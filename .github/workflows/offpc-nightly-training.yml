@@ -1,0 +1,99 @@
+name: Off-PC Nightly Training
+
+on:
+  schedule:
+    - cron: "17 3 * * *"
+  workflow_dispatch:
+    inputs:
+      iterations:
+        description: "Number of generated candidate teams"
+        required: false
+        default: "32"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: offpc-nightly-training
+  cancel-in-progress: false
+
+jobs:
+  train:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Normalize internal pools
+        env:
+          GITHUB_ACTIONS: "true"
+          RUNNER_ENVIRONMENT: "github-hosted"
+        run: |
+          python scripts/offpc_training/normalize_sources.py
+
+      - name: Ingest Pikalytics-derived sources
+        env:
+          GITHUB_ACTIONS: "true"
+          RUNNER_ENVIRONMENT: "github-hosted"
+        run: |
+          python scripts/offpc_training/ingest_pikalytics.py
+
+      - name: Ingest Reddit sources
+        env:
+          GITHUB_ACTIONS: "true"
+          RUNNER_ENVIRONMENT: "github-hosted"
+        run: |
+          python scripts/offpc_training/ingest_reddit.py
+
+      - name: Ingest YouTube sources
+        env:
+          GITHUB_ACTIONS: "true"
+          RUNNER_ENVIRONMENT: "github-hosted"
+        run: |
+          python scripts/offpc_training/ingest_youtube.py
+
+      - name: Run remote-only training
+        env:
+          GITHUB_ACTIONS: "true"
+          RUNNER_ENVIRONMENT: "github-hosted"
+          TRAIN_ITERATIONS: ${{ github.event.inputs.iterations || '32' }}
+        run: |
+          python scripts/offpc_training/train.py --iterations "${TRAIN_ITERATIONS}"
+
+      - name: Validate learned outputs
+        env:
+          GITHUB_ACTIONS: "true"
+          RUNNER_ENVIRONMENT: "github-hosted"
+        run: |
+          python scripts/offpc_training/validate_learned_data.py
+
+      - name: Upload training artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: offpc-training-${{ github.run_id }}
+          path: |
+            data/normalized
+            data/learned_weights.json
+            data/species_role_priors.json
+            data/move_choice_weights.json
+            data/threat_penalties.json
+            data/team_archive.json
+            data/battle_logs
+            reports/training_summary.md
+
+      - name: Commit refreshed remote outputs
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/normalized data/learned_weights.json data/species_role_priors.json data/move_choice_weights.json data/threat_penalties.json data/team_archive.json data/battle_logs reports/training_summary.md
+          if git diff --cached --quiet; then
+            echo "No remote-learning changes to commit."
+            exit 0
+          fi
+          git commit -m "chore: refresh off-pc learning outputs"
+          git push
