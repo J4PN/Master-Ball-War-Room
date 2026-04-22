@@ -1,0 +1,22 @@
+{
+  "desktop": {
+    "gridAlignItems": "start",
+    "gridTemplateColumns": "915px 380px",
+    "panelCanScroll": true,
+    "panelClientHeight": 1224,
+    "panelHeight": "1226px",
+    "panelMaxHeight": "1226px",
+    "panelOverflowY": "auto",
+    "panelPosition": "sticky",
+    "panelScrollHeight": 3207,
+    "panelScrollTop": 260,
+    "windowScrollY": 0
+  },
+  "narrow": {
+    "gridTemplateColumns": "819px",
+    "panelHeight": "3082.95px",
+    "panelMaxHeight": "none",
+    "panelOverflowY": "auto",
+    "panelPosition": "static"
+  }
+}

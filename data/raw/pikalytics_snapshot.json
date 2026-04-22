@@ -1,0 +1,19 @@
+{
+  "updatedAt": null,
+  "entries": [
+    {
+      "sourceName": "Pikalytics Champions snapshot",
+      "sourceUrl": "https://www.pikalytics.com/pokedex/championspreview",
+      "archetype": "pivot-balance",
+      "confidence": 0.96,
+      "team": [
+        { "name": "Incineroar", "item": "Sitrus Berry", "ability": "Intimidate", "moves": ["Fake Out", "Flare Blitz", "Parting Shot", "Knock Off"], "nature": "Careful" },
+        { "name": "Whimsicott", "item": "Focus Sash", "ability": "Prankster", "moves": ["Tailwind", "Moonblast", "Encore", "Protect"], "nature": "Timid" },
+        { "name": "Garchomp", "item": "Choice Scarf", "ability": "Rough Skin", "moves": ["Earthquake", "Rock Slide", "Dragon Claw", "Protect"], "nature": "Jolly" },
+        { "name": "Sinistcha", "item": "Leftovers", "ability": "Hospitality", "moves": ["Matcha Gotcha", "Shadow Ball", "Rage Powder", "Protect"], "nature": "Sassy" },
+        { "name": "Kingambit", "item": "Black Glasses", "ability": "Defiant", "moves": ["Sucker Punch", "Kowtow Cleave", "Low Kick", "Protect"], "nature": "Adamant" },
+        { "name": "Pelipper", "item": "Choice Scarf", "ability": "Drizzle", "moves": ["Hurricane", "Muddy Water", "Tailwind", "Protect"], "nature": "Timid" }
+      ]
+    }
+  ]
+}

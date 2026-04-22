@@ -1,0 +1,19 @@
+{
+  "speed_slider_exists": false,
+  "speed_slider_value_exists": false,
+  "meta_threat_count": 0,
+  "meta_threat_rows": [],
+  "speed_panel_size": {
+    "height": 0,
+    "width": 0
+  },
+  "slot_values": [
+    "Incineroar",
+    "Starmie",
+    "Garchomp",
+    "Whimsicott",
+    "Kingambit",
+    "Pelipper"
+  ],
+  "team_analysis_text": "Select a few confirmed Champions Pokemon to get role, matchup recommendations, and the live defense type chart."
+}

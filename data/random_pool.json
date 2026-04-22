@@ -1,0 +1,27 @@
+{
+  "updatedAt": null,
+  "teams": [
+    {
+      "label": "random-a",
+      "team": [
+        "Gengar",
+        "Pelipper",
+        "Dragonite",
+        "Farigiraf",
+        "Rotom-Wash",
+        "Kingambit"
+      ]
+    },
+    {
+      "label": "random-b",
+      "team": [
+        "Whimsicott",
+        "Charizard",
+        "Starmie",
+        "Tyranitar",
+        "Incineroar",
+        "Sinistcha"
+      ]
+    }
+  ]
+}

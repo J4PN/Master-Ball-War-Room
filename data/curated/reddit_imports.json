@@ -1,0 +1,21 @@
+{
+  "updatedAt": null,
+  "teams": [
+    {
+      "sourceName": "Curated Reddit balance team",
+      "sourceUrl": "https://www.reddit.com/r/stunfisk/example-balance-team",
+      "archetype": "balance",
+      "confidence": 0.82,
+      "notes": "Human-curated from Reddit post and linked paste.",
+      "tags": ["reddit", "verified"],
+      "team": [
+        { "name": "Incineroar", "item": "Safety Goggles", "ability": "Intimidate", "moves": ["Fake Out", "Parting Shot", "Will-O-Wisp", "Knock Off"], "nature": "Careful" },
+        { "name": "Starmie", "item": "Life Orb", "ability": "Natural Cure", "moves": ["Hydro Pump", "Ice Beam", "Psychic", "Protect"], "nature": "Timid" },
+        { "name": "Garchomp", "item": "Clear Amulet", "ability": "Rough Skin", "moves": ["Earthquake", "Rock Slide", "Swords Dance", "Protect"], "nature": "Jolly" },
+        { "name": "Whimsicott", "item": "Focus Sash", "ability": "Prankster", "moves": ["Tailwind", "Encore", "Moonblast", "Protect"], "nature": "Timid" },
+        { "name": "Kingambit", "item": "Black Glasses", "ability": "Defiant", "moves": ["Sucker Punch", "Kowtow Cleave", "Protect", "Low Kick"], "nature": "Adamant" },
+        { "name": "Pelipper", "item": "Covert Cloak", "ability": "Drizzle", "moves": ["Tailwind", "Hurricane", "Muddy Water", "Protect"], "nature": "Timid" }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "threats": [
+    {
+      "severity": "live-war-room-severity live-war-room-severity--warn",
+      "text": "Meta snapshot not ready, using local team read."
+    }
+  ],
+  "matchups": [
+    "Add more Pokemon to reveal matchup pressure."
+  ]
+}

@@ -1,0 +1,98 @@
+{
+  "intimidated": {
+    "category": "physical",
+    "max": 141,
+    "maxPercent": 74.2,
+    "min": 119,
+    "minPercent": 62.6,
+    "moveType": "Ground",
+    "rolls": [
+      119,
+      121,
+      122,
+      124,
+      125,
+      126,
+      128,
+      129,
+      131,
+      132,
+      133,
+      135,
+      136,
+      138,
+      139,
+      141
+    ],
+    "source": "fallback"
+  },
+  "neutral": {
+    "category": "physical",
+    "max": 213,
+    "maxPercent": 112.1,
+    "min": 181,
+    "minPercent": 95.3,
+    "moveType": "Ground",
+    "rolls": [
+      181,
+      183,
+      185,
+      187,
+      189,
+      191,
+      193,
+      195,
+      198,
+      200,
+      202,
+      204,
+      206,
+      208,
+      210,
+      213
+    ],
+    "source": "fallback"
+  },
+  "topThreats": [
+    {
+      "intimidatePressure": 0,
+      "matchupScore": 21,
+      "name": "Mega Floette",
+      "safeSwitchCount": 0,
+      "speedRisk": false,
+      "threatSeverityScore": 74
+    },
+    {
+      "intimidatePressure": 0,
+      "matchupScore": 49,
+      "name": "Garchomp",
+      "safeSwitchCount": 0,
+      "speedRisk": false,
+      "threatSeverityScore": 46
+    },
+    {
+      "intimidatePressure": 0,
+      "matchupScore": 53,
+      "name": "Sneasler",
+      "safeSwitchCount": 0,
+      "speedRisk": false,
+      "threatSeverityScore": 42
+    },
+    {
+      "intimidatePressure": 0,
+      "matchupScore": 53,
+      "name": "Whimsicott",
+      "safeSwitchCount": 0,
+      "speedRisk": false,
+      "threatSeverityScore": 42
+    },
+    {
+      "intimidatePressure": 0,
+      "matchupScore": 63,
+      "name": "Dragonite",
+      "safeSwitchCount": 1,
+      "speedRisk": false,
+      "threatSeverityScore": 32
+    }
+  ]
+}

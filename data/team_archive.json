@@ -1,0 +1,31 @@
+{
+  "updatedAt": null,
+  "teams": [
+    {
+      "source": "seed",
+      "label": "pivot-tailwind-shell",
+      "team": [
+        "Incineroar",
+        "Whimsicott",
+        "Garchomp",
+        "Pelipper",
+        "Kingambit",
+        "Starmie"
+      ],
+      "score": 0.58
+    },
+    {
+      "source": "seed",
+      "label": "rain-pressure-shell",
+      "team": [
+        "Pelipper",
+        "Basculegion",
+        "Whimsicott",
+        "Incineroar",
+        "Garchomp",
+        "Sinistcha"
+      ],
+      "score": 0.55
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+[
+  {
+    "class": "live-war-room-list__item live-war-room-severity--danger",
+    "text": "Incineroar (54.4%)\nSevere \u2014 no safe switch-ins and it controls the pace",
+    "text_color": "rgb(239, 111, 108)",
+    "background": "rgba(239, 111, 108, 0.08)",
+    "border": "rgba(239, 111, 108, 0.46)"
+  },
+  {
+    "class": "live-war-room-list__item live-war-room-severity--danger",
+    "text": "Sneasler (45.1%)\nSevere \u2014 no safe switch-ins and it controls the pace",
+    "text_color": "rgb(239, 111, 108)",
+    "background": "rgba(239, 111, 108, 0.08)",
+    "border": "rgba(239, 111, 108, 0.46)"
+  },
+  {
+    "class": "live-war-room-list__item live-war-room-severity--warn",
+    "text": "Garchomp (37.1%)\nModerate \u2014 no safe switch-ins and it controls the pace",
+    "text_color": "rgb(244, 211, 94)",
+    "background": "rgba(244, 211, 94, 0.08)",
+    "border": "rgba(244, 211, 94, 0.42)"
+  },
+  {
+    "class": "live-war-room-list__item live-war-room-severity--warn",
+    "text": "Sinistcha (34.6%)\nModerate \u2014 no safe switch-ins and it controls the pace",
+    "text_color": "rgb(244, 211, 94)",
+    "background": "rgba(244, 211, 94, 0.08)",
+    "border": "rgba(244, 211, 94, 0.42)"
+  },
+  {
+    "class": "live-war-room-list__item live-war-room-severity--good",
+    "text": "Basculegion (22.1%)\nManageable \u2014 no safe switch-ins and it controls the pace",
+    "text_color": "rgb(91, 201, 140)",
+    "background": "rgba(91, 201, 140, 0.08)",
+    "border": "rgba(91, 201, 140, 0.38)"
+  }
+]

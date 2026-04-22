@@ -1,0 +1,17 @@
+{
+  "updatedAt": null,
+  "byThreat": {
+    "incineroar": {
+      "multiplier": 1.2,
+      "notes": "Physical-heavy teams still need stronger Intimidate insurance."
+    },
+    "sneasler": {
+      "multiplier": 1.1,
+      "notes": "Fast disruption remains a top pressure source."
+    },
+    "garchomp": {
+      "multiplier": 1.08,
+      "notes": "Spread pressure punishes limited switch structures."
+    }
+  }
+}

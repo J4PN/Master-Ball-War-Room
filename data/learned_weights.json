@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "updatedAt": null,
+  "candidateScoreWeights": {
+    "rolePrior": 6,
+    "moveWeight": 4,
+    "threatPenalty": 12,
+    "archiveBias": 3
+  },
+  "leadPairBias": {
+    "fakeOut": 0,
+    "speedControl": 0
+  },
+  "threatSeverityWeights": {
+    "default": 1,
+    "byThreat": {}
+  }
+}

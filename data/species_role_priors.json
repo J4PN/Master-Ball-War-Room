@@ -1,0 +1,33 @@
+{
+  "updatedAt": null,
+  "priors": {
+    "incineroar": {
+      "weight": 0.4,
+      "roles": [
+        "pivot_support",
+        "fake_out"
+      ]
+    },
+    "whimsicott": {
+      "weight": 0.28,
+      "roles": [
+        "speed_control",
+        "support"
+      ]
+    },
+    "garchomp": {
+      "weight": 0.24,
+      "roles": [
+        "physical_pressure",
+        "spread_damage"
+      ]
+    },
+    "pelipper": {
+      "weight": 0.22,
+      "roles": [
+        "weather",
+        "speed_control"
+      ]
+    }
+  }
+}

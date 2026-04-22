@@ -1,0 +1,21 @@
+{
+  "updatedAt": null,
+  "posts": [
+    {
+      "title": "Rate my Champions rain shell",
+      "sourceName": "r/stunfisk post",
+      "sourceUrl": "https://www.reddit.com/r/stunfisk/example-rain-shell",
+      "archetype": "rain",
+      "confidence": 0.68,
+      "importStrategy": "raw-thread-parse",
+      "notes": "Partial post body plus Pokepaste summary.",
+      "tags": ["pokepaste", "community"],
+      "team": [
+        { "name": "Pelipper", "item": "Focus Sash", "ability": "Drizzle", "moves": ["Tailwind", "Hurricane"] },
+        { "name": "Basculegion", "item": "Choice Scarf", "ability": "Adaptability", "moves": ["Last Respects", "Wave Crash"] },
+        { "name": "Incineroar", "item": "Safety Goggles", "ability": "Intimidate", "moves": ["Fake Out", "Parting Shot"] },
+        { "name": "Whimsicott", "moves": ["Tailwind", "Encore"] }
+      ]
+    }
+  ]
+}

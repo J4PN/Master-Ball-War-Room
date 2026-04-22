@@ -1,0 +1,11 @@
+{
+  "updatedAt": null,
+  "weights": {
+    "protect": 0.18,
+    "fake out": 0.22,
+    "tailwind": 0.2,
+    "parting shot": 0.16,
+    "rage powder": 0.14,
+    "electroweb": 0.08
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "updatedAt": null,
+  "teams": [
+    {
+      "sourceName": "Curated YouTube showcase team",
+      "sourceUrl": "https://www.youtube.com/watch?v=example-curated",
+      "archetype": "fast-offense",
+      "confidence": 0.79,
+      "notes": "Curated from video description and on-screen team sheet.",
+      "tags": ["youtube", "verified"],
+      "team": [
+        { "name": "Incineroar", "item": "Sitrus Berry", "ability": "Intimidate", "moves": ["Fake Out", "Parting Shot", "Flare Blitz", "Knock Off"], "nature": "Careful" },
+        { "name": "Garchomp", "item": "Choice Scarf", "ability": "Rough Skin", "moves": ["Earthquake", "Rock Slide", "Dragon Claw", "Protect"], "nature": "Jolly" },
+        { "name": "Whimsicott", "item": "Focus Sash", "ability": "Prankster", "moves": ["Tailwind", "Encore", "Moonblast", "Protect"], "nature": "Timid" },
+        { "name": "Starmie", "item": "Life Orb", "ability": "Analytic", "moves": ["Hydro Pump", "Ice Beam", "Thunderbolt", "Protect"], "nature": "Timid" },
+        { "name": "Dragonite", "item": "Dragoninite", "ability": "Multiscale", "moves": ["Extreme Speed", "Dragon Claw", "Fire Punch", "Protect"], "nature": "Adamant" },
+        { "name": "Rotom-Wash", "item": "Sitrus Berry", "ability": "Levitate", "moves": ["Thunderbolt", "Hydro Pump", "Volt Switch", "Protect"], "nature": "Calm" }
+      ]
+    }
+  ]
+}

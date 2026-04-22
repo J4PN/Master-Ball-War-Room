@@ -1,0 +1,27 @@
+{
+  "updatedAt": null,
+  "teams": [
+    {
+      "label": "meta-pivot-core",
+      "team": [
+        "Incineroar",
+        "Whimsicott",
+        "Garchomp",
+        "Sinistcha",
+        "Kingambit",
+        "Pelipper"
+      ]
+    },
+    {
+      "label": "meta-rain-core",
+      "team": [
+        "Pelipper",
+        "Basculegion",
+        "Incineroar",
+        "Whimsicott",
+        "Archaludon",
+        "Garchomp"
+      ]
+    }
+  ]
+}

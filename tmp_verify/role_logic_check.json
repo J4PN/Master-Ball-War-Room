@@ -1,0 +1,10 @@
+{
+  "live_panel": {
+    "overflowY": "auto",
+    "maxHeight": "1364px",
+    "clientHeight": 1021,
+    "scrollHeight": 1021
+  },
+  "incineroar_build": "Paste a team or type a request. The builder will detect whether to import or generate.",
+  "primarina_build": "Paste a team or type a request. The builder will detect whether to import or generate."
+}

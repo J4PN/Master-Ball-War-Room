@@ -1,0 +1,21 @@
+{
+  "updatedAt": null,
+  "videos": [
+    {
+      "title": "Top 10 Champions teams this week",
+      "sourceName": "YouTube description extract",
+      "sourceUrl": "https://www.youtube.com/watch?v=example",
+      "archetype": "bulky-offense",
+      "confidence": 0.57,
+      "importStrategy": "description-or-comment-parse",
+      "notes": "Partial team inferred from description and pinned comment; incomplete on purpose.",
+      "tags": ["description", "pinned-comment", "partial"],
+      "team": [
+        { "name": "Incineroar", "moves": ["Fake Out", "Parting Shot"] },
+        { "name": "Garchomp", "moves": ["Earthquake", "Rock Slide"] },
+        { "name": "Starmie" },
+        { "name": "Whimsicott" }
+      ]
+    }
+  ]
+}

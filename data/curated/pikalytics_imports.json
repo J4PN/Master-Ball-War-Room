@@ -1,0 +1,20 @@
+{
+  "updatedAt": null,
+  "teams": [
+    {
+      "sourceName": "Curated Pikalytics import",
+      "sourceUrl": "https://www.pikalytics.com/pokedex/championspreview",
+      "archetype": "rain-balance",
+      "confidence": 0.99,
+      "notes": "Manually curated from a stable snapshot.",
+      "team": [
+        { "name": "Pelipper", "item": "Choice Scarf", "ability": "Drizzle", "moves": ["Hurricane", "Tailwind", "Protect", "Muddy Water"], "nature": "Timid" },
+        { "name": "Basculegion", "item": "Choice Scarf", "ability": "Adaptability", "moves": ["Last Respects", "Wave Crash", "Flip Turn", "Aqua Jet"], "nature": "Adamant" },
+        { "name": "Incineroar", "item": "Sitrus Berry", "ability": "Intimidate", "moves": ["Fake Out", "Parting Shot", "Flare Blitz", "Knock Off"], "nature": "Careful" },
+        { "name": "Whimsicott", "item": "Focus Sash", "ability": "Prankster", "moves": ["Tailwind", "Encore", "Moonblast", "Protect"], "nature": "Timid" },
+        { "name": "Archaludon", "item": "Assault Vest", "ability": "Stamina", "moves": ["Flash Cannon", "Electro Shot", "Draco Meteor", "Snarl"], "nature": "Modest" },
+        { "name": "Garchomp", "item": "Clear Amulet", "ability": "Rough Skin", "moves": ["Earthquake", "Rock Slide", "Protect", "Dragon Claw"], "nature": "Jolly" }
+      ]
+    }
+  ]
+}

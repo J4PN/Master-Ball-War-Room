@@ -1,0 +1,27 @@
+{
+  "updatedAt": null,
+  "teams": [
+    {
+      "label": "self-built-a",
+      "team": [
+        "Incineroar",
+        "Whimsicott",
+        "Pelipper",
+        "Basculegion",
+        "Kingambit",
+        "Farigiraf"
+      ]
+    },
+    {
+      "label": "self-built-b",
+      "team": [
+        "Garchomp",
+        "Sinistcha",
+        "Starmie",
+        "Incineroar",
+        "Dragonite",
+        "Rotom-Wash"
+      ]
+    }
+  ]
+}
