@@ -11011,3 +11011,225 @@ function installEvaluateTeamStateMovesetPatch() {
 }
 
 installEvaluateTeamStateMovesetPatch();
+
+const MOVESET_SUPPORT_MOVE_POOL = [
+  "Fake Out",
+  "Tailwind",
+  "Trick Room",
+  "Rage Powder",
+  "Parting Shot",
+  "Icy Wind",
+  "Electroweb",
+  "Helping Hand",
+  "Encore",
+  "Spore",
+  "Nuzzle",
+  "Protect",
+  "Wide Guard",
+  "Will-O-Wisp",
+  "Taunt",
+];
+
+function getMovesetProfileForContext(species, role, archetype) {
+  return getMovesetQualityProfile(species, role, archetype);
+}
+
+function sanitizeAutobuilderSet(entry, teamState = [], structureReport = null) {
+  if (!entry || typeof entry !== "object") {
+    return null;
+  }
+  const species = getTeamEntrySpeciesName(entry);
+  if (!species) {
+    return null;
+  }
+
+  const role = inferMovesetRole(entry, teamState, structureReport);
+  const archetype = inferMovesetArchetype(structureReport, teamState);
+  const profile = getMovesetProfileForContext(species, role, archetype);
+  const originalMoves = getTeamEntryMoves(entry);
+  const originalItem = getTeamEntryItem(entry);
+  let moves = originalMoves.slice(0, 4);
+  const reasons = [];
+
+  if (!profile) {
+    return {
+      species,
+      role,
+      archetype,
+      chosenMoves: moves.slice(),
+      chosenItem: originalItem,
+      rejectedMoves: [],
+      moveQualityScore: 0,
+      setCoherenceScore: 0,
+      badMovePenalty: 0,
+      whyChosen: reasons,
+    };
+  }
+
+  const requiredMoves = [
+    ...(profile.coreMoves || []),
+    ...(((profile.archetypeRequiredMoves || {})[archetype]) || []),
+  ];
+
+  requiredMoves.forEach((requiredMove) => {
+    if (moves.includes(requiredMove)) {
+      return;
+    }
+    if (moves.length < 4) {
+      moves.push(requiredMove);
+      reasons.push(`added required move ${requiredMove}`);
+      return;
+    }
+    const weakestMove = moves
+      .map((move) => ({
+        move,
+        score: getMoveQualityScore(species, move, role, archetype) - getBadMovePenalty(species, move, { role, archetype }),
+      }))
+      .sort((a, b) => a.score - b.score)[0];
+    if (weakestMove && weakestMove.move) {
+      moves = moves.map((move) => (move === weakestMove.move ? requiredMove : move));
+      reasons.push(`replaced ${weakestMove.move} with required move ${requiredMove}`);
+    }
+  });
+
+  moves = moves.map((move) => {
+    const penalty = getBadMovePenalty(species, move, { role, archetype });
+    if (penalty < 24) {
+      return move;
+    }
+    const replacement = getPreferredReplacementMoves(species, role, archetype, moves).find(
+      (candidate) => !moves.includes(candidate)
+    );
+    if (!replacement) {
+      return move;
+    }
+    reasons.push(`replaced bad move ${move} with ${replacement}`);
+    return replacement;
+  });
+
+  if (role === "support") {
+    const supportCount = moves.filter((move) => MOVESET_SUPPORT_MOVE_POOL.includes(move)).length;
+    if (supportCount < 2) {
+      const supportReplacement = getPreferredReplacementMoves(species, role, archetype, moves).find((move) =>
+        MOVESET_SUPPORT_MOVE_POOL.includes(move)
+      );
+      if (supportReplacement) {
+        const weakestAttackingMove = moves
+          .map((move) => ({ move, score: getMoveQualityScore(species, move, role, archetype) }))
+          .filter((entryMove) => !MOVESET_SUPPORT_MOVE_POOL.includes(entryMove.move))
+          .sort((a, b) => a.score - b.score)[0];
+        if (weakestAttackingMove) {
+          moves = moves.map((move) => (move === weakestAttackingMove.move ? supportReplacement : move));
+          reasons.push(`added support utility ${supportReplacement}`);
+        }
+      }
+    }
+  }
+
+  moves = Array.from(new Set(moves.filter(Boolean))).slice(0, 4);
+  const fillMoves = getPreferredReplacementMoves(species, role, archetype, moves);
+  while (moves.length < 4 && fillMoves.length) {
+    const fillMove = fillMoves.shift();
+    if (!moves.includes(fillMove)) {
+      moves.push(fillMove);
+      reasons.push(`filled moveslot with ${fillMove}`);
+    }
+  }
+
+  let item = originalItem;
+  if (getItemQualityScore(species, item, role, archetype, moves) < -8 && (profile.preferredItems || []).length) {
+    item = profile.preferredItems[0];
+    reasons.push(`replaced item ${originalItem || "(none)"} with ${item}`);
+  }
+
+  setTeamEntryMoves(entry, moves);
+  setTeamEntryItem(entry, item);
+
+  const rejectedMoves = originalMoves.filter((move) => move && !moves.includes(move));
+  const moveQualityScore = moves.reduce((sum, move) => sum + getMoveQualityScore(species, move, role, archetype), 0);
+  const setCoherenceScore = getSetCoherenceScore(species, moves, item, role, archetype);
+  const badMovePenalty = moves.reduce((sum, move) => sum + getBadMovePenalty(species, move, { role, archetype }), 0);
+  const debugEntry = {
+    species,
+    role,
+    archetype,
+    chosenMoves: moves.slice(),
+    chosenItem: item,
+    rejectedMoves,
+    moveQualityScore,
+    setCoherenceScore,
+    badMovePenalty,
+    whyChosen: reasons.slice(),
+  };
+
+  if (typeof window !== "undefined") {
+    window.__MBWR_MOVESET_DEBUG = window.__MBWR_MOVESET_DEBUG || [];
+    window.__MBWR_MOVESET_DEBUG.push(debugEntry);
+    if (window.__MBWR_MOVESET_DEBUG.length > 200) {
+      window.__MBWR_MOVESET_DEBUG = window.__MBWR_MOVESET_DEBUG.slice(-200);
+    }
+  }
+
+  return debugEntry;
+}
+
+function sanitizeAutobuilderTeamSets(teamState = [], structureReport = null) {
+  return (teamState || []).map((entry) => sanitizeAutobuilderSet(entry, teamState, structureReport)).filter(Boolean);
+}
+
+function getTeamMovesetQualitySummary(teamState = [], structureReport = null) {
+  const summaries = sanitizeAutobuilderTeamSets(teamState, structureReport);
+  const totalMoveQuality = summaries.reduce((sum, entry) => sum + entry.moveQualityScore, 0);
+  const totalCoherence = summaries.reduce((sum, entry) => sum + entry.setCoherenceScore, 0);
+  const totalPenalty = summaries.reduce((sum, entry) => sum + entry.badMovePenalty, 0);
+  return {
+    summaries,
+    totalMoveQuality,
+    totalCoherence,
+    totalPenalty,
+    totalScoreBonus: clampScore((totalCoherence * 0.2) + (totalMoveQuality * 0.08) - (totalPenalty * 0.18)),
+  };
+}
+
+function installAutobuilderMovesetQualityPatch() {
+  if (typeof sanitizeFinalMoveSet === "function" && !sanitizeFinalMoveSet.__mbwrMovesetQualityPatched) {
+    const originalSanitizeFinalMoveSet = sanitizeFinalMoveSet;
+    sanitizeFinalMoveSet = function patchedSanitizeFinalMoveSet(entry, ...rest) {
+      const result = originalSanitizeFinalMoveSet.call(this, entry, ...rest);
+      const target = result && typeof result === "object" ? result : entry;
+      if (target && typeof target === "object") {
+        const teamState = Array.isArray(rest[0]) ? rest[0] : [];
+        const structureReport =
+          rest.find((arg) => arg && typeof arg === "object" && (arg.archetype || arg.primaryArchetype || arg.roleMap)) || null;
+        sanitizeAutobuilderSet(target, teamState, structureReport);
+      }
+      return result;
+    };
+    sanitizeFinalMoveSet.__mbwrMovesetQualityPatched = true;
+  }
+
+  if (typeof evaluateTeamState === "function" && !evaluateTeamState.__mbwrMovesetQualitySummaryPatched) {
+    const originalEvaluateTeamState = evaluateTeamState;
+    evaluateTeamState = function patchedEvaluateTeamStateMovesets(teamState, structureReport, ...rest) {
+      const safeTeamState = Array.isArray(teamState) ? teamState : [];
+      const movesetQualitySummary = getTeamMovesetQualitySummary(safeTeamState, structureReport || null);
+      const result = originalEvaluateTeamState.call(this, safeTeamState, structureReport, ...rest);
+      if (result && typeof result === "object") {
+        result.movesetQualitySummary = movesetQualitySummary;
+        if (typeof result.metaMatchupScore === "number") {
+          result.metaMatchupScore = clampScore(result.metaMatchupScore + movesetQualitySummary.totalScoreBonus);
+        }
+        if (typeof result.score === "number") {
+          result.score = clampScore(result.score + movesetQualitySummary.totalScoreBonus);
+        }
+        if (typeof result.totalScore === "number") {
+          result.totalScore = clampScore(result.totalScore + movesetQualitySummary.totalScoreBonus);
+        }
+      }
+      return result;
+    };
+    evaluateTeamState.__mbwrMovesetQualitySummaryPatched = true;
+  }
+}
+
+installAutobuilderMovesetQualityPatch();
