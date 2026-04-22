@@ -1590,3 +1590,51 @@ body.is-applying-team .team-builder-grid {
     animation: none !important;
   }
 }
+.team-builder-sp-stepper {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 2.5rem;
+  padding: 0.2rem;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 0.8rem;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.team-builder-sp-stepper__button {
+  width: 2rem;
+  height: 2rem;
+  border: 0;
+  border-radius: 0.6rem;
+  background: rgba(255, 255, 255, 0.1);
+  color: inherit;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.team-builder-sp-stepper__button:hover,
+.team-builder-sp-stepper__button:focus-visible {
+  background: rgba(255, 255, 255, 0.18);
+  outline: none;
+}
+
+.team-builder-sp-stepper__input {
+  width: 4rem;
+  min-width: 4rem;
+  padding: 0.35rem 0.4rem;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-weight: 600;
+  text-align: center;
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+.team-builder-sp-stepper__input::-webkit-outer-spin-button,
+.team-builder-sp-stepper__input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}

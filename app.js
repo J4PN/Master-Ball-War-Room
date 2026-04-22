@@ -10436,3 +10436,172 @@
     parseBuilderRequest
   };
 })();
+const TEAMBUILDER_SP_STAT_NAMES = new Set(["HP", "Atk", "Def", "SpA", "SpD", "Spe"]);
+
+function getTeamBuilderSpLabelText(input) {
+  if (!input) return "";
+  const candidateNodes = [];
+  if (input.labels && input.labels.length) {
+    candidateNodes.push(...Array.from(input.labels));
+  }
+  const row = input.closest("label, .stat-row, .builder-stat-row, .team-builder-stat, .teambuilder-stat, .pokemon-stat-row, .spread-row, li, tr, .row");
+  if (row) {
+    candidateNodes.push(row);
+    const heading = row.querySelector("label, .label, .stat-label, strong, span");
+    if (heading) candidateNodes.push(heading);
+  }
+  for (const node of candidateNodes) {
+    const text = (node.textContent || "").replace(/\s+/g, " ").trim();
+    const match = text.match(/\b(HP|Atk|Def|SpA|SpD|Spe)\b/i);
+    if (match) {
+      return match[1];
+    }
+  }
+  return "";
+}
+
+function isTeamBuilderSpRangeInput(input) {
+  if (!(input instanceof HTMLInputElement) || input.type !== "range") {
+    return false;
+  }
+  const statName = getTeamBuilderSpLabelText(input);
+  if (!TEAMBUILDER_SP_STAT_NAMES.has(statName)) {
+    return false;
+  }
+  const max = Number(input.max || 0);
+  const min = Number(input.min || 0);
+  return min === 0 && max === 32;
+}
+
+function clampTeamBuilderSpValue(value) {
+  if (!Number.isFinite(value)) return 0;
+  return Math.max(0, Math.min(32, Math.round(value)));
+}
+
+function dispatchTeamBuilderSpEvents(input) {
+  input.dispatchEvent(new Event("input", { bubbles: true }));
+  input.dispatchEvent(new Event("change", { bubbles: true }));
+}
+
+function applyTeamBuilderSpValue(input, nextValue) {
+  const clampedValue = clampTeamBuilderSpValue(nextValue);
+  const currentValue = clampTeamBuilderSpValue(Number(input.value || 0));
+  if (clampedValue === currentValue) {
+    input.value = String(clampedValue);
+    return;
+  }
+  input.value = String(clampedValue);
+  dispatchTeamBuilderSpEvents(input);
+}
+
+function removeTeamBuilderSliderArtifacts(input) {
+  const parent = input.parentElement;
+  if (!parent) return;
+  const removable = Array.from(parent.children).filter((child) => {
+    if (child === input || child.classList.contains("team-builder-sp-stepper")) {
+      return false;
+    }
+    const tagName = child.tagName;
+    if (tagName === "OUTPUT") {
+      return true;
+    }
+    const className = child.className || "";
+    return /slider|bubble|thumb|track|pill|value/i.test(className);
+  });
+  removable.forEach((node) => node.remove());
+}
+
+function convertTeamBuilderSpInput(input) {
+  if (!isTeamBuilderSpRangeInput(input) || input.dataset.spStepperApplied === "true") {
+    return false;
+  }
+
+  input.dataset.spStepperApplied = "true";
+  input.type = "number";
+  input.min = "0";
+  input.max = "32";
+  input.step = "1";
+  input.inputMode = "numeric";
+  input.autocomplete = "off";
+  input.classList.add("team-builder-sp-stepper__input");
+
+  const wrapper = document.createElement("div");
+  wrapper.className = "team-builder-sp-stepper";
+
+  const minusButton = document.createElement("button");
+  minusButton.type = "button";
+  minusButton.className = "team-builder-sp-stepper__button";
+  minusButton.setAttribute("aria-label", `Decrease ${getTeamBuilderSpLabelText(input) || "SP"}`);
+  minusButton.textContent = "-";
+
+  const plusButton = document.createElement("button");
+  plusButton.type = "button";
+  plusButton.className = "team-builder-sp-stepper__button";
+  plusButton.setAttribute("aria-label", `Increase ${getTeamBuilderSpLabelText(input) || "SP"}`);
+  plusButton.textContent = "+";
+
+  const currentParent = input.parentElement;
+  if (!currentParent) {
+    return false;
+  }
+
+  currentParent.insertBefore(wrapper, input);
+  wrapper.appendChild(minusButton);
+  wrapper.appendChild(input);
+  wrapper.appendChild(plusButton);
+
+  minusButton.addEventListener("click", () => {
+    applyTeamBuilderSpValue(input, Number(input.value || 0) - 1);
+  });
+
+  plusButton.addEventListener("click", () => {
+    applyTeamBuilderSpValue(input, Number(input.value || 0) + 1);
+  });
+
+  input.addEventListener("input", () => {
+    const nextValue = clampTeamBuilderSpValue(Number(input.value || 0));
+    if (String(nextValue) !== String(input.value)) {
+      input.value = String(nextValue);
+    }
+  });
+
+  input.addEventListener("blur", () => {
+    applyTeamBuilderSpValue(input, Number(input.value || 0));
+  });
+
+  removeTeamBuilderSliderArtifacts(input);
+  return true;
+}
+
+function enhanceTeamBuilderSpEditors(root = document) {
+  const scope = root && typeof root.querySelectorAll === "function" ? root : document;
+  const inputs = Array.from(scope.querySelectorAll('input[type="range"]')).filter(isTeamBuilderSpRangeInput);
+  inputs.forEach(convertTeamBuilderSpInput);
+}
+
+function bootTeamBuilderSpEditorEnhancement() {
+  enhanceTeamBuilderSpEditors(document);
+  if (!document.body || document.body.dataset.teamBuilderSpObserverAttached === "true") {
+    return;
+  }
+  document.body.dataset.teamBuilderSpObserverAttached = "true";
+  const observer = new MutationObserver((mutations) => {
+    for (const mutation of mutations) {
+      mutation.addedNodes.forEach((node) => {
+        if (!(node instanceof Element)) return;
+        if (node.matches && node.matches('input[type="range"]')) {
+          enhanceTeamBuilderSpEditors(node.parentElement || node);
+          return;
+        }
+        enhanceTeamBuilderSpEditors(node);
+      });
+    }
+  });
+  observer.observe(document.body, { childList: true, subtree: true });
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", bootTeamBuilderSpEditorEnhancement);
+} else {
+  bootTeamBuilderSpEditorEnhancement();
+}
