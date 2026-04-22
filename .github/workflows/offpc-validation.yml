@@ -1,0 +1,48 @@
+name: Off-PC Learned Data Validation
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Rebuild normalized pools
+        env:
+          GITHUB_ACTIONS: "true"
+          RUNNER_ENVIRONMENT: "github-hosted"
+        run: |
+          python scripts/offpc_training/normalize_sources.py
+          python scripts/offpc_training/ingest_pikalytics.py
+          python scripts/offpc_training/ingest_reddit.py
+          python scripts/offpc_training/ingest_youtube.py
+
+      - name: Validate learned and normalized files
+        env:
+          GITHUB_ACTIONS: "true"
+          RUNNER_ENVIRONMENT: "github-hosted"
+        run: |
+          python scripts/offpc_training/validate_learned_data.py
+
+      - name: Upload validation artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: offpc-validation-${{ github.run_id }}
+          path: |
+            data/normalized
+            data/learned_weights.json
+            data/species_role_priors.json
+            data/move_choice_weights.json
+            data/threat_penalties.json
+            data/team_archive.json

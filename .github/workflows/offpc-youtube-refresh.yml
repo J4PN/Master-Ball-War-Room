@@ -1,0 +1,37 @@
+name: Off-PC YouTube Refresh
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Refresh YouTube normalized pool
+        env:
+          GITHUB_ACTIONS: "true"
+          RUNNER_ENVIRONMENT: "github-hosted"
+        run: |
+          python scripts/offpc_training/ingest_youtube.py
+          python scripts/offpc_training/train.py --iterations 12
+          python scripts/offpc_training/validate_learned_data.py
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: offpc-youtube-${{ github.run_id }}
+          path: |
+            data/normalized/youtube_pool.json
+            data/normalized/source_meta_snapshot.json
+            data/learned_weights.json
+            data/team_archive.json
+            reports/training_summary.md

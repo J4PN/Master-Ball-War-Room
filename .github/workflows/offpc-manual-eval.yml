@@ -1,0 +1,56 @@
+name: Off-PC Manual Evaluation
+
+on:
+  workflow_dispatch:
+    inputs:
+      iterations:
+        description: "Lightweight evaluation candidate count"
+        required: false
+        default: "10"
+
+permissions:
+  contents: read
+
+jobs:
+  evaluate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Refresh normalized pools
+        env:
+          GITHUB_ACTIONS: "true"
+          RUNNER_ENVIRONMENT: "github-hosted"
+        run: |
+          python scripts/offpc_training/normalize_sources.py
+          python scripts/offpc_training/ingest_pikalytics.py
+          python scripts/offpc_training/ingest_reddit.py
+          python scripts/offpc_training/ingest_youtube.py
+
+      - name: Run lightweight evaluation
+        env:
+          GITHUB_ACTIONS: "true"
+          RUNNER_ENVIRONMENT: "github-hosted"
+          TRAIN_ITERATIONS: ${{ github.event.inputs.iterations || '10' }}
+        run: |
+          python scripts/offpc_training/train.py --iterations "${TRAIN_ITERATIONS}"
+
+      - name: Upload evaluation artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: offpc-eval-${{ github.run_id }}
+          path: |
+            data/normalized
+            data/learned_weights.json
+            data/species_role_priors.json
+            data/move_choice_weights.json
+            data/threat_penalties.json
+            data/team_archive.json
+            data/battle_logs
+            reports/training_summary.md

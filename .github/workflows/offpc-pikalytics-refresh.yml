@@ -1,0 +1,39 @@
+name: Off-PC Pikalytics Refresh
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "40 2 * * 1,4"
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Refresh Pikalytics-derived normalized pool
+        env:
+          GITHUB_ACTIONS: "true"
+          RUNNER_ENVIRONMENT: "github-hosted"
+        run: |
+          python scripts/offpc_training/ingest_pikalytics.py
+          python scripts/offpc_training/train.py --iterations 12
+          python scripts/offpc_training/validate_learned_data.py
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: offpc-pikalytics-${{ github.run_id }}
+          path: |
+            data/normalized/pikalytics_pool.json
+            data/normalized/source_meta_snapshot.json
+            data/learned_weights.json
+            data/threat_penalties.json
+            reports/training_summary.md
