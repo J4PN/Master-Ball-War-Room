@@ -1,0 +1,165 @@
+{
+  "version": "2026-04-17",
+  "title": "Pokemon move discourage policy by role",
+  "notes": [
+    "These are discourage lists, not ban lists.",
+    "Moves in allow_lists should never be auto-flagged as bad just because they are low power or conditional.",
+    "Conditional groups require role, set, or board-state checks before discouraging.",
+    "Designed for support and attacker role classification."
+  ],
+  "global_logic": {
+    "policy_type": "discourage_not_ban",
+    "steps": [
+      "Classify Pokemon role as support or attacker.",
+      "Apply the matching discourage list.",
+      "Override discouragement if the move is explicitly part of the approved set, team mode, or active board-state synergy.",
+      "Never auto-discourage moves in the allow_lists."
+    ],
+    "override_conditions": [
+      "move is explicitly present in the approved set for that Pokemon",
+      "team mode explicitly enables the move or archetype",
+      "active board-state makes the move high-value right now",
+      "no stronger legal alternative exists for the intended role"
+    ]
+  },
+  "roles": {
+    "support": {
+      "hard_discourage": [
+        "Hyper Beam",
+        "Giga Impact",
+        "Blast Burn",
+        "Hydro Cannon",
+        "Frenzy Plant",
+        "Explosion",
+        "Self-Destruct",
+        "Final Gambit",
+        "Fissure",
+        "Sheer Cold",
+        "Guillotine",
+        "Horn Drill",
+        "Swords Dance",
+        "Nasty Plot",
+        "Dragon Dance",
+        "Quiver Dance",
+        "Calm Mind",
+        "Bulk Up",
+        "Coil",
+        "Growl",
+        "Leer",
+        "Tail Whip",
+        "String Shot",
+        "Sand Attack",
+        "Smokescreen",
+        "Metronome",
+        "Assist",
+        "Copycat",
+        "Mirror Move"
+      ],
+      "conditional_discourage": {
+        "only_if_team_mode_does_not_use_them": [
+          "Trick Room",
+          "Tailwind",
+          "Rain Dance",
+          "Sunny Day",
+          "Sandstorm",
+          "Snowscape",
+          "Electric Terrain",
+          "Psychic Terrain",
+          "Grassy Terrain",
+          "Misty Terrain",
+          "Reflect",
+          "Light Screen",
+          "Aurora Veil",
+          "Roar",
+          "Whirlwind",
+          "Dragon Tail",
+          "Wrap",
+          "Bind",
+          "Fire Spin",
+          "Sand Tomb",
+          "Whirlpool"
+        ]
+      },
+      "allow_list": [
+        "Follow Me",
+        "Rage Powder",
+        "Fake Out",
+        "Parting Shot",
+        "U-turn",
+        "Protect",
+        "Spiky Shield",
+        "Baneful Bunker",
+        "Burning Bulwark",
+        "King's Shield",
+        "Taunt",
+        "Encore",
+        "Helping Hand"
+      ]
+    },
+    "attacker": {
+      "hard_discourage": [
+        "Hyper Beam",
+        "Giga Impact",
+        "Blast Burn",
+        "Hydro Cannon",
+        "Frenzy Plant",
+        "Fissure",
+        "Sheer Cold",
+        "Guillotine",
+        "Horn Drill",
+        "Swift",
+        "Round",
+        "Water Pulse",
+        "Twister",
+        "Mud-Slap",
+        "Rock Tomb",
+        "Growl",
+        "Leer",
+        "Tail Whip",
+        "String Shot",
+        "Confuse Ray",
+        "Supersonic",
+        "Metronome",
+        "Assist",
+        "Copycat",
+        "Mirror Move"
+      ],
+      "conditional_discourage": {
+        "only_if_no_synergy_or_set_support": [
+          "Solar Beam",
+          "Solar Blade",
+          "Fly",
+          "Dig",
+          "Dive",
+          "Bounce",
+          "Phantom Force",
+          "Swords Dance",
+          "Nasty Plot",
+          "Dragon Dance",
+          "Quiver Dance",
+          "Bulk Up",
+          "Calm Mind",
+          "Explosion",
+          "Final Gambit",
+          "Memento"
+        ]
+      },
+      "allow_list": [
+        "Fake Out",
+        "Sucker Punch",
+        "Jet Punch",
+        "Accelerock",
+        "Ice Shard",
+        "Mach Punch",
+        "Heavy Slam",
+        "Heat Crash",
+        "Foul Play",
+        "Water Spout",
+        "Eruption",
+        "Last Respects",
+        "Knock Off",
+        "U-turn"
+      ]
+    }
+  }
+}

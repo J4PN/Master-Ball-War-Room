@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pokémon Champions Team Builder — Master Ball War Room</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;800&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./styles.css?v=20260419l" />
+</head>
+<body>
+  <div class="page-shell">
+    <header class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">Pokémon Champions Competitive Tool</p>
+        <h1>Master Ball War Room</h1>
+        <p class="hero-subtitle">Team Builder &amp; Battle Analyzer</p>
+        <p class="hero-text">
+          Build your Champions team, analyze type weaknesses, run damage calculations, and check speed tiers — all in one place.
+        </p>
+        <div class="hero-onboarding">
+          <span class="hero-step"><span class="hero-step__num">1</span>Search &amp; add 6 Pokémon below</span>
+          <span class="hero-step"><span class="hero-step__num">2</span>Set moves, item &amp; nature</span>
+          <span class="hero-step"><span class="hero-step__num">3</span>Click Analyze Team for full breakdown</span>
+        </div>
+        <div class="hero-cta-row">
+          <button class="action-button accent hero-cta-btn" id="hero-start-btn">▶ Start Building Team</button>
+          <button class="action-button ghost hero-save-btn" id="hero-save-btn" title="Save team to browser storage">💾 Save Team</button>
+          <button class="action-button ghost hero-save-btn" id="hero-load-btn" title="Load saved team">↩ Load Saved</button>
+        </div>
+        <p id="hero-save-status" class="hero-save-status"></p>
+      </div>
+      <div class="hero-logo" aria-hidden="true">
+        <img src="./logo.png" alt="Master Ball War Room logo" class="hero-logo__img" />
+      </div>
+    </header>
+
+    <nav class="tab-bar" aria-label="Calculator tabs">
+      <button class="tab-button is-active" data-tab-trigger="teambuilder">⚔ Teambuilder</button>
+      <button class="tab-button" data-tab-trigger="damage">💥 Damage Calc</button>
+      <button class="tab-button" data-tab-trigger="speed">⚡ Speed Calc</button>
+      <button class="tab-button" data-tab-trigger="meta">📊 Meta</button>
+    </nav>
+
+    <main>
+      <section class="tab-panel" data-tab-panel="damage">
+        <div class="quick-strip">
+          <div class="quick-chip"><strong>Roster:</strong> legal Champions DB only</div>
+          <div class="quick-chip"><strong>Moves:</strong> legal learnsets only</div>
+          <div class="quick-chip"><strong>Items:</strong> parsed from <code>Items.txt</code></div>
+          <div class="quick-chip"><strong>Stats:</strong> 66 total SP / 32 max per stat</div>
+          <div class="quick-chip"><strong>Battle level:</strong> fixed at 50</div>
+        </div>
+        <div class="panel-grid">
+          <section class="card import-card">
+            <div class="section-heading">
+              <p class="section-kicker">Import</p>
+              <h2>Pikalytics / Showdown Paste</h2>
+            </div>
+            <p class="muted">
+              Paste one or more exported sets. Champions legal forms and variants are supported, and imported EVs are converted into Champions-style SP.
+            </p>
+            <textarea id="import-input" class="import-box" placeholder="Lycanroc-Dusk @ Focus Sash&#10;Ability: Tough Claws&#10;EVs: 252 Atk / 4 Def / 252 Spe&#10;Jolly Nature&#10;- Accelerock&#10;- Stone Edge"></textarea>
+            <div class="inline-actions">
+              <button id="parse-import" class="action-button accent">Parse Import</button>
+              <button id="clear-import" class="action-button ghost">Clear</button>
+            </div>
+            <div id="import-results" class="import-results"></div>
+          </section>
+
+          <section class="card calc-card">
+            <div class="section-heading">
+              <p class="section-kicker">Battle Setup</p>
+              <h2>Attacker vs Defender</h2>
+            </div>
+
+            <div class="combatants">
+              <article class="combatant">
+                <div class="combatant-header">
+                  <div class="pokemon-preview">
+                    <div class="sprite-shell"><img id="attacker-sprite" class="pokemon-sprite" alt="Attacker sprite" /></div>
+                    <div>
+                      <h3>Attacker</h3>
+                      <p class="muted">Search by name, then lock in a legal set.</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="field-grid">
+                  <label>
+                    Pokemon
+                    <input id="attacker-name" class="combo-input" placeholder="Search attacker Pokemon" />
+                  </label>
+                  <label>
+                    Item
+                    <input id="attacker-item" class="combo-input" placeholder="Search attacker item" />
+                  </label>
+                  <label>
+                    Ability
+                    <input id="attacker-ability" class="combo-input" placeholder="Search attacker ability" />
+                  </label>
+                  <label>
+                    Nature
+                    <select id="attacker-nature"></select>
+                  </label>
+                  <label>
+                    Move
+                    <input id="attacker-move" class="combo-input move-picker-input" placeholder="Click to choose legal move" readonly />
+                  </label>
+                  <label>
+                    Atk Stage
+                    <select id="calc-attacker-atk-stage">
+                      <option value="-6">-6</option><option value="-5">-5</option><option value="-4">-4</option><option value="-3">-3</option><option value="-2">-2</option><option value="-1">-1</option><option value="0" selected>0</option><option value="1">+1</option><option value="2">+2</option><option value="3">+3</option><option value="4">+4</option><option value="5">+5</option><option value="6">+6</option>
+                    </select>
+                  </label>
+                  <label>
+                    SpA Stage
+                    <select id="calc-attacker-spa-stage">
+                      <option value="-6">-6</option><option value="-5">-5</option><option value="-4">-4</option><option value="-3">-3</option><option value="-2">-2</option><option value="-1">-1</option><option value="0" selected>0</option><option value="1">+1</option><option value="2">+2</option><option value="3">+3</option><option value="4">+4</option><option value="5">+5</option><option value="6">+6</option>
+                    </select>
+                  </label>
+                  <label class="checkbox-field">
+                    <input id="calc-attacker-burned" type="checkbox" />
+                    Attacker Burned
+                  </label>
+                  <label>
+                    Last Respects Fainted Allies
+                    <input id="calc-last-respects-count" type="number" min="0" max="5" value="0" />
+                  </label>
+                  <label>
+                    Supreme Overlord Fainted Allies
+                    <input id="calc-supreme-count" type="number" min="0" max="5" value="0" />
+                  </label>
+                </div>
+                <p class="muted stat-budget-copy">Stat Points: 66 total max, 32 max per stat.</p>
+                <div class="sp-total" id="attacker-sp-total">0 / 66 SP</div>
+                <div class="stats-grid" id="attacker-stats-grid"></div>
+              </article>
+
+              <article class="combatant">
+                <div class="combatant-header">
+                  <div class="pokemon-preview">
+                    <div class="sprite-shell"><img id="defender-sprite" class="pokemon-sprite" alt="Defender sprite" /></div>
+                    <div>
+                      <h3>Defender</h3>
+                      <p class="muted">Filter the legal roster fast.</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="field-grid">
+                  <label>
+                    Pokemon
+                    <input id="defender-name" class="combo-input" placeholder="Search defender Pokemon" />
+                  </label>
+                  <label>
+                    Item
+                    <input id="defender-item" class="combo-input" placeholder="Search defender item" />
+                  </label>
+                  <label>
+                    Ability
+                    <input id="defender-ability" class="combo-input" placeholder="Search defender ability" />
+                  </label>
+                  <label>
+                    Nature
+                    <select id="defender-nature"></select>
+                  </label>
+                  <label>
+                    Def Stage
+                    <select id="calc-defender-def-stage">
+                      <option value="-6">-6</option><option value="-5">-5</option><option value="-4">-4</option><option value="-3">-3</option><option value="-2">-2</option><option value="-1">-1</option><option value="0" selected>0</option><option value="1">+1</option><option value="2">+2</option><option value="3">+3</option><option value="4">+4</option><option value="5">+5</option><option value="6">+6</option>
+                    </select>
+                  </label>
+                  <label>
+                    SpD Stage
+                    <select id="calc-defender-spd-stage">
+                      <option value="-6">-6</option><option value="-5">-5</option><option value="-4">-4</option><option value="-3">-3</option><option value="-2">-2</option><option value="-1">-1</option><option value="0" selected>0</option><option value="1">+1</option><option value="2">+2</option><option value="3">+3</option><option value="4">+4</option><option value="5">+5</option><option value="6">+6</option>
+                    </select>
+                  </label>
+                  <label>
+                    Weather
+                    <select id="calc-weather">
+                      <option value="">None</option>
+                      <option value="Sun">Sun</option>
+                      <option value="Rain">Rain</option>
+                      <option value="Sand">Sand</option>
+                      <option value="Snow">Snow</option>
+                    </select>
+                  </label>
+                  <label>
+                    Terrain
+                    <select id="calc-terrain">
+                      <option value="">None</option>
+                      <option value="Electric">Electric</option>
+                      <option value="Grassy">Grassy</option>
+                      <option value="Psychic">Psychic</option>
+                      <option value="Misty">Misty</option>
+                    </select>
+                  </label>
+                </div>
+                <p class="muted stat-budget-copy">Stat Points: 66 total max, 32 max per stat.</p>
+                <div class="sp-total" id="defender-sp-total">0 / 66 SP</div>
+                <div class="stats-grid" id="defender-stats-grid"></div>
+              </article>
+            </div>
+
+            <div class="inline-actions calc-actions">
+              <button id="calculate-damage" class="action-button accent">Calculate Damage</button>
+              <button id="send-to-bug-tab" class="action-button ghost">Report A Problem</button>
+            </div>
+
+            <section id="damage-result" class="result-panel">
+              <p class="placeholder">Select two Pokemon and a move to calculate damage.</p>
+            </section>
+          </section>
+        </div>
+      </section>
+
+      <section class="tab-panel" data-tab-panel="speed">
+        <div class="panel-grid speed-layout">
+          <section class="card">
+            <div class="section-heading">
+              <p class="section-kicker">Speed Calc</p>
+              <h2>Live Speed Calculator</h2>
+            </div>
+            <p class="muted">Pokemon list includes the Champions roster configured in this app, including supported forms and variants.</p>
+            <div class="speed-preview">
+              <div class="sprite-shell sprite-shell--large"><img id="speed-sprite" class="pokemon-sprite" alt="Speed calc sprite" /></div>
+              <div class="quick-strip speed-strip">
+                <div class="quick-chip"><strong>Search:</strong> legal roster only</div>
+                <div class="quick-chip"><strong>Speed mods:</strong> Tailwind, Choice Scarf, stages</div>
+              </div>
+            </div>
+            <div class="field-grid">
+              <label>
+                Pokemon
+                <input id="speed-pokemon" class="combo-input" placeholder="Search speed calc Pokemon" />
+              </label>
+              <label>
+                Base Speed
+                <input id="speed-base" type="number" min="1" max="255" value="100" />
+              </label>
+              <label>
+                IVs
+                <input id="speed-iv" type="number" min="0" max="31" value="31" />
+              </label>
+              <label>
+                Nature
+                <select id="speed-nature-mode">
+                  <option value="boost">Speed Boosting</option>
+                  <option value="neutral">Neutral</option>
+                  <option value="drop">Speed Lowering</option>
+                </select>
+              </label>
+              <label class="checkbox-field">
+                <input id="speed-scarf" type="checkbox" />
+                Choice Scarf
+              </label>
+              <label>
+                Stage
+                <select id="speed-stage">
+                  <option value="-6">-6</option>
+                  <option value="-5">-5</option>
+                  <option value="-4">-4</option>
+                  <option value="-3">-3</option>
+                  <option value="-2">-2</option>
+                  <option value="-1">-1</option>
+                  <option value="0" selected>0</option>
+                  <option value="1">+1</option>
+                  <option value="2">+2</option>
+                  <option value="3">+3</option>
+                  <option value="4">+4</option>
+                  <option value="5">+5</option>
+                  <option value="6">+6</option>
+                </select>
+              </label>
+              <label class="checkbox-field">
+                <input id="speed-tailwind" type="checkbox" />
+                Tailwind Active
+              </label>
+              <label>
+                Weather
+                <select id="speed-weather">
+                  <option value="">None</option>
+                  <option value="Rain">Rain</option>
+                  <option value="Sun">Sun</option>
+                  <option value="Sand">Sand</option>
+                  <option value="Snow">Snow</option>
+                </select>
+              </label>
+              <label>
+                Speed Ability Mod
+                <select id="speed-ability-mod">
+                  <option value="">None</option>
+                  <option value="swift-swim">Swift Swim</option>
+                  <option value="chlorophyll">Chlorophyll</option>
+                  <option value="sand-rush">Sand Rush</option>
+                  <option value="slush-rush">Slush Rush</option>
+                  <option value="surge-surfer">Surge Surfer</option>
+                  <option value="unburden">Unburden</option>
+                </select>
+              </label>
+            </div>
+            <section id="speed-result" class="result-panel compact"></section>
+          </section>
+
+          <section class="card">
+            <div class="section-heading">
+              <p class="section-kicker">Reference</p>
+              <h2>Common Speed Tiers</h2>
+            </div>
+            <p class="muted">
+              These benchmarks use level 50, 31 IVs, and the benchmarked SP, nature, and item shown on each meta row.
+            </p>
+            <div id="speed-chart" class="speed-chart"></div>
+          </section>
+        </div>
+      </section>
+
+      <section class="tab-panel is-active" data-tab-panel="teambuilder">
+        <div class="panel-grid teambuilder-layout">
+          <section class="card">
+            <div class="section-heading">
+              <p class="section-kicker">Teambuilder</p>
+              <h2>Patch Weaknesses</h2>
+            </div>
+            <p class="muted">
+              Build around the configured Champions roster. Recommendations account for stacked type weaknesses and common threats in this pool.
+            </p>
+            <textarea id="team-import-input" class="compact-box" placeholder="Paste a Pokepaste here, or describe what you want like 'build around Mega Lucario', 'counter this team', or 'rain balance with speed control'."></textarea>
+            <div class="inline-actions">
+              <button id="team-parse-import" class="action-button accent">Run Request / Import Paste</button>
+              <button id="team-clear-import" class="action-button ghost">Clear Box</button>
+            </div>
+            <div class="builder-assistant card-glow">
+              <div class="section-heading">
+                <p class="section-kicker">Builder Assistant</p>
+                <h2>Draft + Tweaks</h2>
+              </div>
+              <div class="field-grid builder-assistant__grid">
+                <label>
+                  Request Type
+                  <select id="ai-builder-mode">
+                    <option value="archetype">Build Around Archetype</option>
+                    <option value="counter">Counter A Team</option>
+                    <option value="pokemon">Build Around A Pokemon</option>
+                  </select>
+                </label>
+                <label>
+                  Focus
+                  <input id="ai-builder-focus" placeholder="rain offense / counter Incineroar + Garchomp / build around Mega Gardevoir" />
+                </label>
+              </div>
+              <div class="inline-actions">
+                <button id="ai-builder-generate" class="action-button accent">Generate From Box</button>
+                <button id="ai-builder-apply" class="action-button ghost">Load Draft Into Teambuilder</button>
+              </div>
+              <section id="ai-builder-output" class="result-panel compact">
+                <p class="placeholder">Paste a team or type a request. The builder will detect whether to import or generate.</p>
+              </section>
+              <section class="result-panel compact builder-tweak-panel">
+                <p class="result-title">Tweak This Draft</p>
+                <p class="result-copy">Ask for set-level tweaks like more bulk, better anti-Fairy pressure, different speed control, safer items, or cleaner move choices.</p>
+                <textarea id="ai-builder-tweaks" class="compact-box" placeholder="Examples: make Whimsicott bulkier into Sneasler, give me stronger anti-Fairy coverage, clean up support moves, optimize items for this six."></textarea>
+                <div class="inline-actions">
+                  <button id="ai-builder-tweak" class="action-button accent">Apply Tweaks</button>
+                  <button id="ai-builder-analyze" class="action-button ghost">Analyze Current Team</button>
+                </div>
+              </section>
+            </div>
+            <div class="quick-strip">
+              <div class="quick-chip"><strong>Unified box:</strong> paste import or type a request</div>
+              <div class="quick-chip"><strong>Slots:</strong> legal Pokemon, items, abilities, and moves</div>
+              <div class="quick-chip"><strong>Warnings:</strong> green safe, amber caution, red stack</div>
+              <div class="quick-chip"><strong>Battle level:</strong> fixed at 50</div>
+            </div>
+            <div class="team-builder-grid">
+              <article class="team-card" data-team-card="0">
+                <div class="team-card__header"><div class="pokemon-preview"><div class="sprite-shell"><img id="team-sprite-0" class="pokemon-sprite" alt="Team slot 1 sprite" /></div><h3>Slot 1</h3></div><span class="team-card__tag">Lead / flex</span></div>
+                <div class="team-card__grid">
+                  <label>Pokemon<input class="combo-input team-slot" data-slot="0" placeholder="Search slot 1 Pokemon" /></label>
+                  <label>Item<input class="combo-input team-item" data-slot="0" placeholder="Search slot 1 item" /></label>
+                  <label>Ability<input class="combo-input team-ability" data-slot="0" placeholder="Search slot 1 abilities" /></label>
+                  <label>Nature<select class="team-nature" data-slot="0"></select></label>
+                  <label>Move 1<input class="combo-input team-move move-picker-input" data-slot="0" data-move-slot="0" placeholder="Click to choose move 1" readonly /></label>
+                  <label>Move 2<input class="combo-input team-move move-picker-input" data-slot="0" data-move-slot="1" placeholder="Click to choose move 2" readonly /></label>
+                  <label>Move 3<input class="combo-input team-move move-picker-input" data-slot="0" data-move-slot="2" placeholder="Click to choose move 3" readonly /></label>
+                  <label>Move 4<input class="combo-input team-move move-picker-input" data-slot="0" data-move-slot="3" placeholder="Click to choose move 4" readonly /></label>
+                  <div class="team-sp-block team-card__full">
+                    <div class="sp-total" id="team-sp-total-0">0 / 66 SP</div>
+                    <div class="team-stats-grid" id="team-stats-grid-0"></div>
+                  </div>
+                </div>
+              </article>
+              <article class="team-card" data-team-card="1">
+                <div class="team-card__header"><div class="pokemon-preview"><div class="sprite-shell"><img id="team-sprite-1" class="pokemon-sprite" alt="Team slot 2 sprite" /></div><h3>Slot 2</h3></div><span class="team-card__tag">Core</span></div>
+                <div class="team-card__grid">
+                  <label>Pokemon<input class="combo-input team-slot" data-slot="1" placeholder="Search slot 2 Pokemon" /></label>
+                  <label>Item<input class="combo-input team-item" data-slot="1" placeholder="Search slot 2 item" /></label>
+                  <label>Ability<input class="combo-input team-ability" data-slot="1" placeholder="Search slot 2 abilities" /></label>
+                  <label>Nature<select class="team-nature" data-slot="1"></select></label>
+                  <label>Move 1<input class="combo-input team-move move-picker-input" data-slot="1" data-move-slot="0" placeholder="Click to choose move 1" readonly /></label>
+                  <label>Move 2<input class="combo-input team-move move-picker-input" data-slot="1" data-move-slot="1" placeholder="Click to choose move 2" readonly /></label>
+                  <label>Move 3<input class="combo-input team-move move-picker-input" data-slot="1" data-move-slot="2" placeholder="Click to choose move 3" readonly /></label>
+                  <label>Move 4<input class="combo-input team-move move-picker-input" data-slot="1" data-move-slot="3" placeholder="Click to choose move 4" readonly /></label>
+                  <div class="team-sp-block team-card__full">
+                    <div class="sp-total" id="team-sp-total-1">0 / 66 SP</div>
+                    <div class="team-stats-grid" id="team-stats-grid-1"></div>
+                  </div>
+                </div>
+              </article>
+              <article class="team-card" data-team-card="2">
+                <div class="team-card__header"><div class="pokemon-preview"><div class="sprite-shell"><img id="team-sprite-2" class="pokemon-sprite" alt="Team slot 3 sprite" /></div><h3>Slot 3</h3></div><span class="team-card__tag">Pivot</span></div>
+                <div class="team-card__grid">
+                  <label>Pokemon<input class="combo-input team-slot" data-slot="2" placeholder="Search slot 3 Pokemon" /></label>
+                  <label>Item<input class="combo-input team-item" data-slot="2" placeholder="Search slot 3 item" /></label>
+                  <label>Ability<input class="combo-input team-ability" data-slot="2" placeholder="Search slot 3 abilities" /></label>
+                  <label>Nature<select class="team-nature" data-slot="2"></select></label>
+                  <label>Move 1<input class="combo-input team-move move-picker-input" data-slot="2" data-move-slot="0" placeholder="Click to choose move 1" readonly /></label>
+                  <label>Move 2<input class="combo-input team-move move-picker-input" data-slot="2" data-move-slot="1" placeholder="Click to choose move 2" readonly /></label>
+                  <label>Move 3<input class="combo-input team-move move-picker-input" data-slot="2" data-move-slot="2" placeholder="Click to choose move 3" readonly /></label>
+                  <label>Move 4<input class="combo-input team-move move-picker-input" data-slot="2" data-move-slot="3" placeholder="Click to choose move 4" readonly /></label>
+                  <div class="team-sp-block team-card__full">
+                    <div class="sp-total" id="team-sp-total-2">0 / 66 SP</div>
+                    <div class="team-stats-grid" id="team-stats-grid-2"></div>
+                  </div>
+                </div>
+              </article>
+              <article class="team-card" data-team-card="3">
+                <div class="team-card__header"><div class="pokemon-preview"><div class="sprite-shell"><img id="team-sprite-3" class="pokemon-sprite" alt="Team slot 4 sprite" /></div><h3>Slot 4</h3></div><span class="team-card__tag">Support</span></div>
+                <div class="team-card__grid">
+                  <label>Pokemon<input class="combo-input team-slot" data-slot="3" placeholder="Search slot 4 Pokemon" /></label>
+                  <label>Item<input class="combo-input team-item" data-slot="3" placeholder="Search slot 4 item" /></label>
+                  <label>Ability<input class="combo-input team-ability" data-slot="3" placeholder="Search slot 4 abilities" /></label>
+                  <label>Nature<select class="team-nature" data-slot="3"></select></label>
+                  <label>Move 1<input class="combo-input team-move move-picker-input" data-slot="3" data-move-slot="0" placeholder="Click to choose move 1" readonly /></label>
+                  <label>Move 2<input class="combo-input team-move move-picker-input" data-slot="3" data-move-slot="1" placeholder="Click to choose move 2" readonly /></label>
+                  <label>Move 3<input class="combo-input team-move move-picker-input" data-slot="3" data-move-slot="2" placeholder="Click to choose move 3" readonly /></label>
+                  <label>Move 4<input class="combo-input team-move move-picker-input" data-slot="3" data-move-slot="3" placeholder="Click to choose move 4" readonly /></label>
+                  <div class="team-sp-block team-card__full">
+                    <div class="sp-total" id="team-sp-total-3">0 / 66 SP</div>
+                    <div class="team-stats-grid" id="team-stats-grid-3"></div>
+                  </div>
+                </div>
+              </article>
+              <article class="team-card" data-team-card="4">
+                <div class="team-card__header"><div class="pokemon-preview"><div class="sprite-shell"><img id="team-sprite-4" class="pokemon-sprite" alt="Team slot 5 sprite" /></div><h3>Slot 5</h3></div><span class="team-card__tag">Breaker</span></div>
+                <div class="team-card__grid">
+                  <label>Pokemon<input class="combo-input team-slot" data-slot="4" placeholder="Search slot 5 Pokemon" /></label>
+                  <label>Item<input class="combo-input team-item" data-slot="4" placeholder="Search slot 5 item" /></label>
+                  <label>Ability<input class="combo-input team-ability" data-slot="4" placeholder="Search slot 5 abilities" /></label>
+                  <label>Nature<select class="team-nature" data-slot="4"></select></label>
+                  <label>Move 1<input class="combo-input team-move move-picker-input" data-slot="4" data-move-slot="0" placeholder="Click to choose move 1" readonly /></label>
+                  <label>Move 2<input class="combo-input team-move move-picker-input" data-slot="4" data-move-slot="1" placeholder="Click to choose move 2" readonly /></label>
+                  <label>Move 3<input class="combo-input team-move move-picker-input" data-slot="4" data-move-slot="2" placeholder="Click to choose move 3" readonly /></label>
+                  <label>Move 4<input class="combo-input team-move move-picker-input" data-slot="4" data-move-slot="3" placeholder="Click to choose move 4" readonly /></label>
+                  <div class="team-sp-block team-card__full">
+                    <div class="sp-total" id="team-sp-total-4">0 / 66 SP</div>
+                    <div class="team-stats-grid" id="team-stats-grid-4"></div>
+                  </div>
+                </div>
+              </article>
+              <article class="team-card" data-team-card="5">
+                <div class="team-card__header"><div class="pokemon-preview"><div class="sprite-shell"><img id="team-sprite-5" class="pokemon-sprite" alt="Team slot 6 sprite" /></div><h3>Slot 6</h3></div><span class="team-card__tag">Closer</span></div>
+                <div class="team-card__grid">
+                  <label>Pokemon<input class="combo-input team-slot" data-slot="5" placeholder="Search slot 6 Pokemon" /></label>
+                  <label>Item<input class="combo-input team-item" data-slot="5" placeholder="Search slot 6 item" /></label>
+                  <label>Ability<input class="combo-input team-ability" data-slot="5" placeholder="Search slot 6 abilities" /></label>
+                  <label>Nature<select class="team-nature" data-slot="5"></select></label>
+                  <label>Move 1<input class="combo-input team-move move-picker-input" data-slot="5" data-move-slot="0" placeholder="Click to choose move 1" readonly /></label>
+                  <label>Move 2<input class="combo-input team-move move-picker-input" data-slot="5" data-move-slot="1" placeholder="Click to choose move 2" readonly /></label>
+                  <label>Move 3<input class="combo-input team-move move-picker-input" data-slot="5" data-move-slot="2" placeholder="Click to choose move 3" readonly /></label>
+                  <label>Move 4<input class="combo-input team-move move-picker-input" data-slot="5" data-move-slot="3" placeholder="Click to choose move 4" readonly /></label>
+                  <div class="team-sp-block team-card__full">
+                    <div class="sp-total" id="team-sp-total-5">0 / 66 SP</div>
+                    <div class="team-stats-grid" id="team-stats-grid-5"></div>
+                  </div>
+                </div>
+              </article>
+            </div>
+            <div class="inline-actions">
+              <button id="build-team" class="action-button accent">Analyze Team</button>
+              <button id="clear-team" class="action-button ghost">Clear Team</button>
+              <button id="copy-team-export" class="action-button ghost">Copy Team</button>
+              <button id="download-team-export" class="action-button ghost">Download Team</button>
+              <button id="download-team-image" class="action-button ghost">Export Image</button>
+            </div>
+            <section id="team-export-status" class="status-note">Export the current six slots as text or an image.</section>
+            <section id="team-analysis" class="result-panel">
+              <p class="placeholder">Select a few confirmed Champions Pokemon to get role, matchup recommendations, and the live defense type chart.</p>
+            </section>
+            <div class="team-roster-shell">
+              <div class="section-heading">
+                <p class="section-kicker">Quick Add — Confirmed Pool</p>
+                <h2>Official Champions Roster</h2>
+              </div>
+              <p class="muted">
+                Click any Pokémon to instantly add it to the next empty team slot. Filter by name or type.
+              </p>
+              <div class="roster-filter-row">
+                <input id="roster-search" class="roster-search-input" placeholder="🔍 Search Pokémon..." />
+                <select id="roster-type-filter" class="roster-type-select">
+                  <option value="">All Types</option>
+                  <option value="Normal">Normal</option>
+                  <option value="Fire">Fire</option>
+                  <option value="Water">Water</option>
+                  <option value="Grass">Grass</option>
+                  <option value="Electric">Electric</option>
+                  <option value="Ice">Ice</option>
+                  <option value="Fighting">Fighting</option>
+                  <option value="Poison">Poison</option>
+                  <option value="Ground">Ground</option>
+                  <option value="Flying">Flying</option>
+                  <option value="Psychic">Psychic</option>
+                  <option value="Bug">Bug</option>
+                  <option value="Rock">Rock</option>
+                  <option value="Ghost">Ghost</option>
+                  <option value="Dragon">Dragon</option>
+                  <option value="Dark">Dark</option>
+                  <option value="Steel">Steel</option>
+                  <option value="Fairy">Fairy</option>
+                </select>
+                <span id="roster-count" class="roster-count"></span>
+              </div>
+              <div id="confirmed-roster" class="confirmed-roster confirmed-roster--row"></div>
+            </div>
+          </section>
+          <aside id="live-war-room-intel" class="card live-war-room-card" aria-live="polite" aria-busy="false">
+            <div class="section-heading live-war-room-card__heading">
+              <div>
+                <p class="section-kicker">Live War Room Intel</p>
+                <h2>Always-On Team Read</h2>
+              </div>
+              <span class="live-war-room-card__status">Monitoring</span>
+            </div>
+            <section class="live-war-room-section live-war-room-section--summary">
+              <p class="live-war-room-section__label">War Room Summary</p>
+              <p class="live-war-room-section__body">Waiting for more team data.</p>
+            </section>
+            <section class="live-war-room-section">
+              <p class="live-war-room-section__label">Critical Weakness</p>
+              <p class="live-war-room-section__body">Add more Pokemon to reveal the biggest structural issue.</p>
+            </section>
+            <section class="live-war-room-section">
+              <p class="live-war-room-section__label">Meta Threats</p>
+              <div class="live-war-room-list">
+                <div class="live-war-room-list__item">Meta snapshot not ready, using local team read.</div>
+              </div>
+            </section>
+            <section class="live-war-room-section">
+              <p class="live-war-room-section__label">Speed Control</p>
+              <p class="live-war-room-section__body">Waiting for more speed information.</p>
+            </section>
+            <section class="live-war-room-section">
+              <p class="live-war-room-section__label">Quick Matchup Preview</p>
+              <div class="live-war-room-list">
+                <div class="live-war-room-list__item">Add more Pokemon to reveal matchup pressure.</div>
+              </div>
+            </section>
+            <section class="live-war-room-section">
+              <p class="live-war-room-section__label">Role Gaps</p>
+              <div class="live-war-room-list">
+                <div class="live-war-room-list__item">No role gaps yet. Add more Pokemon to expose them.</div>
+              </div>
+            </section>
+            <section class="live-war-room-section">
+              <p class="live-war-room-section__label">Team Score</p>
+              <div class="live-war-room-score-row">
+                <div class="live-war-room-score"><span>Offense</span><strong>--</strong></div>
+                <div class="live-war-room-score"><span>Defense</span><strong>--</strong></div>
+                <div class="live-war-room-score"><span>Synergy</span><strong>--</strong></div>
+              </div>
+            </section>
+          </aside>
+        </div>
+      </section>
+
+      <section class="tab-panel" data-tab-panel="meta">
+        <div class="panel-grid speed-layout">
+          <section class="card">
+            <div class="section-heading">
+              <p class="section-kicker">Meta</p>
+              <h2>Champions Usage Board</h2>
+            </div>
+            <p class="muted">
+              Usage is pulled from the current Pikalytics-backed meta snapshot when available, then shown across the full legal roster.
+            </p>
+            <section id="meta-status" class="status-note">Loading current Champions meta snapshot.</section>
+            <div id="meta-usage-board" class="speed-chart"></div>
+          </section>
+        </div>
+      </section>
+
+      <section class="tab-panel" data-tab-panel="credits">
+        <div class="panel-grid speed-layout">
+          <section class="card">
+            <div class="section-heading">
+              <p class="section-kicker">Credits</p>
+              <h2>Credits And Inspiration</h2>
+            </div>
+            <div class="analysis-grid">
+              <div class="analysis-stack">
+                <p class="result-title">Project</p>
+                <p class="result-copy"><strong>Created by:</strong> J4PN</p>
+                <p class="result-copy"><strong>Discord:</strong> J4PN_</p>
+              </div>
+              <div class="analysis-stack">
+                <p class="result-title">Inspiration</p>
+                <p class="result-copy"><strong>PokeCounter inspiration / ROI:</strong> <a href="https://pokecounter.app/about" target="_blank" rel="noreferrer">pokecounter.app/about</a></p>
+                <p class="result-copy">Credit to the owner of PokeCounter for inspiration on matchup presentation and team-analysis clarity.</p>
+                <p class="result-copy"><strong>pkmn.help inspiration:</strong> <a href="https://www.pkmn.help/about/" target="_blank" rel="noreferrer">pkmn.help/about</a></p>
+                <p class="result-copy">Credit to wavebeem's pkmn.help for type-chart and matchup-calculator inspiration.</p>
+              </div>
+              <div class="analysis-stack">
+                <p class="result-title">Sources</p>
+                <p class="result-copy"><a href="https://www.serebii.net/" target="_blank" rel="noreferrer">Serebii</a></p>
+                <p class="result-copy"><a href="https://pokemondb.net/" target="_blank" rel="noreferrer">Pokemon Database</a></p>
+                <p class="result-copy"><a href="https://www.pikalytics.com/pokedex/championstournaments" target="_blank" rel="noreferrer">Pikalytics Champions Tournaments</a></p>
+                <p class="result-copy"><a href="https://www.pikalytics.com/pokedex/championspreview" target="_blank" rel="noreferrer">Pikalytics Champions Preview</a></p>
+              </div>
+              <div class="analysis-stack">
+                <p class="result-title">Special Thanks</p>
+                <p class="result-copy"><strong>RoiDadadou</strong></p>
+                <p class="result-copy">Provided Pokemon learnsets and legal Pokemon support data.</p>
+                <p class="result-copy"><a href="https://x.com/leperseuradimir" target="_blank" rel="noreferrer">x.com/leperseuradimir</a></p>
+                <p class="result-copy"><strong>Discord:</strong> roidadadou</p>
+              </div>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <section class="tab-panel" data-tab-panel="bugs">
+        <div class="panel-grid speed-layout">
+          <section class="card">
+            <div class="section-heading">
+              <p class="section-kicker">Support</p>
+              <h2>Bug Report Builder</h2>
+            </div>
+            <p class="muted">
+              Build a clean report with your current calculator state. This is the fastest no-backend option, and it can be wired to email or GitHub later.
+            </p>
+            <div class="field-grid">
+              <label>
+                Bug Title
+                <input id="bug-title" placeholder="Damage calc mismatch on Lycanroc Dusk" />
+              </label>
+              <label>
+                Severity
+                <select id="bug-severity">
+                  <option value="high">High</option>
+                  <option value="medium" selected>Medium</option>
+                  <option value="low">Low</option>
+                </select>
+              </label>
+              <label>
+                Expected Behavior
+                <textarea id="bug-expected" class="compact-box" placeholder="What should have happened?"></textarea>
+              </label>
+              <label>
+                Actual Behavior
+                <textarea id="bug-actual" class="compact-box" placeholder="What happened instead?"></textarea>
+              </label>
+              <label>
+                Steps To Reproduce
+                <textarea id="bug-steps" class="compact-box" placeholder="1. Pick attacker&#10;2. Pick move&#10;3. Click calculate"></textarea>
+              </label>
+              <label>
+                Contact / Notes
+                <textarea id="bug-contact" class="compact-box" placeholder="Optional Discord, email, or notes"></textarea>
+              </label>
+            </div>
+            <div class="inline-actions">
+              <button id="generate-bug-report" class="action-button accent">Generate Report</button>
+              <button id="send-bug-report-github" class="action-button accent">Send To GitHub</button>
+              <button id="copy-bug-report" class="action-button ghost">Copy Report</button>
+              <button id="download-bug-report" class="action-button ghost">Download Report</button>
+            </div>
+            <section id="bug-status" class="status-note">Reports can now open a prefilled GitHub issue for <code>J4PN/Master-Ball-War-Room</code>.</section>
+          </section>
+
+          <section class="card">
+            <div class="section-heading">
+              <p class="section-kicker">Preview</p>
+              <h2>Report Payload</h2>
+            </div>
+            <textarea id="bug-report-output" class="import-box" readonly placeholder="Generate a report to preview the packaged payload."></textarea>
+          </section>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="site-footer__inner">
+        <span class="site-footer__brand">Master Ball War Room</span>
+        <span class="site-footer__sep">·</span>
+        <span class="site-footer__by">by J4PN</span>
+        <span class="site-footer__sep">·</span>
+        <button class="footer-link-btn" data-tab-trigger="credits">Credits</button>
+        <span class="site-footer__sep">·</span>
+        <button class="footer-link-btn" data-tab-trigger="bugs">🐛 Report a Bug</button>
+        <span class="site-footer__sep">·</span>
+        <a class="site-footer__link" href="https://github.com/J4PN/Master-Ball-War-Room" target="_blank" rel="noreferrer">GitHub ↗</a>
+      </div>
+    </footer>
+
+  <section id="move-picker" class="move-picker" aria-hidden="true">
+    <div class="move-picker__dialog">
+      <div class="move-picker__header">
+        <h3 id="move-picker-title">Choose Move</h3>
+        <button id="move-picker-close" class="move-picker__close" type="button">×</button>
+      </div>
+      <input id="move-picker-search" class="move-picker__search" placeholder="Search Moves..." />
+      <div class="move-picker__table">
+        <div id="move-picker-head" class="move-picker__head">
+          <span>Move</span>
+          <span>Fit</span>
+          <span>Description</span>
+          <span>Power</span>
+          <span>Accuracy</span>
+          <span>PP</span>
+        </div>
+        <div id="move-picker-results" class="move-picker__body"></div>
+      </div>
+    </div>
+  </section>
+
+  <script src="./champions_database_complete.js?v=20260419l"></script>
+  <script src="./items-data.js?v=20260419l"></script>
+  <script src="./abilities-data.js?v=20260419l"></script>
+  <script src="./app.js?v=20260419l"></script>
+<script src="./patch.js"></script>
+<script src="./engine2.js"></script>
+<script src="./tr_fix.js"></script>
+    </body>
+</html>
