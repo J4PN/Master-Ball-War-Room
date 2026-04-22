@@ -10437,6 +10437,111 @@
   };
 })();
 const TEAMBUILDER_SP_STAT_NAMES = new Set(["HP", "Atk", "Def", "SpA", "SpD", "Spe"]);
+const MOVESET_ROLE_LOCKED_SPECIES = {
+  incineroar: "support",
+  whimsicott: "support",
+  farigiraf: "support",
+  sinistcha: "support",
+  pelipper: "support",
+  amoonguss: "support",
+  raichu: "support",
+  "rotom-wash": "support",
+  "rotom-heat": "support",
+  basculegion: "attacker",
+  garchomp: "attacker",
+  kingambit: "attacker",
+  dragonite: "attacker",
+};
+
+const MOVESET_QUALITY_PROFILES = {
+  basculegion: {
+    attacker: {
+      coreMoves: ["Last Respects", "Wave Crash"],
+      archetypeRequiredMoves: { rain: ["Aqua Jet"] },
+      preferredMoves: ["Flip Turn", "Protect", "Crunch"],
+      discouragedMoves: { rain: ["Head Smash", "Psychic Fangs"], default: ["Head Smash"] },
+      preferredItems: ["Choice Band", "Choice Scarf", "Mystic Water", "Life Orb", "Clear Amulet"],
+      discouragedItems: ["Leftovers"],
+    },
+  },
+  pelipper: {
+    support: {
+      coreMoves: ["Hurricane"],
+      archetypeRequiredMoves: { rain: ["Tailwind", "Muddy Water"] },
+      preferredMoves: ["Protect", "Icy Wind", "Wide Guard", "Hydro Pump", "U-turn"],
+      discouragedMoves: { rain: ["Roost", "Toxic"], default: ["Toxic"] },
+      preferredItems: ["Focus Sash", "Covert Cloak", "Damp Rock", "Safety Goggles", "Sitrus Berry"],
+      discouragedItems: ["Leftovers"],
+    },
+  },
+  incineroar: {
+    support: {
+      coreMoves: ["Fake Out", "Parting Shot"],
+      preferredMoves: ["Flare Blitz", "Knock Off", "Will-O-Wisp", "Taunt", "Protect"],
+      discouragedMoves: { support: ["Close Combat"] },
+      preferredItems: ["Sitrus Berry", "Safety Goggles", "Assault Vest", "Figy Berry", "Shuca Berry"],
+      discouragedItems: ["Leftovers"],
+    },
+  },
+  whimsicott: {
+    support: {
+      coreMoves: ["Tailwind"],
+      preferredMoves: ["Moonblast", "Encore", "Taunt", "Helping Hand", "Protect"],
+      preferredItems: ["Focus Sash", "Covert Cloak", "Mental Herb"],
+    },
+  },
+  farigiraf: {
+    support: {
+      coreMoves: ["Trick Room"],
+      preferredMoves: ["Helping Hand", "Psychic", "Hyper Voice", "Protect", "Imprison"],
+      preferredItems: ["Safety Goggles", "Sitrus Berry", "Throat Spray", "Mental Herb"],
+    },
+  },
+  sinistcha: {
+    support: {
+      coreMoves: ["Matcha Gotcha"],
+      preferredMoves: ["Trick Room", "Rage Powder", "Strength Sap", "Protect", "Shadow Ball"],
+      preferredItems: ["Sitrus Berry", "Rocky Helmet", "Covert Cloak", "Mental Herb"],
+    },
+  },
+  amoonguss: {
+    support: {
+      coreMoves: ["Spore", "Rage Powder"],
+      preferredMoves: ["Pollen Puff", "Protect", "Clear Smog", "Sludge Bomb"],
+      preferredItems: ["Rocky Helmet", "Sitrus Berry", "Coba Berry", "Mental Herb"],
+    },
+  },
+  raichu: {
+    support: {
+      coreMoves: ["Fake Out"],
+      preferredMoves: ["Nuzzle", "Electroweb", "Volt Switch", "Protect", "Thunderbolt", "Encore"],
+      preferredItems: ["Focus Sash", "Covert Cloak", "Air Balloon"],
+    },
+  },
+  garchomp: {
+    attacker: {
+      coreMoves: ["Earthquake"],
+      preferredMoves: ["Dragon Claw", "Protect", "Rock Slide", "Stomping Tantrum", "Swords Dance"],
+      preferredItems: ["Clear Amulet", "Choice Scarf", "Life Orb", "Loaded Dice"],
+      discouragedItems: ["Leftovers"],
+    },
+  },
+  kingambit: {
+    attacker: {
+      coreMoves: ["Kowtow Cleave"],
+      preferredMoves: ["Sucker Punch", "Iron Head", "Low Kick", "Protect", "Swords Dance"],
+      preferredItems: ["Black Glasses", "Life Orb", "Assault Vest", "Lum Berry"],
+      discouragedItems: ["Leftovers"],
+    },
+  },
+  dragonite: {
+    attacker: {
+      coreMoves: ["Extreme Speed"],
+      preferredMoves: ["Dragon Claw", "Protect", "Low Kick", "Stomping Tantrum", "Ice Spinner"],
+      preferredItems: ["Choice Band", "Loaded Dice", "Lum Berry", "Assault Vest"],
+    },
+  },
+};
 
 function getTeamBuilderSpLabelText(input) {
   if (!input) return "";
@@ -10605,3 +10710,304 @@ if (document.readyState === "loading") {
 } else {
   bootTeamBuilderSpEditorEnhancement();
 }
+
+function normalizeMovesetSpeciesKey(species) {
+  return String(species || "").trim().toLowerCase().replace(/\s+/g, "-");
+}
+
+function getTeamEntrySpeciesName(entry) {
+  return entry?.species || entry?.name || entry?.pokemon || entry?.speciesName || "";
+}
+
+function getTeamEntryMoves(entry) {
+  if (!entry || typeof entry !== "object") return [];
+  if (Array.isArray(entry.moves)) {
+    return entry.moves.filter(Boolean).map((move) => String(move).trim());
+  }
+  return ["move1", "move2", "move3", "move4"]
+    .map((key) => entry[key])
+    .filter(Boolean)
+    .map((move) => String(move).trim());
+}
+
+function setTeamEntryMoves(entry, moves) {
+  if (!entry || typeof entry !== "object") return;
+  const finalMoves = Array.from(new Set((moves || []).filter(Boolean))).slice(0, 4);
+  if (Array.isArray(entry.moves)) {
+    entry.moves = finalMoves.slice();
+  }
+  ["move1", "move2", "move3", "move4"].forEach((key, index) => {
+    if (key in entry || !Array.isArray(entry.moves)) {
+      entry[key] = finalMoves[index] || "";
+    }
+  });
+}
+
+function getTeamEntryItem(entry) {
+  return String(entry?.item || "").trim();
+}
+
+function setTeamEntryItem(entry, item) {
+  if (!entry || typeof entry !== "object") return;
+  entry.item = item || "";
+}
+
+function inferMovesetArchetype(structureReport = null, teamState = []) {
+  const explicit = String(structureReport?.archetype || structureReport?.primaryArchetype || "").trim().toLowerCase();
+  if (explicit) return explicit;
+  const speciesNames = teamState.map(getTeamEntrySpeciesName).map(normalizeMovesetSpeciesKey);
+  if (speciesNames.includes("pelipper") || speciesNames.includes("basculegion")) return "rain";
+  if (speciesNames.includes("farigiraf") || speciesNames.includes("sinistcha")) return "trick-room";
+  if (speciesNames.includes("whimsicott")) return "tailwind";
+  return "balance";
+}
+
+function inferMovesetRole(entry, teamState = [], structureReport = null) {
+  const explicitRole = String(entry?.role || entry?.primaryRole || "").trim().toLowerCase();
+  if (explicitRole) return explicitRole;
+  const speciesKey = normalizeMovesetSpeciesKey(getTeamEntrySpeciesName(entry));
+  if (MOVESET_ROLE_LOCKED_SPECIES[speciesKey]) {
+    return MOVESET_ROLE_LOCKED_SPECIES[speciesKey];
+  }
+  const moves = getTeamEntryMoves(entry);
+  const supportMoves = ["Fake Out", "Tailwind", "Trick Room", "Rage Powder", "Parting Shot", "Icy Wind", "Electroweb", "Helping Hand", "Encore", "Spore", "Nuzzle"];
+  return moves.some((move) => supportMoves.includes(move)) ? "support" : "attacker";
+}
+
+function getMovesetQualityProfile(species, role, archetype) {
+  const speciesProfile = MOVESET_QUALITY_PROFILES[normalizeMovesetSpeciesKey(species)] || null;
+  if (!speciesProfile) return null;
+  return speciesProfile[role] || speciesProfile.default || speciesProfile.support || speciesProfile.attacker || null;
+}
+
+function getBadMovePenalty(species, move, context = {}) {
+  if (!move) return 0;
+  const role = String(context.role || "").toLowerCase();
+  const archetype = String(context.archetype || "").toLowerCase();
+  const profile = getMovesetQualityProfile(species, role, archetype);
+  let penalty = 0;
+  if (profile?.discouragedMoves) {
+    const discouraged = [
+      ...(profile.discouragedMoves.default || []),
+      ...(profile.discouragedMoves[archetype] || []),
+      ...(profile.discouragedMoves[role] || []),
+    ];
+    if (discouraged.includes(move)) penalty += 30;
+  }
+  const speciesKey = normalizeMovesetSpeciesKey(species);
+  if (speciesKey === "basculegion" && archetype === "rain" && ["Head Smash", "Psychic Fangs"].includes(move)) penalty += 40;
+  if (speciesKey === "incineroar" && role === "support" && move === "Close Combat") penalty += 28;
+  if (role === "support" && ["Head Smash", "Outrage", "Giga Impact"].includes(move)) penalty += 24;
+  return penalty;
+}
+
+function getMoveQualityScore(species, move, role, archetype) {
+  const profile = getMovesetQualityProfile(species, role, archetype);
+  if (!profile || !move) return 0;
+  let score = 0;
+  if ((profile.coreMoves || []).includes(move)) score += 32;
+  if ((profile.preferredMoves || []).includes(move)) score += 16;
+  const archetypeRequired = (profile.archetypeRequiredMoves && profile.archetypeRequiredMoves[archetype]) || [];
+  if (archetypeRequired.includes(move)) score += 24;
+  if (role === "support" && ["Fake Out", "Tailwind", "Trick Room", "Rage Powder", "Parting Shot", "Icy Wind", "Electroweb", "Helping Hand", "Encore", "Spore", "Nuzzle", "Protect"].includes(move)) {
+    score += 8;
+  }
+  if (role !== "support" && ["Wave Crash", "Last Respects", "Kowtow Cleave", "Earthquake", "Extreme Speed", "Dragon Claw", "Flare Blitz", "Hurricane", "Muddy Water", "Hydro Pump"].includes(move)) {
+    score += 6;
+  }
+  score -= getBadMovePenalty(species, move, { role, archetype });
+  return score;
+}
+
+function getCoreMoveRequirementScore(species, archetype, moves = []) {
+  const role = inferMovesetRole({ species, moves }, [], { archetype });
+  const profile = getMovesetQualityProfile(species, role, archetype);
+  if (!profile) return 0;
+  let score = 0;
+  (profile.coreMoves || []).forEach((move) => {
+    score += moves.includes(move) ? 14 : -18;
+  });
+  const required = (profile.archetypeRequiredMoves && profile.archetypeRequiredMoves[archetype]) || [];
+  required.forEach((move) => {
+    score += moves.includes(move) ? 12 : -20;
+  });
+  return score;
+}
+
+function getItemQualityScore(species, item, role, archetype, moves = []) {
+  const profile = getMovesetQualityProfile(species, role, archetype);
+  if (!profile || !item) return 0;
+  let score = 0;
+  if ((profile.preferredItems || []).includes(item)) score += 16;
+  if ((profile.discouragedItems || []).includes(item)) score -= 18;
+  if (normalizeMovesetSpeciesKey(species) === "pelipper" && archetype === "rain" && item === "Leftovers") score -= 18;
+  if (normalizeMovesetSpeciesKey(species) === "basculegion" && archetype === "rain" && item === "Leftovers") score -= 20;
+  if (role === "attacker" && item === "Leftovers") score -= 12;
+  if (role === "support" && item.startsWith("Choice ")) score -= 14;
+  if (moves.includes("Protect") && item.startsWith("Choice ")) score -= 6;
+  return score;
+}
+
+function getSetCoherenceScore(species, moves, item, role, archetype) {
+  const supportMoves = ["Fake Out", "Tailwind", "Trick Room", "Rage Powder", "Parting Shot", "Icy Wind", "Electroweb", "Helping Hand", "Encore", "Spore", "Nuzzle", "Protect"];
+  const moveScore = moves.reduce((sum, move) => sum + getMoveQualityScore(species, move, role, archetype), 0);
+  const coreScore = getCoreMoveRequirementScore(species, archetype, moves);
+  const itemScore = getItemQualityScore(species, item, role, archetype, moves);
+  const supportCount = moves.filter((move) => supportMoves.includes(move)).length;
+  const attackCount = moves.length - supportCount;
+  let roleScore = 0;
+  if (role === "support") {
+    roleScore += supportCount >= 2 ? 16 : -18;
+    roleScore += attackCount <= 2 ? 6 : -10;
+  } else {
+    roleScore += attackCount >= 2 ? 14 : -18;
+    roleScore += moves.includes("Protect") ? 6 : 0;
+  }
+  return moveScore + coreScore + itemScore + roleScore;
+}
+
+function getPreferredReplacementMoves(species, role, archetype, existingMoves = []) {
+  const profile = getMovesetQualityProfile(species, role, archetype);
+  if (!profile) return [];
+  return [
+    ...(profile.coreMoves || []),
+    ...(((profile.archetypeRequiredMoves || {})[archetype]) || []),
+    ...(profile.preferredMoves || []),
+  ].filter((move, index, arr) => move && !existingMoves.includes(move) && arr.indexOf(move) === index);
+}
+
+function sanitizeAutobuilderSet(entry, teamState = [], structureReport = null) {
+  const species = getTeamEntrySpeciesName(entry);
+  if (!species) return null;
+  const archetype = inferMovesetArchetype(structureReport, teamState);
+  const role = inferMovesetRole(entry, teamState, structureReport);
+  const originalMoves = getTeamEntryMoves(entry);
+  const originalItem = getTeamEntryItem(entry);
+  let moves = originalMoves.slice(0, 4);
+  const reasons = [];
+  const profile = getMovesetQualityProfile(species, role, archetype);
+  if (!profile) {
+    return { species, role, archetype, moves, item: originalItem, moveQualityScore: 0, setCoherenceScore: 0, badMovePenalty: 0, reasons };
+  }
+
+  const requiredMoves = [
+    ...(profile.coreMoves || []),
+    ...(((profile.archetypeRequiredMoves || {})[archetype]) || []),
+  ];
+
+  requiredMoves.forEach((requiredMove) => {
+    if (moves.includes(requiredMove)) return;
+    const replacementMoves = getPreferredReplacementMoves(species, role, archetype, moves);
+    const weakestMove = moves
+      .map((move) => ({ move, score: getMoveQualityScore(species, move, role, archetype) }))
+      .sort((a, b) => a.score - b.score)[0];
+    if (weakestMove?.move) {
+      moves = moves.map((move) => (move === weakestMove.move ? requiredMove : move));
+    } else if (moves.length < 4) {
+      moves.push(requiredMove);
+    } else if (replacementMoves.length) {
+      moves[0] = requiredMove;
+    }
+    reasons.push(`required ${requiredMove} for ${archetype || role} coherence`);
+  });
+
+  moves = moves.map((move) => {
+    const penalty = getBadMovePenalty(species, move, { role, archetype });
+    if (penalty < 24) return move;
+    const replacement = getPreferredReplacementMoves(species, role, archetype, moves)[0];
+    if (!replacement) return move;
+    reasons.push(`replaced ${move} with ${replacement}`);
+    return replacement;
+  });
+
+  moves = Array.from(new Set(moves.filter(Boolean))).slice(0, 4);
+  const fallbackMoves = getPreferredReplacementMoves(species, role, archetype, moves);
+  while (moves.length < 4 && fallbackMoves.length) {
+    const nextMove = fallbackMoves.shift();
+    if (!moves.includes(nextMove)) {
+      moves.push(nextMove);
+      reasons.push(`filled set with ${nextMove}`);
+    }
+  }
+
+  let item = originalItem;
+  if (getItemQualityScore(species, item, role, archetype, moves) < -8 && (profile.preferredItems || []).length) {
+    item = profile.preferredItems[0];
+    reasons.push(`replaced ${originalItem || "empty item"} with ${item}`);
+  }
+
+  setTeamEntryMoves(entry, moves);
+  setTeamEntryItem(entry, item);
+
+  const badMovePenalty = moves.reduce((sum, move) => sum + getBadMovePenalty(species, move, { role, archetype }), 0);
+  const moveQualityScore = moves.reduce((sum, move) => sum + getMoveQualityScore(species, move, role, archetype), 0);
+  const setCoherenceScore = getSetCoherenceScore(species, moves, item, role, archetype);
+
+  if (typeof window !== "undefined") {
+    window.__MBWR_MOVESET_DEBUG = window.__MBWR_MOVESET_DEBUG || [];
+    window.__MBWR_MOVESET_DEBUG.push({
+      species,
+      role,
+      archetype,
+      chosenMoves: moves.slice(),
+      chosenItem: item,
+      rejectedMoves: originalMoves.filter((move) => move && !moves.includes(move)),
+      moveQualityScore,
+      setCoherenceScore,
+      badMovePenalty,
+      whyChosen: reasons.slice(),
+    });
+    if (window.__MBWR_MOVESET_DEBUG.length > 200) {
+      window.__MBWR_MOVESET_DEBUG = window.__MBWR_MOVESET_DEBUG.slice(-200);
+    }
+  }
+
+  return { species, role, archetype, moves, item, moveQualityScore, setCoherenceScore, badMovePenalty, reasons };
+}
+
+function sanitizeAutobuilderTeamSets(teamState = [], structureReport = null) {
+  return (teamState || []).map((entry) => sanitizeAutobuilderSet(entry, teamState, structureReport)).filter(Boolean);
+}
+
+function getTeamMovesetQualitySummary(teamState = [], structureReport = null) {
+  const summaries = sanitizeAutobuilderTeamSets(teamState, structureReport);
+  const totalCoherence = summaries.reduce((sum, entry) => sum + entry.setCoherenceScore, 0);
+  const totalPenalty = summaries.reduce((sum, entry) => sum + entry.badMovePenalty, 0);
+  const totalMoveQuality = summaries.reduce((sum, entry) => sum + entry.moveQualityScore, 0);
+  return {
+    summaries,
+    totalCoherence,
+    totalPenalty,
+    totalMoveQuality,
+    totalScoreBonus: clampScore((totalCoherence * 0.22) + (totalMoveQuality * 0.08) - (totalPenalty * 0.18)),
+  };
+}
+
+function installEvaluateTeamStateMovesetPatch() {
+  if (typeof evaluateTeamState !== "function" || evaluateTeamState.__mbwrMovesetPatchApplied) {
+    return;
+  }
+  const originalEvaluateTeamState = evaluateTeamState;
+  evaluateTeamState = function patchedEvaluateTeamState(teamState, structureReport, ...rest) {
+    const safeTeamState = Array.isArray(teamState) ? teamState : [];
+    sanitizeAutobuilderTeamSets(safeTeamState, structureReport || null);
+    const result = originalEvaluateTeamState.call(this, safeTeamState, structureReport, ...rest);
+    const movesetQualitySummary = getTeamMovesetQualitySummary(safeTeamState, structureReport || null);
+    if (result && typeof result === "object") {
+      result.movesetQualitySummary = movesetQualitySummary;
+      if (typeof result.metaMatchupScore === "number") {
+        result.metaMatchupScore = clampScore(result.metaMatchupScore + movesetQualitySummary.totalScoreBonus);
+      }
+      if (typeof result.score === "number") {
+        result.score = clampScore(result.score + movesetQualitySummary.totalScoreBonus);
+      }
+      if (typeof result.totalScore === "number") {
+        result.totalScore = clampScore(result.totalScore + movesetQualitySummary.totalScoreBonus);
+      }
+    }
+    return result;
+  };
+  evaluateTeamState.__mbwrMovesetPatchApplied = true;
+}
+
+installEvaluateTeamStateMovesetPatch();
