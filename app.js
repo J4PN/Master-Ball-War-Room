@@ -210,6 +210,120 @@
     return clampLearnedNumber(weights[normalizeNameKey(moveName || "")], 0, -1, 1);
   }
 
+  function getLearnedSourceConfidenceWeight(sourceType = "") {
+    const defaults = getLearnedBuilderData().learnedWeights?.sourceConfidenceDefaults || {};
+    return clampLearnedNumber(defaults[normalizeNameKey(sourceType || "")], 0.55, 0.15, 1.2);
+  }
+
+  function getLearnedSourceSamplingWeight(sourceType = "") {
+    const weights = getLearnedBuilderData().learnedWeights?.sourceSamplingWeights || {};
+    return clampLearnedNumber(weights[normalizeNameKey(sourceType || "")], 0.55, 0.15, 1.5);
+  }
+
+  function getLearnedCombinedTeams() {
+    return getLearnedBuilderData().combinedTrainingPool?.teams || [];
+  }
+
+  function getLearnedSpeciesPoolWeight(speciesName, options = {}) {
+    const speciesKey = normalizeNameKey(speciesName || "");
+    if (!speciesKey) return 0;
+    const learnedTeams = getLearnedCombinedTeams();
+    if (!learnedTeams.length) return 0;
+    const archetypeHint = normalizeNameKey(options.archetypeHint || "");
+    const matches = learnedTeams.reduce((sum, row) => {
+      const teamSlots = Array.isArray(row?.team) ? row.team : [];
+      const contains = teamSlots.some((slot) => normalizeNameKey(slot?.name || "") === speciesKey);
+      if (!contains) return sum;
+      const sourceType = normalizeNameKey(row?.sourceType || "");
+      const confidence = clampLearnedNumber(row?.confidence, getLearnedSourceConfidenceWeight(sourceType), 0.1, 1.1);
+      const completeness = clampLearnedNumber(row?.completeness, 0.5, 0, 1);
+      const sourceWeight = getLearnedSourceSamplingWeight(sourceType) * getLearnedSourceConfidenceWeight(sourceType);
+      const archetypeBoost = archetypeHint && normalizeNameKey(row?.archetype || "").includes(archetypeHint) ? 1.25 : 1;
+      return sum + sourceWeight * confidence * (0.55 + completeness * 0.45) * archetypeBoost;
+    }, 0);
+    return matches / learnedTeams.length;
+  }
+
+  function getLearnedCandidateInfluence(entry, teamState = [], structureReport = null) {
+    const speciesKey = normalizeNameKey(entry?.name || "");
+    if (!speciesKey) return { score: 0, reasons: [], debug: {} };
+    const learnedTeams = getLearnedCombinedTeams();
+    const currentKeys = (teamState || []).filter((slot) => slot?.name).map((slot) => normalizeNameKey(slot.name));
+    const currentCount = currentKeys.length;
+    const archetypeHint = normalizeNameKey(structureReport?.label || structureReport?.summary || "");
+    const rolePrior = getLearnedRolePriorWeight(entry.name);
+    const poolWeight = getLearnedSpeciesPoolWeight(entry.name, { archetypeHint });
+    let shellMatch = 0;
+    let offShellPenalty = 0;
+    let pairingStrength = 0;
+
+    learnedTeams.forEach((row) => {
+      const sourceType = normalizeNameKey(row?.sourceType || "");
+      const teamSlots = Array.isArray(row?.team) ? row.team : [];
+      const teamKeys = teamSlots.map((slot) => normalizeNameKey(slot?.name || "")).filter(Boolean);
+      if (!teamKeys.length) return;
+      const containsCandidate = teamKeys.includes(speciesKey);
+      const overlapCount = currentKeys.filter((key) => teamKeys.includes(key)).length;
+      const overlapRatio = currentCount ? overlapCount / currentCount : 0;
+      const confidence = clampLearnedNumber(row?.confidence, getLearnedSourceConfidenceWeight(sourceType), 0.1, 1.1);
+      const completeness = clampLearnedNumber(row?.completeness, 0.5, 0, 1);
+      const sourceWeight = getLearnedSourceSamplingWeight(sourceType) * getLearnedSourceConfidenceWeight(sourceType);
+      const archetypeBoost = archetypeHint && normalizeNameKey(row?.archetype || "").includes(archetypeHint) ? 1.3 : 1;
+      const baseWeight = sourceWeight * confidence * (0.5 + completeness * 0.5) * archetypeBoost;
+      if (containsCandidate) {
+        pairingStrength += baseWeight;
+      }
+      if (currentCount && overlapCount > 0) {
+        if (containsCandidate) {
+          shellMatch += baseWeight * (1 + overlapRatio * 2.5);
+        } else if (overlapRatio >= 0.5) {
+          offShellPenalty += baseWeight * overlapRatio * 1.9;
+        }
+      }
+    });
+
+    let score = rolePrior * 26 + poolWeight * 34 + shellMatch * (currentCount >= 2 ? 18 : 10) - offShellPenalty * (currentCount >= 3 ? 16 : 7);
+    if (currentCount >= 4 && shellMatch < 0.45 && poolWeight < 0.08) score -= 12;
+    if (currentCount >= 5 && shellMatch < 0.35) score -= 9;
+    score = Math.max(-24, Math.min(58, score));
+
+    const reasons = [];
+    if (shellMatch >= 0.9) reasons.push("high learned shell match");
+    if (poolWeight >= 0.14) reasons.push("repeatedly appears in successful learned teams");
+    if (rolePrior >= 0.2) reasons.push("strong learned role prior");
+    if (offShellPenalty >= 0.45) reasons.push("off-shell compared with stronger learned completions");
+    if (currentCount >= 4 && score <= 0) reasons.push("late-slot filler risk");
+
+    const payload = {
+      score,
+      reasons,
+      debug: {
+        rolePrior,
+        poolWeight,
+        shellMatch,
+        offShellPenalty,
+        pairingStrength,
+        currentCount
+      }
+    };
+    if (typeof window !== "undefined") {
+      const debugStore = Array.isArray(window.__MBWR_LEARNED_BUILDER_DEBUG) ? window.__MBWR_LEARNED_BUILDER_DEBUG : [];
+      debugStore.push({
+        species: entry?.name || "",
+        score,
+        reasons,
+        rolePrior,
+        poolWeight,
+        shellMatch,
+        offShellPenalty,
+        pairingStrength,
+        currentCount
+      });
+      window.__MBWR_LEARNED_BUILDER_DEBUG = debugStore.slice(-60);
+    }
+    return payload;
+  }
+
   function getLearnedThreatPenaltyMultiplier(threatName) {
     const threatWeights = getLearnedBuilderData().learnedWeights?.threatSeverityWeights || {};
     const directPenalties = getLearnedBuilderData().threatPenalties?.byThreat || {};
@@ -4989,6 +5103,15 @@
         reasons.push(`Helps into ${weakness.attackType}.`);
       }
     });
+    const learnedInfluence = getLearnedCandidateInfluence(entry, teamState, structureReport);
+    const learnedWeights = getLearnedBuilderData().learnedWeights?.candidateScoreWeights || {};
+    const learnedThreatWeight = clampLearnedNumber(learnedWeights.threatPenalty, 12, 4, 24);
+    const learnedArchiveBias = clampLearnedNumber(learnedWeights.archiveBias, 3, 0, 10);
+    const currentTeamCount = (teamState || []).filter((slot) => slot?.name).length;
+    score += learnedInfluence.score;
+    if (learnedInfluence.debug.shellMatch >= 0.75) score += learnedArchiveBias * 1.6;
+    if (currentTeamCount >= 4 && learnedInfluence.debug.offShellPenalty >= 0.4) score -= learnedArchiveBias * 1.2;
+
     threats.forEach(({ threat, pressure }) => {
       const resists = threat.types.some((type) => getTypeEffectiveness(type, entry.types) < 1);
       const threatensBack = entry.types.some((stab) => threat.types.some((targetType) => getSingleTypeEffectiveness(stab, targetType) > 1));
@@ -5011,6 +5134,11 @@
         reasons.push(`Adds pressure into ${type}.`);
       }
     });
+
+    if (learnedInfluence.debug.poolWeight >= 0.12) score += learnedThreatWeight * 0.55;
+    if (learnedInfluence.debug.shellMatch >= 1.1) score += learnedThreatWeight * 0.7;
+    if (currentTeamCount >= 5 && learnedInfluence.debug.shellMatch < 0.35) score -= learnedThreatWeight * 0.8;
+    if (currentTeamCount >= 4 && learnedInfluence.debug.poolWeight < 0.05 && learnedInfluence.debug.rolePrior <= 0) score -= 10;
     const hasSpeedControl = (structureReport.speedControlCount || 0) > 0;
     const hasTrickRoom = (structureReport.trickRoomCount || 0) > 0;
     const disruptionLead = ["fake out", "encore", "taunt", "electroweb", "icy wind", "nuzzle", "parting shot"];
