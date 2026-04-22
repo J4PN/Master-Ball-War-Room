@@ -1,9 +1,9 @@
 {
-  "updatedAt": null,
+  "updatedAt": "2026-04-22T22:52:53+00:00",
   "teams": [
     {
-      "source": "seed",
-      "label": "pivot-tailwind-shell",
+      "source": "archive",
+      "label": "archivepivottailwindshell",
       "team": [
         "Incineroar",
         "Whimsicott",
@@ -12,11 +12,12 @@
         "Kingambit",
         "Starmie"
       ],
-      "score": 0.58
+      "score": 0.69,
+      "confidence": 0.762
     },
     {
-      "source": "seed",
-      "label": "rain-pressure-shell",
+      "source": "archive",
+      "label": "archiverainpressureshell",
       "team": [
         "Pelipper",
         "Basculegion",
@@ -25,7 +26,172 @@
         "Garchomp",
         "Sinistcha"
       ],
-      "score": 0.55
+      "score": 0.687,
+      "confidence": 0.762
+    },
+    {
+      "source": "pikalytics",
+      "label": "pikalyticscuratedpikalyticsimportpelipperbasculegionincineroarwhimsicottarchaludongarchomp",
+      "team": [
+        "Pelipper",
+        "Basculegion",
+        "Incineroar",
+        "Whimsicott",
+        "Archaludon",
+        "Garchomp"
+      ],
+      "score": 0.692,
+      "confidence": 0.992
+    },
+    {
+      "source": "pikalytics",
+      "label": "pikalyticspikalyticschampionssnapshotincineroarwhimsicottgarchompsinistchakingambitpelipper",
+      "team": [
+        "Incineroar",
+        "Whimsicott",
+        "Garchomp",
+        "Sinistcha",
+        "Kingambit",
+        "Pelipper"
+      ],
+      "score": 0.691,
+      "confidence": 0.97
+    },
+    {
+      "source": "youtube",
+      "label": "youtubecuratedyoutubeshowcaseteamincineroargarchompwhimsicottstarmiedragoniterotomwash",
+      "team": [
+        "Incineroar",
+        "Garchomp",
+        "Whimsicott",
+        "Starmie",
+        "Dragonite",
+        "Rotom-Wash"
+      ],
+      "score": 0.713,
+      "confidence": 0.843
+    },
+    {
+      "source": "reddit",
+      "label": "redditcuratedredditbalanceteamincineroarstarmiegarchompwhimsicottkingambitpelipper",
+      "team": [
+        "Incineroar",
+        "Starmie",
+        "Garchomp",
+        "Whimsicott",
+        "Kingambit",
+        "Pelipper"
+      ],
+      "score": 0.694,
+      "confidence": 0.865
+    },
+    {
+      "source": "reddit",
+      "label": "redditrstunfiskpostpelipperbasculegionincineroarwhimsicott",
+      "team": [
+        "Pelipper",
+        "Basculegion",
+        "Incineroar",
+        "Whimsicott"
+      ],
+      "score": 0.717,
+      "confidence": 0.685
+    },
+    {
+      "source": "youtube",
+      "label": "youtubeyoutubedescriptionextractincineroargarchompstarmiewhimsicott",
+      "team": [
+        "Incineroar",
+        "Garchomp",
+        "Starmie",
+        "Whimsicott"
+      ],
+      "score": 0.718,
+      "confidence": 0.502
+    },
+    {
+      "source": "selfplay",
+      "label": "selfplayselfbuiltbgarchompsinistchastarmieincineroardragoniterotomwash",
+      "team": [
+        "Garchomp",
+        "Sinistcha",
+        "Starmie",
+        "Incineroar",
+        "Dragonite",
+        "Rotom-Wash"
+      ],
+      "score": 0.717,
+      "confidence": 0.485
+    },
+    {
+      "source": "selfplay",
+      "label": "selfplayselfbuiltaincineroarwhimsicottpelipperbasculegionkingambitfarigiraf",
+      "team": [
+        "Incineroar",
+        "Whimsicott",
+        "Pelipper",
+        "Basculegion",
+        "Kingambit",
+        "Farigiraf"
+      ],
+      "score": 0.699,
+      "confidence": 0.485
+    },
+    {
+      "source": "selfplay",
+      "label": "generated25",
+      "team": [
+        "Gengar",
+        "Archaludon",
+        "Dragonite",
+        "Farigiraf",
+        "Rotom-Wash",
+        "Kingambit"
+      ],
+      "score": 0.742,
+      "confidence": 0.445
+    },
+    {
+      "source": "selfplay",
+      "label": "generated22",
+      "team": [
+        "Gengar",
+        "Tyranitar",
+        "Dragonite",
+        "Basculegion",
+        "Rotom-Wash",
+        "Kingambit"
+      ],
+      "score": 0.739,
+      "confidence": 0.445
+    },
+    {
+      "source": "selfplay",
+      "label": "generated10",
+      "team": [
+        "Gengar",
+        "Pelipper",
+        "Dragonite",
+        "Farigiraf",
+        "Starmie",
+        "Basculegion"
+      ],
+      "score": 0.729,
+      "confidence": 0.445
+    },
+    {
+      "source": "selfplay",
+      "label": "generated29",
+      "team": [
+        "Gengar",
+        "Pelipper",
+        "Dragonite",
+        "Farigiraf",
+        "Archaludon",
+        "Kingambit"
+      ],
+      "score": 0.729,
+      "confidence": 0.445
     }
   ]
 }

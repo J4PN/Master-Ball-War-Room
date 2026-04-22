@@ -1,17 +1,57 @@
 {
-  "updatedAt": null,
+  "updatedAt": "2026-04-22T22:52:53+00:00",
   "byThreat": {
     "incineroar": {
-      "multiplier": 1.2,
-      "notes": "Physical-heavy teams still need stronger Intimidate insurance."
+      "multiplier": 1.503,
+      "notes": "Observed in archive, meta, pikalytics, reddit, selfplay, youtube source pools."
     },
     "sneasler": {
       "multiplier": 1.1,
       "notes": "Fast disruption remains a top pressure source."
     },
     "garchomp": {
-      "multiplier": 1.08,
-      "notes": "Spread pressure punishes limited switch structures."
+      "multiplier": 1.536,
+      "notes": "Observed in archive, meta, pikalytics, reddit, selfplay, youtube source pools."
+    },
+    "whimsicott": {
+      "multiplier": 1.581,
+      "notes": "Observed in archive, meta, pikalytics, reddit, selfplay, youtube source pools."
+    },
+    "pelipper": {
+      "multiplier": 1.527,
+      "notes": "Observed in archive, meta, pikalytics, reddit, selfplay source pools."
+    },
+    "kingambit": {
+      "multiplier": 1.241,
+      "notes": "Observed in archive, meta, pikalytics, reddit, selfplay source pools."
+    },
+    "basculegion": {
+      "multiplier": 1.296,
+      "notes": "Observed in archive, meta, pikalytics, reddit, selfplay source pools."
+    },
+    "sinistcha": {
+      "multiplier": 1.222,
+      "notes": "Observed in archive, meta, pikalytics, selfplay source pools."
+    },
+    "starmie": {
+      "multiplier": 1.177,
+      "notes": "Observed in archive, reddit, selfplay, youtube source pools."
+    },
+    "archaludon": {
+      "multiplier": 1.207,
+      "notes": "Observed in meta, pikalytics source pools."
+    },
+    "dragonite": {
+      "multiplier": 1.148,
+      "notes": "Observed in selfplay, youtube source pools."
+    },
+    "rotomwash": {
+      "multiplier": 1.148,
+      "notes": "Observed in selfplay, youtube source pools."
+    },
+    "farigiraf": {
+      "multiplier": 1.119,
+      "notes": "Observed in selfplay source pools."
     }
   }
 }

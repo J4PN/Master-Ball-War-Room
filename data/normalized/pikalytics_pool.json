@@ -1,6 +1,198 @@
 {
-  "updatedAt": null,
+  "updatedAt": "2026-04-22T22:52:52+00:00",
   "sourceType": "pikalytics",
-  "notes": "Generated remotely from Pikalytics-derived snapshots and curated imports.",
-  "teams": []
+  "notes": "Built from raw Pikalytics-derived snapshots and curated imports.",
+  "teams": [
+    {
+      "id": "pikalyticspikalyticschampionssnapshotincineroarwhimsicottgarchompsinistchakingambitpelipper",
+      "sourceType": "pikalytics",
+      "sourceName": "Pikalytics Champions snapshot",
+      "sourceUrl": "https://www.pikalytics.com/pokedex/championspreview",
+      "archetype": "pivot-balance",
+      "team": [
+        {
+          "name": "Incineroar",
+          "item": "Sitrus Berry",
+          "ability": "Intimidate",
+          "moves": [
+            "Fake Out",
+            "Flare Blitz",
+            "Parting Shot",
+            "Knock Off"
+          ],
+          "nature": "Careful",
+          "spreads": {}
+        },
+        {
+          "name": "Whimsicott",
+          "item": "Focus Sash",
+          "ability": "Prankster",
+          "moves": [
+            "Tailwind",
+            "Moonblast",
+            "Encore",
+            "Protect"
+          ],
+          "nature": "Timid",
+          "spreads": {}
+        },
+        {
+          "name": "Garchomp",
+          "item": "Choice Scarf",
+          "ability": "Rough Skin",
+          "moves": [
+            "Earthquake",
+            "Rock Slide",
+            "Dragon Claw",
+            "Protect"
+          ],
+          "nature": "Jolly",
+          "spreads": {}
+        },
+        {
+          "name": "Sinistcha",
+          "item": "Leftovers",
+          "ability": "Hospitality",
+          "moves": [
+            "Matcha Gotcha",
+            "Shadow Ball",
+            "Rage Powder",
+            "Protect"
+          ],
+          "nature": "Sassy",
+          "spreads": {}
+        },
+        {
+          "name": "Kingambit",
+          "item": "Black Glasses",
+          "ability": "Defiant",
+          "moves": [
+            "Sucker Punch",
+            "Kowtow Cleave",
+            "Low Kick",
+            "Protect"
+          ],
+          "nature": "Adamant",
+          "spreads": {}
+        },
+        {
+          "name": "Pelipper",
+          "item": "Choice Scarf",
+          "ability": "Drizzle",
+          "moves": [
+            "Hurricane",
+            "Muddy Water",
+            "Tailwind",
+            "Protect"
+          ],
+          "nature": "Timid",
+          "spreads": {}
+        }
+      ],
+      "confidence": 0.96,
+      "completeness": 1.0,
+      "tags": [
+        "pikalytics",
+        "meta"
+      ],
+      "importStrategy": "raw-snapshot",
+      "notes": "Processed from checked-in Pikalytics-derived raw snapshot."
+    },
+    {
+      "id": "pikalyticscuratedpikalyticsimportpelipperbasculegionincineroarwhimsicottarchaludongarchomp",
+      "sourceType": "pikalytics",
+      "sourceName": "Curated Pikalytics import",
+      "sourceUrl": "https://www.pikalytics.com/pokedex/championspreview",
+      "archetype": "rain-balance",
+      "team": [
+        {
+          "name": "Pelipper",
+          "item": "Choice Scarf",
+          "ability": "Drizzle",
+          "moves": [
+            "Hurricane",
+            "Tailwind",
+            "Protect",
+            "Muddy Water"
+          ],
+          "nature": "Timid",
+          "spreads": {}
+        },
+        {
+          "name": "Basculegion",
+          "item": "Choice Scarf",
+          "ability": "Adaptability",
+          "moves": [
+            "Last Respects",
+            "Wave Crash",
+            "Flip Turn",
+            "Aqua Jet"
+          ],
+          "nature": "Adamant",
+          "spreads": {}
+        },
+        {
+          "name": "Incineroar",
+          "item": "Sitrus Berry",
+          "ability": "Intimidate",
+          "moves": [
+            "Fake Out",
+            "Parting Shot",
+            "Flare Blitz",
+            "Knock Off"
+          ],
+          "nature": "Careful",
+          "spreads": {}
+        },
+        {
+          "name": "Whimsicott",
+          "item": "Focus Sash",
+          "ability": "Prankster",
+          "moves": [
+            "Tailwind",
+            "Encore",
+            "Moonblast",
+            "Protect"
+          ],
+          "nature": "Timid",
+          "spreads": {}
+        },
+        {
+          "name": "Archaludon",
+          "item": "Assault Vest",
+          "ability": "Stamina",
+          "moves": [
+            "Flash Cannon",
+            "Electro Shot",
+            "Draco Meteor",
+            "Snarl"
+          ],
+          "nature": "Modest",
+          "spreads": {}
+        },
+        {
+          "name": "Garchomp",
+          "item": "Clear Amulet",
+          "ability": "Rough Skin",
+          "moves": [
+            "Earthquake",
+            "Rock Slide",
+            "Protect",
+            "Dragon Claw"
+          ],
+          "nature": "Jolly",
+          "spreads": {}
+        }
+      ],
+      "confidence": 0.99,
+      "completeness": 1.0,
+      "tags": [
+        "pikalytics",
+        "meta",
+        "curated"
+      ],
+      "importStrategy": "curated-import",
+      "notes": "Manually curated from a stable snapshot."
+    }
+  ]
 }

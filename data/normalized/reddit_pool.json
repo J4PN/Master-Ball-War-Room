@@ -1,6 +1,165 @@
 {
-  "updatedAt": null,
+  "updatedAt": "2026-04-22T22:52:52+00:00",
   "sourceType": "reddit",
-  "notes": "Generated remotely from Reddit snapshots and curated imports.",
-  "teams": []
+  "notes": "Built from checked-in Reddit raw snapshots and curated imports.",
+  "teams": [
+    {
+      "id": "redditrstunfiskpostpelipperbasculegionincineroarwhimsicott",
+      "sourceType": "reddit",
+      "sourceName": "r/stunfisk post",
+      "sourceUrl": "https://www.reddit.com/r/stunfisk/example-rain-shell",
+      "archetype": "rain",
+      "team": [
+        {
+          "name": "Pelipper",
+          "item": "Focus Sash",
+          "ability": "Drizzle",
+          "moves": [
+            "Tailwind",
+            "Hurricane"
+          ],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Basculegion",
+          "item": "Choice Scarf",
+          "ability": "Adaptability",
+          "moves": [
+            "Last Respects",
+            "Wave Crash"
+          ],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Incineroar",
+          "item": "Safety Goggles",
+          "ability": "Intimidate",
+          "moves": [
+            "Fake Out",
+            "Parting Shot"
+          ],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Whimsicott",
+          "item": "",
+          "ability": "",
+          "moves": [
+            "Tailwind",
+            "Encore"
+          ],
+          "nature": "",
+          "spreads": {}
+        }
+      ],
+      "confidence": 0.68,
+      "completeness": 0.7,
+      "tags": [
+        "reddit",
+        "community",
+        "pokepaste"
+      ],
+      "importStrategy": "raw-thread-parse",
+      "notes": "Partial post body plus Pokepaste summary."
+    },
+    {
+      "id": "redditcuratedredditbalanceteamincineroarstarmiegarchompwhimsicottkingambitpelipper",
+      "sourceType": "reddit",
+      "sourceName": "Curated Reddit balance team",
+      "sourceUrl": "https://www.reddit.com/r/stunfisk/example-balance-team",
+      "archetype": "balance",
+      "team": [
+        {
+          "name": "Incineroar",
+          "item": "Safety Goggles",
+          "ability": "Intimidate",
+          "moves": [
+            "Fake Out",
+            "Parting Shot",
+            "Will-O-Wisp",
+            "Knock Off"
+          ],
+          "nature": "Careful",
+          "spreads": {}
+        },
+        {
+          "name": "Starmie",
+          "item": "Life Orb",
+          "ability": "Natural Cure",
+          "moves": [
+            "Hydro Pump",
+            "Ice Beam",
+            "Psychic",
+            "Protect"
+          ],
+          "nature": "Timid",
+          "spreads": {}
+        },
+        {
+          "name": "Garchomp",
+          "item": "Clear Amulet",
+          "ability": "Rough Skin",
+          "moves": [
+            "Earthquake",
+            "Rock Slide",
+            "Swords Dance",
+            "Protect"
+          ],
+          "nature": "Jolly",
+          "spreads": {}
+        },
+        {
+          "name": "Whimsicott",
+          "item": "Focus Sash",
+          "ability": "Prankster",
+          "moves": [
+            "Tailwind",
+            "Encore",
+            "Moonblast",
+            "Protect"
+          ],
+          "nature": "Timid",
+          "spreads": {}
+        },
+        {
+          "name": "Kingambit",
+          "item": "Black Glasses",
+          "ability": "Defiant",
+          "moves": [
+            "Sucker Punch",
+            "Kowtow Cleave",
+            "Protect",
+            "Low Kick"
+          ],
+          "nature": "Adamant",
+          "spreads": {}
+        },
+        {
+          "name": "Pelipper",
+          "item": "Covert Cloak",
+          "ability": "Drizzle",
+          "moves": [
+            "Tailwind",
+            "Hurricane",
+            "Muddy Water",
+            "Protect"
+          ],
+          "nature": "Timid",
+          "spreads": {}
+        }
+      ],
+      "confidence": 0.82,
+      "completeness": 1.0,
+      "tags": [
+        "reddit",
+        "curated",
+        "verified"
+      ],
+      "importStrategy": "curated-import",
+      "notes": "Human-curated from Reddit post and linked paste."
+    }
+  ]
 }

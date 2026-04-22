@@ -1,6 +1,161 @@
 {
-  "updatedAt": null,
+  "updatedAt": "2026-04-22T22:52:53+00:00",
   "sourceType": "youtube",
-  "notes": "Generated remotely from YouTube snapshots and curated imports.",
-  "teams": []
+  "notes": "Built from checked-in YouTube raw snapshots and curated imports.",
+  "teams": [
+    {
+      "id": "youtubeyoutubedescriptionextractincineroargarchompstarmiewhimsicott",
+      "sourceType": "youtube",
+      "sourceName": "YouTube description extract",
+      "sourceUrl": "https://www.youtube.com/watch?v=example",
+      "archetype": "bulky-offense",
+      "team": [
+        {
+          "name": "Incineroar",
+          "item": "",
+          "ability": "",
+          "moves": [
+            "Fake Out",
+            "Parting Shot"
+          ],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Garchomp",
+          "item": "",
+          "ability": "",
+          "moves": [
+            "Earthquake",
+            "Rock Slide"
+          ],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Starmie",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Whimsicott",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        }
+      ],
+      "confidence": 0.57,
+      "completeness": 0.3,
+      "tags": [
+        "youtube",
+        "community",
+        "description",
+        "pinned-comment",
+        "partial"
+      ],
+      "importStrategy": "description-or-comment-parse",
+      "notes": "Partial team inferred from description and pinned comment; incomplete on purpose."
+    },
+    {
+      "id": "youtubecuratedyoutubeshowcaseteamincineroargarchompwhimsicottstarmiedragoniterotomwash",
+      "sourceType": "youtube",
+      "sourceName": "Curated YouTube showcase team",
+      "sourceUrl": "https://www.youtube.com/watch?v=example-curated",
+      "archetype": "fast-offense",
+      "team": [
+        {
+          "name": "Incineroar",
+          "item": "Sitrus Berry",
+          "ability": "Intimidate",
+          "moves": [
+            "Fake Out",
+            "Parting Shot",
+            "Flare Blitz",
+            "Knock Off"
+          ],
+          "nature": "Careful",
+          "spreads": {}
+        },
+        {
+          "name": "Garchomp",
+          "item": "Choice Scarf",
+          "ability": "Rough Skin",
+          "moves": [
+            "Earthquake",
+            "Rock Slide",
+            "Dragon Claw",
+            "Protect"
+          ],
+          "nature": "Jolly",
+          "spreads": {}
+        },
+        {
+          "name": "Whimsicott",
+          "item": "Focus Sash",
+          "ability": "Prankster",
+          "moves": [
+            "Tailwind",
+            "Encore",
+            "Moonblast",
+            "Protect"
+          ],
+          "nature": "Timid",
+          "spreads": {}
+        },
+        {
+          "name": "Starmie",
+          "item": "Life Orb",
+          "ability": "Analytic",
+          "moves": [
+            "Hydro Pump",
+            "Ice Beam",
+            "Thunderbolt",
+            "Protect"
+          ],
+          "nature": "Timid",
+          "spreads": {}
+        },
+        {
+          "name": "Dragonite",
+          "item": "Dragoninite",
+          "ability": "Multiscale",
+          "moves": [
+            "Extreme Speed",
+            "Dragon Claw",
+            "Fire Punch",
+            "Protect"
+          ],
+          "nature": "Adamant",
+          "spreads": {}
+        },
+        {
+          "name": "Rotom-Wash",
+          "item": "Sitrus Berry",
+          "ability": "Levitate",
+          "moves": [
+            "Thunderbolt",
+            "Hydro Pump",
+            "Volt Switch",
+            "Protect"
+          ],
+          "nature": "Calm",
+          "spreads": {}
+        }
+      ],
+      "confidence": 0.79,
+      "completeness": 1.0,
+      "tags": [
+        "youtube",
+        "curated",
+        "verified"
+      ],
+      "importStrategy": "curated-import",
+      "notes": "Curated from video description and on-screen team sheet."
+    }
+  ]
 }

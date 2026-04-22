@@ -1,5 +1,157 @@
 {
-  "updatedAt": null,
-  "sources": [],
-  "threats": []
+  "updatedAt": "2026-04-22T22:52:53+00:00",
+  "sources": [
+    "archive",
+    "meta",
+    "pikalytics",
+    "reddit",
+    "selfplay",
+    "youtube"
+  ],
+  "threats": [
+    {
+      "name": "incineroar",
+      "displayName": "incineroar",
+      "importance": 1.8,
+      "sources": [
+        "archive",
+        "meta",
+        "pikalytics",
+        "reddit",
+        "selfplay",
+        "youtube"
+      ],
+      "notes": "Observed in archive, meta, pikalytics, reddit, selfplay, youtube source pools."
+    },
+    {
+      "name": "whimsicott",
+      "displayName": "whimsicott",
+      "importance": 1.734,
+      "sources": [
+        "archive",
+        "meta",
+        "pikalytics",
+        "reddit",
+        "selfplay",
+        "youtube"
+      ],
+      "notes": "Observed in archive, meta, pikalytics, reddit, selfplay, youtube source pools."
+    },
+    {
+      "name": "garchomp",
+      "displayName": "garchomp",
+      "importance": 1.632,
+      "sources": [
+        "archive",
+        "meta",
+        "pikalytics",
+        "reddit",
+        "selfplay",
+        "youtube"
+      ],
+      "notes": "Observed in archive, meta, pikalytics, reddit, selfplay, youtube source pools."
+    },
+    {
+      "name": "pelipper",
+      "displayName": "pelipper",
+      "importance": 1.57,
+      "sources": [
+        "archive",
+        "meta",
+        "pikalytics",
+        "reddit",
+        "selfplay"
+      ],
+      "notes": "Observed in archive, meta, pikalytics, reddit, selfplay source pools."
+    },
+    {
+      "name": "kingambit",
+      "displayName": "kingambit",
+      "importance": 0.828,
+      "sources": [
+        "archive",
+        "meta",
+        "pikalytics",
+        "reddit",
+        "selfplay"
+      ],
+      "notes": "Observed in archive, meta, pikalytics, reddit, selfplay source pools."
+    },
+    {
+      "name": "basculegion",
+      "displayName": "basculegion",
+      "importance": 0.807,
+      "sources": [
+        "archive",
+        "meta",
+        "pikalytics",
+        "reddit",
+        "selfplay"
+      ],
+      "notes": "Observed in archive, meta, pikalytics, reddit, selfplay source pools."
+    },
+    {
+      "name": "sinistcha",
+      "displayName": "sinistcha",
+      "importance": 0.699,
+      "sources": [
+        "archive",
+        "meta",
+        "pikalytics",
+        "selfplay"
+      ],
+      "notes": "Observed in archive, meta, pikalytics, selfplay source pools."
+    },
+    {
+      "name": "starmie",
+      "displayName": "starmie",
+      "importance": 0.6,
+      "sources": [
+        "archive",
+        "reddit",
+        "selfplay",
+        "youtube"
+      ],
+      "notes": "Observed in archive, reddit, selfplay, youtube source pools."
+    },
+    {
+      "name": "archaludon",
+      "displayName": "archaludon",
+      "importance": 0.6,
+      "sources": [
+        "meta",
+        "pikalytics"
+      ],
+      "notes": "Observed in meta, pikalytics source pools."
+    },
+    {
+      "name": "dragonite",
+      "displayName": "dragonite",
+      "importance": 0.6,
+      "sources": [
+        "selfplay",
+        "youtube"
+      ],
+      "notes": "Observed in selfplay, youtube source pools."
+    },
+    {
+      "name": "rotomwash",
+      "displayName": "rotomwash",
+      "importance": 0.6,
+      "sources": [
+        "selfplay",
+        "youtube"
+      ],
+      "notes": "Observed in selfplay, youtube source pools."
+    },
+    {
+      "name": "farigiraf",
+      "displayName": "farigiraf",
+      "importance": 0.6,
+      "sources": [
+        "selfplay"
+      ],
+      "notes": "Observed in selfplay source pools."
+    }
+  ]
 }

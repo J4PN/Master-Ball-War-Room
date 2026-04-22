@@ -1,4 +1,3097 @@
 {
-  "updatedAt": null,
-  "teams": []
+  "updatedAt": "2026-04-22T22:52:53+00:00",
+  "teams": [
+    {
+      "id": "pikalyticspikalyticschampionssnapshotincineroarwhimsicottgarchompsinistchakingambitpelipper",
+      "sourceType": "pikalytics",
+      "sourceName": "Pikalytics Champions snapshot",
+      "sourceUrl": "https://www.pikalytics.com/pokedex/championspreview",
+      "archetype": "pivot-balance",
+      "team": [
+        {
+          "name": "Incineroar",
+          "item": "Sitrus Berry",
+          "ability": "Intimidate",
+          "moves": [
+            "Fake Out",
+            "Flare Blitz",
+            "Parting Shot",
+            "Knock Off"
+          ],
+          "nature": "Careful",
+          "spreads": {}
+        },
+        {
+          "name": "Whimsicott",
+          "item": "Focus Sash",
+          "ability": "Prankster",
+          "moves": [
+            "Tailwind",
+            "Moonblast",
+            "Encore",
+            "Protect"
+          ],
+          "nature": "Timid",
+          "spreads": {}
+        },
+        {
+          "name": "Garchomp",
+          "item": "Choice Scarf",
+          "ability": "Rough Skin",
+          "moves": [
+            "Earthquake",
+            "Rock Slide",
+            "Dragon Claw",
+            "Protect"
+          ],
+          "nature": "Jolly",
+          "spreads": {}
+        },
+        {
+          "name": "Sinistcha",
+          "item": "Leftovers",
+          "ability": "Hospitality",
+          "moves": [
+            "Matcha Gotcha",
+            "Shadow Ball",
+            "Rage Powder",
+            "Protect"
+          ],
+          "nature": "Sassy",
+          "spreads": {}
+        },
+        {
+          "name": "Kingambit",
+          "item": "Black Glasses",
+          "ability": "Defiant",
+          "moves": [
+            "Sucker Punch",
+            "Kowtow Cleave",
+            "Low Kick",
+            "Protect"
+          ],
+          "nature": "Adamant",
+          "spreads": {}
+        },
+        {
+          "name": "Pelipper",
+          "item": "Choice Scarf",
+          "ability": "Drizzle",
+          "moves": [
+            "Hurricane",
+            "Muddy Water",
+            "Tailwind",
+            "Protect"
+          ],
+          "nature": "Timid",
+          "spreads": {}
+        }
+      ],
+      "confidence": 0.96,
+      "completeness": 1.0,
+      "tags": [
+        "pikalytics",
+        "meta"
+      ],
+      "importStrategy": "raw-snapshot",
+      "notes": "Processed from checked-in Pikalytics-derived raw snapshot."
+    },
+    {
+      "id": "pikalyticscuratedpikalyticsimportpelipperbasculegionincineroarwhimsicottarchaludongarchomp",
+      "sourceType": "pikalytics",
+      "sourceName": "Curated Pikalytics import",
+      "sourceUrl": "https://www.pikalytics.com/pokedex/championspreview",
+      "archetype": "rain-balance",
+      "team": [
+        {
+          "name": "Pelipper",
+          "item": "Choice Scarf",
+          "ability": "Drizzle",
+          "moves": [
+            "Hurricane",
+            "Tailwind",
+            "Protect",
+            "Muddy Water"
+          ],
+          "nature": "Timid",
+          "spreads": {}
+        },
+        {
+          "name": "Basculegion",
+          "item": "Choice Scarf",
+          "ability": "Adaptability",
+          "moves": [
+            "Last Respects",
+            "Wave Crash",
+            "Flip Turn",
+            "Aqua Jet"
+          ],
+          "nature": "Adamant",
+          "spreads": {}
+        },
+        {
+          "name": "Incineroar",
+          "item": "Sitrus Berry",
+          "ability": "Intimidate",
+          "moves": [
+            "Fake Out",
+            "Parting Shot",
+            "Flare Blitz",
+            "Knock Off"
+          ],
+          "nature": "Careful",
+          "spreads": {}
+        },
+        {
+          "name": "Whimsicott",
+          "item": "Focus Sash",
+          "ability": "Prankster",
+          "moves": [
+            "Tailwind",
+            "Encore",
+            "Moonblast",
+            "Protect"
+          ],
+          "nature": "Timid",
+          "spreads": {}
+        },
+        {
+          "name": "Archaludon",
+          "item": "Assault Vest",
+          "ability": "Stamina",
+          "moves": [
+            "Flash Cannon",
+            "Electro Shot",
+            "Draco Meteor",
+            "Snarl"
+          ],
+          "nature": "Modest",
+          "spreads": {}
+        },
+        {
+          "name": "Garchomp",
+          "item": "Clear Amulet",
+          "ability": "Rough Skin",
+          "moves": [
+            "Earthquake",
+            "Rock Slide",
+            "Protect",
+            "Dragon Claw"
+          ],
+          "nature": "Jolly",
+          "spreads": {}
+        }
+      ],
+      "confidence": 0.99,
+      "completeness": 1.0,
+      "tags": [
+        "pikalytics",
+        "meta",
+        "curated"
+      ],
+      "importStrategy": "curated-import",
+      "notes": "Manually curated from a stable snapshot."
+    },
+    {
+      "id": "redditrstunfiskpostpelipperbasculegionincineroarwhimsicott",
+      "sourceType": "reddit",
+      "sourceName": "r/stunfisk post",
+      "sourceUrl": "https://www.reddit.com/r/stunfisk/example-rain-shell",
+      "archetype": "rain",
+      "team": [
+        {
+          "name": "Pelipper",
+          "item": "Focus Sash",
+          "ability": "Drizzle",
+          "moves": [
+            "Tailwind",
+            "Hurricane"
+          ],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Basculegion",
+          "item": "Choice Scarf",
+          "ability": "Adaptability",
+          "moves": [
+            "Last Respects",
+            "Wave Crash"
+          ],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Incineroar",
+          "item": "Safety Goggles",
+          "ability": "Intimidate",
+          "moves": [
+            "Fake Out",
+            "Parting Shot"
+          ],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Whimsicott",
+          "item": "",
+          "ability": "",
+          "moves": [
+            "Tailwind",
+            "Encore"
+          ],
+          "nature": "",
+          "spreads": {}
+        }
+      ],
+      "confidence": 0.68,
+      "completeness": 0.7,
+      "tags": [
+        "reddit",
+        "community",
+        "pokepaste"
+      ],
+      "importStrategy": "raw-thread-parse",
+      "notes": "Partial post body plus Pokepaste summary."
+    },
+    {
+      "id": "redditcuratedredditbalanceteamincineroarstarmiegarchompwhimsicottkingambitpelipper",
+      "sourceType": "reddit",
+      "sourceName": "Curated Reddit balance team",
+      "sourceUrl": "https://www.reddit.com/r/stunfisk/example-balance-team",
+      "archetype": "balance",
+      "team": [
+        {
+          "name": "Incineroar",
+          "item": "Safety Goggles",
+          "ability": "Intimidate",
+          "moves": [
+            "Fake Out",
+            "Parting Shot",
+            "Will-O-Wisp",
+            "Knock Off"
+          ],
+          "nature": "Careful",
+          "spreads": {}
+        },
+        {
+          "name": "Starmie",
+          "item": "Life Orb",
+          "ability": "Natural Cure",
+          "moves": [
+            "Hydro Pump",
+            "Ice Beam",
+            "Psychic",
+            "Protect"
+          ],
+          "nature": "Timid",
+          "spreads": {}
+        },
+        {
+          "name": "Garchomp",
+          "item": "Clear Amulet",
+          "ability": "Rough Skin",
+          "moves": [
+            "Earthquake",
+            "Rock Slide",
+            "Swords Dance",
+            "Protect"
+          ],
+          "nature": "Jolly",
+          "spreads": {}
+        },
+        {
+          "name": "Whimsicott",
+          "item": "Focus Sash",
+          "ability": "Prankster",
+          "moves": [
+            "Tailwind",
+            "Encore",
+            "Moonblast",
+            "Protect"
+          ],
+          "nature": "Timid",
+          "spreads": {}
+        },
+        {
+          "name": "Kingambit",
+          "item": "Black Glasses",
+          "ability": "Defiant",
+          "moves": [
+            "Sucker Punch",
+            "Kowtow Cleave",
+            "Protect",
+            "Low Kick"
+          ],
+          "nature": "Adamant",
+          "spreads": {}
+        },
+        {
+          "name": "Pelipper",
+          "item": "Covert Cloak",
+          "ability": "Drizzle",
+          "moves": [
+            "Tailwind",
+            "Hurricane",
+            "Muddy Water",
+            "Protect"
+          ],
+          "nature": "Timid",
+          "spreads": {}
+        }
+      ],
+      "confidence": 0.82,
+      "completeness": 1.0,
+      "tags": [
+        "reddit",
+        "curated",
+        "verified"
+      ],
+      "importStrategy": "curated-import",
+      "notes": "Human-curated from Reddit post and linked paste."
+    },
+    {
+      "id": "youtubeyoutubedescriptionextractincineroargarchompstarmiewhimsicott",
+      "sourceType": "youtube",
+      "sourceName": "YouTube description extract",
+      "sourceUrl": "https://www.youtube.com/watch?v=example",
+      "archetype": "bulky-offense",
+      "team": [
+        {
+          "name": "Incineroar",
+          "item": "",
+          "ability": "",
+          "moves": [
+            "Fake Out",
+            "Parting Shot"
+          ],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Garchomp",
+          "item": "",
+          "ability": "",
+          "moves": [
+            "Earthquake",
+            "Rock Slide"
+          ],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Starmie",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Whimsicott",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        }
+      ],
+      "confidence": 0.57,
+      "completeness": 0.3,
+      "tags": [
+        "youtube",
+        "community",
+        "description",
+        "pinned-comment",
+        "partial"
+      ],
+      "importStrategy": "description-or-comment-parse",
+      "notes": "Partial team inferred from description and pinned comment; incomplete on purpose."
+    },
+    {
+      "id": "youtubecuratedyoutubeshowcaseteamincineroargarchompwhimsicottstarmiedragoniterotomwash",
+      "sourceType": "youtube",
+      "sourceName": "Curated YouTube showcase team",
+      "sourceUrl": "https://www.youtube.com/watch?v=example-curated",
+      "archetype": "fast-offense",
+      "team": [
+        {
+          "name": "Incineroar",
+          "item": "Sitrus Berry",
+          "ability": "Intimidate",
+          "moves": [
+            "Fake Out",
+            "Parting Shot",
+            "Flare Blitz",
+            "Knock Off"
+          ],
+          "nature": "Careful",
+          "spreads": {}
+        },
+        {
+          "name": "Garchomp",
+          "item": "Choice Scarf",
+          "ability": "Rough Skin",
+          "moves": [
+            "Earthquake",
+            "Rock Slide",
+            "Dragon Claw",
+            "Protect"
+          ],
+          "nature": "Jolly",
+          "spreads": {}
+        },
+        {
+          "name": "Whimsicott",
+          "item": "Focus Sash",
+          "ability": "Prankster",
+          "moves": [
+            "Tailwind",
+            "Encore",
+            "Moonblast",
+            "Protect"
+          ],
+          "nature": "Timid",
+          "spreads": {}
+        },
+        {
+          "name": "Starmie",
+          "item": "Life Orb",
+          "ability": "Analytic",
+          "moves": [
+            "Hydro Pump",
+            "Ice Beam",
+            "Thunderbolt",
+            "Protect"
+          ],
+          "nature": "Timid",
+          "spreads": {}
+        },
+        {
+          "name": "Dragonite",
+          "item": "Dragoninite",
+          "ability": "Multiscale",
+          "moves": [
+            "Extreme Speed",
+            "Dragon Claw",
+            "Fire Punch",
+            "Protect"
+          ],
+          "nature": "Adamant",
+          "spreads": {}
+        },
+        {
+          "name": "Rotom-Wash",
+          "item": "Sitrus Berry",
+          "ability": "Levitate",
+          "moves": [
+            "Thunderbolt",
+            "Hydro Pump",
+            "Volt Switch",
+            "Protect"
+          ],
+          "nature": "Calm",
+          "spreads": {}
+        }
+      ],
+      "confidence": 0.79,
+      "completeness": 1.0,
+      "tags": [
+        "youtube",
+        "curated",
+        "verified"
+      ],
+      "importStrategy": "curated-import",
+      "notes": "Curated from video description and on-screen team sheet."
+    },
+    {
+      "id": "archivepivottailwindshell",
+      "sourceType": "archive",
+      "sourceName": "team_archive",
+      "sourceUrl": "",
+      "archetype": "",
+      "team": [
+        {
+          "name": "Incineroar",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Whimsicott",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Garchomp",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Pelipper",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Kingambit",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Starmie",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        }
+      ],
+      "confidence": 0.85,
+      "completeness": 0.5,
+      "tags": [
+        "archive"
+      ]
+    },
+    {
+      "id": "archiverainpressureshell",
+      "sourceType": "archive",
+      "sourceName": "team_archive",
+      "sourceUrl": "",
+      "archetype": "",
+      "team": [
+        {
+          "name": "Pelipper",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Basculegion",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Whimsicott",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Incineroar",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Garchomp",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Sinistcha",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        }
+      ],
+      "confidence": 0.85,
+      "completeness": 0.5,
+      "tags": [
+        "archive"
+      ]
+    },
+    {
+      "id": "randomrandomagengarpelipperdragonitefarigirafrotomwashkingambit",
+      "sourceType": "random",
+      "sourceName": "random-a",
+      "sourceUrl": "",
+      "archetype": "",
+      "team": [
+        {
+          "name": "Gengar",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Pelipper",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Dragonite",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Farigiraf",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Rotom-Wash",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Kingambit",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        }
+      ],
+      "confidence": 0.35,
+      "completeness": 0.2,
+      "tags": [
+        "random"
+      ],
+      "importStrategy": "pass-through",
+      "notes": "Normalized from generated robustness pool."
+    },
+    {
+      "id": "randomrandombwhimsicottcharizardstarmietyranitarincineroarsinistcha",
+      "sourceType": "random",
+      "sourceName": "random-b",
+      "sourceUrl": "",
+      "archetype": "",
+      "team": [
+        {
+          "name": "Whimsicott",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Charizard",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Starmie",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Tyranitar",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Incineroar",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Sinistcha",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        }
+      ],
+      "confidence": 0.35,
+      "completeness": 0.2,
+      "tags": [
+        "random"
+      ],
+      "importStrategy": "pass-through",
+      "notes": "Normalized from generated robustness pool."
+    },
+    {
+      "id": "selfplayselfbuiltaincineroarwhimsicottpelipperbasculegionkingambitfarigiraf",
+      "sourceType": "selfplay",
+      "sourceName": "self-built-a",
+      "sourceUrl": "",
+      "archetype": "",
+      "team": [
+        {
+          "name": "Incineroar",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Whimsicott",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Pelipper",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Basculegion",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Kingambit",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Farigiraf",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        }
+      ],
+      "confidence": 0.58,
+      "completeness": 0.2,
+      "tags": [
+        "selfplay"
+      ],
+      "importStrategy": "pass-through",
+      "notes": "Normalized from self-built exploratory pool."
+    },
+    {
+      "id": "selfplayselfbuiltbgarchompsinistchastarmieincineroardragoniterotomwash",
+      "sourceType": "selfplay",
+      "sourceName": "self-built-b",
+      "sourceUrl": "",
+      "archetype": "",
+      "team": [
+        {
+          "name": "Garchomp",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Sinistcha",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Starmie",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Incineroar",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Dragonite",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Rotom-Wash",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        }
+      ],
+      "confidence": 0.58,
+      "completeness": 0.2,
+      "tags": [
+        "selfplay"
+      ],
+      "importStrategy": "pass-through",
+      "notes": "Normalized from self-built exploratory pool."
+    },
+    {
+      "id": "generated1",
+      "sourceType": "selfplay",
+      "sourceName": "self-generated",
+      "sourceUrl": "",
+      "archetype": "",
+      "team": [
+        {
+          "name": "Incineroar",
+          "item": "Sitrus Berry",
+          "ability": "Intimidate",
+          "moves": [
+            "Fake Out",
+            "Parting Shot",
+            "Flare Blitz",
+            "Knock Off"
+          ],
+          "nature": "Careful",
+          "spreads": {}
+        },
+        {
+          "name": "Farigiraf",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Whimsicott",
+          "item": "Focus Sash",
+          "ability": "Prankster",
+          "moves": [
+            "Tailwind",
+            "Encore",
+            "Moonblast",
+            "Protect"
+          ],
+          "nature": "Timid",
+          "spreads": {}
+        },
+        {
+          "name": "Starmie",
+          "item": "Life Orb",
+          "ability": "Analytic",
+          "moves": [
+            "Hydro Pump",
+            "Ice Beam",
+            "Thunderbolt",
+            "Protect"
+          ],
+          "nature": "Timid",
+          "spreads": {}
+        },
+        {
+          "name": "Sinistcha",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Rotom-Wash",
+          "item": "Sitrus Berry",
+          "ability": "Levitate",
+          "moves": [
+            "Thunderbolt",
+            "Hydro Pump",
+            "Volt Switch",
+            "Protect"
+          ],
+          "nature": "Calm",
+          "spreads": {}
+        }
+      ],
+      "confidence": 0.46,
+      "completeness": 0.4,
+      "tags": [
+        "selfplay",
+        "generated",
+        "exploratory"
+      ]
+    },
+    {
+      "id": "generated2",
+      "sourceType": "selfplay",
+      "sourceName": "self-generated",
+      "sourceUrl": "",
+      "archetype": "",
+      "team": [
+        {
+          "name": "Dragonite",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Whimsicott",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Tyranitar",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Basculegion",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Kingambit",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Farigiraf",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        }
+      ],
+      "confidence": 0.46,
+      "completeness": 0.4,
+      "tags": [
+        "selfplay",
+        "generated",
+        "exploratory"
+      ]
+    },
+    {
+      "id": "generated3",
+      "sourceType": "selfplay",
+      "sourceName": "self-generated",
+      "sourceUrl": "",
+      "archetype": "",
+      "team": [
+        {
+          "name": "Incineroar",
+          "item": "Sitrus Berry",
+          "ability": "Intimidate",
+          "moves": [
+            "Fake Out",
+            "Flare Blitz",
+            "Parting Shot",
+            "Knock Off"
+          ],
+          "nature": "Careful",
+          "spreads": {}
+        },
+        {
+          "name": "Whimsicott",
+          "item": "Focus Sash",
+          "ability": "Prankster",
+          "moves": [
+            "Tailwind",
+            "Moonblast",
+            "Encore",
+            "Protect"
+          ],
+          "nature": "Timid",
+          "spreads": {}
+        },
+        {
+          "name": "Garchomp",
+          "item": "Choice Scarf",
+          "ability": "Rough Skin",
+          "moves": [
+            "Earthquake",
+            "Rock Slide",
+            "Dragon Claw",
+            "Protect"
+          ],
+          "nature": "Jolly",
+          "spreads": {}
+        },
+        {
+          "name": "Sinistcha",
+          "item": "Leftovers",
+          "ability": "Hospitality",
+          "moves": [
+            "Matcha Gotcha",
+            "Shadow Ball",
+            "Rage Powder",
+            "Protect"
+          ],
+          "nature": "Sassy",
+          "spreads": {}
+        },
+        {
+          "name": "Kingambit",
+          "item": "Black Glasses",
+          "ability": "Defiant",
+          "moves": [
+            "Sucker Punch",
+            "Kowtow Cleave",
+            "Low Kick",
+            "Protect"
+          ],
+          "nature": "Adamant",
+          "spreads": {}
+        },
+        {
+          "name": "Tyranitar",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        }
+      ],
+      "confidence": 0.46,
+      "completeness": 0.4,
+      "tags": [
+        "selfplay",
+        "generated",
+        "exploratory"
+      ]
+    },
+    {
+      "id": "generated4",
+      "sourceType": "selfplay",
+      "sourceName": "self-generated",
+      "sourceUrl": "",
+      "archetype": "",
+      "team": [
+        {
+          "name": "Gengar",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Pelipper",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Dragonite",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Starmie",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Rotom-Wash",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Kingambit",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        }
+      ],
+      "confidence": 0.46,
+      "completeness": 0.4,
+      "tags": [
+        "selfplay",
+        "generated",
+        "exploratory"
+      ]
+    },
+    {
+      "id": "generated29",
+      "sourceType": "selfplay",
+      "sourceName": "self-generated",
+      "sourceUrl": "",
+      "archetype": "",
+      "team": [
+        {
+          "name": "Gengar",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Pelipper",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Dragonite",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Farigiraf",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Archaludon",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Kingambit",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        }
+      ],
+      "confidence": 0.46,
+      "completeness": 0.4,
+      "tags": [
+        "selfplay",
+        "generated",
+        "exploratory"
+      ]
+    },
+    {
+      "id": "generated6",
+      "sourceType": "selfplay",
+      "sourceName": "self-generated",
+      "sourceUrl": "",
+      "archetype": "",
+      "team": [
+        {
+          "name": "Pelipper",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Charizard",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Incineroar",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Whimsicott",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Archaludon",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Garchomp",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        }
+      ],
+      "confidence": 0.46,
+      "completeness": 0.4,
+      "tags": [
+        "selfplay",
+        "generated",
+        "exploratory"
+      ]
+    },
+    {
+      "id": "generated7",
+      "sourceType": "selfplay",
+      "sourceName": "self-generated",
+      "sourceUrl": "",
+      "archetype": "",
+      "team": [
+        {
+          "name": "Pelipper",
+          "item": "Choice Scarf",
+          "ability": "Drizzle",
+          "moves": [
+            "Hurricane",
+            "Tailwind",
+            "Protect",
+            "Muddy Water"
+          ],
+          "nature": "Timid",
+          "spreads": {}
+        },
+        {
+          "name": "Basculegion",
+          "item": "Choice Scarf",
+          "ability": "Adaptability",
+          "moves": [
+            "Last Respects",
+            "Wave Crash",
+            "Flip Turn",
+            "Aqua Jet"
+          ],
+          "nature": "Adamant",
+          "spreads": {}
+        },
+        {
+          "name": "Starmie",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Whimsicott",
+          "item": "Focus Sash",
+          "ability": "Prankster",
+          "moves": [
+            "Tailwind",
+            "Encore",
+            "Moonblast",
+            "Protect"
+          ],
+          "nature": "Timid",
+          "spreads": {}
+        },
+        {
+          "name": "Archaludon",
+          "item": "Assault Vest",
+          "ability": "Stamina",
+          "moves": [
+            "Flash Cannon",
+            "Electro Shot",
+            "Draco Meteor",
+            "Snarl"
+          ],
+          "nature": "Modest",
+          "spreads": {}
+        },
+        {
+          "name": "Garchomp",
+          "item": "Clear Amulet",
+          "ability": "Rough Skin",
+          "moves": [
+            "Earthquake",
+            "Rock Slide",
+            "Protect",
+            "Dragon Claw"
+          ],
+          "nature": "Jolly",
+          "spreads": {}
+        }
+      ],
+      "confidence": 0.46,
+      "completeness": 0.4,
+      "tags": [
+        "selfplay",
+        "generated",
+        "exploratory"
+      ]
+    },
+    {
+      "id": "generated8",
+      "sourceType": "selfplay",
+      "sourceName": "self-generated",
+      "sourceUrl": "",
+      "archetype": "",
+      "team": [
+        {
+          "name": "Incineroar",
+          "item": "Sitrus Berry",
+          "ability": "Intimidate",
+          "moves": [
+            "Fake Out",
+            "Parting Shot",
+            "Flare Blitz",
+            "Knock Off"
+          ],
+          "nature": "Careful",
+          "spreads": {}
+        },
+        {
+          "name": "Tyranitar",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Whimsicott",
+          "item": "Focus Sash",
+          "ability": "Prankster",
+          "moves": [
+            "Tailwind",
+            "Encore",
+            "Moonblast",
+            "Protect"
+          ],
+          "nature": "Timid",
+          "spreads": {}
+        },
+        {
+          "name": "Starmie",
+          "item": "Life Orb",
+          "ability": "Analytic",
+          "moves": [
+            "Hydro Pump",
+            "Ice Beam",
+            "Thunderbolt",
+            "Protect"
+          ],
+          "nature": "Timid",
+          "spreads": {}
+        },
+        {
+          "name": "Dragonite",
+          "item": "Dragoninite",
+          "ability": "Multiscale",
+          "moves": [
+            "Extreme Speed",
+            "Dragon Claw",
+            "Fire Punch",
+            "Protect"
+          ],
+          "nature": "Adamant",
+          "spreads": {}
+        },
+        {
+          "name": "Rotom-Wash",
+          "item": "Sitrus Berry",
+          "ability": "Levitate",
+          "moves": [
+            "Thunderbolt",
+            "Hydro Pump",
+            "Volt Switch",
+            "Protect"
+          ],
+          "nature": "Calm",
+          "spreads": {}
+        }
+      ],
+      "confidence": 0.46,
+      "completeness": 0.4,
+      "tags": [
+        "selfplay",
+        "generated",
+        "exploratory"
+      ]
+    },
+    {
+      "id": "generated9",
+      "sourceType": "selfplay",
+      "sourceName": "self-generated",
+      "sourceUrl": "",
+      "archetype": "",
+      "team": [
+        {
+          "name": "Tyranitar",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Pelipper",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Dragonite",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Basculegion",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Rotom-Wash",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Kingambit",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        }
+      ],
+      "confidence": 0.46,
+      "completeness": 0.4,
+      "tags": [
+        "selfplay",
+        "generated",
+        "exploratory"
+      ]
+    },
+    {
+      "id": "generated10",
+      "sourceType": "selfplay",
+      "sourceName": "self-generated",
+      "sourceUrl": "",
+      "archetype": "",
+      "team": [
+        {
+          "name": "Gengar",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Pelipper",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Dragonite",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Farigiraf",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Starmie",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Basculegion",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        }
+      ],
+      "confidence": 0.46,
+      "completeness": 0.4,
+      "tags": [
+        "selfplay",
+        "generated",
+        "exploratory"
+      ]
+    },
+    {
+      "id": "generated11",
+      "sourceType": "selfplay",
+      "sourceName": "self-generated",
+      "sourceUrl": "",
+      "archetype": "",
+      "team": [
+        {
+          "name": "Pelipper",
+          "item": "Focus Sash",
+          "ability": "Drizzle",
+          "moves": [
+            "Tailwind",
+            "Hurricane"
+          ],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Basculegion",
+          "item": "Choice Scarf",
+          "ability": "Adaptability",
+          "moves": [
+            "Last Respects",
+            "Wave Crash"
+          ],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Incineroar",
+          "item": "Safety Goggles",
+          "ability": "Intimidate",
+          "moves": [
+            "Fake Out",
+            "Parting Shot"
+          ],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Whimsicott",
+          "item": "",
+          "ability": "",
+          "moves": [
+            "Tailwind",
+            "Encore"
+          ],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Gengar",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        }
+      ],
+      "confidence": 0.46,
+      "completeness": 0.4,
+      "tags": [
+        "selfplay",
+        "generated",
+        "exploratory"
+      ]
+    },
+    {
+      "id": "generated12",
+      "sourceType": "selfplay",
+      "sourceName": "self-generated",
+      "sourceUrl": "",
+      "archetype": "",
+      "team": [
+        {
+          "name": "Incineroar",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Whimsicott",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Tyranitar",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Basculegion",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Kingambit",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Farigiraf",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        }
+      ],
+      "confidence": 0.46,
+      "completeness": 0.4,
+      "tags": [
+        "selfplay",
+        "generated",
+        "exploratory"
+      ]
+    },
+    {
+      "id": "generated13",
+      "sourceType": "selfplay",
+      "sourceName": "self-generated",
+      "sourceUrl": "",
+      "archetype": "",
+      "team": [
+        {
+          "name": "Incineroar",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Whimsicott",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Garchomp",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Basculegion",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Kingambit",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Pelipper",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        }
+      ],
+      "confidence": 0.46,
+      "completeness": 0.4,
+      "tags": [
+        "selfplay",
+        "generated",
+        "exploratory"
+      ]
+    },
+    {
+      "id": "generated14",
+      "sourceType": "selfplay",
+      "sourceName": "self-generated",
+      "sourceUrl": "",
+      "archetype": "",
+      "team": [
+        {
+          "name": "Sinistcha",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Basculegion",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Incineroar",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Whimsicott",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Archaludon",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Charizard",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        }
+      ],
+      "confidence": 0.46,
+      "completeness": 0.4,
+      "tags": [
+        "selfplay",
+        "generated",
+        "exploratory"
+      ]
+    },
+    {
+      "id": "generated15",
+      "sourceType": "selfplay",
+      "sourceName": "self-generated",
+      "sourceUrl": "",
+      "archetype": "",
+      "team": [
+        {
+          "name": "Dragonite",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Whimsicott",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Garchomp",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Sinistcha",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Kingambit",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Pelipper",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        }
+      ],
+      "confidence": 0.46,
+      "completeness": 0.4,
+      "tags": [
+        "selfplay",
+        "generated",
+        "exploratory"
+      ]
+    },
+    {
+      "id": "generated16",
+      "sourceType": "selfplay",
+      "sourceName": "self-generated",
+      "sourceUrl": "",
+      "archetype": "",
+      "team": [
+        {
+          "name": "Incineroar",
+          "item": "Sitrus Berry",
+          "ability": "Intimidate",
+          "moves": [
+            "Fake Out",
+            "Parting Shot",
+            "Flare Blitz",
+            "Knock Off"
+          ],
+          "nature": "Careful",
+          "spreads": {}
+        },
+        {
+          "name": "Garchomp",
+          "item": "Choice Scarf",
+          "ability": "Rough Skin",
+          "moves": [
+            "Earthquake",
+            "Rock Slide",
+            "Dragon Claw",
+            "Protect"
+          ],
+          "nature": "Jolly",
+          "spreads": {}
+        },
+        {
+          "name": "Whimsicott",
+          "item": "Focus Sash",
+          "ability": "Prankster",
+          "moves": [
+            "Tailwind",
+            "Encore",
+            "Moonblast",
+            "Protect"
+          ],
+          "nature": "Timid",
+          "spreads": {}
+        },
+        {
+          "name": "Pelipper",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Basculegion",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Rotom-Wash",
+          "item": "Sitrus Berry",
+          "ability": "Levitate",
+          "moves": [
+            "Thunderbolt",
+            "Hydro Pump",
+            "Volt Switch",
+            "Protect"
+          ],
+          "nature": "Calm",
+          "spreads": {}
+        }
+      ],
+      "confidence": 0.46,
+      "completeness": 0.4,
+      "tags": [
+        "selfplay",
+        "generated",
+        "exploratory"
+      ]
+    },
+    {
+      "id": "generated17",
+      "sourceType": "selfplay",
+      "sourceName": "self-generated",
+      "sourceUrl": "",
+      "archetype": "",
+      "team": [
+        {
+          "name": "Gengar",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Pelipper",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Incineroar",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Farigiraf",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Rotom-Wash",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Kingambit",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        }
+      ],
+      "confidence": 0.46,
+      "completeness": 0.4,
+      "tags": [
+        "selfplay",
+        "generated",
+        "exploratory"
+      ]
+    },
+    {
+      "id": "generated18",
+      "sourceType": "selfplay",
+      "sourceName": "self-generated",
+      "sourceUrl": "",
+      "archetype": "",
+      "team": [
+        {
+          "name": "Starmie",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Basculegion",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Incineroar",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Whimsicott",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Archaludon",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Garchomp",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        }
+      ],
+      "confidence": 0.46,
+      "completeness": 0.4,
+      "tags": [
+        "selfplay",
+        "generated",
+        "exploratory"
+      ]
+    },
+    {
+      "id": "generated19",
+      "sourceType": "selfplay",
+      "sourceName": "self-generated",
+      "sourceUrl": "",
+      "archetype": "",
+      "team": [
+        {
+          "name": "Basculegion",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Whimsicott",
+          "item": "Focus Sash",
+          "ability": "Prankster",
+          "moves": [
+            "Tailwind",
+            "Moonblast",
+            "Encore",
+            "Protect"
+          ],
+          "nature": "Timid",
+          "spreads": {}
+        },
+        {
+          "name": "Garchomp",
+          "item": "Choice Scarf",
+          "ability": "Rough Skin",
+          "moves": [
+            "Earthquake",
+            "Rock Slide",
+            "Dragon Claw",
+            "Protect"
+          ],
+          "nature": "Jolly",
+          "spreads": {}
+        },
+        {
+          "name": "Sinistcha",
+          "item": "Leftovers",
+          "ability": "Hospitality",
+          "moves": [
+            "Matcha Gotcha",
+            "Shadow Ball",
+            "Rage Powder",
+            "Protect"
+          ],
+          "nature": "Sassy",
+          "spreads": {}
+        },
+        {
+          "name": "Kingambit",
+          "item": "Black Glasses",
+          "ability": "Defiant",
+          "moves": [
+            "Sucker Punch",
+            "Kowtow Cleave",
+            "Low Kick",
+            "Protect"
+          ],
+          "nature": "Adamant",
+          "spreads": {}
+        },
+        {
+          "name": "Pelipper",
+          "item": "Choice Scarf",
+          "ability": "Drizzle",
+          "moves": [
+            "Hurricane",
+            "Muddy Water",
+            "Tailwind",
+            "Protect"
+          ],
+          "nature": "Timid",
+          "spreads": {}
+        }
+      ],
+      "confidence": 0.46,
+      "completeness": 0.4,
+      "tags": [
+        "selfplay",
+        "generated",
+        "exploratory"
+      ]
+    },
+    {
+      "id": "generated20",
+      "sourceType": "selfplay",
+      "sourceName": "self-generated",
+      "sourceUrl": "",
+      "archetype": "",
+      "team": [
+        {
+          "name": "Incineroar",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Starmie",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Garchomp",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Dragonite",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Kingambit",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Pelipper",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        }
+      ],
+      "confidence": 0.46,
+      "completeness": 0.4,
+      "tags": [
+        "selfplay",
+        "generated",
+        "exploratory"
+      ]
+    },
+    {
+      "id": "generated21",
+      "sourceType": "selfplay",
+      "sourceName": "self-generated",
+      "sourceUrl": "",
+      "archetype": "",
+      "team": [
+        {
+          "name": "Incineroar",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Whimsicott",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Garchomp",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Charizard",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Kingambit",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Starmie",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        }
+      ],
+      "confidence": 0.46,
+      "completeness": 0.4,
+      "tags": [
+        "selfplay",
+        "generated",
+        "exploratory"
+      ]
+    },
+    {
+      "id": "generated22",
+      "sourceType": "selfplay",
+      "sourceName": "self-generated",
+      "sourceUrl": "",
+      "archetype": "",
+      "team": [
+        {
+          "name": "Gengar",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Tyranitar",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Dragonite",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Basculegion",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Rotom-Wash",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Kingambit",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        }
+      ],
+      "confidence": 0.46,
+      "completeness": 0.4,
+      "tags": [
+        "selfplay",
+        "generated",
+        "exploratory"
+      ]
+    },
+    {
+      "id": "generated23",
+      "sourceType": "selfplay",
+      "sourceName": "self-generated",
+      "sourceUrl": "",
+      "archetype": "",
+      "team": [
+        {
+          "name": "Farigiraf",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Dragonite",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Garchomp",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Sinistcha",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Kingambit",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Pelipper",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        }
+      ],
+      "confidence": 0.46,
+      "completeness": 0.4,
+      "tags": [
+        "selfplay",
+        "generated",
+        "exploratory"
+      ]
+    },
+    {
+      "id": "generated24",
+      "sourceType": "selfplay",
+      "sourceName": "self-generated",
+      "sourceUrl": "",
+      "archetype": "",
+      "team": [
+        {
+          "name": "Incineroar",
+          "item": "",
+          "ability": "",
+          "moves": [
+            "Fake Out",
+            "Parting Shot"
+          ],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Garchomp",
+          "item": "",
+          "ability": "",
+          "moves": [
+            "Earthquake",
+            "Rock Slide"
+          ],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Starmie",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Whimsicott",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Sinistcha",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        }
+      ],
+      "confidence": 0.46,
+      "completeness": 0.4,
+      "tags": [
+        "selfplay",
+        "generated",
+        "exploratory"
+      ]
+    },
+    {
+      "id": "generated25",
+      "sourceType": "selfplay",
+      "sourceName": "self-generated",
+      "sourceUrl": "",
+      "archetype": "",
+      "team": [
+        {
+          "name": "Gengar",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Archaludon",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Dragonite",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Farigiraf",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Rotom-Wash",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Kingambit",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        }
+      ],
+      "confidence": 0.46,
+      "completeness": 0.4,
+      "tags": [
+        "selfplay",
+        "generated",
+        "exploratory"
+      ]
+    },
+    {
+      "id": "generated26",
+      "sourceType": "selfplay",
+      "sourceName": "self-generated",
+      "sourceUrl": "",
+      "archetype": "",
+      "team": [
+        {
+          "name": "Kingambit",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Basculegion",
+          "item": "Choice Scarf",
+          "ability": "Adaptability",
+          "moves": [
+            "Last Respects",
+            "Wave Crash",
+            "Flip Turn",
+            "Aqua Jet"
+          ],
+          "nature": "Adamant",
+          "spreads": {}
+        },
+        {
+          "name": "Sinistcha",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Whimsicott",
+          "item": "Focus Sash",
+          "ability": "Prankster",
+          "moves": [
+            "Tailwind",
+            "Encore",
+            "Moonblast",
+            "Protect"
+          ],
+          "nature": "Timid",
+          "spreads": {}
+        },
+        {
+          "name": "Archaludon",
+          "item": "Assault Vest",
+          "ability": "Stamina",
+          "moves": [
+            "Flash Cannon",
+            "Electro Shot",
+            "Draco Meteor",
+            "Snarl"
+          ],
+          "nature": "Modest",
+          "spreads": {}
+        },
+        {
+          "name": "Garchomp",
+          "item": "Clear Amulet",
+          "ability": "Rough Skin",
+          "moves": [
+            "Earthquake",
+            "Rock Slide",
+            "Protect",
+            "Dragon Claw"
+          ],
+          "nature": "Jolly",
+          "spreads": {}
+        }
+      ],
+      "confidence": 0.46,
+      "completeness": 0.4,
+      "tags": [
+        "selfplay",
+        "generated",
+        "exploratory"
+      ]
+    },
+    {
+      "id": "generated27",
+      "sourceType": "selfplay",
+      "sourceName": "self-generated",
+      "sourceUrl": "",
+      "archetype": "",
+      "team": [
+        {
+          "name": "Incineroar",
+          "item": "",
+          "ability": "",
+          "moves": [
+            "Fake Out",
+            "Parting Shot"
+          ],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Garchomp",
+          "item": "",
+          "ability": "",
+          "moves": [
+            "Earthquake",
+            "Rock Slide"
+          ],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Starmie",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Whimsicott",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Basculegion",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        }
+      ],
+      "confidence": 0.46,
+      "completeness": 0.4,
+      "tags": [
+        "selfplay",
+        "generated",
+        "exploratory"
+      ]
+    },
+    {
+      "id": "generated28",
+      "sourceType": "selfplay",
+      "sourceName": "self-generated",
+      "sourceUrl": "",
+      "archetype": "",
+      "team": [
+        {
+          "name": "Pelipper",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Basculegion",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Incineroar",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Whimsicott",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Gengar",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Garchomp",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        }
+      ],
+      "confidence": 0.46,
+      "completeness": 0.4,
+      "tags": [
+        "selfplay",
+        "generated",
+        "exploratory"
+      ]
+    },
+    {
+      "id": "generated30",
+      "sourceType": "selfplay",
+      "sourceName": "self-generated",
+      "sourceUrl": "",
+      "archetype": "",
+      "team": [
+        {
+          "name": "Incineroar",
+          "item": "Safety Goggles",
+          "ability": "Intimidate",
+          "moves": [
+            "Fake Out",
+            "Parting Shot",
+            "Will-O-Wisp",
+            "Knock Off"
+          ],
+          "nature": "Careful",
+          "spreads": {}
+        },
+        {
+          "name": "Sinistcha",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Garchomp",
+          "item": "Clear Amulet",
+          "ability": "Rough Skin",
+          "moves": [
+            "Earthquake",
+            "Rock Slide",
+            "Swords Dance",
+            "Protect"
+          ],
+          "nature": "Jolly",
+          "spreads": {}
+        },
+        {
+          "name": "Whimsicott",
+          "item": "Focus Sash",
+          "ability": "Prankster",
+          "moves": [
+            "Tailwind",
+            "Encore",
+            "Moonblast",
+            "Protect"
+          ],
+          "nature": "Timid",
+          "spreads": {}
+        },
+        {
+          "name": "Tyranitar",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Pelipper",
+          "item": "Covert Cloak",
+          "ability": "Drizzle",
+          "moves": [
+            "Tailwind",
+            "Hurricane",
+            "Muddy Water",
+            "Protect"
+          ],
+          "nature": "Timid",
+          "spreads": {}
+        }
+      ],
+      "confidence": 0.46,
+      "completeness": 0.4,
+      "tags": [
+        "selfplay",
+        "generated",
+        "exploratory"
+      ]
+    },
+    {
+      "id": "generated31",
+      "sourceType": "selfplay",
+      "sourceName": "self-generated",
+      "sourceUrl": "",
+      "archetype": "",
+      "team": [
+        {
+          "name": "Incineroar",
+          "item": "Sitrus Berry",
+          "ability": "Intimidate",
+          "moves": [
+            "Fake Out",
+            "Flare Blitz",
+            "Parting Shot",
+            "Knock Off"
+          ],
+          "nature": "Careful",
+          "spreads": {}
+        },
+        {
+          "name": "Whimsicott",
+          "item": "Focus Sash",
+          "ability": "Prankster",
+          "moves": [
+            "Tailwind",
+            "Moonblast",
+            "Encore",
+            "Protect"
+          ],
+          "nature": "Timid",
+          "spreads": {}
+        },
+        {
+          "name": "Dragonite",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Sinistcha",
+          "item": "Leftovers",
+          "ability": "Hospitality",
+          "moves": [
+            "Matcha Gotcha",
+            "Shadow Ball",
+            "Rage Powder",
+            "Protect"
+          ],
+          "nature": "Sassy",
+          "spreads": {}
+        },
+        {
+          "name": "Kingambit",
+          "item": "Black Glasses",
+          "ability": "Defiant",
+          "moves": [
+            "Sucker Punch",
+            "Kowtow Cleave",
+            "Low Kick",
+            "Protect"
+          ],
+          "nature": "Adamant",
+          "spreads": {}
+        },
+        {
+          "name": "Charizard",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        }
+      ],
+      "confidence": 0.46,
+      "completeness": 0.4,
+      "tags": [
+        "selfplay",
+        "generated",
+        "exploratory"
+      ]
+    },
+    {
+      "id": "generated32",
+      "sourceType": "selfplay",
+      "sourceName": "self-generated",
+      "sourceUrl": "",
+      "archetype": "",
+      "team": [
+        {
+          "name": "Pelipper",
+          "item": "Choice Scarf",
+          "ability": "Drizzle",
+          "moves": [
+            "Hurricane",
+            "Tailwind",
+            "Protect",
+            "Muddy Water"
+          ],
+          "nature": "Timid",
+          "spreads": {}
+        },
+        {
+          "name": "Gengar",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Incineroar",
+          "item": "Sitrus Berry",
+          "ability": "Intimidate",
+          "moves": [
+            "Fake Out",
+            "Parting Shot",
+            "Flare Blitz",
+            "Knock Off"
+          ],
+          "nature": "Careful",
+          "spreads": {}
+        },
+        {
+          "name": "Whimsicott",
+          "item": "Focus Sash",
+          "ability": "Prankster",
+          "moves": [
+            "Tailwind",
+            "Encore",
+            "Moonblast",
+            "Protect"
+          ],
+          "nature": "Timid",
+          "spreads": {}
+        },
+        {
+          "name": "Archaludon",
+          "item": "Assault Vest",
+          "ability": "Stamina",
+          "moves": [
+            "Flash Cannon",
+            "Electro Shot",
+            "Draco Meteor",
+            "Snarl"
+          ],
+          "nature": "Modest",
+          "spreads": {}
+        },
+        {
+          "name": "Garchomp",
+          "item": "Clear Amulet",
+          "ability": "Rough Skin",
+          "moves": [
+            "Earthquake",
+            "Rock Slide",
+            "Protect",
+            "Dragon Claw"
+          ],
+          "nature": "Jolly",
+          "spreads": {}
+        }
+      ],
+      "confidence": 0.46,
+      "completeness": 0.4,
+      "tags": [
+        "selfplay",
+        "generated",
+        "exploratory"
+      ]
+    }
+  ]
 }

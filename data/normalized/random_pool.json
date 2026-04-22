@@ -1,6 +1,135 @@
 {
-  "updatedAt": null,
+  "updatedAt": "2026-04-22T22:52:52+00:00",
   "sourceType": "random",
-  "notes": "Generated remotely from random robustness pool.",
-  "teams": []
+  "notes": "Normalized from generated robustness pool.",
+  "teams": [
+    {
+      "id": "randomrandomagengarpelipperdragonitefarigirafrotomwashkingambit",
+      "sourceType": "random",
+      "sourceName": "random-a",
+      "sourceUrl": "",
+      "archetype": "",
+      "team": [
+        {
+          "name": "Gengar",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Pelipper",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Dragonite",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Farigiraf",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Rotom-Wash",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Kingambit",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        }
+      ],
+      "confidence": 0.35,
+      "completeness": 0.2,
+      "tags": [
+        "random"
+      ],
+      "importStrategy": "pass-through",
+      "notes": "Normalized from generated robustness pool."
+    },
+    {
+      "id": "randomrandombwhimsicottcharizardstarmietyranitarincineroarsinistcha",
+      "sourceType": "random",
+      "sourceName": "random-b",
+      "sourceUrl": "",
+      "archetype": "",
+      "team": [
+        {
+          "name": "Whimsicott",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Charizard",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Starmie",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Tyranitar",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Incineroar",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Sinistcha",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        }
+      ],
+      "confidence": 0.35,
+      "completeness": 0.2,
+      "tags": [
+        "random"
+      ],
+      "importStrategy": "pass-through",
+      "notes": "Normalized from generated robustness pool."
+    }
+  ]
 }

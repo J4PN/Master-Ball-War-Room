@@ -1,11 +1,11 @@
 {
-  "version": 1,
-  "updatedAt": null,
+  "version": 2,
+  "updatedAt": "2026-04-22T22:52:53+00:00",
   "candidateScoreWeights": {
-    "rolePrior": 6,
-    "moveWeight": 4,
-    "threatPenalty": 12,
-    "archiveBias": 3
+    "rolePrior": 7.333,
+    "moveWeight": 5.979,
+    "threatPenalty": 11.543,
+    "archiveBias": 4.16
   },
   "leadPairBias": {
     "fakeOut": 0,
@@ -13,6 +13,37 @@
   },
   "threatSeverityWeights": {
     "default": 1,
-    "byThreat": {}
+    "byThreat": {
+      "incineroar": 1.8,
+      "whimsicott": 1.734,
+      "garchomp": 1.632,
+      "pelipper": 1.57,
+      "kingambit": 0.828,
+      "basculegion": 0.807,
+      "sinistcha": 0.699,
+      "starmie": 0.6,
+      "archaludon": 0.6,
+      "dragonite": 0.6,
+      "rotomwash": 0.6,
+      "farigiraf": 0.6
+    }
+  },
+  "sourceSamplingWeights": {
+    "meta": 1.0,
+    "pikalytics": 0.95,
+    "archive": 0.8,
+    "reddit": 0.55,
+    "youtube": 0.45,
+    "selfplay": 0.5,
+    "random": 0.3
+  },
+  "sourceConfidenceDefaults": {
+    "meta": 1.0,
+    "pikalytics": 0.96,
+    "archive": 0.9,
+    "reddit": 0.72,
+    "youtube": 0.62,
+    "selfplay": 0.58,
+    "random": 0.35
   }
 }

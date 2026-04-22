@@ -1,6 +1,135 @@
 {
-  "updatedAt": null,
+  "updatedAt": "2026-04-22T22:52:52+00:00",
   "sourceType": "meta",
-  "notes": "Generated remotely from internal meta pool.",
-  "teams": []
+  "notes": "Normalized from maintained internal meta pool.",
+  "teams": [
+    {
+      "id": "metametapivotcoreincineroarwhimsicottgarchompsinistchakingambitpelipper",
+      "sourceType": "meta",
+      "sourceName": "meta-pivot-core",
+      "sourceUrl": "",
+      "archetype": "",
+      "team": [
+        {
+          "name": "Incineroar",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Whimsicott",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Garchomp",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Sinistcha",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Kingambit",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Pelipper",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        }
+      ],
+      "confidence": 1.0,
+      "completeness": 0.2,
+      "tags": [
+        "meta"
+      ],
+      "importStrategy": "pass-through",
+      "notes": "Normalized from maintained internal meta pool."
+    },
+    {
+      "id": "metametaraincorepelipperbasculegionincineroarwhimsicottarchaludongarchomp",
+      "sourceType": "meta",
+      "sourceName": "meta-rain-core",
+      "sourceUrl": "",
+      "archetype": "",
+      "team": [
+        {
+          "name": "Pelipper",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Basculegion",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Incineroar",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Whimsicott",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Archaludon",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Garchomp",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        }
+      ],
+      "confidence": 1.0,
+      "completeness": 0.2,
+      "tags": [
+        "meta"
+      ],
+      "importStrategy": "pass-through",
+      "notes": "Normalized from maintained internal meta pool."
+    }
+  ]
 }
