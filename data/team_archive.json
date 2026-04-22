@@ -1,9 +1,9 @@
 {
-  "updatedAt": "2026-04-22T22:52:53+00:00",
+  "updatedAt": "2026-04-22T23:28:45+00:00",
   "teams": [
     {
       "source": "archive",
-      "label": "archivepivottailwindshell",
+      "label": "archivearchivepivottailwindshell",
       "team": [
         "Incineroar",
         "Whimsicott",
@@ -12,12 +12,12 @@
         "Kingambit",
         "Starmie"
       ],
-      "score": 0.69,
-      "confidence": 0.762
+      "score": 0.656,
+      "confidence": 0.697
     },
     {
       "source": "archive",
-      "label": "archiverainpressureshell",
+      "label": "archivearchiverainpressureshell",
       "team": [
         "Pelipper",
         "Basculegion",
@@ -26,12 +26,12 @@
         "Garchomp",
         "Sinistcha"
       ],
-      "score": 0.687,
-      "confidence": 0.762
+      "score": 0.653,
+      "confidence": 0.697
     },
     {
-      "source": "pikalytics",
-      "label": "pikalyticscuratedpikalyticsimportpelipperbasculegionincineroarwhimsicottarchaludongarchomp",
+      "source": "archive",
+      "label": "archivepikalyticscuratedpikalyticsimportpelipperbasculegionincineroarwhimsicottarchaludongarchomp",
       "team": [
         "Pelipper",
         "Basculegion",
@@ -40,12 +40,12 @@
         "Archaludon",
         "Garchomp"
       ],
-      "score": 0.692,
-      "confidence": 0.992
+      "score": 0.654,
+      "confidence": 0.869
     },
     {
-      "source": "pikalytics",
-      "label": "pikalyticspikalyticschampionssnapshotincineroarwhimsicottgarchompsinistchakingambitpelipper",
+      "source": "archive",
+      "label": "archivepikalyticspikalyticschampionssnapshotincineroarwhimsicottgarchompsinistchakingambitpelipper",
       "team": [
         "Incineroar",
         "Whimsicott",
@@ -54,12 +54,12 @@
         "Kingambit",
         "Pelipper"
       ],
-      "score": 0.691,
-      "confidence": 0.97
+      "score": 0.654,
+      "confidence": 0.853
     },
     {
-      "source": "youtube",
-      "label": "youtubecuratedyoutubeshowcaseteamincineroargarchompwhimsicottstarmiedragoniterotomwash",
+      "source": "archive",
+      "label": "archiveyoutubecuratedyoutubeshowcaseteamincineroargarchompwhimsicottstarmiedragoniterotomwash",
       "team": [
         "Incineroar",
         "Garchomp",
@@ -68,12 +68,12 @@
         "Dragonite",
         "Rotom-Wash"
       ],
-      "score": 0.713,
-      "confidence": 0.843
+      "score": 0.674,
+      "confidence": 0.757
     },
     {
-      "source": "reddit",
-      "label": "redditcuratedredditbalanceteamincineroarstarmiegarchompwhimsicottkingambitpelipper",
+      "source": "archive",
+      "label": "archiveredditcuratedredditbalanceteamincineroarstarmiegarchompwhimsicottkingambitpelipper",
       "team": [
         "Incineroar",
         "Starmie",
@@ -82,31 +82,31 @@
         "Kingambit",
         "Pelipper"
       ],
-      "score": 0.694,
-      "confidence": 0.865
+      "score": 0.656,
+      "confidence": 0.774
     },
     {
-      "source": "reddit",
-      "label": "redditrstunfiskpostpelipperbasculegionincineroarwhimsicott",
+      "source": "archive",
+      "label": "archiveredditrstunfiskpostpelipperbasculegionincineroarwhimsicott",
       "team": [
         "Pelipper",
         "Basculegion",
         "Incineroar",
         "Whimsicott"
       ],
-      "score": 0.717,
-      "confidence": 0.685
+      "score": 0.676,
+      "confidence": 0.639
     },
     {
-      "source": "youtube",
-      "label": "youtubeyoutubedescriptionextractincineroargarchompstarmiewhimsicott",
+      "source": "archive",
+      "label": "archiveyoutubeyoutubedescriptionextractincineroargarchompstarmiewhimsicott",
       "team": [
         "Incineroar",
         "Garchomp",
         "Starmie",
         "Whimsicott"
       ],
-      "score": 0.718,
+      "score": 0.68,
       "confidence": 0.502
     },
     {
@@ -120,7 +120,7 @@
         "Dragonite",
         "Rotom-Wash"
       ],
-      "score": 0.717,
+      "score": 0.683,
       "confidence": 0.485
     },
     {
@@ -134,7 +134,7 @@
         "Kingambit",
         "Farigiraf"
       ],
-      "score": 0.699,
+      "score": 0.665,
       "confidence": 0.485
     },
     {
@@ -152,8 +152,8 @@
       "confidence": 0.445
     },
     {
-      "source": "selfplay",
-      "label": "generated22",
+      "source": "archive",
+      "label": "archivegenerated22",
       "team": [
         "Gengar",
         "Tyranitar",
@@ -162,12 +162,12 @@
         "Rotom-Wash",
         "Kingambit"
       ],
-      "score": 0.739,
-      "confidence": 0.445
+      "score": 0.708,
+      "confidence": 0.459
     },
     {
-      "source": "selfplay",
-      "label": "generated10",
+      "source": "archive",
+      "label": "archivegenerated10",
       "team": [
         "Gengar",
         "Pelipper",
@@ -176,12 +176,12 @@
         "Starmie",
         "Basculegion"
       ],
-      "score": 0.729,
-      "confidence": 0.445
+      "score": 0.698,
+      "confidence": 0.459
     },
     {
-      "source": "selfplay",
-      "label": "generated29",
+      "source": "archive",
+      "label": "archivegenerated29",
       "team": [
         "Gengar",
         "Pelipper",
@@ -190,7 +190,21 @@
         "Archaludon",
         "Kingambit"
       ],
-      "score": 0.729,
+      "score": 0.697,
+      "confidence": 0.459
+    },
+    {
+      "source": "selfplay",
+      "label": "generated69",
+      "team": [
+        "Incineroar",
+        "Farigiraf",
+        "Whimsicott",
+        "Charizard",
+        "Dragonite",
+        "Rotom-Wash"
+      ],
+      "score": 0.716,
       "confidence": 0.445
     }
   ]

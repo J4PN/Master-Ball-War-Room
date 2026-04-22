@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-04-22T22:52:53+00:00",
+  "updatedAt": "2026-04-22T23:28:45+00:00",
   "sources": [
     "archive",
     "meta",
@@ -26,21 +26,7 @@
     {
       "name": "whimsicott",
       "displayName": "whimsicott",
-      "importance": 1.734,
-      "sources": [
-        "archive",
-        "meta",
-        "pikalytics",
-        "reddit",
-        "selfplay",
-        "youtube"
-      ],
-      "notes": "Observed in archive, meta, pikalytics, reddit, selfplay, youtube source pools."
-    },
-    {
-      "name": "garchomp",
-      "displayName": "garchomp",
-      "importance": 1.632,
+      "importance": 1.695,
       "sources": [
         "archive",
         "meta",
@@ -54,7 +40,7 @@
     {
       "name": "pelipper",
       "displayName": "pelipper",
-      "importance": 1.57,
+      "importance": 1.548,
       "sources": [
         "archive",
         "meta",
@@ -65,9 +51,23 @@
       "notes": "Observed in archive, meta, pikalytics, reddit, selfplay source pools."
     },
     {
+      "name": "garchomp",
+      "displayName": "garchomp",
+      "importance": 1.547,
+      "sources": [
+        "archive",
+        "meta",
+        "pikalytics",
+        "reddit",
+        "selfplay",
+        "youtube"
+      ],
+      "notes": "Observed in archive, meta, pikalytics, reddit, selfplay, youtube source pools."
+    },
+    {
       "name": "kingambit",
       "displayName": "kingambit",
-      "importance": 0.828,
+      "importance": 0.963,
       "sources": [
         "archive",
         "meta",
@@ -80,7 +80,7 @@
     {
       "name": "basculegion",
       "displayName": "basculegion",
-      "importance": 0.807,
+      "importance": 0.874,
       "sources": [
         "archive",
         "meta",
@@ -91,21 +91,9 @@
       "notes": "Observed in archive, meta, pikalytics, reddit, selfplay source pools."
     },
     {
-      "name": "sinistcha",
-      "displayName": "sinistcha",
-      "importance": 0.699,
-      "sources": [
-        "archive",
-        "meta",
-        "pikalytics",
-        "selfplay"
-      ],
-      "notes": "Observed in archive, meta, pikalytics, selfplay source pools."
-    },
-    {
       "name": "starmie",
       "displayName": "starmie",
-      "importance": 0.6,
+      "importance": 0.71,
       "sources": [
         "archive",
         "reddit",
@@ -115,43 +103,77 @@
       "notes": "Observed in archive, reddit, selfplay, youtube source pools."
     },
     {
+      "name": "sinistcha",
+      "displayName": "sinistcha",
+      "importance": 0.6,
+      "sources": [
+        "archive",
+        "meta",
+        "pikalytics",
+        "selfplay"
+      ],
+      "notes": "Observed in archive, meta, pikalytics, selfplay source pools."
+    },
+    {
       "name": "archaludon",
       "displayName": "archaludon",
       "importance": 0.6,
       "sources": [
+        "archive",
         "meta",
         "pikalytics"
       ],
-      "notes": "Observed in meta, pikalytics source pools."
+      "notes": "Observed in archive, meta, pikalytics source pools."
     },
     {
       "name": "dragonite",
       "displayName": "dragonite",
       "importance": 0.6,
       "sources": [
+        "archive",
         "selfplay",
         "youtube"
       ],
-      "notes": "Observed in selfplay, youtube source pools."
+      "notes": "Observed in archive, selfplay, youtube source pools."
     },
     {
       "name": "rotomwash",
       "displayName": "rotomwash",
       "importance": 0.6,
       "sources": [
+        "archive",
         "selfplay",
         "youtube"
       ],
-      "notes": "Observed in selfplay, youtube source pools."
+      "notes": "Observed in archive, selfplay, youtube source pools."
     },
     {
       "name": "farigiraf",
       "displayName": "farigiraf",
       "importance": 0.6,
       "sources": [
+        "archive",
         "selfplay"
       ],
-      "notes": "Observed in selfplay source pools."
+      "notes": "Observed in archive, selfplay source pools."
+    },
+    {
+      "name": "gengar",
+      "displayName": "gengar",
+      "importance": 0.6,
+      "sources": [
+        "archive"
+      ],
+      "notes": "Observed in archive source pools."
+    },
+    {
+      "name": "tyranitar",
+      "displayName": "tyranitar",
+      "importance": 0.6,
+      "sources": [
+        "archive"
+      ],
+      "notes": "Observed in archive source pools."
     }
   ]
 }

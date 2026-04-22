@@ -1,8 +1,8 @@
 {
-  "updatedAt": "2026-04-22T22:52:53+00:00",
+  "updatedAt": "2026-04-22T23:28:45+00:00",
   "byThreat": {
     "incineroar": {
-      "multiplier": 1.503,
+      "multiplier": 1.562,
       "notes": "Observed in archive, meta, pikalytics, reddit, selfplay, youtube source pools."
     },
     "sneasler": {
@@ -10,48 +10,56 @@
       "notes": "Fast disruption remains a top pressure source."
     },
     "garchomp": {
-      "multiplier": 1.536,
+      "multiplier": 1.465,
       "notes": "Observed in archive, meta, pikalytics, reddit, selfplay, youtube source pools."
     },
     "whimsicott": {
-      "multiplier": 1.581,
+      "multiplier": 1.546,
       "notes": "Observed in archive, meta, pikalytics, reddit, selfplay, youtube source pools."
     },
     "pelipper": {
-      "multiplier": 1.527,
+      "multiplier": 1.524,
       "notes": "Observed in archive, meta, pikalytics, reddit, selfplay source pools."
     },
     "kingambit": {
-      "multiplier": 1.241,
+      "multiplier": 1.407,
       "notes": "Observed in archive, meta, pikalytics, reddit, selfplay source pools."
     },
     "basculegion": {
-      "multiplier": 1.296,
+      "multiplier": 1.277,
       "notes": "Observed in archive, meta, pikalytics, reddit, selfplay source pools."
     },
     "sinistcha": {
-      "multiplier": 1.222,
+      "multiplier": 1.236,
       "notes": "Observed in archive, meta, pikalytics, selfplay source pools."
     },
     "starmie": {
-      "multiplier": 1.177,
+      "multiplier": 1.194,
       "notes": "Observed in archive, reddit, selfplay, youtube source pools."
     },
     "archaludon": {
-      "multiplier": 1.207,
-      "notes": "Observed in meta, pikalytics source pools."
+      "multiplier": 1.177,
+      "notes": "Observed in archive, meta, pikalytics source pools."
     },
     "dragonite": {
-      "multiplier": 1.148,
-      "notes": "Observed in selfplay, youtube source pools."
+      "multiplier": 1.119,
+      "notes": "Observed in archive, selfplay, youtube source pools."
     },
     "rotomwash": {
-      "multiplier": 1.148,
-      "notes": "Observed in selfplay, youtube source pools."
+      "multiplier": 1.119,
+      "notes": "Observed in archive, selfplay, youtube source pools."
     },
     "farigiraf": {
+      "multiplier": 1.148,
+      "notes": "Observed in archive, selfplay source pools."
+    },
+    "gengar": {
       "multiplier": 1.119,
-      "notes": "Observed in selfplay source pools."
+      "notes": "Observed in archive source pools."
+    },
+    "tyranitar": {
+      "multiplier": 1.148,
+      "notes": "Observed in archive source pools."
     }
   }
 }
