@@ -224,6 +224,100 @@
     return getLearnedBuilderData().combinedTrainingPool?.teams || [];
   }
 
+  function getLearnedArchiveTeams() {
+    const archived = getLearnedBuilderData().teamArchive?.teams || [];
+    return archived.map((row, index) => ({
+      id: normalizeNameKey(row?.label || `archive-${index}`),
+      sourceType: "archive",
+      sourceName: row?.label || `archive-${index}`,
+      sourceUrl: "",
+      archetype: row?.archetype || "",
+      confidence: clampLearnedNumber(row?.confidence, 0.88, 0.1, 1),
+      completeness: 0.78,
+      tags: ["archive", "successful"],
+      team: (row?.team || []).map((name) => ({ name, item: "", ability: "", moves: [], nature: "", spreads: {} }))
+    })).filter((row) => row.team.length);
+  }
+
+  function getSpeciesLearnedRoles(speciesName) {
+    const priors = getLearnedBuilderData().speciesRolePriors?.priors || {};
+    return priors[normalizeNameKey(speciesName || "")]?.roles || [];
+  }
+
+  function inferLearnedRoleNeeds(teamState = [], structureReport = null) {
+    const filled = (teamState || []).filter((slot) => slot?.name);
+    const moveKeys = filled.flatMap((slot) => (slot.moves || []).map((move) => normalizeNameKey(move)).filter(Boolean));
+    const roles = {
+      speedControl: !moveKeys.some((move) => ["tailwind", "icy wind", "electroweb", "trick room", "thunder wave"].includes(move)),
+      pivot: !moveKeys.some((move) => ["u turn", "volt switch", "flip turn", "parting shot"].includes(move)),
+      fakeOut: !moveKeys.includes("fake out"),
+      redirect: !moveKeys.some((move) => ["follow me", "rage powder"].includes(move)),
+      trickRoomSetter: normalizeNameKey(structureReport?.label || "").includes("trickroom") && !moveKeys.includes("trick room"),
+      weatherAbuser: normalizeNameKey(structureReport?.label || "").includes("rain") || normalizeNameKey(structureReport?.label || "").includes("sun"),
+      closer: filled.length >= 4
+    };
+    return roles;
+  }
+
+  function getArchiveShellMatchScore(entry, currentTeam = [], archetypeHint = "") {
+    const speciesKey = normalizeNameKey(entry?.name || "");
+    if (!speciesKey) return 0;
+    const currentKeys = (currentTeam || []).filter((slot) => slot?.name).map((slot) => normalizeNameKey(slot.name));
+    return getLearnedArchiveTeams().reduce((best, row) => {
+      const teamKeys = (row.team || []).map((slot) => normalizeNameKey(slot?.name || "")).filter(Boolean);
+      if (!teamKeys.includes(speciesKey)) return best;
+      const overlap = currentKeys.filter((key) => teamKeys.includes(key)).length;
+      const overlapRatio = currentKeys.length ? overlap / currentKeys.length : 0;
+      const archetypeBoost = archetypeHint && normalizeNameKey(row.archetype || "").includes(archetypeHint) ? 1.2 : 1;
+      return Math.max(best, overlapRatio * row.confidence * archetypeBoost);
+    }, 0);
+  }
+
+  function getArchiveCorePairScore(entry, currentTeam = []) {
+    const speciesKey = normalizeNameKey(entry?.name || "");
+    const currentKeys = (currentTeam || []).filter((slot) => slot?.name).map((slot) => normalizeNameKey(slot.name));
+    if (!speciesKey || !currentKeys.length) return 0;
+    return getLearnedArchiveTeams().reduce((score, row) => {
+      const teamKeys = (row.team || []).map((slot) => normalizeNameKey(slot?.name || "")).filter(Boolean);
+      if (!teamKeys.includes(speciesKey)) return score;
+      const pairHits = currentKeys.filter((key) => teamKeys.includes(key)).length;
+      return score + pairHits * row.confidence;
+    }, 0) / Math.max(1, currentKeys.length);
+  }
+
+  function getArchiveRolePairScore(entry, currentTeam = [], roleNeeds = {}) {
+    const learnedRoles = getSpeciesLearnedRoles(entry?.name || "");
+    let score = 0;
+    if (roleNeeds.speedControl && learnedRoles.some((role) => normalizeNameKey(role).includes("speed"))) score += 0.35;
+    if (roleNeeds.pivot && learnedRoles.some((role) => normalizeNameKey(role).includes("pivot"))) score += 0.35;
+    if (roleNeeds.fakeOut && learnedRoles.some((role) => normalizeNameKey(role).includes("fakeout"))) score += 0.3;
+    if (roleNeeds.redirect && learnedRoles.some((role) => normalizeNameKey(role).includes("support"))) score += 0.2;
+    if (roleNeeds.trickRoomSetter && learnedRoles.some((role) => normalizeNameKey(role).includes("tr"))) score += 0.35;
+    if (roleNeeds.weatherAbuser && learnedRoles.some((role) => ["weather", "speedcontrol", "specialpressure", "physicalpressure"].includes(normalizeNameKey(role)))) score += 0.2;
+    return score;
+  }
+
+  function getArchiveCompletionPressure(entry, currentTeam = [], structureReport = null) {
+    const speciesKey = normalizeNameKey(entry?.name || "");
+    const archetypeHint = normalizeNameKey(structureReport?.label || "");
+    const currentKeys = (currentTeam || []).filter((slot) => slot?.name).map((slot) => normalizeNameKey(slot.name));
+    let reward = 0;
+    let penalty = 0;
+    getLearnedArchiveTeams().forEach((row) => {
+      const teamKeys = (row.team || []).map((slot) => normalizeNameKey(slot?.name || "")).filter(Boolean);
+      const overlap = currentKeys.filter((key) => teamKeys.includes(key)).length;
+      if (overlap < 2) return;
+      const remaining = teamKeys.filter((key) => !currentKeys.includes(key));
+      const archetypeBoost = archetypeHint && normalizeNameKey(row.archetype || "").includes(archetypeHint) ? 1.2 : 1;
+      if (remaining.includes(speciesKey)) {
+        reward += row.confidence * archetypeBoost * (1 + overlap * 0.45);
+      } else if (overlap >= 4) {
+        penalty += row.confidence * archetypeBoost * 0.9;
+      }
+    });
+    return reward - penalty;
+  }
+
   function getLearnedSpeciesPoolWeight(speciesName, options = {}) {
     const speciesKey = normalizeNameKey(speciesName || "");
     if (!speciesKey) return 0;
@@ -248,11 +342,17 @@
     const speciesKey = normalizeNameKey(entry?.name || "");
     if (!speciesKey) return { score: 0, reasons: [], debug: {} };
     const learnedTeams = getLearnedCombinedTeams();
+    const archiveTeams = getLearnedArchiveTeams();
     const currentKeys = (teamState || []).filter((slot) => slot?.name).map((slot) => normalizeNameKey(slot.name));
     const currentCount = currentKeys.length;
     const archetypeHint = normalizeNameKey(structureReport?.label || structureReport?.summary || "");
+    const roleNeeds = inferLearnedRoleNeeds(teamState, structureReport);
     const rolePrior = getLearnedRolePriorWeight(entry.name);
     const poolWeight = getLearnedSpeciesPoolWeight(entry.name, { archetypeHint });
+    const archiveShellMatch = getArchiveShellMatchScore(entry, teamState, archetypeHint);
+    const archiveCorePair = getArchiveCorePairScore(entry, teamState);
+    const archiveRolePair = getArchiveRolePairScore(entry, teamState, roleNeeds);
+    const archiveCompletionPressure = getArchiveCompletionPressure(entry, teamState, structureReport);
     let shellMatch = 0;
     let offShellPenalty = 0;
     let pairingStrength = 0;
@@ -282,13 +382,30 @@
       }
     });
 
-    let score = rolePrior * 26 + poolWeight * 34 + shellMatch * (currentCount >= 2 ? 18 : 10) - offShellPenalty * (currentCount >= 3 ? 16 : 7);
+    archiveTeams.forEach((row) => {
+      const teamKeys = (row.team || []).map((slot) => normalizeNameKey(slot?.name || "")).filter(Boolean);
+      if (!teamKeys.includes(speciesKey)) return;
+      const overlapCount = currentKeys.filter((key) => teamKeys.includes(key)).length;
+      if (!currentCount || overlapCount <= 0) return;
+      pairingStrength += row.confidence * (overlapCount / currentCount) * 0.8;
+    });
+
+    let score = rolePrior * 26
+      + poolWeight * 34
+      + shellMatch * (currentCount >= 2 ? 18 : 10)
+      + archiveShellMatch * 24
+      + archiveCorePair * 9
+      + archiveRolePair * 14
+      + archiveCompletionPressure * (currentCount >= 4 ? 11 : 7)
+      - offShellPenalty * (currentCount >= 3 ? 16 : 7);
     if (currentCount >= 4 && shellMatch < 0.45 && poolWeight < 0.08) score -= 12;
     if (currentCount >= 5 && shellMatch < 0.35) score -= 9;
     score = Math.max(-24, Math.min(58, score));
 
     const reasons = [];
     if (shellMatch >= 0.9) reasons.push("high learned shell match");
+    if (archiveShellMatch >= 0.45) reasons.push("strong archive shell match");
+    if (archiveCompletionPressure >= 0.5) reasons.push("completes successful archive shells");
     if (poolWeight >= 0.14) reasons.push("repeatedly appears in successful learned teams");
     if (rolePrior >= 0.2) reasons.push("strong learned role prior");
     if (offShellPenalty >= 0.45) reasons.push("off-shell compared with stronger learned completions");
@@ -300,6 +417,10 @@
       debug: {
         rolePrior,
         poolWeight,
+        archiveShellMatch,
+        archiveCorePair,
+        archiveRolePair,
+        archiveCompletionPressure,
         shellMatch,
         offShellPenalty,
         pairingStrength,
@@ -314,6 +435,10 @@
         reasons,
         rolePrior,
         poolWeight,
+        archiveShellMatch,
+        archiveCorePair,
+        archiveRolePair,
+        archiveCompletionPressure,
         shellMatch,
         offShellPenalty,
         pairingStrength,
@@ -334,6 +459,166 @@
     const sourceThreat = sourceSnapshot.find((row) => normalizeNameKey(row?.name || "") === key);
     const sourceWeight = clampLearnedNumber(sourceThreat?.importance, 1, 0.5, 2);
     return Math.max(0.5, Math.min(2.5, severityWeight * directWeight * sourceWeight));
+  }
+
+  function getCompletedTeamLearnedRanking(teamState = [], threatRows = [], structureReport = null, baseScore = 0) {
+    const filled = (teamState || []).filter((slot) => slot?.name);
+    const currentKeys = filled.map((slot) => normalizeNameKey(slot.name)).filter(Boolean);
+    const currentCount = currentKeys.length;
+    if (!currentCount) {
+      return {
+        learnedShellSimilarity: 0,
+        archiveShellSimilarity: 0,
+        learnedArchetypeCoherence: 0,
+        learnedPartnerSuccess: 0,
+        learnedRolePairSuccess: 0,
+        offShellDriftPenalty: 0,
+        lateSlotIntentionality: 0,
+        nicheValueScore: 0,
+        antiMetaCoverageScore: 0,
+        archiveScore: 0,
+        learnedScore: 0,
+        metaAutopilotPenalty: 0,
+        finalScoreBonus: 0,
+        reasons: []
+      };
+    }
+
+    const archetypeHint = normalizeNameKey(structureReport?.label || structureReport?.summary || "");
+    const learnedTeams = getLearnedCombinedTeams();
+    const archiveTeams = getLearnedArchiveTeams();
+    const topSourceThreats = (getLearnedBuilderData().sourceMetaSnapshot?.threats || []).slice(0, 8);
+    const topThreatKeys = topSourceThreats.map((row) => normalizeNameKey(row?.name || "")).filter(Boolean);
+
+    let learnedShellSimilarity = 0;
+    let archiveShellSimilarity = 0;
+    let learnedArchetypeCoherence = 0;
+    let learnedPartnerSuccess = 0;
+    let learnedRolePairSuccess = 0;
+    let lateSlotIntentionality = 0;
+    let offShellDriftPenalty = 0;
+
+    const pairKeys = [];
+    for (let i = 0; i < currentKeys.length; i += 1) {
+      for (let j = i + 1; j < currentKeys.length; j += 1) {
+        pairKeys.push([currentKeys[i], currentKeys[j]]);
+      }
+    }
+
+    const evaluatePool = (rows, isArchive = false) => {
+      rows.forEach((row) => {
+        const teamKeys = (row?.team || []).map((slot) => normalizeNameKey(slot?.name || "")).filter(Boolean);
+        if (!teamKeys.length) return;
+        const overlap = currentKeys.filter((key) => teamKeys.includes(key)).length;
+        const overlapRatio = overlap / currentCount;
+        const sourceType = normalizeNameKey(row?.sourceType || (isArchive ? "archive" : ""));
+        const confidence = clampLearnedNumber(row?.confidence, isArchive ? 0.88 : getLearnedSourceConfidenceWeight(sourceType), 0.1, 1);
+        const sourceWeight = isArchive ? 1.05 : getLearnedSourceSamplingWeight(sourceType) * getLearnedSourceConfidenceWeight(sourceType);
+        const archetypeBoost = archetypeHint && normalizeNameKey(row?.archetype || "").includes(archetypeHint) ? 1.25 : 1;
+        const baseWeight = overlapRatio * confidence * sourceWeight * archetypeBoost;
+        if (isArchive) archiveShellSimilarity = Math.max(archiveShellSimilarity, baseWeight);
+        else learnedShellSimilarity = Math.max(learnedShellSimilarity, baseWeight);
+        if (archetypeHint && normalizeNameKey(row?.archetype || "").includes(archetypeHint)) {
+          learnedArchetypeCoherence += baseWeight * (isArchive ? 0.8 : 1);
+        }
+        pairKeys.forEach(([left, right]) => {
+          if (teamKeys.includes(left) && teamKeys.includes(right)) {
+            learnedPartnerSuccess += baseWeight * (isArchive ? 0.7 : 1);
+          }
+        });
+        if (overlap >= 4) {
+          const remaining = teamKeys.filter((key) => !currentKeys.includes(key));
+          if (remaining.length <= 2) {
+            lateSlotIntentionality += baseWeight * 1.4;
+          } else if (remaining.length >= 3) {
+            offShellDriftPenalty += baseWeight * 1.2;
+          }
+        }
+      });
+    };
+
+    evaluatePool(learnedTeams, false);
+    evaluatePool(archiveTeams, true);
+
+    const roleNeeds = inferLearnedRoleNeeds(teamState, structureReport);
+    filled.forEach((slot) => {
+      const roles = getSpeciesLearnedRoles(slot.name);
+      if (!roles.length) return;
+      if (!roleNeeds.speedControl && roles.some((role) => normalizeNameKey(role).includes("speed"))) learnedRolePairSuccess += 0.14;
+      if (!roleNeeds.pivot && roles.some((role) => normalizeNameKey(role).includes("pivot"))) learnedRolePairSuccess += 0.14;
+      if (!roleNeeds.fakeOut && roles.some((role) => normalizeNameKey(role).includes("fakeout"))) learnedRolePairSuccess += 0.12;
+      if (!roleNeeds.redirect && roles.some((role) => normalizeNameKey(role).includes("support"))) learnedRolePairSuccess += 0.08;
+    });
+
+    const antiMetaCoverageScore = threatRows.length
+      ? threatRows.slice(0, 4).reduce((sum, row) => sum + Math.max(0, row.matchupScore - 42), 0) / (threatRows.slice(0, 4).length * 58)
+      : 0;
+
+    const nicheSpecies = filled.filter((slot) => {
+      const poolWeight = getLearnedSpeciesPoolWeight(slot.name, { archetypeHint });
+      return poolWeight >= 0.015 && poolWeight <= 0.12;
+    });
+    const nicheValueScore = Math.min(1.2, nicheSpecies.length * 0.16 + antiMetaCoverageScore * 0.45);
+
+    const topThreatOverlap = currentKeys.filter((key) => topThreatKeys.includes(key)).length;
+    const metaAutopilotPenalty = topThreatOverlap >= 5 && nicheValueScore < 0.4
+      ? Math.min(1.4, (topThreatOverlap - 4) * 0.28)
+      : 0;
+
+    const archiveScore = archiveShellSimilarity * 18 + lateSlotIntentionality * 9;
+    const learnedScore = learnedShellSimilarity * 16 + learnedArchetypeCoherence * 8 + learnedPartnerSuccess * 6 + learnedRolePairSuccess * 8;
+    const driftPenalty = offShellDriftPenalty * 14 + metaAutopilotPenalty * 8;
+    const finalScoreBonus = Math.max(-18, Math.min(32, archiveScore + learnedScore + nicheValueScore * 7 + antiMetaCoverageScore * 10 - driftPenalty));
+
+    const reasons = [];
+    if (archiveShellSimilarity >= 0.65) reasons.push("strong archive shell match");
+    if (learnedShellSimilarity >= 0.65) reasons.push("strong learned shell similarity");
+    if (lateSlotIntentionality >= 0.6) reasons.push("intentional late-slot completion");
+    if (nicheValueScore >= 0.45) reasons.push("niche value improved matchup spread");
+    if (antiMetaCoverageScore >= 0.45) reasons.push("good anti-meta coverage");
+    if (metaAutopilotPenalty >= 0.3) reasons.push("autopilot penalty applied");
+    if (offShellDriftPenalty >= 0.45) reasons.push("off-shell drift penalized");
+
+    const debugPayload = {
+      team: filled.map((slot) => slot.name),
+      baseScore,
+      learnedScore,
+      archiveScore,
+      learnedShellSimilarity,
+      archiveShellSimilarity,
+      learnedArchetypeCoherence,
+      learnedPartnerSuccess,
+      learnedRolePairSuccess,
+      lateSlotIntentionality,
+      nicheValueScore,
+      antiMetaCoverageScore,
+      offShellDriftPenalty,
+      metaAutopilotPenalty,
+      finalScore: baseScore + finalScoreBonus,
+      whyItBeatNearbyTeams: reasons
+    };
+    if (typeof window !== "undefined") {
+      const debugStore = Array.isArray(window.__MBWR_LEARNED_TEAM_RANK_DEBUG) ? window.__MBWR_LEARNED_TEAM_RANK_DEBUG : [];
+      debugStore.push(debugPayload);
+      window.__MBWR_LEARNED_TEAM_RANK_DEBUG = debugStore.slice(-40);
+    }
+
+    return {
+      learnedShellSimilarity,
+      archiveShellSimilarity,
+      learnedArchetypeCoherence,
+      learnedPartnerSuccess,
+      learnedRolePairSuccess,
+      offShellDriftPenalty,
+      lateSlotIntentionality,
+      nicheValueScore,
+      antiMetaCoverageScore,
+      archiveScore,
+      learnedScore,
+      metaAutopilotPenalty,
+      finalScoreBonus,
+      reasons
+    };
   }
 
   function isDebugFlagEnabled(flagName) {
@@ -5043,7 +5328,9 @@
     const speciesClause = evaluateSpeciesClause(teamState);
     const structureReport = evaluateTeamStructure(teamState);
     const defensiveTypeScore = computeDefensiveTypeScore(weaknessRows, team.length);
-    const metaMatchupScore = computeMetaMatchupScore(threatRows);
+    const baseMetaMatchupScore = computeMetaMatchupScore(threatRows);
+    const learnedTeamRanking = getCompletedTeamLearnedRanking(teamState, threatRows, structureReport, baseMetaMatchupScore);
+    const metaMatchupScore = clampScore(baseMetaMatchupScore + learnedTeamRanking.finalScoreBonus);
     const rawOverallScore = clampScore(Math.round(
       metaPressure.fakeOut.score * 0.12
       + metaPressure.intimidate.score * 0.12
