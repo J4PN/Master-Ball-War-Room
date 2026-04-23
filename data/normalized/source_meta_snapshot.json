@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-04-23T12:31:42+00:00",
+  "updatedAt": "2026-04-23T12:32:31+00:00",
   "sources": [
     "archive",
     "meta",
@@ -10,8 +10,8 @@
   ],
   "threats": [
     {
-      "name": "basespecieswhimsicottdisplayspecieswhimsicottitemmegastonemegaidentityformidentitywhimsicottrolearchetypemoveskeymovesidentitykeywhimsicottwhimsicott",
-      "displayName": "basespecieswhimsicottdisplayspecieswhimsicottitemmegastonemegaidentityformidentitywhimsicottrolearchetypemoveskeymovesidentitykeywhimsicottwhimsicott",
+      "name": "basespecieswhimsicottdisplayspecieswhimsicottitemmegastonemegaidentityformidentitywhimsicottrolearchetypemoveskeymovesidentitykeywhimsicott",
+      "displayName": "basespecieswhimsicottdisplayspecieswhimsicottitemmegastonemegaidentityformidentitywhimsicottrolearchetypemoveskeymovesidentitykeywhimsicott",
       "importance": 1.8,
       "sources": [
         "archive"
@@ -19,126 +19,234 @@
       "notes": "Observed in archive source pools."
     },
     {
-      "name": "basespeciesincineroardisplayspeciesincineroaritemmegastonemegaidentityformidentityincineroarrolearchetypemoveskeymovesidentitykeyincineroarincineroar",
-      "displayName": "basespeciesincineroardisplayspeciesincineroaritemmegastonemegaidentityformidentityincineroarrolearchetypemoveskeymovesidentitykeyincineroarincineroar",
-      "importance": 1.581,
+      "name": "basespeciesbasespecieswhimsicottdisplayspecieswhimsicottitemmegastonemegaidentityformidentitywhimsicottrolearchetypemoveskeymovesidentitykeywhimsicottwhimsicottdisplayspeciesbasespecieswhimsicottdisplayspecieswhimsicottitemmegastonemegaidentityformidentitywhimsicottrolearchetypemoveskeymovesidentitykeywhimsicottwhimsicottitemmegastonemegaidentityformidentitybasespecieswhimsicottdisplayspecieswhimsicottitemmegastonemegaidentityformidentitywhimsicottrolearchetypemoveskeymovesidentitykeywhimsicottwhimsicottrolearchetypemoveskeymovesidentitykeybasespecieswhimsicottdisplayspecieswhimsicottitemmegastonemegaidentityformidentitywhimsicottrolearchetypemoveskeymovesidentitykeywhimsicottwhimsicottbasespecieswhimsicottdisplayspecieswhimsicottitemmegastonemegaidentityformidentitywhimsicottrolearchetypemoveskeymovesidentitykeywhimsicottwhimsicott",
+      "displayName": "basespeciesbasespecieswhimsicottdisplayspecieswhimsicottitemmegastonemegaidentityformidentitywhimsicottrolearchetypemoveskeymovesidentitykeywhimsicottwhimsicottdisplayspeciesbasespecieswhimsicottdisplayspecieswhimsicottitemmegastonemegaidentityformidentitywhimsicottrolearchetypemoveskeymovesidentitykeywhimsicottwhimsicottitemmegastonemegaidentityformidentitybasespecieswhimsicottdisplayspecieswhimsicottitemmegastonemegaidentityformidentitywhimsicottrolearchetypemoveskeymovesidentitykeywhimsicottwhimsicottrolearchetypemoveskeymovesidentitykeybasespecieswhimsicottdisplayspecieswhimsicottitemmegastonemegaidentityformidentitywhimsicottrolearchetypemoveskeymovesidentitykeywhimsicottwhimsicottbasespecieswhimsicottdisplayspecieswhimsicottitemmegastonemegaidentityformidentitywhimsicottrolearchetypemoveskeymovesidentitykeywhimsicottwhimsicott",
+      "importance": 1.567,
       "sources": [
         "archive"
       ],
       "notes": "Observed in archive source pools."
     },
     {
-      "name": "basespeciespelipperdisplayspeciespelipperitemmegastonemegaidentityformidentitypelipperrolearchetypemoveskeymovesidentitykeypelipperpelipper",
-      "displayName": "basespeciespelipperdisplayspeciespelipperitemmegastonemegaidentityformidentitypelipperrolearchetypemoveskeymovesidentitykeypelipperpelipper",
-      "importance": 1.442,
+      "name": "basespeciesincineroardisplayspeciesincineroaritemmegastonemegaidentityformidentityincineroarrolearchetypemoveskeymovesidentitykeyincineroar",
+      "displayName": "basespeciesincineroardisplayspeciesincineroaritemmegastonemegaidentityformidentityincineroarrolearchetypemoveskeymovesidentitykeyincineroar",
+      "importance": 1.494,
       "sources": [
         "archive"
       ],
       "notes": "Observed in archive source pools."
     },
     {
-      "name": "basespecieskingambitdisplayspecieskingambititemmegastonemegaidentityformidentitykingambitrolearchetypemoveskeymovesidentitykeykingambitkingambit",
-      "displayName": "basespecieskingambitdisplayspecieskingambititemmegastonemegaidentityformidentitykingambitrolearchetypemoveskeymovesidentitykeykingambitkingambit",
-      "importance": 1.315,
+      "name": "basespeciespelipperdisplayspeciespelipperitemmegastonemegaidentityformidentitypelipperrolearchetypemoveskeymovesidentitykeypelipper",
+      "displayName": "basespeciespelipperdisplayspeciespelipperitemmegastonemegaidentityformidentitypelipperrolearchetypemoveskeymovesidentitykeypelipper",
+      "importance": 1.457,
       "sources": [
         "archive"
       ],
       "notes": "Observed in archive source pools."
     },
     {
-      "name": "basespeciesdragonitedisplayspeciesdragoniteitemmegastonemegaidentityformidentitydragoniterolearchetypemoveskeymovesidentitykeydragonitedragonite",
-      "displayName": "basespeciesdragonitedisplayspeciesdragoniteitemmegastonemegaidentityformidentitydragoniterolearchetypemoveskeymovesidentitykeydragonitedragonite",
-      "importance": 1.298,
+      "name": "basespecieskingambitdisplayspecieskingambititemmegastonemegaidentityformidentitykingambitrolearchetypemoveskeymovesidentitykeykingambit",
+      "displayName": "basespecieskingambitdisplayspecieskingambititemmegastonemegaidentityformidentitykingambitrolearchetypemoveskeymovesidentitykeykingambit",
+      "importance": 1.457,
       "sources": [
         "archive"
       ],
       "notes": "Observed in archive source pools."
     },
     {
-      "name": "basespeciesgarchompdisplayspeciesgarchompitemmegastonemegaidentityformidentitygarchomprolearchetypemoveskeymovesidentitykeygarchompgarchomp",
-      "displayName": "basespeciesgarchompdisplayspeciesgarchompitemmegastonemegaidentityformidentitygarchomprolearchetypemoveskeymovesidentitykeygarchompgarchomp",
-      "importance": 1.201,
+      "name": "basespeciesdragonitedisplayspeciesdragoniteitemmegastonemegaidentityformidentitydragoniterolearchetypemoveskeymovesidentitykeydragonite",
+      "displayName": "basespeciesdragonitedisplayspeciesdragoniteitemmegastonemegaidentityformidentitydragoniterolearchetypemoveskeymovesidentitykeydragonite",
+      "importance": 1.455,
       "sources": [
         "archive"
       ],
       "notes": "Observed in archive source pools."
     },
     {
-      "name": "basespeciesstarmiedisplayspeciesstarmieitemmegastonemegaidentityformidentitystarmierolearchetypemoveskeymovesidentitykeystarmiestarmie",
-      "displayName": "basespeciesstarmiedisplayspeciesstarmieitemmegastonemegaidentityformidentitystarmierolearchetypemoveskeymovesidentitykeystarmiestarmie",
-      "importance": 1.155,
+      "name": "basespeciesbasespeciespelipperdisplayspeciespelipperitemmegastonemegaidentityformidentitypelipperrolearchetypemoveskeymovesidentitykeypelipperpelipperdisplayspeciesbasespeciespelipperdisplayspeciespelipperitemmegastonemegaidentityformidentitypelipperrolearchetypemoveskeymovesidentitykeypelipperpelipperitemmegastonemegaidentityformidentitybasespeciespelipperdisplayspeciespelipperitemmegastonemegaidentityformidentitypelipperrolearchetypemoveskeymovesidentitykeypelipperpelipperrolearchetypemoveskeymovesidentitykeybasespeciespelipperdisplayspeciespelipperitemmegastonemegaidentityformidentitypelipperrolearchetypemoveskeymovesidentitykeypelipperpelipperbasespeciespelipperdisplayspeciespelipperitemmegastonemegaidentityformidentitypelipperrolearchetypemoveskeymovesidentitykeypelipperpelipper",
+      "displayName": "basespeciesbasespeciespelipperdisplayspeciespelipperitemmegastonemegaidentityformidentitypelipperrolearchetypemoveskeymovesidentitykeypelipperpelipperdisplayspeciesbasespeciespelipperdisplayspeciespelipperitemmegastonemegaidentityformidentitypelipperrolearchetypemoveskeymovesidentitykeypelipperpelipperitemmegastonemegaidentityformidentitybasespeciespelipperdisplayspeciespelipperitemmegastonemegaidentityformidentitypelipperrolearchetypemoveskeymovesidentitykeypelipperpelipperrolearchetypemoveskeymovesidentitykeybasespeciespelipperdisplayspeciespelipperitemmegastonemegaidentityformidentitypelipperrolearchetypemoveskeymovesidentitykeypelipperpelipperbasespeciespelipperdisplayspeciespelipperitemmegastonemegaidentityformidentitypelipperrolearchetypemoveskeymovesidentitykeypelipperpelipper",
+      "importance": 1.286,
       "sources": [
         "archive"
       ],
       "notes": "Observed in archive source pools."
     },
     {
-      "name": "basespeciessinistchadisplayspeciessinistchaitemmegastonemegaidentityformidentitysinistcharolearchetypemoveskeymovesidentitykeysinistchasinistcha",
-      "displayName": "basespeciessinistchadisplayspeciessinistchaitemmegastonemegaidentityformidentitysinistcharolearchetypemoveskeymovesidentitykeysinistchasinistcha",
-      "importance": 1.091,
+      "name": "basespeciesfarigirafdisplayspeciesfarigirafitemmegastonemegaidentityformidentityfarigirafrolearchetypemoveskeymovesidentitykeyfarigiraf",
+      "displayName": "basespeciesfarigirafdisplayspeciesfarigirafitemmegastonemegaidentityformidentityfarigirafrolearchetypemoveskeymovesidentitykeyfarigiraf",
+      "importance": 1.188,
       "sources": [
         "archive"
       ],
       "notes": "Observed in archive source pools."
     },
     {
-      "name": "basespeciesbasculegiondisplayspeciesbasculegionitemmegastonemegaidentityformidentitybasculegionrolearchetypemoveskeymovesidentitykeybasculegionbasculegion",
-      "displayName": "basespeciesbasculegiondisplayspeciesbasculegionitemmegastonemegaidentityformidentitybasculegionrolearchetypemoveskeymovesidentitykeybasculegionbasculegion",
-      "importance": 1.073,
+      "name": "basespeciesstarmiedisplayspeciesstarmieitemmegastonemegaidentityformidentitystarmierolearchetypemoveskeymovesidentitykeystarmie",
+      "displayName": "basespeciesstarmiedisplayspeciesstarmieitemmegastonemegaidentityformidentitystarmierolearchetypemoveskeymovesidentitykeystarmie",
+      "importance": 1.187,
       "sources": [
         "archive"
       ],
       "notes": "Observed in archive source pools."
     },
     {
-      "name": "basespeciesfarigirafdisplayspeciesfarigirafitemmegastonemegaidentityformidentityfarigirafrolearchetypemoveskeymovesidentitykeyfarigiraffarigiraf",
-      "displayName": "basespeciesfarigirafdisplayspeciesfarigirafitemmegastonemegaidentityformidentityfarigirafrolearchetypemoveskeymovesidentitykeyfarigiraffarigiraf",
-      "importance": 1.003,
+      "name": "basespeciesbasespeciesincineroardisplayspeciesincineroaritemmegastonemegaidentityformidentityincineroarrolearchetypemoveskeymovesidentitykeyincineroarincineroardisplayspeciesbasespeciesincineroardisplayspeciesincineroaritemmegastonemegaidentityformidentityincineroarrolearchetypemoveskeymovesidentitykeyincineroarincineroaritemmegastonemegaidentityformidentitybasespeciesincineroardisplayspeciesincineroaritemmegastonemegaidentityformidentityincineroarrolearchetypemoveskeymovesidentitykeyincineroarincineroarrolearchetypemoveskeymovesidentitykeybasespeciesincineroardisplayspeciesincineroaritemmegastonemegaidentityformidentityincineroarrolearchetypemoveskeymovesidentitykeyincineroarincineroarbasespeciesincineroardisplayspeciesincineroaritemmegastonemegaidentityformidentityincineroarrolearchetypemoveskeymovesidentitykeyincineroarincineroar",
+      "displayName": "basespeciesbasespeciesincineroardisplayspeciesincineroaritemmegastonemegaidentityformidentityincineroarrolearchetypemoveskeymovesidentitykeyincineroarincineroardisplayspeciesbasespeciesincineroardisplayspeciesincineroaritemmegastonemegaidentityformidentityincineroarrolearchetypemoveskeymovesidentitykeyincineroarincineroaritemmegastonemegaidentityformidentitybasespeciesincineroardisplayspeciesincineroaritemmegastonemegaidentityformidentityincineroarrolearchetypemoveskeymovesidentitykeyincineroarincineroarrolearchetypemoveskeymovesidentitykeybasespeciesincineroardisplayspeciesincineroaritemmegastonemegaidentityformidentityincineroarrolearchetypemoveskeymovesidentitykeyincineroarincineroarbasespeciesincineroardisplayspeciesincineroaritemmegastonemegaidentityformidentityincineroarrolearchetypemoveskeymovesidentitykeyincineroarincineroar",
+      "importance": 1.185,
       "sources": [
         "archive"
       ],
       "notes": "Observed in archive source pools."
     },
     {
-      "name": "basespeciesrotomwashdisplayspeciesrotomwashitemmegastonemegaidentityformidentityrotomwashrolearchetypemoveskeymovesidentitykeyrotomwashrotomwash",
-      "displayName": "basespeciesrotomwashdisplayspeciesrotomwashitemmegastonemegaidentityformidentityrotomwashrolearchetypemoveskeymovesidentitykeyrotomwashrotomwash",
-      "importance": 0.888,
+      "name": "basespeciesbasculegiondisplayspeciesbasculegionitemmegastonemegaidentityformidentitybasculegionrolearchetypemoveskeymovesidentitykeybasculegion",
+      "displayName": "basespeciesbasculegiondisplayspeciesbasculegionitemmegastonemegaidentityformidentitybasculegionrolearchetypemoveskeymovesidentitykeybasculegion",
+      "importance": 1.151,
       "sources": [
         "archive"
       ],
       "notes": "Observed in archive source pools."
     },
     {
-      "name": "basespeciescharizarddisplayspeciescharizarditemmegastonemegaidentityformidentitycharizardrolearchetypemoveskeymovesidentitykeycharizardcharizard",
-      "displayName": "basespeciescharizarddisplayspeciescharizarditemmegastonemegaidentityformidentitycharizardrolearchetypemoveskeymovesidentitykeycharizardcharizard",
-      "importance": 0.781,
+      "name": "basespeciessinistchadisplayspeciessinistchaitemmegastonemegaidentityformidentitysinistcharolearchetypemoveskeymovesidentitykeysinistcha",
+      "displayName": "basespeciessinistchadisplayspeciessinistchaitemmegastonemegaidentityformidentitysinistcharolearchetypemoveskeymovesidentitykeysinistcha",
+      "importance": 1.149,
       "sources": [
         "archive"
       ],
       "notes": "Observed in archive source pools."
     },
     {
-      "name": "basespeciesgengardisplayspeciesgengaritemmegastonemegaidentityformidentitygengarrolearchetypemoveskeymovesidentitykeygengargengar",
-      "displayName": "basespeciesgengardisplayspeciesgengaritemmegastonemegaidentityformidentitygengarrolearchetypemoveskeymovesidentitykeygengargengar",
-      "importance": 0.751,
+      "name": "basespeciesgarchompdisplayspeciesgarchompitemmegastonemegaidentityformidentitygarchomprolearchetypemoveskeymovesidentitykeygarchomp",
+      "displayName": "basespeciesgarchompdisplayspeciesgarchompitemmegastonemegaidentityformidentitygarchomprolearchetypemoveskeymovesidentitykeygarchomp",
+      "importance": 1.11,
       "sources": [
         "archive"
       ],
       "notes": "Observed in archive source pools."
     },
     {
-      "name": "basespeciesarchaludondisplayspeciesarchaludonitemmegastonemegaidentityformidentityarchaludonrolearchetypemoveskeymovesidentitykeyarchaludonarchaludon",
-      "displayName": "basespeciesarchaludondisplayspeciesarchaludonitemmegastonemegaidentityformidentityarchaludonrolearchetypemoveskeymovesidentitykeyarchaludonarchaludon",
-      "importance": 0.709,
+      "name": "basespeciesbasespeciesgarchompdisplayspeciesgarchompitemmegastonemegaidentityformidentitygarchomprolearchetypemoveskeymovesidentitykeygarchompgarchompdisplayspeciesbasespeciesgarchompdisplayspeciesgarchompitemmegastonemegaidentityformidentitygarchomprolearchetypemoveskeymovesidentitykeygarchompgarchompitemmegastonemegaidentityformidentitybasespeciesgarchompdisplayspeciesgarchompitemmegastonemegaidentityformidentitygarchomprolearchetypemoveskeymovesidentitykeygarchompgarchomprolearchetypemoveskeymovesidentitykeybasespeciesgarchompdisplayspeciesgarchompitemmegastonemegaidentityformidentitygarchomprolearchetypemoveskeymovesidentitykeygarchompgarchompbasespeciesgarchompdisplayspeciesgarchompitemmegastonemegaidentityformidentitygarchomprolearchetypemoveskeymovesidentitykeygarchompgarchomp",
+      "displayName": "basespeciesbasespeciesgarchompdisplayspeciesgarchompitemmegastonemegaidentityformidentitygarchomprolearchetypemoveskeymovesidentitykeygarchompgarchompdisplayspeciesbasespeciesgarchompdisplayspeciesgarchompitemmegastonemegaidentityformidentitygarchomprolearchetypemoveskeymovesidentitykeygarchompgarchompitemmegastonemegaidentityformidentitybasespeciesgarchompdisplayspeciesgarchompitemmegastonemegaidentityformidentitygarchomprolearchetypemoveskeymovesidentitykeygarchompgarchomprolearchetypemoveskeymovesidentitykeybasespeciesgarchompdisplayspeciesgarchompitemmegastonemegaidentityformidentitygarchomprolearchetypemoveskeymovesidentitykeygarchompgarchompbasespeciesgarchompdisplayspeciesgarchompitemmegastonemegaidentityformidentitygarchomprolearchetypemoveskeymovesidentitykeygarchompgarchomp",
+      "importance": 1.062,
       "sources": [
         "archive"
       ],
       "notes": "Observed in archive source pools."
     },
     {
-      "name": "basespeciestyranitardisplayspeciestyranitaritemmegastonemegaidentityformidentitytyranitarrolearchetypemoveskeymovesidentitykeytyranitartyranitar",
-      "displayName": "basespeciestyranitardisplayspeciestyranitaritemmegastonemegaidentityformidentitytyranitarrolearchetypemoveskeymovesidentitykeytyranitartyranitar",
-      "importance": 0.6,
+      "name": "basespeciesbasespeciesstarmiedisplayspeciesstarmieitemmegastonemegaidentityformidentitystarmierolearchetypemoveskeymovesidentitykeystarmiestarmiedisplayspeciesbasespeciesstarmiedisplayspeciesstarmieitemmegastonemegaidentityformidentitystarmierolearchetypemoveskeymovesidentitykeystarmiestarmieitemmegastonemegaidentityformidentitybasespeciesstarmiedisplayspeciesstarmieitemmegastonemegaidentityformidentitystarmierolearchetypemoveskeymovesidentitykeystarmiestarmierolearchetypemoveskeymovesidentitykeybasespeciesstarmiedisplayspeciesstarmieitemmegastonemegaidentityformidentitystarmierolearchetypemoveskeymovesidentitykeystarmiestarmiebasespeciesstarmiedisplayspeciesstarmieitemmegastonemegaidentityformidentitystarmierolearchetypemoveskeymovesidentitykeystarmiestarmie",
+      "displayName": "basespeciesbasespeciesstarmiedisplayspeciesstarmieitemmegastonemegaidentityformidentitystarmierolearchetypemoveskeymovesidentitykeystarmiestarmiedisplayspeciesbasespeciesstarmiedisplayspeciesstarmieitemmegastonemegaidentityformidentitystarmierolearchetypemoveskeymovesidentitykeystarmiestarmieitemmegastonemegaidentityformidentitybasespeciesstarmiedisplayspeciesstarmieitemmegastonemegaidentityformidentitystarmierolearchetypemoveskeymovesidentitykeystarmiestarmierolearchetypemoveskeymovesidentitykeybasespeciesstarmiedisplayspeciesstarmieitemmegastonemegaidentityformidentitystarmierolearchetypemoveskeymovesidentitykeystarmiestarmiebasespeciesstarmiedisplayspeciesstarmieitemmegastonemegaidentityformidentitystarmierolearchetypemoveskeymovesidentitykeystarmiestarmie",
+      "importance": 1.062,
+      "sources": [
+        "archive"
+      ],
+      "notes": "Observed in archive source pools."
+    },
+    {
+      "name": "basespeciesrotomwashdisplayspeciesrotomwashitemmegastonemegaidentityformidentityrotomwashrolearchetypemoveskeymovesidentitykeyrotomwash",
+      "displayName": "basespeciesrotomwashdisplayspeciesrotomwashitemmegastonemegaidentityformidentityrotomwashrolearchetypemoveskeymovesidentitykeyrotomwash",
+      "importance": 0.957,
+      "sources": [
+        "archive"
+      ],
+      "notes": "Observed in archive source pools."
+    },
+    {
+      "name": "basespeciesbasespecieskingambitdisplayspecieskingambititemmegastonemegaidentityformidentitykingambitrolearchetypemoveskeymovesidentitykeykingambitkingambitdisplayspeciesbasespecieskingambitdisplayspecieskingambititemmegastonemegaidentityformidentitykingambitrolearchetypemoveskeymovesidentitykeykingambitkingambititemmegastonemegaidentityformidentitybasespecieskingambitdisplayspecieskingambititemmegastonemegaidentityformidentitykingambitrolearchetypemoveskeymovesidentitykeykingambitkingambitrolearchetypemoveskeymovesidentitykeybasespecieskingambitdisplayspecieskingambititemmegastonemegaidentityformidentitykingambitrolearchetypemoveskeymovesidentitykeykingambitkingambitbasespecieskingambitdisplayspecieskingambititemmegastonemegaidentityformidentitykingambitrolearchetypemoveskeymovesidentitykeykingambitkingambit",
+      "displayName": "basespeciesbasespecieskingambitdisplayspecieskingambititemmegastonemegaidentityformidentitykingambitrolearchetypemoveskeymovesidentitykeykingambitkingambitdisplayspeciesbasespecieskingambitdisplayspecieskingambititemmegastonemegaidentityformidentitykingambitrolearchetypemoveskeymovesidentitykeykingambitkingambititemmegastonemegaidentityformidentitybasespecieskingambitdisplayspecieskingambititemmegastonemegaidentityformidentitykingambitrolearchetypemoveskeymovesidentitykeykingambitkingambitrolearchetypemoveskeymovesidentitykeybasespecieskingambitdisplayspecieskingambititemmegastonemegaidentityformidentitykingambitrolearchetypemoveskeymovesidentitykeykingambitkingambitbasespecieskingambitdisplayspecieskingambititemmegastonemegaidentityformidentitykingambitrolearchetypemoveskeymovesidentitykeykingambitkingambit",
+      "importance": 0.948,
+      "sources": [
+        "archive"
+      ],
+      "notes": "Observed in archive source pools."
+    },
+    {
+      "name": "basespeciesbasespeciesdragonitedisplayspeciesdragoniteitemmegastonemegaidentityformidentitydragoniterolearchetypemoveskeymovesidentitykeydragonitedragonitedisplayspeciesbasespeciesdragonitedisplayspeciesdragoniteitemmegastonemegaidentityformidentitydragoniterolearchetypemoveskeymovesidentitykeydragonitedragoniteitemmegastonemegaidentityformidentitybasespeciesdragonitedisplayspeciesdragoniteitemmegastonemegaidentityformidentitydragoniterolearchetypemoveskeymovesidentitykeydragonitedragoniterolearchetypemoveskeymovesidentitykeybasespeciesdragonitedisplayspeciesdragoniteitemmegastonemegaidentityformidentitydragoniterolearchetypemoveskeymovesidentitykeydragonitedragonitebasespeciesdragonitedisplayspeciesdragoniteitemmegastonemegaidentityformidentitydragoniterolearchetypemoveskeymovesidentitykeydragonitedragonite",
+      "displayName": "basespeciesbasespeciesdragonitedisplayspeciesdragoniteitemmegastonemegaidentityformidentitydragoniterolearchetypemoveskeymovesidentitykeydragonitedragonitedisplayspeciesbasespeciesdragonitedisplayspeciesdragoniteitemmegastonemegaidentityformidentitydragoniterolearchetypemoveskeymovesidentitykeydragonitedragoniteitemmegastonemegaidentityformidentitybasespeciesdragonitedisplayspeciesdragoniteitemmegastonemegaidentityformidentitydragoniterolearchetypemoveskeymovesidentitykeydragonitedragoniterolearchetypemoveskeymovesidentitykeybasespeciesdragonitedisplayspeciesdragoniteitemmegastonemegaidentityformidentitydragoniterolearchetypemoveskeymovesidentitykeydragonitedragonitebasespeciesdragonitedisplayspeciesdragoniteitemmegastonemegaidentityformidentitydragoniterolearchetypemoveskeymovesidentitykeydragonitedragonite",
+      "importance": 0.934,
+      "sources": [
+        "archive"
+      ],
+      "notes": "Observed in archive source pools."
+    },
+    {
+      "name": "basespeciescharizarddisplayspeciescharizarditemmegastonemegaidentityformidentitycharizardrolearchetypemoveskeymovesidentitykeycharizard",
+      "displayName": "basespeciescharizarddisplayspeciescharizarditemmegastonemegaidentityformidentitycharizardrolearchetypemoveskeymovesidentitykeycharizard",
+      "importance": 0.918,
+      "sources": [
+        "archive"
+      ],
+      "notes": "Observed in archive source pools."
+    },
+    {
+      "name": "basespeciesbasespeciesbasculegiondisplayspeciesbasculegionitemmegastonemegaidentityformidentitybasculegionrolearchetypemoveskeymovesidentitykeybasculegionbasculegiondisplayspeciesbasespeciesbasculegiondisplayspeciesbasculegionitemmegastonemegaidentityformidentitybasculegionrolearchetypemoveskeymovesidentitykeybasculegionbasculegionitemmegastonemegaidentityformidentitybasespeciesbasculegiondisplayspeciesbasculegionitemmegastonemegaidentityformidentitybasculegionrolearchetypemoveskeymovesidentitykeybasculegionbasculegionrolearchetypemoveskeymovesidentitykeybasespeciesbasculegiondisplayspeciesbasculegionitemmegastonemegaidentityformidentitybasculegionrolearchetypemoveskeymovesidentitykeybasculegionbasculegionbasespeciesbasculegiondisplayspeciesbasculegionitemmegastonemegaidentityformidentitybasculegionrolearchetypemoveskeymovesidentitykeybasculegionbasculegion",
+      "displayName": "basespeciesbasespeciesbasculegiondisplayspeciesbasculegionitemmegastonemegaidentityformidentitybasculegionrolearchetypemoveskeymovesidentitykeybasculegionbasculegiondisplayspeciesbasespeciesbasculegiondisplayspeciesbasculegionitemmegastonemegaidentityformidentitybasculegionrolearchetypemoveskeymovesidentitykeybasculegionbasculegionitemmegastonemegaidentityformidentitybasespeciesbasculegiondisplayspeciesbasculegionitemmegastonemegaidentityformidentitybasculegionrolearchetypemoveskeymovesidentitykeybasculegionbasculegionrolearchetypemoveskeymovesidentitykeybasespeciesbasculegiondisplayspeciesbasculegionitemmegastonemegaidentityformidentitybasculegionrolearchetypemoveskeymovesidentitykeybasculegionbasculegionbasespeciesbasculegiondisplayspeciesbasculegionitemmegastonemegaidentityformidentitybasculegionrolearchetypemoveskeymovesidentitykeybasculegionbasculegion",
+      "importance": 0.915,
+      "sources": [
+        "archive"
+      ],
+      "notes": "Observed in archive source pools."
+    },
+    {
+      "name": "basespeciesbasespeciessinistchadisplayspeciessinistchaitemmegastonemegaidentityformidentitysinistcharolearchetypemoveskeymovesidentitykeysinistchasinistchadisplayspeciesbasespeciessinistchadisplayspeciessinistchaitemmegastonemegaidentityformidentitysinistcharolearchetypemoveskeymovesidentitykeysinistchasinistchaitemmegastonemegaidentityformidentitybasespeciessinistchadisplayspeciessinistchaitemmegastonemegaidentityformidentitysinistcharolearchetypemoveskeymovesidentitykeysinistchasinistcharolearchetypemoveskeymovesidentitykeybasespeciessinistchadisplayspeciessinistchaitemmegastonemegaidentityformidentitysinistcharolearchetypemoveskeymovesidentitykeysinistchasinistchabasespeciessinistchadisplayspeciessinistchaitemmegastonemegaidentityformidentitysinistcharolearchetypemoveskeymovesidentitykeysinistchasinistcha",
+      "displayName": "basespeciesbasespeciessinistchadisplayspeciessinistchaitemmegastonemegaidentityformidentitysinistcharolearchetypemoveskeymovesidentitykeysinistchasinistchadisplayspeciesbasespeciessinistchadisplayspeciessinistchaitemmegastonemegaidentityformidentitysinistcharolearchetypemoveskeymovesidentitykeysinistchasinistchaitemmegastonemegaidentityformidentitybasespeciessinistchadisplayspeciessinistchaitemmegastonemegaidentityformidentitysinistcharolearchetypemoveskeymovesidentitykeysinistchasinistcharolearchetypemoveskeymovesidentitykeybasespeciessinistchadisplayspeciessinistchaitemmegastonemegaidentityformidentitysinistcharolearchetypemoveskeymovesidentitykeysinistchasinistchabasespeciessinistchadisplayspeciessinistchaitemmegastonemegaidentityformidentitysinistcharolearchetypemoveskeymovesidentitykeysinistchasinistcha",
+      "importance": 0.906,
+      "sources": [
+        "archive"
+      ],
+      "notes": "Observed in archive source pools."
+    },
+    {
+      "name": "basespeciesgengardisplayspeciesgengaritemmegastonemegaidentityformidentitygengarrolearchetypemoveskeymovesidentitykeygengar",
+      "displayName": "basespeciesgengardisplayspeciesgengaritemmegastonemegaidentityformidentitygengarrolearchetypemoveskeymovesidentitykeygengar",
+      "importance": 0.882,
+      "sources": [
+        "archive"
+      ],
+      "notes": "Observed in archive source pools."
+    },
+    {
+      "name": "basespeciesarchaludondisplayspeciesarchaludonitemmegastonemegaidentityformidentityarchaludonrolearchetypemoveskeymovesidentitykeyarchaludon",
+      "displayName": "basespeciesarchaludondisplayspeciesarchaludonitemmegastonemegaidentityformidentityarchaludonrolearchetypemoveskeymovesidentitykeyarchaludon",
+      "importance": 0.804,
+      "sources": [
+        "archive"
+      ],
+      "notes": "Observed in archive source pools."
+    },
+    {
+      "name": "basespeciesbasespeciesrotomwashdisplayspeciesrotomwashitemmegastonemegaidentityformidentityrotomwashrolearchetypemoveskeymovesidentitykeyrotomwashrotomwashdisplayspeciesbasespeciesrotomwashdisplayspeciesrotomwashitemmegastonemegaidentityformidentityrotomwashrolearchetypemoveskeymovesidentitykeyrotomwashrotomwashitemmegastonemegaidentityformidentitybasespeciesrotomwashdisplayspeciesrotomwashitemmegastonemegaidentityformidentityrotomwashrolearchetypemoveskeymovesidentitykeyrotomwashrotomwashrolearchetypemoveskeymovesidentitykeybasespeciesrotomwashdisplayspeciesrotomwashitemmegastonemegaidentityformidentityrotomwashrolearchetypemoveskeymovesidentitykeyrotomwashrotomwashbasespeciesrotomwashdisplayspeciesrotomwashitemmegastonemegaidentityformidentityrotomwashrolearchetypemoveskeymovesidentitykeyrotomwashrotomwash",
+      "displayName": "basespeciesbasespeciesrotomwashdisplayspeciesrotomwashitemmegastonemegaidentityformidentityrotomwashrolearchetypemoveskeymovesidentitykeyrotomwashrotomwashdisplayspeciesbasespeciesrotomwashdisplayspeciesrotomwashitemmegastonemegaidentityformidentityrotomwashrolearchetypemoveskeymovesidentitykeyrotomwashrotomwashitemmegastonemegaidentityformidentitybasespeciesrotomwashdisplayspeciesrotomwashitemmegastonemegaidentityformidentityrotomwashrolearchetypemoveskeymovesidentitykeyrotomwashrotomwashrolearchetypemoveskeymovesidentitykeybasespeciesrotomwashdisplayspeciesrotomwashitemmegastonemegaidentityformidentityrotomwashrolearchetypemoveskeymovesidentitykeyrotomwashrotomwashbasespeciesrotomwashdisplayspeciesrotomwashitemmegastonemegaidentityformidentityrotomwashrolearchetypemoveskeymovesidentitykeyrotomwashrotomwash",
+      "importance": 0.703,
+      "sources": [
+        "archive"
+      ],
+      "notes": "Observed in archive source pools."
+    },
+    {
+      "name": "basespeciesbasespeciesfarigirafdisplayspeciesfarigirafitemmegastonemegaidentityformidentityfarigirafrolearchetypemoveskeymovesidentitykeyfarigiraffarigirafdisplayspeciesbasespeciesfarigirafdisplayspeciesfarigirafitemmegastonemegaidentityformidentityfarigirafrolearchetypemoveskeymovesidentitykeyfarigiraffarigirafitemmegastonemegaidentityformidentitybasespeciesfarigirafdisplayspeciesfarigirafitemmegastonemegaidentityformidentityfarigirafrolearchetypemoveskeymovesidentitykeyfarigiraffarigirafrolearchetypemoveskeymovesidentitykeybasespeciesfarigirafdisplayspeciesfarigirafitemmegastonemegaidentityformidentityfarigirafrolearchetypemoveskeymovesidentitykeyfarigiraffarigirafbasespeciesfarigirafdisplayspeciesfarigirafitemmegastonemegaidentityformidentityfarigirafrolearchetypemoveskeymovesidentitykeyfarigiraffarigiraf",
+      "displayName": "basespeciesbasespeciesfarigirafdisplayspeciesfarigirafitemmegastonemegaidentityformidentityfarigirafrolearchetypemoveskeymovesidentitykeyfarigiraffarigirafdisplayspeciesbasespeciesfarigirafdisplayspeciesfarigirafitemmegastonemegaidentityformidentityfarigirafrolearchetypemoveskeymovesidentitykeyfarigiraffarigirafitemmegastonemegaidentityformidentitybasespeciesfarigirafdisplayspeciesfarigirafitemmegastonemegaidentityformidentityfarigirafrolearchetypemoveskeymovesidentitykeyfarigiraffarigirafrolearchetypemoveskeymovesidentitykeybasespeciesfarigirafdisplayspeciesfarigirafitemmegastonemegaidentityformidentityfarigirafrolearchetypemoveskeymovesidentitykeyfarigiraffarigirafbasespeciesfarigirafdisplayspeciesfarigirafitemmegastonemegaidentityformidentityfarigirafrolearchetypemoveskeymovesidentitykeyfarigiraffarigiraf",
+      "importance": 0.653,
+      "sources": [
+        "archive"
+      ],
+      "notes": "Observed in archive source pools."
+    },
+    {
+      "name": "basespeciestyranitardisplayspeciestyranitaritemmegastonemegaidentityformidentitytyranitarrolearchetypemoveskeymovesidentitykeytyranitar",
+      "displayName": "basespeciestyranitardisplayspeciestyranitaritemmegastonemegaidentityformidentitytyranitarrolearchetypemoveskeymovesidentitykeytyranitar",
+      "importance": 0.613,
+      "sources": [
+        "archive"
+      ],
+      "notes": "Observed in archive source pools."
+    },
+    {
+      "name": "basespeciesbasespeciescharizarddisplayspeciescharizarditemmegastonemegaidentityformidentitycharizardrolearchetypemoveskeymovesidentitykeycharizardcharizarddisplayspeciesbasespeciescharizarddisplayspeciescharizarditemmegastonemegaidentityformidentitycharizardrolearchetypemoveskeymovesidentitykeycharizardcharizarditemmegastonemegaidentityformidentitybasespeciescharizarddisplayspeciescharizarditemmegastonemegaidentityformidentitycharizardrolearchetypemoveskeymovesidentitykeycharizardcharizardrolearchetypemoveskeymovesidentitykeybasespeciescharizarddisplayspeciescharizarditemmegastonemegaidentityformidentitycharizardrolearchetypemoveskeymovesidentitykeycharizardcharizardbasespeciescharizarddisplayspeciescharizarditemmegastonemegaidentityformidentitycharizardrolearchetypemoveskeymovesidentitykeycharizardcharizard",
+      "displayName": "basespeciesbasespeciescharizarddisplayspeciescharizarditemmegastonemegaidentityformidentitycharizardrolearchetypemoveskeymovesidentitykeycharizardcharizarddisplayspeciesbasespeciescharizarddisplayspeciescharizarditemmegastonemegaidentityformidentitycharizardrolearchetypemoveskeymovesidentitykeycharizardcharizarditemmegastonemegaidentityformidentitybasespeciescharizarddisplayspeciescharizarditemmegastonemegaidentityformidentitycharizardrolearchetypemoveskeymovesidentitykeycharizardcharizardrolearchetypemoveskeymovesidentitykeybasespeciescharizarddisplayspeciescharizarditemmegastonemegaidentityformidentitycharizardrolearchetypemoveskeymovesidentitykeycharizardcharizardbasespeciescharizarddisplayspeciescharizarditemmegastonemegaidentityformidentitycharizardrolearchetypemoveskeymovesidentitykeycharizardcharizard",
+      "importance": 0.613,
       "sources": [
         "archive"
       ],
@@ -158,6 +266,15 @@
       "notes": "Observed in meta, pikalytics, reddit, selfplay, youtube source pools."
     },
     {
+      "name": "basespeciesbasespeciesgengardisplayspeciesgengaritemmegastonemegaidentityformidentitygengarrolearchetypemoveskeymovesidentitykeygengargengardisplayspeciesbasespeciesgengardisplayspeciesgengaritemmegastonemegaidentityformidentitygengarrolearchetypemoveskeymovesidentitykeygengargengaritemmegastonemegaidentityformidentitybasespeciesgengardisplayspeciesgengaritemmegastonemegaidentityformidentitygengarrolearchetypemoveskeymovesidentitykeygengargengarrolearchetypemoveskeymovesidentitykeybasespeciesgengardisplayspeciesgengaritemmegastonemegaidentityformidentitygengarrolearchetypemoveskeymovesidentitykeygengargengarbasespeciesgengardisplayspeciesgengaritemmegastonemegaidentityformidentitygengarrolearchetypemoveskeymovesidentitykeygengargengar",
+      "displayName": "basespeciesbasespeciesgengardisplayspeciesgengaritemmegastonemegaidentityformidentitygengarrolearchetypemoveskeymovesidentitykeygengargengardisplayspeciesbasespeciesgengardisplayspeciesgengaritemmegastonemegaidentityformidentitygengarrolearchetypemoveskeymovesidentitykeygengargengaritemmegastonemegaidentityformidentitybasespeciesgengardisplayspeciesgengaritemmegastonemegaidentityformidentitygengarrolearchetypemoveskeymovesidentitykeygengargengarrolearchetypemoveskeymovesidentitykeybasespeciesgengardisplayspeciesgengaritemmegastonemegaidentityformidentitygengarrolearchetypemoveskeymovesidentitykeygengargengarbasespeciesgengardisplayspeciesgengaritemmegastonemegaidentityformidentitygengarrolearchetypemoveskeymovesidentitykeygengargengar",
+      "importance": 0.6,
+      "sources": [
+        "archive"
+      ],
+      "notes": "Observed in archive source pools."
+    },
+    {
       "name": "whimsicott",
       "displayName": "whimsicott",
       "importance": 0.6,
@@ -169,147 +286,16 @@
         "youtube"
       ],
       "notes": "Observed in meta, pikalytics, reddit, selfplay, youtube source pools."
-    },
-    {
-      "name": "garchomp",
-      "displayName": "garchomp",
-      "importance": 0.6,
-      "sources": [
-        "meta",
-        "pikalytics",
-        "reddit",
-        "selfplay",
-        "youtube"
-      ],
-      "notes": "Observed in meta, pikalytics, reddit, selfplay, youtube source pools."
-    },
-    {
-      "name": "pelipper",
-      "displayName": "pelipper",
-      "importance": 0.6,
-      "sources": [
-        "meta",
-        "pikalytics",
-        "reddit",
-        "selfplay"
-      ],
-      "notes": "Observed in meta, pikalytics, reddit, selfplay source pools."
-    },
-    {
-      "name": "basespeciesgarchompdisplayspeciesgarchompitemchoicescarfmegastonemegaidentityformidentitygarchomprolearchetypemovesearthquakerockslidedragonclawprotectkeymovesearthquakerockslideidentitykeygarchompgarchompchoicescarf",
-      "displayName": "basespeciesgarchompdisplayspeciesgarchompitemchoicescarfmegastonemegaidentityformidentitygarchomprolearchetypemovesearthquakerockslidedragonclawprotectkeymovesearthquakerockslideidentitykeygarchompgarchompchoicescarf",
-      "importance": 0.6,
-      "sources": [
-        "archive"
-      ],
-      "notes": "Observed in archive source pools."
-    },
-    {
-      "name": "basespecieskingambitdisplayspecieskingambititemblackglassesmegastonemegaidentityformidentitykingambitrolearchetypemovessuckerpunchkowtowcleavelowkickprotectkeymovessuckerpunchkowtowcleaveidentitykeykingambitkingambitblackglasses",
-      "displayName": "basespecieskingambitdisplayspecieskingambititemblackglassesmegastonemegaidentityformidentitykingambitrolearchetypemovessuckerpunchkowtowcleavelowkickprotectkeymovessuckerpunchkowtowcleaveidentitykeykingambitkingambitblackglasses",
-      "importance": 0.6,
-      "sources": [
-        "archive"
-      ],
-      "notes": "Observed in archive source pools."
-    },
-    {
-      "name": "basespeciespelipperdisplayspeciespelipperitemchoicescarfmegastonemegaidentityformidentitypelipperrolearchetypemoveshurricanemuddywatertailwindprotectkeymoveshurricanemuddywateridentitykeypelipperpelipperchoicescarf",
-      "displayName": "basespeciespelipperdisplayspeciespelipperitemchoicescarfmegastonemegaidentityformidentitypelipperrolearchetypemoveshurricanemuddywatertailwindprotectkeymoveshurricanemuddywateridentitykeypelipperpelipperchoicescarf",
-      "importance": 0.6,
-      "sources": [
-        "archive"
-      ],
-      "notes": "Observed in archive source pools."
-    },
-    {
-      "name": "kingambit",
-      "displayName": "kingambit",
-      "importance": 0.6,
-      "sources": [
-        "meta",
-        "pikalytics",
-        "reddit",
-        "selfplay"
-      ],
-      "notes": "Observed in meta, pikalytics, reddit, selfplay source pools."
-    },
-    {
-      "name": "basculegion",
-      "displayName": "basculegion",
-      "importance": 0.6,
-      "sources": [
-        "meta",
-        "pikalytics",
-        "reddit",
-        "selfplay"
-      ],
-      "notes": "Observed in meta, pikalytics, reddit, selfplay source pools."
-    },
-    {
-      "name": "basespeciesincineroardisplayspeciesincineroaritemmegastonemegaidentityformidentityincineroarrolearchetypemovesfakeoutpartingshotkeymovesfakeoutpartingshotidentitykeyincineroarincineroar",
-      "displayName": "basespeciesincineroardisplayspeciesincineroaritemmegastonemegaidentityformidentityincineroarrolearchetypemovesfakeoutpartingshotkeymovesfakeoutpartingshotidentitykeyincineroarincineroar",
-      "importance": 0.6,
-      "sources": [
-        "archive"
-      ],
-      "notes": "Observed in archive source pools."
-    },
-    {
-      "name": "basespeciesgarchompdisplayspeciesgarchompitemmegastonemegaidentityformidentitygarchomprolearchetypemovesearthquakerockslidekeymovesearthquakerockslideidentitykeygarchompgarchomp",
-      "displayName": "basespeciesgarchompdisplayspeciesgarchompitemmegastonemegaidentityformidentitygarchomprolearchetypemovesearthquakerockslidekeymovesearthquakerockslideidentitykeygarchompgarchomp",
-      "importance": 0.6,
-      "sources": [
-        "archive"
-      ],
-      "notes": "Observed in archive source pools."
-    },
-    {
-      "name": "sinistcha",
-      "displayName": "sinistcha",
-      "importance": 0.6,
-      "sources": [
-        "meta",
-        "pikalytics",
-        "selfplay"
-      ],
-      "notes": "Observed in meta, pikalytics, selfplay source pools."
-    },
-    {
-      "name": "basespeciesincineroardisplayspeciesincineroaritemsitrusberrymegastonemegaidentityformidentityincineroarrolearchetypemovesfakeoutpartingshotflareblitzknockoffkeymovesfakeoutpartingshotidentitykeyincineroarincineroarsitrusberry",
-      "displayName": "basespeciesincineroardisplayspeciesincineroaritemsitrusberrymegastonemegaidentityformidentityincineroarrolearchetypemovesfakeoutpartingshotflareblitzknockoffkeymovesfakeoutpartingshotidentitykeyincineroarincineroarsitrusberry",
-      "importance": 0.6,
-      "sources": [
-        "archive"
-      ],
-      "notes": "Observed in archive source pools."
-    },
-    {
-      "name": "basespeciesincineroardisplayspeciesincineroaritemsitrusberrymegastonemegaidentityformidentityincineroarrolearchetypemovesfakeoutflareblitzpartingshotknockoffkeymovesfakeoutflareblitzidentitykeyincineroarincineroarsitrusberry",
-      "displayName": "basespeciesincineroardisplayspeciesincineroaritemsitrusberrymegastonemegaidentityformidentityincineroarrolearchetypemovesfakeoutflareblitzpartingshotknockoffkeymovesfakeoutflareblitzidentitykeyincineroarincineroarsitrusberry",
-      "importance": 0.6,
-      "sources": [
-        "archive"
-      ],
-      "notes": "Observed in archive source pools."
-    },
-    {
-      "name": "basespeciessinistchadisplayspeciessinistchaitemleftoversmegastonemegaidentityformidentitysinistcharolearchetypemovesmatchagotchashadowballragepowderprotectkeymovesmatchagotchashadowballidentitykeysinistchasinistchaleftovers",
-      "displayName": "basespeciessinistchadisplayspeciessinistchaitemleftoversmegastonemegaidentityformidentitysinistcharolearchetypemovesmatchagotchashadowballragepowderprotectkeymovesmatchagotchashadowballidentitykeysinistchasinistchaleftovers",
-      "importance": 0.6,
-      "sources": [
-        "archive"
-      ],
-      "notes": "Observed in archive source pools."
     }
   ],
   "persistent_archetype_counts": {
     "pivot-balance": 1,
     "rain-balance": 1,
-    "rain": 1,
+    "rain": 2,
     "balance": 1,
-    "unknown": 456,
-    "fast-offense": 1
+    "bulky-offense": 1,
+    "fast-offense": 1,
+    "unknown": 802
   },
   "archetype_diversity_pressure": {
     "rain_penalty": 0.0,
@@ -320,22 +306,18 @@
   "top_sources": [
     [
       "self-generated",
-      335
+      549
     ],
     [
       "team_archive",
-      95
+      242
     ],
     [
       "archive",
-      20
+      7
     ],
     [
-      "random-a",
-      2
-    ],
-    [
-      "random-b",
+      "r/stunfisk post",
       2
     ],
     [
@@ -347,11 +329,11 @@
       1
     ],
     [
-      "r/stunfisk post",
+      "Curated Reddit balance team",
       1
     ],
     [
-      "Curated Reddit balance team",
+      "YouTube description extract",
       1
     ],
     [
@@ -359,11 +341,15 @@
       1
     ],
     [
-      "self-built-a",
+      "random-a",
       1
     ],
     [
-      "self-built-b",
+      "random-b",
+      1
+    ],
+    [
+      "self-built-a",
       1
     ]
   ]

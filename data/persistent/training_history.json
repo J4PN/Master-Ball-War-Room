@@ -20,6 +20,20 @@
         "fast-offense": 1
       },
       "mega_team_count": 0
+    },
+    {
+      "run_index": 3,
+      "team_count": 809,
+      "archetype_counts": {
+        "pivot-balance": 1,
+        "rain-balance": 1,
+        "rain": 2,
+        "balance": 1,
+        "bulky-offense": 1,
+        "fast-offense": 1,
+        "unknown": 802
+      },
+      "mega_team_count": 0
     }
   ]
 }

@@ -2,14 +2,14 @@
   "sources": {
     "archive": {
       "quality_class": "archive",
-      "sample_count": 34,
-      "reliability_score": 5.8488,
+      "sample_count": 41,
+      "reliability_score": 6.3784,
       "tags": []
     },
     "self-generated": {
       "quality_class": "archive",
-      "sample_count": 424,
-      "reliability_score": 3.9627,
+      "sample_count": 973,
+      "reliability_score": 3.9623,
       "tags": [
         "selfplay",
         "generated",
@@ -18,24 +18,24 @@
     },
     "random-a": {
       "quality_class": "archive",
-      "sample_count": 3,
-      "reliability_score": 0.9045,
+      "sample_count": 4,
+      "reliability_score": 1.1019,
       "tags": [
         "random"
       ]
     },
     "random-b": {
       "quality_class": "archive",
-      "sample_count": 3,
-      "reliability_score": 0.9045,
+      "sample_count": 4,
+      "reliability_score": 1.1019,
       "tags": [
         "random"
       ]
     },
     "Pikalytics Champions snapshot": {
       "quality_class": "unknown",
-      "sample_count": 1,
-      "reliability_score": 0.864,
+      "sample_count": 2,
+      "reliability_score": 1.6157,
       "tags": [
         "pikalytics",
         "meta"
@@ -43,8 +43,8 @@
     },
     "Curated Pikalytics import": {
       "quality_class": "unknown",
-      "sample_count": 1,
-      "reliability_score": 0.891,
+      "sample_count": 2,
+      "reliability_score": 1.6662,
       "tags": [
         "pikalytics",
         "meta",
@@ -52,9 +52,9 @@
       ]
     },
     "r/stunfisk post": {
-      "quality_class": "unknown",
-      "sample_count": 1,
-      "reliability_score": 0.492,
+      "quality_class": "archive",
+      "sample_count": 3,
+      "reliability_score": 1.442,
       "tags": [
         "reddit",
         "community",
@@ -63,8 +63,8 @@
     },
     "Curated Reddit balance team": {
       "quality_class": "unknown",
-      "sample_count": 1,
-      "reliability_score": 0.738,
+      "sample_count": 2,
+      "reliability_score": 1.3801,
       "tags": [
         "reddit",
         "curated",
@@ -73,8 +73,8 @@
     },
     "Curated YouTube showcase team": {
       "quality_class": "unknown",
-      "sample_count": 1,
-      "reliability_score": 0.711,
+      "sample_count": 2,
+      "reliability_score": 1.3296,
       "tags": [
         "youtube",
         "curated",
@@ -82,27 +82,39 @@
       ]
     },
     "team_archive": {
-      "quality_class": "unknown",
-      "sample_count": 95,
-      "reliability_score": 2.9992,
+      "quality_class": "archive",
+      "sample_count": 337,
+      "reliability_score": 3.9627,
       "tags": [
         "archive"
       ]
     },
     "self-built-a": {
       "quality_class": "unknown",
-      "sample_count": 1,
-      "reliability_score": 0.522,
+      "sample_count": 2,
+      "reliability_score": 0.9761,
       "tags": [
         "selfplay"
       ]
     },
     "self-built-b": {
       "quality_class": "unknown",
-      "sample_count": 1,
-      "reliability_score": 0.522,
+      "sample_count": 2,
+      "reliability_score": 0.9761,
       "tags": [
         "selfplay"
+      ]
+    },
+    "YouTube description extract": {
+      "quality_class": "unknown",
+      "sample_count": 1,
+      "reliability_score": 0.513,
+      "tags": [
+        "youtube",
+        "community",
+        "description",
+        "pinned-comment",
+        "partial"
       ]
     }
   }

@@ -1,36 +1,36 @@
 # Off-PC Training Summary
 
-- Timestamp: 2026-04-23T12:31:50+00:00
-- Candidate iterations: 250
-- Evaluated candidates: 361
-- Battle log: `data/battle_logs/training-20260423T123150Z.jsonl`
+- Timestamp: 2026-04-23T12:33:38+00:00
+- Candidate iterations: 500
+- Evaluated candidates: 689
+- Battle log: `data/battle_logs/training-20260423T123338Z.jsonl`
 
 ## Source Counts
 
-- `archive`: 103
+- `archive`: 180
 - `pikalytics`: 2
 - `random`: 2
 - `reddit`: 2
-- `selfplay`: 250
+- `selfplay`: 501
 - `youtube`: 2
 
 ## Top Teams
 
-- `pikalyticscuratedpikalyticsimportpelipperbasculegionincineroarwhimsicottarchaludongarchomp` [pikalytics] score `0.676` confidence `0.99`
+- `pikalyticscuratedpikalyticsimportpelipperbasculegionincineroarwhimsicottarchaludongarchomp` [pikalytics] score `0.680` confidence `0.99`
   `Pelipper, Basculegion, Incineroar, Whimsicott, Archaludon, Garchomp`
-  meta `0.772` | pikalytics `0.898` | reddit `0.652` | youtube `0.571` | archive `0.637` | random `0.307` | selfplay `0.468`
-- `pikalyticspikalyticschampionssnapshotincineroarwhimsicottgarchompsinistchakingambitpelipper` [pikalytics] score `0.681` confidence `0.97`
+  meta `0.778` | pikalytics `0.904` | reddit `0.655` | youtube `0.573` | archive `0.642` | random `0.307` | selfplay `0.470`
+- `pikalyticspikalyticschampionssnapshotincineroarwhimsicottgarchompsinistchakingambitpelipper` [pikalytics] score `0.685` confidence `0.97`
   `Incineroar, Whimsicott, Garchomp, Sinistcha, Kingambit, Pelipper`
-  meta `0.779` | pikalytics `0.905` | reddit `0.659` | youtube `0.574` | archive `0.643` | random `0.302` | selfplay `0.466`
-- `redditcuratedredditbalanceteamincineroarstarmiegarchompwhimsicottkingambitpelipper` [reddit] score `0.684` confidence `0.86`
-  `Incineroar, Starmie, Garchomp, Whimsicott, Kingambit, Pelipper`
-  meta `0.791` | pikalytics `0.917` | reddit `0.652` | youtube `0.561` | archive `0.643` | random `0.302` | selfplay `0.466`
-- `youtubecuratedyoutubeshowcaseteamincineroargarchompwhimsicottstarmiedragoniterotomwash` [youtube] score `0.699` confidence `0.84`
-  `Incineroar, Garchomp, Whimsicott, Starmie, Dragonite, Rotom-Wash`
-  meta `0.826` | pikalytics `0.949` | reddit `0.675` | youtube `0.549` | archive `0.641` | random `0.301` | selfplay `0.464`
-- `archivearchive` [archive] score `0.707` confidence `0.71`
+  meta `0.785` | pikalytics `0.910` | reddit `0.662` | youtube `0.576` | archive `0.648` | random `0.302` | selfplay `0.467`
+- `archivearchive` [archive] score `0.727` confidence `0.87`
   `{'base_species': 'Pelipper', 'display_species': 'Pelipper', 'item': '', 'mega_stone': '', 'mega_identity': '', 'form_identity': 'Pelipper', 'role': '', 'archetype': '', 'moves': [], 'key_moves': [], 'identity_key': 'pelipper::pelipper::::'}, {'base_species': 'Basculegion', 'display_species': 'Basculegion', 'item': '', 'mega_stone': '', 'mega_identity': '', 'form_identity': 'Basculegion', 'role': '', 'archetype': '', 'moves': [], 'key_moves': [], 'identity_key': 'basculegion::basculegion::::'}, {'base_species': 'Incineroar', 'display_species': 'Incineroar', 'item': '', 'mega_stone': '', 'mega_identity': '', 'form_identity': 'Incineroar', 'role': '', 'archetype': '', 'moves': [], 'key_moves': [], 'identity_key': 'incineroar::incineroar::::'}, {'base_species': 'Whimsicott', 'display_species': 'Whimsicott', 'item': '', 'mega_stone': '', 'mega_identity': '', 'form_identity': 'Whimsicott', 'role': '', 'archetype': '', 'moves': [], 'key_moves': [], 'identity_key': 'whimsicott::whimsicott::::'}, {'base_species': 'Archaludon', 'display_species': 'Archaludon', 'item': '', 'mega_stone': '', 'mega_identity': '', 'form_identity': 'Archaludon', 'role': '', 'archetype': '', 'moves': [], 'key_moves': [], 'identity_key': 'archaludon::archaludon::::'}, {'base_species': 'Garchomp', 'display_species': 'Garchomp', 'item': '', 'mega_stone': '', 'mega_identity': '', 'form_identity': 'Garchomp', 'role': '', 'archetype': '', 'moves': [], 'key_moves': [], 'identity_key': 'garchomp::garchomp::::'}`
-  meta `0.855` | pikalytics `0.977` | reddit `0.698` | youtube `0.595` | archive `0.560` | random `0.306` | selfplay `0.485`
-- `archivearchive` [archive] score `0.706` confidence `0.70`
+  meta `0.872` | pikalytics `0.993` | reddit `0.707` | youtube `0.601` | archive `0.616` | random `0.310` | selfplay `0.492`
+- `archivearchive` [archive] score `0.722` confidence `0.87`
+  `{'base_species': 'Pelipper', 'display_species': 'Pelipper', 'item': 'Choice Scarf', 'mega_stone': '', 'mega_identity': '', 'form_identity': 'Pelipper', 'role': '', 'archetype': 'rain-balance', 'moves': ['Hurricane', 'Tailwind', 'Protect', 'Muddy Water'], 'key_moves': ['Hurricane', 'Tailwind'], 'identity_key': 'pelipper::pelipper::choice scarf::'}, {'base_species': 'Basculegion', 'display_species': 'Basculegion', 'item': 'Choice Scarf', 'mega_stone': '', 'mega_identity': '', 'form_identity': 'Basculegion', 'role': '', 'archetype': 'rain-balance', 'moves': ['Last Respects', 'Wave Crash', 'Flip Turn', 'Aqua Jet'], 'key_moves': ['Last Respects', 'Wave Crash'], 'identity_key': 'basculegion::basculegion::choice scarf::'}, {'base_species': 'Incineroar', 'display_species': 'Incineroar', 'item': 'Sitrus Berry', 'mega_stone': '', 'mega_identity': '', 'form_identity': 'Incineroar', 'role': '', 'archetype': 'rain-balance', 'moves': ['Fake Out', 'Parting Shot', 'Flare Blitz', 'Knock Off'], 'key_moves': ['Fake Out', 'Parting Shot'], 'identity_key': 'incineroar::incineroar::sitrus berry::'}, {'base_species': 'Whimsicott', 'display_species': 'Whimsicott', 'item': 'Focus Sash', 'mega_stone': '', 'mega_identity': '', 'form_identity': 'Whimsicott', 'role': '', 'archetype': 'rain-balance', 'moves': ['Tailwind', 'Encore', 'Moonblast', 'Protect'], 'key_moves': ['Tailwind', 'Encore'], 'identity_key': 'whimsicott::whimsicott::focus sash::'}, {'base_species': 'Archaludon', 'display_species': 'Archaludon', 'item': 'Assault Vest', 'mega_stone': '', 'mega_identity': '', 'form_identity': 'Archaludon', 'role': '', 'archetype': 'rain-balance', 'moves': ['Flash Cannon', 'Electro Shot', 'Draco Meteor', 'Snarl'], 'key_moves': ['Flash Cannon', 'Electro Shot'], 'identity_key': 'archaludon::archaludon::assault vest::'}, {'base_species': 'Garchomp', 'display_species': 'Garchomp', 'item': 'Clear Amulet', 'mega_stone': '', 'mega_identity': '', 'form_identity': 'Garchomp', 'role': '', 'archetype': 'rain-balance', 'moves': ['Earthquake', 'Rock Slide', 'Protect', 'Dragon Claw'], 'key_moves': ['Earthquake', 'Rock Slide'], 'identity_key': 'garchomp::garchomp::clear amulet::'}`
+  meta `0.865` | pikalytics `0.987` | reddit `0.703` | youtube `0.598` | archive `0.613` | random `0.308` | selfplay `0.489`
+- `archivearchive` [archive] score `0.727` confidence `0.85`
   `{'base_species': 'Incineroar', 'display_species': 'Incineroar', 'item': '', 'mega_stone': '', 'mega_identity': '', 'form_identity': 'Incineroar', 'role': '', 'archetype': '', 'moves': [], 'key_moves': [], 'identity_key': 'incineroar::incineroar::::'}, {'base_species': 'Whimsicott', 'display_species': 'Whimsicott', 'item': '', 'mega_stone': '', 'mega_identity': '', 'form_identity': 'Whimsicott', 'role': '', 'archetype': '', 'moves': [], 'key_moves': [], 'identity_key': 'whimsicott::whimsicott::::'}, {'base_species': 'Garchomp', 'display_species': 'Garchomp', 'item': '', 'mega_stone': '', 'mega_identity': '', 'form_identity': 'Garchomp', 'role': '', 'archetype': '', 'moves': [], 'key_moves': [], 'identity_key': 'garchomp::garchomp::::'}, {'base_species': 'Sinistcha', 'display_species': 'Sinistcha', 'item': '', 'mega_stone': '', 'mega_identity': '', 'form_identity': 'Sinistcha', 'role': '', 'archetype': '', 'moves': [], 'key_moves': [], 'identity_key': 'sinistcha::sinistcha::::'}, {'base_species': 'Kingambit', 'display_species': 'Kingambit', 'item': '', 'mega_stone': '', 'mega_identity': '', 'form_identity': 'Kingambit', 'role': '', 'archetype': '', 'moves': [], 'key_moves': [], 'identity_key': 'kingambit::kingambit::::'}, {'base_species': 'Pelipper', 'display_species': 'Pelipper', 'item': '', 'mega_stone': '', 'mega_identity': '', 'form_identity': 'Pelipper', 'role': '', 'archetype': '', 'moves': [], 'key_moves': [], 'identity_key': 'pelipper::pelipper::::'}`
-  meta `0.855` | pikalytics `0.977` | reddit `0.698` | youtube `0.595` | archive `0.556` | random `0.306` | selfplay `0.485`
+  meta `0.872` | pikalytics `0.993` | reddit `0.707` | youtube `0.601` | archive `0.616` | random `0.310` | selfplay `0.492`
+- `archivearchive` [archive] score `0.722` confidence `0.84`
+  `{'base_species': 'Incineroar', 'display_species': 'Incineroar', 'item': 'Sitrus Berry', 'mega_stone': '', 'mega_identity': '', 'form_identity': 'Incineroar', 'role': '', 'archetype': 'pivot-balance', 'moves': ['Fake Out', 'Flare Blitz', 'Parting Shot', 'Knock Off'], 'key_moves': ['Fake Out', 'Flare Blitz'], 'identity_key': 'incineroar::incineroar::sitrus berry::'}, {'base_species': 'Whimsicott', 'display_species': 'Whimsicott', 'item': 'Focus Sash', 'mega_stone': '', 'mega_identity': '', 'form_identity': 'Whimsicott', 'role': '', 'archetype': 'pivot-balance', 'moves': ['Tailwind', 'Moonblast', 'Encore', 'Protect'], 'key_moves': ['Tailwind', 'Moonblast'], 'identity_key': 'whimsicott::whimsicott::focus sash::'}, {'base_species': 'Garchomp', 'display_species': 'Garchomp', 'item': 'Choice Scarf', 'mega_stone': '', 'mega_identity': '', 'form_identity': 'Garchomp', 'role': '', 'archetype': 'pivot-balance', 'moves': ['Earthquake', 'Rock Slide', 'Dragon Claw', 'Protect'], 'key_moves': ['Earthquake', 'Rock Slide'], 'identity_key': 'garchomp::garchomp::choice scarf::'}, {'base_species': 'Sinistcha', 'display_species': 'Sinistcha', 'item': 'Leftovers', 'mega_stone': '', 'mega_identity': '', 'form_identity': 'Sinistcha', 'role': '', 'archetype': 'pivot-balance', 'moves': ['Matcha Gotcha', 'Shadow Ball', 'Rage Powder', 'Protect'], 'key_moves': ['Matcha Gotcha', 'Shadow Ball'], 'identity_key': 'sinistcha::sinistcha::leftovers::'}, {'base_species': 'Kingambit', 'display_species': 'Kingambit', 'item': 'Black Glasses', 'mega_stone': '', 'mega_identity': '', 'form_identity': 'Kingambit', 'role': '', 'archetype': 'pivot-balance', 'moves': ['Sucker Punch', 'Kowtow Cleave', 'Low Kick', 'Protect'], 'key_moves': ['Sucker Punch', 'Kowtow Cleave'], 'identity_key': 'kingambit::kingambit::black glasses::'}, {'base_species': 'Pelipper', 'display_species': 'Pelipper', 'item': 'Choice Scarf', 'mega_stone': '', 'mega_identity': '', 'form_identity': 'Pelipper', 'role': '', 'archetype': 'pivot-balance', 'moves': ['Hurricane', 'Muddy Water', 'Tailwind', 'Protect'], 'key_moves': ['Hurricane', 'Muddy Water'], 'identity_key': 'pelipper::pelipper::choice scarf::'}`
+  meta `0.865` | pikalytics `0.987` | reddit `0.703` | youtube `0.598` | archive `0.613` | random `0.308` | selfplay `0.489`

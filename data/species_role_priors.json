@@ -1,29 +1,29 @@
 {
-  "updatedAt": "2026-04-23T12:31:50+00:00",
+  "updatedAt": "2026-04-23T12:33:38+00:00",
   "priors": {
     "incineroar": {
-      "weight": 0.079,
+      "weight": 0.061,
       "roles": [
         "pivot_support",
         "fake_out"
       ]
     },
     "whimsicott": {
-      "weight": 0.079,
+      "weight": 0.061,
       "roles": [
         "speed_control",
         "support"
       ]
     },
     "garchomp": {
-      "weight": 0.066,
+      "weight": 0.049,
       "roles": [
         "physical_pressure",
         "spread_damage"
       ]
     },
     "pelipper": {
-      "weight": 0.053,
+      "weight": 0.049,
       "roles": [
         "weather",
         "speed_control"
@@ -31,31 +31,31 @@
     },
     "basculegion": {
       "roles": [],
-      "weight": 0.026
+      "weight": 0.024
     },
     "archaludon": {
       "roles": [],
-      "weight": 0.013
+      "weight": 0.012
     },
     "sinistcha": {
       "roles": [],
-      "weight": 0.013
+      "weight": 0.012
     },
     "kingambit": {
       "roles": [],
-      "weight": 0.026
+      "weight": 0.024
     },
     "starmie": {
       "roles": [],
-      "weight": 0.039
+      "weight": 0.024
     },
     "dragonite": {
       "roles": [],
-      "weight": 0.013
+      "weight": 0.012
     },
     "rotomwash": {
       "roles": [],
-      "weight": 0.013
+      "weight": 0.012
     },
     "farigiraf": {
       "roles": [],
@@ -75,47 +75,167 @@
     },
     "basespeciespelipperdisplayspeciespelipperitemmegastonemegaidentityformidentitypelipperrolearchetypemoveskeymovesidentitykeypelipperpelipper": {
       "roles": [],
-      "weight": 0.066
+      "weight": 0.037
     },
     "basespeciesbasculegiondisplayspeciesbasculegionitemmegastonemegaidentityformidentitybasculegionrolearchetypemoveskeymovesidentitykeybasculegionbasculegion": {
       "roles": [],
-      "weight": 0.039
+      "weight": 0.012
     },
     "basespeciesincineroardisplayspeciesincineroaritemmegastonemegaidentityformidentityincineroarrolearchetypemoveskeymovesidentitykeyincineroarincineroar": {
       "roles": [],
-      "weight": 0.105
+      "weight": 0.049
     },
     "basespecieswhimsicottdisplayspecieswhimsicottitemmegastonemegaidentityformidentitywhimsicottrolearchetypemoveskeymovesidentitykeywhimsicottwhimsicott": {
       "roles": [],
-      "weight": 0.092
+      "weight": 0.049
     },
     "basespeciesarchaludondisplayspeciesarchaludonitemmegastonemegaidentityformidentityarchaludonrolearchetypemoveskeymovesidentitykeyarchaludonarchaludon": {
       "roles": [],
-      "weight": 0.013
+      "weight": 0.012
     },
     "basespeciesgarchompdisplayspeciesgarchompitemmegastonemegaidentityformidentitygarchomprolearchetypemoveskeymovesidentitykeygarchompgarchomp": {
       "roles": [],
-      "weight": 0.092
+      "weight": 0.049
     },
     "basespeciessinistchadisplayspeciessinistchaitemmegastonemegaidentityformidentitysinistcharolearchetypemoveskeymovesidentitykeysinistchasinistcha": {
       "roles": [],
-      "weight": 0.039
+      "weight": 0.012
     },
     "basespecieskingambitdisplayspecieskingambititemmegastonemegaidentityformidentitykingambitrolearchetypemoveskeymovesidentitykeykingambitkingambit": {
       "roles": [],
-      "weight": 0.026
+      "weight": 0.024
     },
     "basespeciesstarmiedisplayspeciesstarmieitemmegastonemegaidentityformidentitystarmierolearchetypemoveskeymovesidentitykeystarmiestarmie": {
       "roles": [],
-      "weight": 0.053
+      "weight": 0.024
     },
     "basespeciesdragonitedisplayspeciesdragoniteitemmegastonemegaidentityformidentitydragoniterolearchetypemoveskeymovesidentitykeydragonitedragonite": {
       "roles": [],
-      "weight": 0.026
+      "weight": 0.012
     },
     "basespeciesrotomwashdisplayspeciesrotomwashitemmegastonemegaidentityformidentityrotomwashrolearchetypemoveskeymovesidentitykeyrotomwashrotomwash": {
       "roles": [],
-      "weight": 0.026
+      "weight": 0.012
+    },
+    "basespeciespelipperdisplayspeciespelipperitemchoicescarfmegastonemegaidentityformidentitypelipperrolearchetyperainbalancemoveshurricanetailwindprotectmuddywaterkeymoveshurricanetailwindidentitykeypelipperpelipperchoicescarf": {
+      "roles": [],
+      "weight": 0.012
+    },
+    "basespeciesbasculegiondisplayspeciesbasculegionitemchoicescarfmegastonemegaidentityformidentitybasculegionrolearchetyperainbalancemoveslastrespectswavecrashflipturnaquajetkeymoveslastrespectswavecrashidentitykeybasculegionbasculegionchoicescarf": {
+      "roles": [],
+      "weight": 0.012
+    },
+    "basespeciesincineroardisplayspeciesincineroaritemsitrusberrymegastonemegaidentityformidentityincineroarrolearchetyperainbalancemovesfakeoutpartingshotflareblitzknockoffkeymovesfakeoutpartingshotidentitykeyincineroarincineroarsitrusberry": {
+      "roles": [],
+      "weight": 0.012
+    },
+    "basespecieswhimsicottdisplayspecieswhimsicottitemfocussashmegastonemegaidentityformidentitywhimsicottrolearchetyperainbalancemovestailwindencoremoonblastprotectkeymovestailwindencoreidentitykeywhimsicottwhimsicottfocussash": {
+      "roles": [],
+      "weight": 0.012
+    },
+    "basespeciesarchaludondisplayspeciesarchaludonitemassaultvestmegastonemegaidentityformidentityarchaludonrolearchetyperainbalancemovesflashcannonelectroshotdracometeorsnarlkeymovesflashcannonelectroshotidentitykeyarchaludonarchaludonassaultvest": {
+      "roles": [],
+      "weight": 0.012
+    },
+    "basespeciesgarchompdisplayspeciesgarchompitemclearamuletmegastonemegaidentityformidentitygarchomprolearchetyperainbalancemovesearthquakerockslideprotectdragonclawkeymovesearthquakerockslideidentitykeygarchompgarchompclearamulet": {
+      "roles": [],
+      "weight": 0.012
+    },
+    "basespeciesincineroardisplayspeciesincineroaritemsitrusberrymegastonemegaidentityformidentityincineroarrolearchetypepivotbalancemovesfakeoutflareblitzpartingshotknockoffkeymovesfakeoutflareblitzidentitykeyincineroarincineroarsitrusberry": {
+      "roles": [],
+      "weight": 0.012
+    },
+    "basespecieswhimsicottdisplayspecieswhimsicottitemfocussashmegastonemegaidentityformidentitywhimsicottrolearchetypepivotbalancemovestailwindmoonblastencoreprotectkeymovestailwindmoonblastidentitykeywhimsicottwhimsicottfocussash": {
+      "roles": [],
+      "weight": 0.012
+    },
+    "basespeciesgarchompdisplayspeciesgarchompitemchoicescarfmegastonemegaidentityformidentitygarchomprolearchetypepivotbalancemovesearthquakerockslidedragonclawprotectkeymovesearthquakerockslideidentitykeygarchompgarchompchoicescarf": {
+      "roles": [],
+      "weight": 0.012
+    },
+    "basespeciessinistchadisplayspeciessinistchaitemleftoversmegastonemegaidentityformidentitysinistcharolearchetypepivotbalancemovesmatchagotchashadowballragepowderprotectkeymovesmatchagotchashadowballidentitykeysinistchasinistchaleftovers": {
+      "roles": [],
+      "weight": 0.012
+    },
+    "basespecieskingambitdisplayspecieskingambititemblackglassesmegastonemegaidentityformidentitykingambitrolearchetypepivotbalancemovessuckerpunchkowtowcleavelowkickprotectkeymovessuckerpunchkowtowcleaveidentitykeykingambitkingambitblackglasses": {
+      "roles": [],
+      "weight": 0.012
+    },
+    "basespeciespelipperdisplayspeciespelipperitemchoicescarfmegastonemegaidentityformidentitypelipperrolearchetypepivotbalancemoveshurricanemuddywatertailwindprotectkeymoveshurricanemuddywateridentitykeypelipperpelipperchoicescarf": {
+      "roles": [],
+      "weight": 0.012
+    },
+    "basespeciesincineroardisplayspeciesincineroaritemsafetygogglesmegastonemegaidentityformidentityincineroarrolearchetypebalancemovesfakeoutpartingshotwillowispknockoffkeymovesfakeoutpartingshotidentitykeyincineroarincineroarsafetygoggles": {
+      "roles": [],
+      "weight": 0.012
+    },
+    "basespeciesstarmiedisplayspeciesstarmieitemlifeorbmegastonemegaidentityformidentitystarmierolearchetypebalancemoveshydropumpicebeampsychicprotectkeymoveshydropumpicebeamidentitykeystarmiestarmielifeorb": {
+      "roles": [],
+      "weight": 0.012
+    },
+    "basespeciesgarchompdisplayspeciesgarchompitemclearamuletmegastonemegaidentityformidentitygarchomprolearchetypebalancemovesearthquakerockslideswordsdanceprotectkeymovesearthquakerockslideidentitykeygarchompgarchompclearamulet": {
+      "roles": [],
+      "weight": 0.012
+    },
+    "basespecieswhimsicottdisplayspecieswhimsicottitemfocussashmegastonemegaidentityformidentitywhimsicottrolearchetypebalancemovestailwindencoremoonblastprotectkeymovestailwindencoreidentitykeywhimsicottwhimsicottfocussash": {
+      "roles": [],
+      "weight": 0.012
+    },
+    "basespecieskingambitdisplayspecieskingambititemblackglassesmegastonemegaidentityformidentitykingambitrolearchetypebalancemovessuckerpunchkowtowcleaveprotectlowkickkeymovessuckerpunchkowtowcleaveidentitykeykingambitkingambitblackglasses": {
+      "roles": [],
+      "weight": 0.012
+    },
+    "basespeciespelipperdisplayspeciespelipperitemcovertcloakmegastonemegaidentityformidentitypelipperrolearchetypebalancemovestailwindhurricanemuddywaterprotectkeymovestailwindhurricaneidentitykeypelipperpelippercovertcloak": {
+      "roles": [],
+      "weight": 0.012
+    },
+    "basespeciesincineroardisplayspeciesincineroaritemsitrusberrymegastonemegaidentityformidentityincineroarrolearchetypefastoffensemovesfakeoutpartingshotflareblitzknockoffkeymovesfakeoutpartingshotidentitykeyincineroarincineroarsitrusberry": {
+      "roles": [],
+      "weight": 0.012
+    },
+    "basespeciesgarchompdisplayspeciesgarchompitemchoicescarfmegastonemegaidentityformidentitygarchomprolearchetypefastoffensemovesearthquakerockslidedragonclawprotectkeymovesearthquakerockslideidentitykeygarchompgarchompchoicescarf": {
+      "roles": [],
+      "weight": 0.012
+    },
+    "basespecieswhimsicottdisplayspecieswhimsicottitemfocussashmegastonemegaidentityformidentitywhimsicottrolearchetypefastoffensemovestailwindencoremoonblastprotectkeymovestailwindencoreidentitykeywhimsicottwhimsicottfocussash": {
+      "roles": [],
+      "weight": 0.012
+    },
+    "basespeciesstarmiedisplayspeciesstarmieitemlifeorbmegastonemegaidentityformidentitystarmierolearchetypefastoffensemoveshydropumpicebeamthunderboltprotectkeymoveshydropumpicebeamidentitykeystarmiestarmielifeorb": {
+      "roles": [],
+      "weight": 0.012
+    },
+    "basespeciesdragonitedisplayspeciesdragoniteitemdragoninitemegastonemegaidentityformidentitydragoniterolearchetypefastoffensemovesextremespeeddragonclawfirepunchprotectkeymovesextremespeeddragonclawidentitykeydragonitedragonitedragoninite": {
+      "roles": [],
+      "weight": 0.012
+    },
+    "basespeciesrotomwashdisplayspeciesrotomwashitemsitrusberrymegastonemegaidentityformidentityrotomwashrolearchetypefastoffensemovesthunderbolthydropumpvoltswitchprotectkeymovesthunderbolthydropumpidentitykeyrotomwashrotomwashsitrusberry": {
+      "roles": [],
+      "weight": 0.012
+    },
+    "basespeciesbasespeciespelipperdisplayspeciespelipperitemmegastonemegaidentityformidentitypelipperrolearchetypemoveskeymovesidentitykeypelipperpelipperdisplayspeciesbasespeciespelipperdisplayspeciespelipperitemmegastonemegaidentityformidentitypelipperrolearchetypemoveskeymovesidentitykeypelipperpelipperitemmegastonemegaidentityformidentitybasespeciespelipperdisplayspeciespelipperitemmegastonemegaidentityformidentitypelipperrolearchetypemoveskeymovesidentitykeypelipperpelipperrolearchetypemoveskeymovesidentitykeybasespeciespelipperdisplayspeciespelipperitemmegastonemegaidentityformidentitypelipperrolearchetypemoveskeymovesidentitykeypelipperpelipperbasespeciespelipperdisplayspeciespelipperitemmegastonemegaidentityformidentitypelipperrolearchetypemoveskeymovesidentitykeypelipperpelipper": {
+      "roles": [],
+      "weight": 0.012
+    },
+    "basespeciesbasespeciesbasculegiondisplayspeciesbasculegionitemmegastonemegaidentityformidentitybasculegionrolearchetypemoveskeymovesidentitykeybasculegionbasculegiondisplayspeciesbasespeciesbasculegiondisplayspeciesbasculegionitemmegastonemegaidentityformidentitybasculegionrolearchetypemoveskeymovesidentitykeybasculegionbasculegionitemmegastonemegaidentityformidentitybasespeciesbasculegiondisplayspeciesbasculegionitemmegastonemegaidentityformidentitybasculegionrolearchetypemoveskeymovesidentitykeybasculegionbasculegionrolearchetypemoveskeymovesidentitykeybasespeciesbasculegiondisplayspeciesbasculegionitemmegastonemegaidentityformidentitybasculegionrolearchetypemoveskeymovesidentitykeybasculegionbasculegionbasespeciesbasculegiondisplayspeciesbasculegionitemmegastonemegaidentityformidentitybasculegionrolearchetypemoveskeymovesidentitykeybasculegionbasculegion": {
+      "roles": [],
+      "weight": 0.012
+    },
+    "basespeciesbasespeciesincineroardisplayspeciesincineroaritemmegastonemegaidentityformidentityincineroarrolearchetypemoveskeymovesidentitykeyincineroarincineroardisplayspeciesbasespeciesincineroardisplayspeciesincineroaritemmegastonemegaidentityformidentityincineroarrolearchetypemoveskeymovesidentitykeyincineroarincineroaritemmegastonemegaidentityformidentitybasespeciesincineroardisplayspeciesincineroaritemmegastonemegaidentityformidentityincineroarrolearchetypemoveskeymovesidentitykeyincineroarincineroarrolearchetypemoveskeymovesidentitykeybasespeciesincineroardisplayspeciesincineroaritemmegastonemegaidentityformidentityincineroarrolearchetypemoveskeymovesidentitykeyincineroarincineroarbasespeciesincineroardisplayspeciesincineroaritemmegastonemegaidentityformidentityincineroarrolearchetypemoveskeymovesidentitykeyincineroarincineroar": {
+      "roles": [],
+      "weight": 0.012
+    },
+    "basespeciesbasespecieswhimsicottdisplayspecieswhimsicottitemmegastonemegaidentityformidentitywhimsicottrolearchetypemoveskeymovesidentitykeywhimsicottwhimsicottdisplayspeciesbasespecieswhimsicottdisplayspecieswhimsicottitemmegastonemegaidentityformidentitywhimsicottrolearchetypemoveskeymovesidentitykeywhimsicottwhimsicottitemmegastonemegaidentityformidentitybasespecieswhimsicottdisplayspecieswhimsicottitemmegastonemegaidentityformidentitywhimsicottrolearchetypemoveskeymovesidentitykeywhimsicottwhimsicottrolearchetypemoveskeymovesidentitykeybasespecieswhimsicottdisplayspecieswhimsicottitemmegastonemegaidentityformidentitywhimsicottrolearchetypemoveskeymovesidentitykeywhimsicottwhimsicottbasespecieswhimsicottdisplayspecieswhimsicottitemmegastonemegaidentityformidentitywhimsicottrolearchetypemoveskeymovesidentitykeywhimsicottwhimsicott": {
+      "roles": [],
+      "weight": 0.012
+    },
+    "basespeciesbasespeciesarchaludondisplayspeciesarchaludonitemmegastonemegaidentityformidentityarchaludonrolearchetypemoveskeymovesidentitykeyarchaludonarchaludondisplayspeciesbasespeciesarchaludondisplayspeciesarchaludonitemmegastonemegaidentityformidentityarchaludonrolearchetypemoveskeymovesidentitykeyarchaludonarchaludonitemmegastonemegaidentityformidentitybasespeciesarchaludondisplayspeciesarchaludonitemmegastonemegaidentityformidentityarchaludonrolearchetypemoveskeymovesidentitykeyarchaludonarchaludonrolearchetypemoveskeymovesidentitykeybasespeciesarchaludondisplayspeciesarchaludonitemmegastonemegaidentityformidentityarchaludonrolearchetypemoveskeymovesidentitykeyarchaludonarchaludonbasespeciesarchaludondisplayspeciesarchaludonitemmegastonemegaidentityformidentityarchaludonrolearchetypemoveskeymovesidentitykeyarchaludonarchaludon": {
+      "roles": [],
+      "weight": 0.012
+    },
+    "basespeciesbasespeciesgarchompdisplayspeciesgarchompitemmegastonemegaidentityformidentitygarchomprolearchetypemoveskeymovesidentitykeygarchompgarchompdisplayspeciesbasespeciesgarchompdisplayspeciesgarchompitemmegastonemegaidentityformidentitygarchomprolearchetypemoveskeymovesidentitykeygarchompgarchompitemmegastonemegaidentityformidentitybasespeciesgarchompdisplayspeciesgarchompitemmegastonemegaidentityformidentitygarchomprolearchetypemoveskeymovesidentitykeygarchompgarchomprolearchetypemoveskeymovesidentitykeybasespeciesgarchompdisplayspeciesgarchompitemmegastonemegaidentityformidentitygarchomprolearchetypemoveskeymovesidentitykeygarchompgarchompbasespeciesgarchompdisplayspeciesgarchompitemmegastonemegaidentityformidentitygarchomprolearchetypemoveskeymovesidentitykeygarchompgarchomp": {
+      "roles": [],
+      "weight": 0.012
     }
   }
 }
