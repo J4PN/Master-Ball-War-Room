@@ -86,8 +86,28 @@ def is_serialized_slot_blob(value) -> bool:
     return sum(marker in lowered for marker in markers) >= 2
 
 
+def is_pathological_serialized_slot_blob(value) -> bool:
+    if not isinstance(value, str):
+        return False
+    text = str(value or "").strip()
+    lowered = text.lower()
+    if len(text) > 12000:
+        return True
+    if text.count("{") > 80 or text.count("}") > 80:
+        return True
+    if lowered.count("base_species") > 8:
+        return True
+    if lowered.count("identity_key") > 8:
+        return True
+    if "{'base_species': \"{'base_species':" in text or '"base_species": "{\'base_species\':' in text:
+        return True
+    return False
+
+
 def try_parse_serialized_slot(value):
     if not is_serialized_slot_blob(value):
+        return None
+    if is_pathological_serialized_slot_blob(value):
         return None
     try:
         parsed = ast.literal_eval(str(value).strip())
@@ -96,15 +116,8 @@ def try_parse_serialized_slot(value):
     return parsed if isinstance(parsed, dict) else None
 
 
-def recover_team_slot(slot) -> dict:
-    parsed = try_parse_serialized_slot(slot) if isinstance(slot, str) else None
-    if parsed:
-        return recover_team_slot(parsed)
+def build_clean_recovered_slot(slot) -> dict:
     if isinstance(slot, dict):
-        for key in ("name", "display_species", "species", "base_species", "form_identity"):
-            nested = try_parse_serialized_slot(slot.get(key))
-            if nested:
-                return recover_team_slot({**nested, **slot})
         name = ""
         for key in ("name", "display_species", "species", "base_species", "form_identity"):
             candidate = str(slot.get(key, "")).strip()
@@ -130,11 +143,84 @@ def recover_team_slot(slot) -> dict:
     }
 
 
+def slot_snapshot(slot) -> str:
+    if isinstance(slot, dict):
+        try:
+            return json.dumps(slot, sort_keys=True, ensure_ascii=True, default=str)
+        except TypeError:
+            return repr(sorted((str(key), str(value)) for key, value in slot.items()))
+    return str(slot)
+
+
+def merge_slot_payload(primary: dict, secondary: dict) -> dict:
+    merged = {}
+    for key in set(secondary) | set(primary):
+        primary_value = primary.get(key)
+        secondary_value = secondary.get(key)
+        if isinstance(primary_value, str) and is_serialized_slot_blob(primary_value) and secondary_value not in (None, "", [], {}):
+            merged[key] = secondary_value
+        elif primary_value in (None, "", [], {}):
+            merged[key] = secondary_value
+        else:
+            merged[key] = primary_value
+    return merged
+
+
+def unwrap_serialized_slot_payload(slot, max_depth=3):
+    current = dict(slot) if isinstance(slot, dict) else slot
+    best = current
+    seen = set()
+    target_keys = ("name", "display_species", "species", "base_species", "form_identity")
+    for _ in range(max_depth):
+        snapshot = slot_snapshot(current)
+        if snapshot in seen:
+            break
+        seen.add(snapshot)
+        improved = False
+        if isinstance(current, str):
+            parsed = try_parse_serialized_slot(current)
+            if not parsed:
+                break
+            candidate = parsed
+            candidate_snapshot = slot_snapshot(candidate)
+            if candidate_snapshot in seen or candidate_snapshot == snapshot:
+                break
+            current = candidate
+            best = candidate
+            improved = True
+        elif isinstance(current, dict):
+            for key in target_keys:
+                parsed = try_parse_serialized_slot(current.get(key))
+                if not parsed:
+                    continue
+                candidate = merge_slot_payload(current, parsed)
+                candidate_snapshot = slot_snapshot(candidate)
+                if candidate_snapshot in seen or candidate_snapshot == snapshot:
+                    continue
+                current = candidate
+                best = candidate
+                improved = True
+                break
+        if not improved:
+            break
+    return best
+
+
+def recover_team_slot(slot) -> dict | None:
+    unwrapped = unwrap_serialized_slot_payload(slot, max_depth=3)
+    recovered = build_clean_recovered_slot(unwrapped)
+    if not recovered.get("name") or is_pathological_serialized_slot_blob(recovered.get("name")):
+        return None
+    return recovered
+
+
 def canonical_team_slots(slots: Sequence[dict]) -> List[dict]:
     normalized = []
     seen = set()
     for slot in slots or []:
         recovered = recover_team_slot(slot)
+        if not recovered:
+            continue
         name = recovered["name"]
         if not name:
             continue
