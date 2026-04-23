@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-04-22T23:28:45+00:00",
+  "updatedAt": "2026-04-23T12:30:30+00:00",
   "sources": [
     "archive",
     "meta",
@@ -40,7 +40,7 @@
     {
       "name": "pelipper",
       "displayName": "pelipper",
-      "importance": 1.548,
+      "importance": 1.499,
       "sources": [
         "archive",
         "meta",
@@ -53,7 +53,7 @@
     {
       "name": "garchomp",
       "displayName": "garchomp",
-      "importance": 1.547,
+      "importance": 1.491,
       "sources": [
         "archive",
         "meta",
@@ -67,7 +67,7 @@
     {
       "name": "kingambit",
       "displayName": "kingambit",
-      "importance": 0.963,
+      "importance": 0.938,
       "sources": [
         "archive",
         "meta",
@@ -80,7 +80,7 @@
     {
       "name": "basculegion",
       "displayName": "basculegion",
-      "importance": 0.874,
+      "importance": 0.852,
       "sources": [
         "archive",
         "meta",
@@ -93,7 +93,7 @@
     {
       "name": "starmie",
       "displayName": "starmie",
-      "importance": 0.71,
+      "importance": 0.686,
       "sources": [
         "archive",
         "reddit",
@@ -115,17 +115,6 @@
       "notes": "Observed in archive, meta, pikalytics, selfplay source pools."
     },
     {
-      "name": "archaludon",
-      "displayName": "archaludon",
-      "importance": 0.6,
-      "sources": [
-        "archive",
-        "meta",
-        "pikalytics"
-      ],
-      "notes": "Observed in archive, meta, pikalytics source pools."
-    },
-    {
       "name": "dragonite",
       "displayName": "dragonite",
       "importance": 0.6,
@@ -135,6 +124,17 @@
         "youtube"
       ],
       "notes": "Observed in archive, selfplay, youtube source pools."
+    },
+    {
+      "name": "archaludon",
+      "displayName": "archaludon",
+      "importance": 0.6,
+      "sources": [
+        "archive",
+        "meta",
+        "pikalytics"
+      ],
+      "notes": "Observed in archive, meta, pikalytics source pools."
     },
     {
       "name": "rotomwash",
@@ -174,6 +174,42 @@
         "archive"
       ],
       "notes": "Observed in archive source pools."
+    },
+    {
+      "name": "charizard",
+      "displayName": "charizard",
+      "importance": 0.6,
+      "sources": [
+        "archive"
+      ],
+      "notes": "Observed in archive source pools."
     }
+  ],
+  "persistent_archetype_counts": {
+    "unknown": 105
+  },
+  "archetype_diversity_pressure": {
+    "rain_penalty": 0.0,
+    "sun_support": 0.216,
+    "weather_diversity_target": 0.26,
+    "applied": false
+  },
+  "top_sources": [
+    [
+      "self-generated",
+      89
+    ],
+    [
+      "archive",
+      14
+    ],
+    [
+      "random-a",
+      1
+    ],
+    [
+      "random-b",
+      1
+    ]
   ]
 }

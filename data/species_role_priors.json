@@ -1,15 +1,15 @@
 {
-  "updatedAt": "2026-04-22T23:28:45+00:00",
+  "updatedAt": "2026-04-23T12:30:31+00:00",
   "priors": {
     "incineroar": {
-      "weight": 0.138,
+      "weight": 0.125,
       "roles": [
         "pivot_support",
         "fake_out"
       ]
     },
     "whimsicott": {
-      "weight": 0.125,
+      "weight": 0.113,
       "roles": [
         "speed_control",
         "support"
@@ -35,7 +35,7 @@
     },
     "archaludon": {
       "roles": [],
-      "weight": 0.025
+      "weight": 0.037
     },
     "sinistcha": {
       "roles": [],
@@ -43,7 +43,7 @@
     },
     "kingambit": {
       "roles": [],
-      "weight": 0.075
+      "weight": 0.087
     },
     "starmie": {
       "roles": [],
@@ -63,7 +63,7 @@
     },
     "gengar": {
       "roles": [],
-      "weight": 0.037
+      "weight": 0.05
     },
     "tyranitar": {
       "roles": [],

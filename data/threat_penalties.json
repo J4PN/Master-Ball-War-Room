@@ -1,8 +1,8 @@
 {
-  "updatedAt": "2026-04-22T23:28:45+00:00",
+  "updatedAt": "2026-04-23T12:30:31+00:00",
   "byThreat": {
     "incineroar": {
-      "multiplier": 1.562,
+      "multiplier": 1.532,
       "notes": "Observed in archive, meta, pikalytics, reddit, selfplay, youtube source pools."
     },
     "sneasler": {
@@ -10,7 +10,7 @@
       "notes": "Fast disruption remains a top pressure source."
     },
     "garchomp": {
-      "multiplier": 1.465,
+      "multiplier": 1.428,
       "notes": "Observed in archive, meta, pikalytics, reddit, selfplay, youtube source pools."
     },
     "whimsicott": {
@@ -18,23 +18,23 @@
       "notes": "Observed in archive, meta, pikalytics, reddit, selfplay, youtube source pools."
     },
     "pelipper": {
-      "multiplier": 1.524,
+      "multiplier": 1.517,
       "notes": "Observed in archive, meta, pikalytics, reddit, selfplay source pools."
     },
     "kingambit": {
-      "multiplier": 1.407,
+      "multiplier": 1.403,
       "notes": "Observed in archive, meta, pikalytics, reddit, selfplay source pools."
     },
     "basculegion": {
-      "multiplier": 1.277,
+      "multiplier": 1.215,
       "notes": "Observed in archive, meta, pikalytics, reddit, selfplay source pools."
     },
     "sinistcha": {
-      "multiplier": 1.236,
+      "multiplier": 1.323,
       "notes": "Observed in archive, meta, pikalytics, selfplay source pools."
     },
     "starmie": {
-      "multiplier": 1.194,
+      "multiplier": 1.22,
       "notes": "Observed in archive, reddit, selfplay, youtube source pools."
     },
     "archaludon": {
@@ -58,7 +58,11 @@
       "notes": "Observed in archive source pools."
     },
     "tyranitar": {
-      "multiplier": 1.148,
+      "multiplier": 1.119,
+      "notes": "Observed in archive source pools."
+    },
+    "charizard": {
+      "multiplier": 1.177,
       "notes": "Observed in archive source pools."
     }
   }

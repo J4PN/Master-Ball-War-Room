@@ -1,105 +1,13 @@
 {
-  "teams": [
+  "shells": [
     {
-      "source_type": "archive",
-      "source_name": "",
-      "source_url": "",
-      "quality_class": "archive",
+      "shell_signature": "archaludon::archaludon::::|basculegion::basculegion::::|garchomp::garchomp::::|incineroar::incineroar::::|pelipper::pelipper::::|whimsicott::whimsicott::::",
       "archetype": "",
-      "tags": [],
-      "team": [
-        {
-          "base_species": "Incineroar",
-          "display_species": "Incineroar",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Incineroar",
-          "role": "",
-          "archetype": "",
-          "moves": [],
-          "key_moves": [],
-          "identity_key": "incineroar::incineroar::::"
-        },
-        {
-          "base_species": "Whimsicott",
-          "display_species": "Whimsicott",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Whimsicott",
-          "role": "",
-          "archetype": "",
-          "moves": [],
-          "key_moves": [],
-          "identity_key": "whimsicott::whimsicott::::"
-        },
-        {
-          "base_species": "Garchomp",
-          "display_species": "Garchomp",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Garchomp",
-          "role": "",
-          "archetype": "",
-          "moves": [],
-          "key_moves": [],
-          "identity_key": "garchomp::garchomp::::"
-        },
-        {
-          "base_species": "Sinistcha",
-          "display_species": "Sinistcha",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Sinistcha",
-          "role": "",
-          "archetype": "",
-          "moves": [],
-          "key_moves": [],
-          "identity_key": "sinistcha::sinistcha::::"
-        },
-        {
-          "base_species": "Kingambit",
-          "display_species": "Kingambit",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Kingambit",
-          "role": "",
-          "archetype": "",
-          "moves": [],
-          "key_moves": [],
-          "identity_key": "kingambit::kingambit::::"
-        },
-        {
-          "base_species": "Pelipper",
-          "display_species": "Pelipper",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Pelipper",
-          "role": "",
-          "archetype": "",
-          "moves": [],
-          "key_moves": [],
-          "identity_key": "pelipper::pelipper::::"
-        }
+      "sample_count": 1,
+      "quality_score": 0.8767,
+      "last_sources": [
+        "archive"
       ],
-      "confidence": 0.765,
-      "score": 0.65,
-      "sourceType": "archive",
-      "sourceName": "",
-      "sourceUrl": ""
-    },
-    {
-      "source_type": "archive",
-      "source_name": "",
-      "source_url": "",
-      "quality_class": "archive",
-      "archetype": "",
-      "tags": [],
       "team": [
         {
           "base_species": "Pelipper",
@@ -180,46 +88,18 @@
           "identity_key": "garchomp::garchomp::::"
         }
       ],
-      "confidence": 0.777,
-      "score": 0.65,
-      "sourceType": "archive",
-      "sourceName": "",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "archive",
-      "source_name": "",
-      "source_url": "",
-      "quality_class": "archive",
+      "shell_signature": "garchomp::garchomp::::|incineroar::incineroar::::|kingambit::kingambit::::|pelipper::pelipper::::|sinistcha::sinistcha::::|whimsicott::whimsicott::::",
       "archetype": "",
-      "tags": [],
+      "sample_count": 1,
+      "quality_score": 0.8633,
+      "last_sources": [
+        "archive"
+      ],
       "team": [
-        {
-          "base_species": "Pelipper",
-          "display_species": "Pelipper",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Pelipper",
-          "role": "",
-          "archetype": "",
-          "moves": [],
-          "key_moves": [],
-          "identity_key": "pelipper::pelipper::::"
-        },
-        {
-          "base_species": "Basculegion",
-          "display_species": "Basculegion",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Basculegion",
-          "role": "",
-          "archetype": "",
-          "moves": [],
-          "key_moves": [],
-          "identity_key": "basculegion::basculegion::::"
-        },
         {
           "base_species": "Incineroar",
           "display_species": "Incineroar",
@@ -245,21 +125,71 @@
           "moves": [],
           "key_moves": [],
           "identity_key": "whimsicott::whimsicott::::"
+        },
+        {
+          "base_species": "Garchomp",
+          "display_species": "Garchomp",
+          "item": "",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Garchomp",
+          "role": "",
+          "archetype": "",
+          "moves": [],
+          "key_moves": [],
+          "identity_key": "garchomp::garchomp::::"
+        },
+        {
+          "base_species": "Sinistcha",
+          "display_species": "Sinistcha",
+          "item": "",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Sinistcha",
+          "role": "",
+          "archetype": "",
+          "moves": [],
+          "key_moves": [],
+          "identity_key": "sinistcha::sinistcha::::"
+        },
+        {
+          "base_species": "Kingambit",
+          "display_species": "Kingambit",
+          "item": "",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Kingambit",
+          "role": "",
+          "archetype": "",
+          "moves": [],
+          "key_moves": [],
+          "identity_key": "kingambit::kingambit::::"
+        },
+        {
+          "base_species": "Pelipper",
+          "display_species": "Pelipper",
+          "item": "",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Pelipper",
+          "role": "",
+          "archetype": "",
+          "moves": [],
+          "key_moves": [],
+          "identity_key": "pelipper::pelipper::::"
         }
       ],
-      "confidence": 0.604,
-      "score": 0.672,
-      "sourceType": "archive",
-      "sourceName": "",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "archive",
-      "source_name": "",
-      "source_url": "",
-      "quality_class": "archive",
+      "shell_signature": "garchomp::garchomp::::|incineroar::incineroar::::|kingambit::kingambit::::|pelipper::pelipper::::|starmie::starmie::::|whimsicott::whimsicott::::",
       "archetype": "",
-      "tags": [],
+      "sample_count": 1,
+      "quality_score": 0.7972,
+      "last_sources": [
+        "archive"
+      ],
       "team": [
         {
           "base_species": "Incineroar",
@@ -340,86 +270,17 @@
           "identity_key": "pelipper::pelipper::::"
         }
       ],
-      "confidence": 0.706,
-      "score": 0.652,
-      "sourceType": "archive",
-      "sourceName": "",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "archive",
-      "source_name": "",
-      "source_url": "",
-      "quality_class": "archive",
+      "shell_signature": "dragonite::dragonite::::|garchomp::garchomp::::|incineroar::incineroar::::|rotom-wash::rotom-wash::::|starmie::starmie::::|whimsicott::whimsicott::::",
       "archetype": "",
-      "tags": [],
-      "team": [
-        {
-          "base_species": "Incineroar",
-          "display_species": "Incineroar",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Incineroar",
-          "role": "",
-          "archetype": "",
-          "moves": [],
-          "key_moves": [],
-          "identity_key": "incineroar::incineroar::::"
-        },
-        {
-          "base_species": "Garchomp",
-          "display_species": "Garchomp",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Garchomp",
-          "role": "",
-          "archetype": "",
-          "moves": [],
-          "key_moves": [],
-          "identity_key": "garchomp::garchomp::::"
-        },
-        {
-          "base_species": "Starmie",
-          "display_species": "Starmie",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Starmie",
-          "role": "",
-          "archetype": "",
-          "moves": [],
-          "key_moves": [],
-          "identity_key": "starmie::starmie::::"
-        },
-        {
-          "base_species": "Whimsicott",
-          "display_species": "Whimsicott",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Whimsicott",
-          "role": "",
-          "archetype": "",
-          "moves": [],
-          "key_moves": [],
-          "identity_key": "whimsicott::whimsicott::::"
-        }
+      "sample_count": 1,
+      "quality_score": 0.7829,
+      "last_sources": [
+        "archive"
       ],
-      "confidence": 0.502,
-      "score": 0.676,
-      "sourceType": "archive",
-      "sourceName": "",
-      "sourceUrl": ""
-    },
-    {
-      "source_type": "archive",
-      "source_name": "",
-      "source_url": "",
-      "quality_class": "archive",
-      "archetype": "",
-      "tags": [],
       "team": [
         {
           "base_species": "Incineroar",
@@ -500,19 +361,17 @@
           "identity_key": "rotom-wash::rotom-wash::::"
         }
       ],
-      "confidence": 0.693,
-      "score": 0.67,
-      "sourceType": "archive",
-      "sourceName": "",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "archive",
-      "source_name": "",
-      "source_url": "",
-      "quality_class": "archive",
+      "shell_signature": "basculegion::basculegion::::|garchomp::garchomp::::|incineroar::incineroar::::|pelipper::pelipper::::|sinistcha::sinistcha::::|whimsicott::whimsicott::::",
       "archetype": "",
-      "tags": [],
+      "sample_count": 1,
+      "quality_score": 0.7323,
+      "last_sources": [
+        "archive"
+      ],
       "team": [
         {
           "base_species": "Pelipper",
@@ -593,19 +452,147 @@
           "identity_key": "sinistcha::sinistcha::::"
         }
       ],
-      "confidence": 0.648,
-      "score": 0.649,
-      "sourceType": "archive",
-      "sourceName": "",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "archive",
-      "source_name": "",
-      "source_url": "",
-      "quality_class": "archive",
+      "shell_signature": "basculegion::basculegion::::|incineroar::incineroar::::|pelipper::pelipper::::|whimsicott::whimsicott::::",
       "archetype": "",
-      "tags": [],
+      "sample_count": 1,
+      "quality_score": 0.6832,
+      "last_sources": [
+        "archive"
+      ],
+      "team": [
+        {
+          "base_species": "Pelipper",
+          "display_species": "Pelipper",
+          "item": "",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Pelipper",
+          "role": "",
+          "archetype": "",
+          "moves": [],
+          "key_moves": [],
+          "identity_key": "pelipper::pelipper::::"
+        },
+        {
+          "base_species": "Basculegion",
+          "display_species": "Basculegion",
+          "item": "",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Basculegion",
+          "role": "",
+          "archetype": "",
+          "moves": [],
+          "key_moves": [],
+          "identity_key": "basculegion::basculegion::::"
+        },
+        {
+          "base_species": "Incineroar",
+          "display_species": "Incineroar",
+          "item": "",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Incineroar",
+          "role": "",
+          "archetype": "",
+          "moves": [],
+          "key_moves": [],
+          "identity_key": "incineroar::incineroar::::"
+        },
+        {
+          "base_species": "Whimsicott",
+          "display_species": "Whimsicott",
+          "item": "",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Whimsicott",
+          "role": "",
+          "archetype": "",
+          "moves": [],
+          "key_moves": [],
+          "identity_key": "whimsicott::whimsicott::::"
+        }
+      ],
+      "rain_bias_count": 0,
+      "mega_count": 0
+    },
+    {
+      "shell_signature": "garchomp::garchomp::::|incineroar::incineroar::::|starmie::starmie::::|whimsicott::whimsicott::::",
+      "archetype": "",
+      "sample_count": 1,
+      "quality_score": 0.569,
+      "last_sources": [
+        "archive"
+      ],
+      "team": [
+        {
+          "base_species": "Incineroar",
+          "display_species": "Incineroar",
+          "item": "",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Incineroar",
+          "role": "",
+          "archetype": "",
+          "moves": [],
+          "key_moves": [],
+          "identity_key": "incineroar::incineroar::::"
+        },
+        {
+          "base_species": "Garchomp",
+          "display_species": "Garchomp",
+          "item": "",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Garchomp",
+          "role": "",
+          "archetype": "",
+          "moves": [],
+          "key_moves": [],
+          "identity_key": "garchomp::garchomp::::"
+        },
+        {
+          "base_species": "Starmie",
+          "display_species": "Starmie",
+          "item": "",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Starmie",
+          "role": "",
+          "archetype": "",
+          "moves": [],
+          "key_moves": [],
+          "identity_key": "starmie::starmie::::"
+        },
+        {
+          "base_species": "Whimsicott",
+          "display_species": "Whimsicott",
+          "item": "",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Whimsicott",
+          "role": "",
+          "archetype": "",
+          "moves": [],
+          "key_moves": [],
+          "identity_key": "whimsicott::whimsicott::::"
+        }
+      ],
+      "rain_bias_count": 0,
+      "mega_count": 0
+    },
+    {
+      "shell_signature": "dragonite::dragonite::::|garchomp::garchomp::::|incineroar::incineroar::::|rotom-wash::rotom-wash::::|sinistcha::sinistcha::::|starmie::starmie::::",
+      "archetype": "",
+      "sample_count": 1,
+      "quality_score": 0.55,
+      "last_sources": [
+        "archive"
+      ],
       "team": [
         {
           "base_species": "Garchomp",
@@ -686,19 +673,17 @@
           "identity_key": "rotom-wash::rotom-wash::::"
         }
       ],
-      "confidence": 0.485,
-      "score": 0.679,
-      "sourceType": "archive",
-      "sourceName": "",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "archive",
-      "source_name": "",
-      "source_url": "",
-      "quality_class": "archive",
+      "shell_signature": "basculegion::basculegion::::|farigiraf::farigiraf::::|incineroar::incineroar::::|kingambit::kingambit::::|pelipper::pelipper::::|whimsicott::whimsicott::::",
       "archetype": "",
-      "tags": [],
+      "sample_count": 1,
+      "quality_score": 0.5498,
+      "last_sources": [
+        "archive"
+      ],
       "team": [
         {
           "base_species": "Incineroar",
@@ -779,112 +764,17 @@
           "identity_key": "farigiraf::farigiraf::::"
         }
       ],
-      "confidence": 0.485,
-      "score": 0.661,
-      "sourceType": "archive",
-      "sourceName": "",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "archive",
-      "source_name": "",
-      "source_url": "",
-      "quality_class": "archive",
+      "shell_signature": "basculegion::basculegion::::|dragonite::dragonite::::|gengar::gengar::::|kingambit::kingambit::::|rotom-wash::rotom-wash::::|tyranitar::tyranitar::::",
       "archetype": "",
-      "tags": [],
-      "team": [
-        {
-          "base_species": "Gengar",
-          "display_species": "Gengar",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Gengar",
-          "role": "",
-          "archetype": "",
-          "moves": [],
-          "key_moves": [],
-          "identity_key": "gengar::gengar::::"
-        },
-        {
-          "base_species": "Archaludon",
-          "display_species": "Archaludon",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Archaludon",
-          "role": "",
-          "archetype": "",
-          "moves": [],
-          "key_moves": [],
-          "identity_key": "archaludon::archaludon::::"
-        },
-        {
-          "base_species": "Dragonite",
-          "display_species": "Dragonite",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Dragonite",
-          "role": "",
-          "archetype": "",
-          "moves": [],
-          "key_moves": [],
-          "identity_key": "dragonite::dragonite::::"
-        },
-        {
-          "base_species": "Farigiraf",
-          "display_species": "Farigiraf",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Farigiraf",
-          "role": "",
-          "archetype": "",
-          "moves": [],
-          "key_moves": [],
-          "identity_key": "farigiraf::farigiraf::::"
-        },
-        {
-          "base_species": "Rotom-Wash",
-          "display_species": "Rotom-Wash",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Rotom-Wash",
-          "role": "",
-          "archetype": "",
-          "moves": [],
-          "key_moves": [],
-          "identity_key": "rotom-wash::rotom-wash::::"
-        },
-        {
-          "base_species": "Kingambit",
-          "display_species": "Kingambit",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Kingambit",
-          "role": "",
-          "archetype": "",
-          "moves": [],
-          "key_moves": [],
-          "identity_key": "kingambit::kingambit::::"
-        }
+      "sample_count": 1,
+      "quality_score": 0.5323,
+      "last_sources": [
+        "archive"
       ],
-      "confidence": 0.459,
-      "score": 0.704,
-      "sourceType": "archive",
-      "sourceName": "",
-      "sourceUrl": ""
-    },
-    {
-      "source_type": "archive",
-      "source_name": "",
-      "source_url": "",
-      "quality_class": "archive",
-      "archetype": "",
-      "tags": [],
       "team": [
         {
           "base_species": "Gengar",
@@ -965,19 +855,17 @@
           "identity_key": "kingambit::kingambit::::"
         }
       ],
-      "confidence": 0.469,
-      "score": 0.703,
-      "sourceType": "archive",
-      "sourceName": "",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "archive",
-      "source_name": "",
-      "source_url": "",
-      "quality_class": "archive",
+      "shell_signature": "basculegion::basculegion::::|dragonite::dragonite::::|farigiraf::farigiraf::::|gengar::gengar::::|pelipper::pelipper::::|starmie::starmie::::",
       "archetype": "",
-      "tags": [],
+      "sample_count": 1,
+      "quality_score": 0.5322,
+      "last_sources": [
+        "archive"
+      ],
       "team": [
         {
           "base_species": "Gengar",
@@ -1058,19 +946,17 @@
           "identity_key": "basculegion::basculegion::::"
         }
       ],
-      "confidence": 0.469,
-      "score": 0.693,
-      "sourceType": "archive",
-      "sourceName": "",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "archive",
-      "source_name": "",
-      "source_url": "",
-      "quality_class": "archive",
+      "shell_signature": "archaludon::archaludon::::|dragonite::dragonite::::|farigiraf::farigiraf::::|gengar::gengar::::|kingambit::kingambit::::|pelipper::pelipper::::",
       "archetype": "",
-      "tags": [],
+      "sample_count": 1,
+      "quality_score": 0.5322,
+      "last_sources": [
+        "archive"
+      ],
       "team": [
         {
           "base_species": "Gengar",
@@ -1151,22 +1037,198 @@
           "identity_key": "kingambit::kingambit::::"
         }
       ],
-      "confidence": 0.469,
-      "score": 0.692,
-      "sourceType": "archive",
-      "sourceName": "",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "archaludon::archaludon::::|dragonite::dragonite::::|farigiraf::farigiraf::::|gengar::gengar::::|kingambit::kingambit::::|rotom-wash::rotom-wash::::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.5211,
+      "last_sources": [
+        "archive"
+      ],
+      "team": [
+        {
+          "base_species": "Gengar",
+          "display_species": "Gengar",
+          "item": "",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Gengar",
+          "role": "",
+          "archetype": "",
+          "moves": [],
+          "key_moves": [],
+          "identity_key": "gengar::gengar::::"
+        },
+        {
+          "base_species": "Archaludon",
+          "display_species": "Archaludon",
+          "item": "",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Archaludon",
+          "role": "",
+          "archetype": "",
+          "moves": [],
+          "key_moves": [],
+          "identity_key": "archaludon::archaludon::::"
+        },
+        {
+          "base_species": "Dragonite",
+          "display_species": "Dragonite",
+          "item": "",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Dragonite",
+          "role": "",
+          "archetype": "",
+          "moves": [],
+          "key_moves": [],
+          "identity_key": "dragonite::dragonite::::"
+        },
+        {
+          "base_species": "Farigiraf",
+          "display_species": "Farigiraf",
+          "item": "",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Farigiraf",
+          "role": "",
+          "archetype": "",
+          "moves": [],
+          "key_moves": [],
+          "identity_key": "farigiraf::farigiraf::::"
+        },
+        {
+          "base_species": "Rotom-Wash",
+          "display_species": "Rotom-Wash",
+          "item": "",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Rotom-Wash",
+          "role": "",
+          "archetype": "",
+          "moves": [],
+          "key_moves": [],
+          "identity_key": "rotom-wash::rotom-wash::::"
+        },
+        {
+          "base_species": "Kingambit",
+          "display_species": "Kingambit",
+          "item": "",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Kingambit",
+          "role": "",
+          "archetype": "",
+          "moves": [],
+          "key_moves": [],
+          "identity_key": "kingambit::kingambit::::"
+        }
+      ],
+      "rain_bias_count": 0,
+      "mega_count": 0
+    },
+    {
+      "shell_signature": "charizard::charizard::::|dragonite::dragonite::::|farigiraf::farigiraf::::|incineroar::incineroar::::|rotom-wash::rotom-wash::::|whimsicott::whimsicott::::",
+      "archetype": "",
+      "sample_count": 1,
+      "quality_score": 0.5056,
+      "last_sources": [
+        "archive"
+      ],
+      "team": [
+        {
+          "base_species": "Incineroar",
+          "display_species": "Incineroar",
+          "item": "",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Incineroar",
+          "role": "",
+          "archetype": "",
+          "moves": [],
+          "key_moves": [],
+          "identity_key": "incineroar::incineroar::::"
+        },
+        {
+          "base_species": "Farigiraf",
+          "display_species": "Farigiraf",
+          "item": "",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Farigiraf",
+          "role": "",
+          "archetype": "",
+          "moves": [],
+          "key_moves": [],
+          "identity_key": "farigiraf::farigiraf::::"
+        },
+        {
+          "base_species": "Whimsicott",
+          "display_species": "Whimsicott",
+          "item": "",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Whimsicott",
+          "role": "",
+          "archetype": "",
+          "moves": [],
+          "key_moves": [],
+          "identity_key": "whimsicott::whimsicott::::"
+        },
+        {
+          "base_species": "Charizard",
+          "display_species": "Charizard",
+          "item": "",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Charizard",
+          "role": "",
+          "archetype": "",
+          "moves": [],
+          "key_moves": [],
+          "identity_key": "charizard::charizard::::"
+        },
+        {
+          "base_species": "Dragonite",
+          "display_species": "Dragonite",
+          "item": "",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Dragonite",
+          "role": "",
+          "archetype": "",
+          "moves": [],
+          "key_moves": [],
+          "identity_key": "dragonite::dragonite::::"
+        },
+        {
+          "base_species": "Rotom-Wash",
+          "display_species": "Rotom-Wash",
+          "item": "",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Rotom-Wash",
+          "role": "",
+          "archetype": "",
+          "moves": [],
+          "key_moves": [],
+          "identity_key": "rotom-wash::rotom-wash::::"
+        }
+      ],
+      "rain_bias_count": 0,
+      "mega_count": 0
+    },
+    {
+      "shell_signature": "charizard::charizard::::|dragonite::dragonite::dragoninite::|farigiraf::farigiraf::::|incineroar::incineroar::sitrus berry::|rotom-wash::rotom-wash::sitrus berry::|whimsicott::whimsicott::focus sash::",
+      "archetype": "",
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -1280,212 +1342,16 @@
           "identity_key": "rotom-wash::rotom-wash::sitrus berry::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "random",
-      "source_name": "random-a",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "basculegion::basculegion::::|incineroar::incineroar::::|pelipper::pelipper::::|sinistcha::sinistcha::::|whimsicott::whimsicott::::",
       "archetype": "",
-      "tags": [
-        "random"
-      ],
-      "team": [
-        {
-          "base_species": "Gengar",
-          "display_species": "Gengar",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Gengar",
-          "role": "",
-          "archetype": "",
-          "moves": [],
-          "key_moves": [],
-          "identity_key": "gengar::gengar::::"
-        },
-        {
-          "base_species": "Pelipper",
-          "display_species": "Pelipper",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Pelipper",
-          "role": "",
-          "archetype": "",
-          "moves": [],
-          "key_moves": [],
-          "identity_key": "pelipper::pelipper::::"
-        },
-        {
-          "base_species": "Dragonite",
-          "display_species": "Dragonite",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Dragonite",
-          "role": "",
-          "archetype": "",
-          "moves": [],
-          "key_moves": [],
-          "identity_key": "dragonite::dragonite::::"
-        },
-        {
-          "base_species": "Farigiraf",
-          "display_species": "Farigiraf",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Farigiraf",
-          "role": "",
-          "archetype": "",
-          "moves": [],
-          "key_moves": [],
-          "identity_key": "farigiraf::farigiraf::::"
-        },
-        {
-          "base_species": "Rotom-Wash",
-          "display_species": "Rotom-Wash",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Rotom-Wash",
-          "role": "",
-          "archetype": "",
-          "moves": [],
-          "key_moves": [],
-          "identity_key": "rotom-wash::rotom-wash::::"
-        },
-        {
-          "base_species": "Kingambit",
-          "display_species": "Kingambit",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Kingambit",
-          "role": "",
-          "archetype": "",
-          "moves": [],
-          "key_moves": [],
-          "identity_key": "kingambit::kingambit::::"
-        }
-      ],
-      "confidence": 0.35,
-      "score": 0.0,
-      "sourceType": "random",
-      "sourceName": "random-a",
-      "sourceUrl": ""
-    },
-    {
-      "source_type": "random",
-      "source_name": "random-b",
-      "source_url": "",
-      "quality_class": "",
-      "archetype": "",
-      "tags": [
-        "random"
-      ],
-      "team": [
-        {
-          "base_species": "Whimsicott",
-          "display_species": "Whimsicott",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Whimsicott",
-          "role": "",
-          "archetype": "",
-          "moves": [],
-          "key_moves": [],
-          "identity_key": "whimsicott::whimsicott::::"
-        },
-        {
-          "base_species": "Charizard",
-          "display_species": "Charizard",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Charizard",
-          "role": "",
-          "archetype": "",
-          "moves": [],
-          "key_moves": [],
-          "identity_key": "charizard::charizard::::"
-        },
-        {
-          "base_species": "Starmie",
-          "display_species": "Starmie",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Starmie",
-          "role": "",
-          "archetype": "",
-          "moves": [],
-          "key_moves": [],
-          "identity_key": "starmie::starmie::::"
-        },
-        {
-          "base_species": "Tyranitar",
-          "display_species": "Tyranitar",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Tyranitar",
-          "role": "",
-          "archetype": "",
-          "moves": [],
-          "key_moves": [],
-          "identity_key": "tyranitar::tyranitar::::"
-        },
-        {
-          "base_species": "Incineroar",
-          "display_species": "Incineroar",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Incineroar",
-          "role": "",
-          "archetype": "",
-          "moves": [],
-          "key_moves": [],
-          "identity_key": "incineroar::incineroar::::"
-        },
-        {
-          "base_species": "Sinistcha",
-          "display_species": "Sinistcha",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Sinistcha",
-          "role": "",
-          "archetype": "",
-          "moves": [],
-          "key_moves": [],
-          "identity_key": "sinistcha::sinistcha::::"
-        }
-      ],
-      "confidence": 0.35,
-      "score": 0.0,
-      "sourceType": "random",
-      "sourceName": "random-b",
-      "sourceUrl": ""
-    },
-    {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
-      "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -1554,22 +1420,16 @@
           "identity_key": "sinistcha::sinistcha::::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "farigiraf::farigiraf::::|pelipper::pelipper::::|sinistcha::sinistcha::::|starmie::starmie::::|tyranitar::tyranitar::::|whimsicott::whimsicott::::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -1651,22 +1511,16 @@
           "identity_key": "sinistcha::sinistcha::::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "basculegion::basculegion::::|dragonite::dragonite::::|farigiraf::farigiraf::::|kingambit::kingambit::::|tyranitar::tyranitar::::|whimsicott::whimsicott::::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -1748,22 +1602,16 @@
           "identity_key": "farigiraf::farigiraf::::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "basculegion::basculegion::choice scarf::|charizard::charizard::::|incineroar::incineroar::safety goggles::|pelipper::pelipper::focus sash::|whimsicott::whimsicott::::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -1856,22 +1704,16 @@
           "identity_key": "charizard::charizard::::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "farigiraf::farigiraf::::|incineroar::incineroar::::|kingambit::kingambit::::|pelipper::pelipper::::|sinistcha::sinistcha::::|whimsicott::whimsicott::::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -1953,22 +1795,16 @@
           "identity_key": "farigiraf::farigiraf::::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "archaludon::archaludon::::|basculegion::basculegion::::|dragonite::dragonite::::|farigiraf::farigiraf::::|gengar::gengar::::|pelipper::pelipper::::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -2050,22 +1886,16 @@
           "identity_key": "basculegion::basculegion::::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "archaludon::archaludon::::|garchomp::garchomp::choice scarf::|incineroar::incineroar::sitrus berry::|kingambit::kingambit::black glasses::|pelipper::pelipper::choice scarf::|sinistcha::sinistcha::leftovers::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -2187,22 +2017,16 @@
           "identity_key": "pelipper::pelipper::choice scarf::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "dragonite::dragonite::dragoninite::|garchomp::garchomp::choice scarf::|incineroar::incineroar::sitrus berry::|rotom-wash::rotom-wash::sitrus berry::|sinistcha::sinistcha::::|starmie::starmie::life orb::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -2324,22 +2148,16 @@
           "identity_key": "rotom-wash::rotom-wash::sitrus berry::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "basculegion::basculegion::::|incineroar::incineroar::::|pelipper::pelipper::::|starmie::starmie::::|whimsicott::whimsicott::::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -2408,22 +2226,16 @@
           "identity_key": "starmie::starmie::::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "basculegion::basculegion::::|charizard::charizard::::|dragonite::dragonite::::|pelipper::pelipper::::|starmie::starmie::::|tyranitar::tyranitar::::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -2505,22 +2317,16 @@
           "identity_key": "basculegion::basculegion::::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "charizard::charizard::::|dragonite::dragonite::::|farigiraf::farigiraf::::|gengar::gengar::::|pelipper::pelipper::::|sinistcha::sinistcha::::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -2602,22 +2408,16 @@
           "identity_key": "charizard::charizard::::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "dragonite::dragonite::::|garchomp::garchomp::::|gengar::gengar::::|pelipper::pelipper::::|starmie::starmie::::|whimsicott::whimsicott::::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -2699,22 +2499,16 @@
           "identity_key": "starmie::starmie::::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "garchomp::garchomp::choice scarf::|kingambit::kingambit::black glasses::|pelipper::pelipper::choice scarf::|rotom-wash::rotom-wash::::|sinistcha::sinistcha::leftovers::|whimsicott::whimsicott::focus sash::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -2836,22 +2630,16 @@
           "identity_key": "pelipper::pelipper::choice scarf::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "archaludon::archaludon::::|charizard::charizard::::|garchomp::garchomp::::|incineroar::incineroar::::|sinistcha::sinistcha::::|whimsicott::whimsicott::::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -2933,22 +2721,16 @@
           "identity_key": "sinistcha::sinistcha::::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "archaludon::archaludon::::|garchomp::garchomp::::|incineroar::incineroar::::|starmie::starmie::::|whimsicott::whimsicott::::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -3029,22 +2811,16 @@
           "identity_key": "archaludon::archaludon::::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "garchomp::garchomp::::|incineroar::incineroar::::|kingambit::kingambit::::|starmie::starmie::::|whimsicott::whimsicott::::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -3125,22 +2901,16 @@
           "identity_key": "kingambit::kingambit::::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "charizard::charizard::::|dragonite::dragonite::::|farigiraf::farigiraf::::|gengar::gengar::::|sinistcha::sinistcha::::|whimsicott::whimsicott::::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -3222,22 +2992,16 @@
           "identity_key": "gengar::gengar::::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "basculegion::basculegion::::|kingambit::kingambit::::|pelipper::pelipper::::|rotom-wash::rotom-wash::::|starmie::starmie::::|whimsicott::whimsicott::::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -3319,22 +3083,16 @@
           "identity_key": "starmie::starmie::::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "charizard::charizard::::|garchomp::garchomp::::|incineroar::incineroar::::|kingambit::kingambit::::|pelipper::pelipper::::|whimsicott::whimsicott::::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -3416,22 +3174,16 @@
           "identity_key": "pelipper::pelipper::::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "archaludon::archaludon::::|charizard::charizard::::|dragonite::dragonite::::|farigiraf::farigiraf::::|rotom-wash::rotom-wash::::|whimsicott::whimsicott::::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -3513,22 +3265,16 @@
           "identity_key": "rotom-wash::rotom-wash::::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "basculegion::basculegion::choice scarf::|incineroar::incineroar::safety goggles::|pelipper::pelipper::focus sash::|rotom-wash::rotom-wash::::|whimsicott::whimsicott::::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -3621,22 +3367,16 @@
           "identity_key": "rotom-wash::rotom-wash::::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "garchomp::garchomp::::|incineroar::incineroar::::|pelipper::pelipper::::|sinistcha::sinistcha::::|starmie::starmie::::|whimsicott::whimsicott::::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -3718,22 +3458,16 @@
           "identity_key": "pelipper::pelipper::::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "charizard::charizard::::|garchomp::garchomp::::|incineroar::incineroar::::|starmie::starmie::::|whimsicott::whimsicott::::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -3814,22 +3548,16 @@
           "identity_key": "charizard::charizard::::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "basculegion::basculegion::::|garchomp::garchomp::::|incineroar::incineroar::::|kingambit::kingambit::::|pelipper::pelipper::::|sinistcha::sinistcha::::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -3911,22 +3639,16 @@
           "identity_key": "pelipper::pelipper::::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "dragonite::dragonite::::|farigiraf::farigiraf::::|garchomp::garchomp::::|kingambit::kingambit::::|pelipper::pelipper::::|sinistcha::sinistcha::::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -4008,22 +3730,16 @@
           "identity_key": "pelipper::pelipper::::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "archaludon::archaludon::::|dragonite::dragonite::::|incineroar::incineroar::::|rotom-wash::rotom-wash::::|starmie::starmie::::|whimsicott::whimsicott::::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -4105,22 +3821,16 @@
           "identity_key": "rotom-wash::rotom-wash::::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "garchomp::garchomp::::|incineroar::incineroar::::|pelipper::pelipper::::|starmie::starmie::::|whimsicott::whimsicott::::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -4201,22 +3911,16 @@
           "identity_key": "pelipper::pelipper::::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "gengar::gengar::::|incineroar::incineroar::::|kingambit::kingambit::::|pelipper::pelipper::::|starmie::starmie::::|whimsicott::whimsicott::::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -4298,22 +4002,16 @@
           "identity_key": "starmie::starmie::::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "basculegion::basculegion::::|dragonite::dragonite::::|garchomp::garchomp::::|rotom-wash::rotom-wash::::|starmie::starmie::::|whimsicott::whimsicott::::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -4395,22 +4093,16 @@
           "identity_key": "rotom-wash::rotom-wash::::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "garchomp::garchomp::::|incineroar::incineroar::::|sinistcha::sinistcha::::|starmie::starmie::::|whimsicott::whimsicott::::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -4491,22 +4183,16 @@
           "identity_key": "sinistcha::sinistcha::::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "garchomp::garchomp::::|incineroar::incineroar::::|pelipper::pelipper::::|sinistcha::sinistcha::::|starmie::starmie::::|tyranitar::tyranitar::::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -4588,22 +4274,16 @@
           "identity_key": "pelipper::pelipper::::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "basculegion::basculegion::choice scarf::|incineroar::incineroar::safety goggles::|kingambit::kingambit::::|pelipper::pelipper::focus sash::|whimsicott::whimsicott::::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -4696,22 +4376,16 @@
           "identity_key": "kingambit::kingambit::::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "farigiraf::farigiraf::::|garchomp::garchomp::clear amulet::|incineroar::incineroar::safety goggles::|kingambit::kingambit::black glasses::|pelipper::pelipper::covert cloak::|whimsicott::whimsicott::focus sash::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -4833,22 +4507,16 @@
           "identity_key": "pelipper::pelipper::covert cloak::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "dragonite::dragonite::::|farigiraf::farigiraf::::|garchomp::garchomp::::|incineroar::incineroar::::|rotom-wash::rotom-wash::::|starmie::starmie::::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -4930,22 +4598,16 @@
           "identity_key": "rotom-wash::rotom-wash::::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "dragonite::dragonite::::|gengar::gengar::::|kingambit::kingambit::::|pelipper::pelipper::::|rotom-wash::rotom-wash::::|starmie::starmie::::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -5027,22 +4689,16 @@
           "identity_key": "kingambit::kingambit::::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "basculegion::basculegion::::|dragonite::dragonite::::|kingambit::kingambit::::|rotom-wash::rotom-wash::::|sinistcha::sinistcha::::|tyranitar::tyranitar::::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -5124,22 +4780,16 @@
           "identity_key": "kingambit::kingambit::::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "basculegion::basculegion::choice scarf::|charizard::charizard::::|garchomp::garchomp::clear amulet::|incineroar::incineroar::sitrus berry::|pelipper::pelipper::choice scarf::|whimsicott::whimsicott::focus sash::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -5261,22 +4911,16 @@
           "identity_key": "garchomp::garchomp::clear amulet::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "incineroar::incineroar::::|kingambit::kingambit::::|pelipper::pelipper::::|rotom-wash::rotom-wash::::|starmie::starmie::::|whimsicott::whimsicott::::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -5358,22 +5002,16 @@
           "identity_key": "starmie::starmie::::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "charizard::charizard::::|farigiraf::farigiraf::::|garchomp::garchomp::::|incineroar::incineroar::::|starmie::starmie::::|whimsicott::whimsicott::::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -5455,22 +5093,16 @@
           "identity_key": "charizard::charizard::::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "dragonite::dragonite::::|garchomp::garchomp::choice scarf::|incineroar::incineroar::sitrus berry::|kingambit::kingambit::black glasses::|pelipper::pelipper::choice scarf::|whimsicott::whimsicott::focus sash::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -5592,22 +5224,16 @@
           "identity_key": "pelipper::pelipper::choice scarf::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "basculegion::basculegion::::|farigiraf::farigiraf::::|gengar::gengar::::|incineroar::incineroar::::|kingambit::kingambit::::|pelipper::pelipper::::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -5689,22 +5315,16 @@
           "identity_key": "farigiraf::farigiraf::::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "dragonite::dragonite::::|garchomp::garchomp::choice scarf::|kingambit::kingambit::black glasses::|pelipper::pelipper::choice scarf::|rotom-wash::rotom-wash::::|whimsicott::whimsicott::focus sash::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -5818,22 +5438,16 @@
           "identity_key": "pelipper::pelipper::choice scarf::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "archaludon::archaludon::::|basculegion::basculegion::::|garchomp::garchomp::::|kingambit::kingambit::::|pelipper::pelipper::::|whimsicott::whimsicott::::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -5915,22 +5529,16 @@
           "identity_key": "garchomp::garchomp::::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "basculegion::basculegion::::|dragonite::dragonite::::|garchomp::garchomp::::|incineroar::incineroar::::|rotom-wash::rotom-wash::::|sinistcha::sinistcha::::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -6012,22 +5620,16 @@
           "identity_key": "rotom-wash::rotom-wash::::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "archaludon::archaludon::::|basculegion::basculegion::::|charizard::charizard::::|garchomp::garchomp::::|incineroar::incineroar::::|whimsicott::whimsicott::::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -6109,22 +5711,16 @@
           "identity_key": "garchomp::garchomp::::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "garchomp::garchomp::::|gengar::gengar::::|incineroar::incineroar::::|starmie::starmie::::|whimsicott::whimsicott::::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -6193,22 +5789,16 @@
           "identity_key": "gengar::gengar::::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "archaludon::archaludon::::|dragonite::dragonite::::|farigiraf::farigiraf::::|garchomp::garchomp::::|rotom-wash::rotom-wash::::|whimsicott::whimsicott::::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -6290,22 +5880,16 @@
           "identity_key": "rotom-wash::rotom-wash::::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "basculegion::basculegion::::|garchomp::garchomp::choice scarf::|gengar::gengar::::|kingambit::kingambit::black glasses::|pelipper::pelipper::choice scarf::|sinistcha::sinistcha::leftovers::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -6419,22 +6003,16 @@
           "identity_key": "pelipper::pelipper::choice scarf::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "charizard::charizard::::|incineroar::incineroar::::|kingambit::kingambit::::|pelipper::pelipper::::|sinistcha::sinistcha::::|whimsicott::whimsicott::::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -6516,22 +6094,16 @@
           "identity_key": "pelipper::pelipper::::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "garchomp::garchomp::::|kingambit::kingambit::::|pelipper::pelipper::::|sinistcha::sinistcha::::|starmie::starmie::::|whimsicott::whimsicott::::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -6613,22 +6185,16 @@
           "identity_key": "pelipper::pelipper::::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "archaludon::archaludon::::|garchomp::garchomp::::|incineroar::incineroar::::|pelipper::pelipper::::|sinistcha::sinistcha::::|whimsicott::whimsicott::::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -6710,22 +6276,16 @@
           "identity_key": "pelipper::pelipper::::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "basculegion::basculegion::::|garchomp::garchomp::choice scarf::|incineroar::incineroar::sitrus berry::|kingambit::kingambit::black glasses::|sinistcha::sinistcha::leftovers::|whimsicott::whimsicott::focus sash::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -6847,22 +6407,16 @@
           "identity_key": "basculegion::basculegion::::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "archaludon::archaludon::assault vest::|basculegion::basculegion::choice scarf::|incineroar::incineroar::sitrus berry::|pelipper::pelipper::choice scarf::|rotom-wash::rotom-wash::::|sinistcha::sinistcha::::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -6976,22 +6530,16 @@
           "identity_key": "sinistcha::sinistcha::::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "basculegion::basculegion::::|dragonite::dragonite::::|gengar::gengar::::|kingambit::kingambit::::|pelipper::pelipper::::|tyranitar::tyranitar::::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -7073,22 +6621,16 @@
           "identity_key": "kingambit::kingambit::::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "charizard::charizard::::|garchomp::garchomp::::|sinistcha::sinistcha::::|starmie::starmie::::|tyranitar::tyranitar::::|whimsicott::whimsicott::::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -7170,22 +6712,16 @@
           "identity_key": "sinistcha::sinistcha::::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "archaludon::archaludon::::|charizard::charizard::::|garchomp::garchomp::choice scarf::|incineroar::incineroar::sitrus berry::|kingambit::kingambit::black glasses::|pelipper::pelipper::choice scarf::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -7299,22 +6835,16 @@
           "identity_key": "pelipper::pelipper::choice scarf::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "charizard::charizard::::|garchomp::garchomp::::|incineroar::incineroar::::|kingambit::kingambit::::|sinistcha::sinistcha::::|tyranitar::tyranitar::::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -7396,22 +6926,16 @@
           "identity_key": "sinistcha::sinistcha::::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "basculegion::basculegion::choice scarf::|incineroar::incineroar::safety goggles::|pelipper::pelipper::focus sash::|tyranitar::tyranitar::::|whimsicott::whimsicott::::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -7504,22 +7028,16 @@
           "identity_key": "tyranitar::tyranitar::::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "basculegion::basculegion::::|dragonite::dragonite::::|gengar::gengar::::|kingambit::kingambit::::|rotom-wash::rotom-wash::::|whimsicott::whimsicott::::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -7601,22 +7119,16 @@
           "identity_key": "kingambit::kingambit::::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "charizard::charizard::::|farigiraf::farigiraf::::|incineroar::incineroar::::|pelipper::pelipper::::|sinistcha::sinistcha::::|whimsicott::whimsicott::::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -7698,22 +7210,16 @@
           "identity_key": "sinistcha::sinistcha::::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "dragonite::dragonite::::|farigiraf::farigiraf::::|incineroar::incineroar::::|sinistcha::sinistcha::::|starmie::starmie::::|whimsicott::whimsicott::::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -7795,22 +7301,16 @@
           "identity_key": "farigiraf::farigiraf::::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "basculegion::basculegion::::|incineroar::incineroar::::|kingambit::kingambit::::|pelipper::pelipper::::|sinistcha::sinistcha::::|whimsicott::whimsicott::::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -7892,22 +7392,16 @@
           "identity_key": "pelipper::pelipper::::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "basculegion::basculegion::::|dragonite::dragonite::::|garchomp::garchomp::::|rotom-wash::rotom-wash::::|sinistcha::sinistcha::::|starmie::starmie::::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -7989,22 +7483,16 @@
           "identity_key": "rotom-wash::rotom-wash::::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "farigiraf::farigiraf::::|garchomp::garchomp::::|incineroar::incineroar::::|starmie::starmie::::|whimsicott::whimsicott::::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -8085,22 +7573,16 @@
           "identity_key": "farigiraf::farigiraf::::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "dragonite::dragonite::::|garchomp::garchomp::::|incineroar::incineroar::::|kingambit::kingambit::::|starmie::starmie::::|tyranitar::tyranitar::::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -8182,22 +7664,16 @@
           "identity_key": "kingambit::kingambit::::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "farigiraf::farigiraf::::|garchomp::garchomp::choice scarf::|incineroar::incineroar::sitrus berry::|pelipper::pelipper::choice scarf::|sinistcha::sinistcha::leftovers::|whimsicott::whimsicott::focus sash::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -8319,22 +7795,16 @@
           "identity_key": "pelipper::pelipper::choice scarf::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "archaludon::archaludon::::|basculegion::basculegion::::|charizard::charizard::::|pelipper::pelipper::::|rotom-wash::rotom-wash::::|whimsicott::whimsicott::::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -8416,22 +7886,16 @@
           "identity_key": "charizard::charizard::::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "basculegion::basculegion::::|farigiraf::farigiraf::::|incineroar::incineroar::::|pelipper::pelipper::::|whimsicott::whimsicott::::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -8500,22 +7964,16 @@
           "identity_key": "farigiraf::farigiraf::::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "archaludon::archaludon::::|dragonite::dragonite::::|garchomp::garchomp::::|incineroar::incineroar::::|kingambit::kingambit::::|sinistcha::sinistcha::::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -8597,22 +8055,16 @@
           "identity_key": "archaludon::archaludon::::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "archaludon::archaludon::assault vest::|basculegion::basculegion::choice scarf::|dragonite::dragonite::::|incineroar::incineroar::sitrus berry::|sinistcha::sinistcha::::|whimsicott::whimsicott::focus sash::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -8726,22 +8178,16 @@
           "identity_key": "dragonite::dragonite::::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "archaludon::archaludon::::|dragonite::dragonite::::|gengar::gengar::::|incineroar::incineroar::::|kingambit::kingambit::::|pelipper::pelipper::::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -8823,22 +8269,16 @@
           "identity_key": "kingambit::kingambit::::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "archaludon::archaludon::::|garchomp::garchomp::::|incineroar::incineroar::::|kingambit::kingambit::::|starmie::starmie::::|whimsicott::whimsicott::::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -8920,22 +8360,16 @@
           "identity_key": "starmie::starmie::::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "basculegion::basculegion::::|dragonite::dragonite::::|farigiraf::farigiraf::::|incineroar::incineroar::::|kingambit::kingambit::::|pelipper::pelipper::::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -9017,22 +8451,16 @@
           "identity_key": "farigiraf::farigiraf::::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "charizard::charizard::::|garchomp::garchomp::::|incineroar::incineroar::::|kingambit::kingambit::::|tyranitar::tyranitar::::|whimsicott::whimsicott::::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -9114,22 +8542,16 @@
           "identity_key": "tyranitar::tyranitar::::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "charizard::charizard::::|farigiraf::farigiraf::::|incineroar::incineroar::::|kingambit::kingambit::::|pelipper::pelipper::::|whimsicott::whimsicott::::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -9211,22 +8633,16 @@
           "identity_key": "farigiraf::farigiraf::::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "charizard::charizard::::|dragonite::dragonite::::|gengar::gengar::::|kingambit::kingambit::::|rotom-wash::rotom-wash::::|whimsicott::whimsicott::::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -9308,22 +8724,16 @@
           "identity_key": "kingambit::kingambit::::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "basculegion::basculegion::::|dragonite::dragonite::::|farigiraf::farigiraf::::|gengar::gengar::::|pelipper::pelipper::::|sinistcha::sinistcha::::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -9405,22 +8815,16 @@
           "identity_key": "basculegion::basculegion::::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "archaludon::archaludon::::|farigiraf::farigiraf::::|incineroar::incineroar::::|kingambit::kingambit::::|rotom-wash::rotom-wash::::|tyranitar::tyranitar::::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -9502,22 +8906,16 @@
           "identity_key": "kingambit::kingambit::::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "dragonite::dragonite::::|farigiraf::farigiraf::::|garchomp::garchomp::::|gengar::gengar::::|kingambit::kingambit::::|rotom-wash::rotom-wash::::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -9599,22 +8997,16 @@
           "identity_key": "kingambit::kingambit::::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "garchomp::garchomp::::|gengar::gengar::::|incineroar::incineroar::::|rotom-wash::rotom-wash::::|starmie::starmie::::|whimsicott::whimsicott::::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -9696,22 +9088,16 @@
           "identity_key": "rotom-wash::rotom-wash::::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "archaludon::archaludon::::|basculegion::basculegion::::|gengar::gengar::::|incineroar::incineroar::::|kingambit::kingambit::::|whimsicott::whimsicott::::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -9793,22 +9179,16 @@
           "identity_key": "gengar::gengar::::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "archaludon::archaludon::::|dragonite::dragonite::::|garchomp::garchomp::::|rotom-wash::rotom-wash::::|sinistcha::sinistcha::::|starmie::starmie::::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -9890,22 +9270,16 @@
           "identity_key": "rotom-wash::rotom-wash::::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "archaludon::archaludon::::|charizard::charizard::::|garchomp::garchomp::::|incineroar::incineroar::::|kingambit::kingambit::::|pelipper::pelipper::::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -9987,22 +9361,16 @@
           "identity_key": "garchomp::garchomp::::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "basculegion::basculegion::::|farigiraf::farigiraf::::|kingambit::kingambit::::|pelipper::pelipper::::|sinistcha::sinistcha::::|whimsicott::whimsicott::::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -10084,22 +9452,16 @@
           "identity_key": "farigiraf::farigiraf::::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "charizard::charizard::::|dragonite::dragonite::::|garchomp::garchomp::clear amulet::|incineroar::incineroar::safety goggles::|pelipper::pelipper::covert cloak::|starmie::starmie::life orb::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -10213,22 +9575,16 @@
           "identity_key": "pelipper::pelipper::covert cloak::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "basculegion::basculegion::::|dragonite::dragonite::::|farigiraf::farigiraf::::|gengar::gengar::::|kingambit::kingambit::::|tyranitar::tyranitar::::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -10310,22 +9666,16 @@
           "identity_key": "kingambit::kingambit::::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "basculegion::basculegion::::|dragonite::dragonite::::|incineroar::incineroar::::|pelipper::pelipper::::|tyranitar::tyranitar::::|whimsicott::whimsicott::::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -10407,22 +9757,16 @@
           "identity_key": "tyranitar::tyranitar::::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "selfplay",
-      "source_name": "self-generated",
-      "source_url": "",
-      "quality_class": "",
+      "shell_signature": "garchomp::garchomp::::|gengar::gengar::::|incineroar::incineroar::::|sinistcha::sinistcha::::|starmie::starmie::::|tyranitar::tyranitar::::",
       "archetype": "",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
+      "sample_count": 1,
+      "quality_score": 0.414,
+      "last_sources": [
+        "self-generated"
       ],
       "team": [
         {
@@ -10504,32 +9848,56 @@
           "identity_key": "gengar::gengar::::"
         }
       ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "selfplay",
-      "sourceName": "self-generated",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     },
     {
-      "source_type": "archive",
-      "source_name": "",
-      "source_url": "",
-      "quality_class": "archive",
+      "shell_signature": "dragonite::dragonite::::|farigiraf::farigiraf::::|gengar::gengar::::|kingambit::kingambit::::|pelipper::pelipper::::|rotom-wash::rotom-wash::::",
       "archetype": "",
-      "tags": [],
+      "sample_count": 1,
+      "quality_score": 0.315,
+      "last_sources": [
+        "random-a"
+      ],
       "team": [
         {
-          "base_species": "Incineroar",
-          "display_species": "Incineroar",
+          "base_species": "Gengar",
+          "display_species": "Gengar",
           "item": "",
           "mega_stone": "",
           "mega_identity": "",
-          "form_identity": "Incineroar",
+          "form_identity": "Gengar",
           "role": "",
           "archetype": "",
           "moves": [],
           "key_moves": [],
-          "identity_key": "incineroar::incineroar::::"
+          "identity_key": "gengar::gengar::::"
+        },
+        {
+          "base_species": "Pelipper",
+          "display_species": "Pelipper",
+          "item": "",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Pelipper",
+          "role": "",
+          "archetype": "",
+          "moves": [],
+          "key_moves": [],
+          "identity_key": "pelipper::pelipper::::"
+        },
+        {
+          "base_species": "Dragonite",
+          "display_species": "Dragonite",
+          "item": "",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Dragonite",
+          "role": "",
+          "archetype": "",
+          "moves": [],
+          "key_moves": [],
+          "identity_key": "dragonite::dragonite::::"
         },
         {
           "base_species": "Farigiraf",
@@ -10544,6 +9912,45 @@
           "key_moves": [],
           "identity_key": "farigiraf::farigiraf::::"
         },
+        {
+          "base_species": "Rotom-Wash",
+          "display_species": "Rotom-Wash",
+          "item": "",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Rotom-Wash",
+          "role": "",
+          "archetype": "",
+          "moves": [],
+          "key_moves": [],
+          "identity_key": "rotom-wash::rotom-wash::::"
+        },
+        {
+          "base_species": "Kingambit",
+          "display_species": "Kingambit",
+          "item": "",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Kingambit",
+          "role": "",
+          "archetype": "",
+          "moves": [],
+          "key_moves": [],
+          "identity_key": "kingambit::kingambit::::"
+        }
+      ],
+      "rain_bias_count": 0,
+      "mega_count": 0
+    },
+    {
+      "shell_signature": "charizard::charizard::::|incineroar::incineroar::::|sinistcha::sinistcha::::|starmie::starmie::::|tyranitar::tyranitar::::|whimsicott::whimsicott::::",
+      "archetype": "",
+      "sample_count": 1,
+      "quality_score": 0.315,
+      "last_sources": [
+        "random-b"
+      ],
+      "team": [
         {
           "base_species": "Whimsicott",
           "display_species": "Whimsicott",
@@ -10571,43 +9978,60 @@
           "identity_key": "charizard::charizard::::"
         },
         {
-          "base_species": "Dragonite",
-          "display_species": "Dragonite",
+          "base_species": "Starmie",
+          "display_species": "Starmie",
           "item": "",
           "mega_stone": "",
           "mega_identity": "",
-          "form_identity": "Dragonite",
+          "form_identity": "Starmie",
           "role": "",
           "archetype": "",
           "moves": [],
           "key_moves": [],
-          "identity_key": "dragonite::dragonite::::"
+          "identity_key": "starmie::starmie::::"
         },
         {
-          "base_species": "Rotom-Wash",
-          "display_species": "Rotom-Wash",
+          "base_species": "Tyranitar",
+          "display_species": "Tyranitar",
           "item": "",
           "mega_stone": "",
           "mega_identity": "",
-          "form_identity": "Rotom-Wash",
+          "form_identity": "Tyranitar",
           "role": "",
           "archetype": "",
           "moves": [],
           "key_moves": [],
-          "identity_key": "rotom-wash::rotom-wash::::"
+          "identity_key": "tyranitar::tyranitar::::"
+        },
+        {
+          "base_species": "Incineroar",
+          "display_species": "Incineroar",
+          "item": "",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Incineroar",
+          "role": "",
+          "archetype": "",
+          "moves": [],
+          "key_moves": [],
+          "identity_key": "incineroar::incineroar::::"
+        },
+        {
+          "base_species": "Sinistcha",
+          "display_species": "Sinistcha",
+          "item": "",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Sinistcha",
+          "role": "",
+          "archetype": "",
+          "moves": [],
+          "key_moves": [],
+          "identity_key": "sinistcha::sinistcha::::"
         }
       ],
-      "confidence": 0.445,
-      "score": 0.716,
-      "sourceType": "archive",
-      "sourceName": "",
-      "sourceUrl": ""
+      "rain_bias_count": 0,
+      "mega_count": 0
     }
-  ],
-  "diversity_pressure": {
-    "rain_penalty": 0.0,
-    "sun_support": 0.216,
-    "weather_diversity_target": 0.26,
-    "applied": false
-  }
+  ]
 }

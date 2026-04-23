@@ -1,0 +1,36 @@
+{
+  "sources": {
+    "archive": {
+      "quality_class": "archive",
+      "sample_count": 14,
+      "reliability_score": 3.8806,
+      "tags": []
+    },
+    "self-generated": {
+      "quality_class": "unknown",
+      "sample_count": 89,
+      "reliability_score": 3.1843,
+      "tags": [
+        "selfplay",
+        "generated",
+        "exploratory"
+      ]
+    },
+    "random-a": {
+      "quality_class": "unknown",
+      "sample_count": 1,
+      "reliability_score": 0.315,
+      "tags": [
+        "random"
+      ]
+    },
+    "random-b": {
+      "quality_class": "unknown",
+      "sample_count": 1,
+      "reliability_score": 0.315,
+      "tags": [
+        "random"
+      ]
+    }
+  }
+}

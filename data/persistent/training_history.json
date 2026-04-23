@@ -1,0 +1,12 @@
+{
+  "runs": [
+    {
+      "run_index": 1,
+      "team_count": 105,
+      "archetype_counts": {
+        "unknown": 105
+      },
+      "mega_team_count": 0
+    }
+  ]
+}

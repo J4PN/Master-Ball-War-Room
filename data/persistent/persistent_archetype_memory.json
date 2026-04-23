@@ -1,0 +1,11 @@
+{
+  "archetypes": {
+    "unknown": {
+      "count": 105,
+      "quality_score": 3.049,
+      "mega_count": 0,
+      "anti_rain_count": 0,
+      "weather_count": 0
+    }
+  }
+}
