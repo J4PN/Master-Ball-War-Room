@@ -200,6 +200,19 @@ def normalize_team_entry(entry, fallback_archetype=""):
     }
 
 
+def normalize_output_team_entry(entry):
+    normalized = dict(entry or {})
+    if "sourceType" not in normalized:
+        normalized["sourceType"] = normalized.get("source_type", "archive")
+    if "sourceName" not in normalized:
+        normalized["sourceName"] = normalized.get("source_name", normalized["sourceType"])
+    if "sourceUrl" not in normalized:
+        normalized["sourceUrl"] = normalized.get("source_url", "")
+    if "team" not in normalized or not isinstance(normalized["team"], list):
+        normalized["team"] = []
+    return normalized
+
+
 def get_shell_signature(team_entry):
     slots = [slot["identity_key"] for slot in team_entry.get("team", []) if slot.get("identity_key")]
     return "|".join(sorted(slots))
@@ -453,7 +466,7 @@ def rewrite_team_archive(current_entries):
 
 def rewrite_combined_pool(current_entries, diversity_pressure):
     payload = {
-        "teams": current_entries[:240],
+        "teams": [normalize_output_team_entry(entry) for entry in current_entries[:240]],
         "diversity_pressure": diversity_pressure,
     }
     save_json(CURRENT_FILES["combined_training_pool"], payload)
