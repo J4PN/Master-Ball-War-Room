@@ -57,6 +57,13 @@ jobs:
         run: |
           python scripts/offpc_training/ingest_youtube.py
 
+      - name: Ingest High-Level Creator Sources
+        env:
+          GITHUB_ACTIONS: "true"
+          RUNNER_ENVIRONMENT: "github-hosted"
+        run: |
+          python scripts/offpc_training/ingest_high_level_sources.py
+
       - name: Run remote-only training
         env:
           GITHUB_ACTIONS: "true"
@@ -64,6 +71,13 @@ jobs:
           TRAIN_ITERATIONS: ${{ github.event.inputs.iterations || '32' }}
         run: |
           python scripts/offpc_training/train.py --iterations "${TRAIN_ITERATIONS}"
+
+      - name: Merge persistent learning memory
+        env:
+          GITHUB_ACTIONS: "true"
+          RUNNER_ENVIRONMENT: "github-hosted"
+        run: |
+          python scripts/offpc_training/persistent_memory.py
 
       - name: Validate learned outputs
         env:
@@ -78,6 +92,7 @@ jobs:
           name: offpc-training-${{ github.run_id }}
           path: |
             data/normalized
+            data/persistent
             data/learned_weights.json
             data/species_role_priors.json
             data/move_choice_weights.json
@@ -85,12 +100,13 @@ jobs:
             data/team_archive.json
             data/battle_logs
             reports/training_summary.md
+            reports/training_memory_report.md
 
       - name: Commit refreshed remote outputs
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/normalized data/learned_weights.json data/species_role_priors.json data/move_choice_weights.json data/threat_penalties.json data/team_archive.json data/battle_logs reports/training_summary.md
+          git add data/normalized data/persistent data/learned_weights.json data/species_role_priors.json data/move_choice_weights.json data/threat_penalties.json data/team_archive.json data/battle_logs reports/training_summary.md reports/training_memory_report.md
           if git diff --cached --quiet; then
             echo "No remote-learning changes to commit."
             exit 0
