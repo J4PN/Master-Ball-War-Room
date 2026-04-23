@@ -1,8 +1,8 @@
 {
   "archetypes": {
     "unknown": {
-      "count": 4783,
-      "quality_score": 4.3496,
+      "count": 4914,
+      "quality_score": 5.0169,
       "mega_count": 0,
       "anti_rain_count": 0,
       "weather_count": 0
@@ -22,11 +22,11 @@
       "weather_count": 0
     },
     "rain": {
-      "count": 9,
-      "quality_score": 2.9916,
+      "count": 10,
+      "quality_score": 3.2144,
       "mega_count": 0,
       "anti_rain_count": 0,
-      "weather_count": 9
+      "weather_count": 10
     },
     "balance": {
       "count": 4,
