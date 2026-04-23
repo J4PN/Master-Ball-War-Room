@@ -34,6 +34,20 @@
         "unknown": 802
       },
       "mega_team_count": 0
+    },
+    {
+      "run_index": 4,
+      "team_count": 1305,
+      "archetype_counts": {
+        "pivot-balance": 1,
+        "rain-balance": 1,
+        "rain": 2,
+        "balance": 1,
+        "bulky-offense": 2,
+        "fast-offense": 1,
+        "unknown": 1297
+      },
+      "mega_team_count": 0
     }
   ]
 }

@@ -1,50 +1,50 @@
 {
   "archetypes": {
     "unknown": {
-      "count": 1363,
-      "quality_score": 5.352,
+      "count": 2660,
+      "quality_score": 5.3244,
       "mega_count": 0,
       "anti_rain_count": 0,
       "weather_count": 0
     },
     "pivot-balance": {
-      "count": 2,
-      "quality_score": 1.607,
+      "count": 3,
+      "quality_score": 2.246,
       "mega_count": 0,
       "anti_rain_count": 0,
       "weather_count": 0
     },
     "rain-balance": {
-      "count": 2,
-      "quality_score": 1.6573,
+      "count": 3,
+      "quality_score": 2.3163,
       "mega_count": 0,
       "anti_rain_count": 0,
       "weather_count": 0
     },
     "rain": {
-      "count": 3,
-      "quality_score": 1.4286,
+      "count": 5,
+      "quality_score": 2.1213,
       "mega_count": 0,
       "anti_rain_count": 0,
-      "weather_count": 3
+      "weather_count": 5
     },
     "balance": {
-      "count": 2,
-      "quality_score": 1.3727,
+      "count": 3,
+      "quality_score": 1.9185,
       "mega_count": 0,
       "anti_rain_count": 0,
       "weather_count": 0
     },
     "fast-offense": {
-      "count": 2,
-      "quality_score": 1.3225,
+      "count": 3,
+      "quality_score": 1.8484,
       "mega_count": 0,
       "anti_rain_count": 0,
       "weather_count": 0
     },
     "bulky-offense": {
-      "count": 1,
-      "quality_score": 0.513,
+      "count": 3,
+      "quality_score": 1.459,
       "mega_count": 0,
       "anti_rain_count": 0,
       "weather_count": 0
