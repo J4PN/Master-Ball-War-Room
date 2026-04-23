@@ -1,29 +1,29 @@
 {
-  "updatedAt": "2026-04-23T12:30:31+00:00",
+  "updatedAt": "2026-04-23T12:31:50+00:00",
   "priors": {
     "incineroar": {
-      "weight": 0.125,
+      "weight": 0.079,
       "roles": [
         "pivot_support",
         "fake_out"
       ]
     },
     "whimsicott": {
-      "weight": 0.113,
+      "weight": 0.079,
       "roles": [
         "speed_control",
         "support"
       ]
     },
     "garchomp": {
-      "weight": 0.1,
+      "weight": 0.066,
       "roles": [
         "physical_pressure",
         "spread_damage"
       ]
     },
     "pelipper": {
-      "weight": 0.113,
+      "weight": 0.053,
       "roles": [
         "weather",
         "speed_control"
@@ -31,31 +31,31 @@
     },
     "basculegion": {
       "roles": [],
-      "weight": 0.075
+      "weight": 0.026
     },
     "archaludon": {
       "roles": [],
-      "weight": 0.037
+      "weight": 0.013
     },
     "sinistcha": {
       "roles": [],
-      "weight": 0.037
+      "weight": 0.013
     },
     "kingambit": {
       "roles": [],
-      "weight": 0.087
+      "weight": 0.026
     },
     "starmie": {
       "roles": [],
-      "weight": 0.075
+      "weight": 0.039
     },
     "dragonite": {
       "roles": [],
-      "weight": 0.075
+      "weight": 0.013
     },
     "rotomwash": {
       "roles": [],
-      "weight": 0.05
+      "weight": 0.013
     },
     "farigiraf": {
       "roles": [],
@@ -72,6 +72,50 @@
     "charizard": {
       "roles": [],
       "weight": 0.013
+    },
+    "basespeciespelipperdisplayspeciespelipperitemmegastonemegaidentityformidentitypelipperrolearchetypemoveskeymovesidentitykeypelipperpelipper": {
+      "roles": [],
+      "weight": 0.066
+    },
+    "basespeciesbasculegiondisplayspeciesbasculegionitemmegastonemegaidentityformidentitybasculegionrolearchetypemoveskeymovesidentitykeybasculegionbasculegion": {
+      "roles": [],
+      "weight": 0.039
+    },
+    "basespeciesincineroardisplayspeciesincineroaritemmegastonemegaidentityformidentityincineroarrolearchetypemoveskeymovesidentitykeyincineroarincineroar": {
+      "roles": [],
+      "weight": 0.105
+    },
+    "basespecieswhimsicottdisplayspecieswhimsicottitemmegastonemegaidentityformidentitywhimsicottrolearchetypemoveskeymovesidentitykeywhimsicottwhimsicott": {
+      "roles": [],
+      "weight": 0.092
+    },
+    "basespeciesarchaludondisplayspeciesarchaludonitemmegastonemegaidentityformidentityarchaludonrolearchetypemoveskeymovesidentitykeyarchaludonarchaludon": {
+      "roles": [],
+      "weight": 0.013
+    },
+    "basespeciesgarchompdisplayspeciesgarchompitemmegastonemegaidentityformidentitygarchomprolearchetypemoveskeymovesidentitykeygarchompgarchomp": {
+      "roles": [],
+      "weight": 0.092
+    },
+    "basespeciessinistchadisplayspeciessinistchaitemmegastonemegaidentityformidentitysinistcharolearchetypemoveskeymovesidentitykeysinistchasinistcha": {
+      "roles": [],
+      "weight": 0.039
+    },
+    "basespecieskingambitdisplayspecieskingambititemmegastonemegaidentityformidentitykingambitrolearchetypemoveskeymovesidentitykeykingambitkingambit": {
+      "roles": [],
+      "weight": 0.026
+    },
+    "basespeciesstarmiedisplayspeciesstarmieitemmegastonemegaidentityformidentitystarmierolearchetypemoveskeymovesidentitykeystarmiestarmie": {
+      "roles": [],
+      "weight": 0.053
+    },
+    "basespeciesdragonitedisplayspeciesdragoniteitemmegastonemegaidentityformidentitydragoniterolearchetypemoveskeymovesidentitykeydragonitedragonite": {
+      "roles": [],
+      "weight": 0.026
+    },
+    "basespeciesrotomwashdisplayspeciesrotomwashitemmegastonemegaidentityformidentityrotomwashrolearchetypemoveskeymovesidentitykeyrotomwashrotomwash": {
+      "roles": [],
+      "weight": 0.026
     }
   }
 }

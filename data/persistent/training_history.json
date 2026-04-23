@@ -7,6 +7,19 @@
         "unknown": 105
       },
       "mega_team_count": 0
+    },
+    {
+      "run_index": 2,
+      "team_count": 461,
+      "archetype_counts": {
+        "pivot-balance": 1,
+        "rain-balance": 1,
+        "rain": 1,
+        "balance": 1,
+        "unknown": 456,
+        "fast-offense": 1
+      },
+      "mega_team_count": 0
     }
   ]
 }

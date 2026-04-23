@@ -1,37 +1,37 @@
 {
-  "updatedAt": "2026-04-23T12:30:31+00:00",
+  "updatedAt": "2026-04-23T12:31:50+00:00",
   "byThreat": {
     "incineroar": {
-      "multiplier": 1.532,
-      "notes": "Observed in archive, meta, pikalytics, reddit, selfplay, youtube source pools."
+      "multiplier": 1.323,
+      "notes": "Observed in meta, pikalytics, reddit, selfplay, youtube source pools."
     },
     "sneasler": {
       "multiplier": 1.1,
       "notes": "Fast disruption remains a top pressure source."
     },
     "garchomp": {
-      "multiplier": 1.428,
-      "notes": "Observed in archive, meta, pikalytics, reddit, selfplay, youtube source pools."
+      "multiplier": 1.236,
+      "notes": "Observed in meta, pikalytics, reddit, selfplay, youtube source pools."
     },
     "whimsicott": {
-      "multiplier": 1.546,
-      "notes": "Observed in archive, meta, pikalytics, reddit, selfplay, youtube source pools."
+      "multiplier": 1.294,
+      "notes": "Observed in meta, pikalytics, reddit, selfplay, youtube source pools."
     },
     "pelipper": {
-      "multiplier": 1.517,
-      "notes": "Observed in archive, meta, pikalytics, reddit, selfplay source pools."
+      "multiplier": 1.294,
+      "notes": "Observed in meta, pikalytics, reddit, selfplay source pools."
     },
     "kingambit": {
-      "multiplier": 1.403,
-      "notes": "Observed in archive, meta, pikalytics, reddit, selfplay source pools."
+      "multiplier": 1.177,
+      "notes": "Observed in meta, pikalytics, reddit, selfplay source pools."
     },
     "basculegion": {
-      "multiplier": 1.215,
-      "notes": "Observed in archive, meta, pikalytics, reddit, selfplay source pools."
+      "multiplier": 1.236,
+      "notes": "Observed in meta, pikalytics, reddit, selfplay source pools."
     },
     "sinistcha": {
-      "multiplier": 1.323,
-      "notes": "Observed in archive, meta, pikalytics, selfplay source pools."
+      "multiplier": 1.119,
+      "notes": "Observed in meta, pikalytics, selfplay source pools."
     },
     "starmie": {
       "multiplier": 1.22,
@@ -63,6 +63,98 @@
     },
     "charizard": {
       "multiplier": 1.177,
+      "notes": "Observed in archive source pools."
+    },
+    "basespecieswhimsicottdisplayspecieswhimsicottitemmegastonemegaidentityformidentitywhimsicottrolearchetypemoveskeymovesidentitykeywhimsicottwhimsicott": {
+      "multiplier": 1.299,
+      "notes": "Observed in archive source pools."
+    },
+    "basespeciesincineroardisplayspeciesincineroaritemmegastonemegaidentityformidentityincineroarrolearchetypemoveskeymovesidentitykeyincineroarincineroar": {
+      "multiplier": 1.266,
+      "notes": "Observed in archive source pools."
+    },
+    "basespeciespelipperdisplayspeciespelipperitemmegastonemegaidentityformidentitypelipperrolearchetypemoveskeymovesidentitykeypelipperpelipper": {
+      "multiplier": 1.245,
+      "notes": "Observed in archive source pools."
+    },
+    "basespecieskingambitdisplayspecieskingambititemmegastonemegaidentityformidentitykingambitrolearchetypemoveskeymovesidentitykeykingambitkingambit": {
+      "multiplier": 1.226,
+      "notes": "Observed in archive source pools."
+    },
+    "basespeciesdragonitedisplayspeciesdragoniteitemmegastonemegaidentityformidentitydragoniterolearchetypemoveskeymovesidentitykeydragonitedragonite": {
+      "multiplier": 1.224,
+      "notes": "Observed in archive source pools."
+    },
+    "basespeciesgarchompdisplayspeciesgarchompitemmegastonemegaidentityformidentitygarchomprolearchetypemoveskeymovesidentitykeygarchompgarchomp": {
+      "multiplier": 1.18,
+      "notes": "Observed in archive source pools."
+    },
+    "basespeciesstarmiedisplayspeciesstarmieitemmegastonemegaidentityformidentitystarmierolearchetypemoveskeymovesidentitykeystarmiestarmie": {
+      "multiplier": 1.202,
+      "notes": "Observed in archive source pools."
+    },
+    "basespeciessinistchadisplayspeciessinistchaitemmegastonemegaidentityformidentitysinistcharolearchetypemoveskeymovesidentitykeysinistchasinistcha": {
+      "multiplier": 1.193,
+      "notes": "Observed in archive source pools."
+    },
+    "basespeciesbasculegiondisplayspeciesbasculegionitemmegastonemegaidentityformidentitybasculegionrolearchetypemoveskeymovesidentitykeybasculegionbasculegion": {
+      "multiplier": 1.161,
+      "notes": "Observed in archive source pools."
+    },
+    "basespeciesfarigirafdisplayspeciesfarigirafitemmegastonemegaidentityformidentityfarigirafrolearchetypemoveskeymovesidentitykeyfarigiraffarigiraf": {
+      "multiplier": 1.18,
+      "notes": "Observed in archive source pools."
+    },
+    "basespeciesrotomwashdisplayspeciesrotomwashitemmegastonemegaidentityformidentityrotomwashrolearchetypemoveskeymovesidentitykeyrotomwashrotomwash": {
+      "multiplier": 1.162,
+      "notes": "Observed in archive source pools."
+    },
+    "basespeciescharizarddisplayspeciescharizarditemmegastonemegaidentityformidentitycharizardrolearchetypemoveskeymovesidentitykeycharizardcharizard": {
+      "multiplier": 1.175,
+      "notes": "Observed in archive source pools."
+    },
+    "basespeciesgengardisplayspeciesgengaritemmegastonemegaidentityformidentitygengarrolearchetypemoveskeymovesidentitykeygengargengar": {
+      "multiplier": 1.142,
+      "notes": "Observed in archive source pools."
+    },
+    "basespeciesarchaludondisplayspeciesarchaludonitemmegastonemegaidentityformidentityarchaludonrolearchetypemoveskeymovesidentitykeyarchaludonarchaludon": {
+      "multiplier": 1.106,
+      "notes": "Observed in archive source pools."
+    },
+    "basespeciestyranitardisplayspeciestyranitaritemmegastonemegaidentityformidentitytyranitarrolearchetypemoveskeymovesidentitykeytyranitartyranitar": {
+      "multiplier": 1.119,
+      "notes": "Observed in archive source pools."
+    },
+    "basespeciesgarchompdisplayspeciesgarchompitemchoicescarfmegastonemegaidentityformidentitygarchomprolearchetypemovesearthquakerockslidedragonclawprotectkeymovesearthquakerockslideidentitykeygarchompgarchompchoicescarf": {
+      "multiplier": 1.119,
+      "notes": "Observed in archive source pools."
+    },
+    "basespecieskingambitdisplayspecieskingambititemblackglassesmegastonemegaidentityformidentitykingambitrolearchetypemovessuckerpunchkowtowcleavelowkickprotectkeymovessuckerpunchkowtowcleaveidentitykeykingambitkingambitblackglasses": {
+      "multiplier": 1.09,
+      "notes": "Observed in archive source pools."
+    },
+    "basespeciespelipperdisplayspeciespelipperitemchoicescarfmegastonemegaidentityformidentitypelipperrolearchetypemoveshurricanemuddywatertailwindprotectkeymoveshurricanemuddywateridentitykeypelipperpelipperchoicescarf": {
+      "multiplier": 1.09,
+      "notes": "Observed in archive source pools."
+    },
+    "basespeciesincineroardisplayspeciesincineroaritemmegastonemegaidentityformidentityincineroarrolearchetypemovesfakeoutpartingshotkeymovesfakeoutpartingshotidentitykeyincineroarincineroar": {
+      "multiplier": 1.09,
+      "notes": "Observed in archive source pools."
+    },
+    "basespeciesgarchompdisplayspeciesgarchompitemmegastonemegaidentityformidentitygarchomprolearchetypemovesearthquakerockslidekeymovesearthquakerockslideidentitykeygarchompgarchomp": {
+      "multiplier": 1.09,
+      "notes": "Observed in archive source pools."
+    },
+    "basespeciesincineroardisplayspeciesincineroaritemsitrusberrymegastonemegaidentityformidentityincineroarrolearchetypemovesfakeoutpartingshotflareblitzknockoffkeymovesfakeoutpartingshotidentitykeyincineroarincineroarsitrusberry": {
+      "multiplier": 1.119,
+      "notes": "Observed in archive source pools."
+    },
+    "basespeciesincineroardisplayspeciesincineroaritemsitrusberrymegastonemegaidentityformidentityincineroarrolearchetypemovesfakeoutflareblitzpartingshotknockoffkeymovesfakeoutflareblitzidentitykeyincineroarincineroarsitrusberry": {
+      "multiplier": 1.09,
+      "notes": "Observed in archive source pools."
+    },
+    "basespeciessinistchadisplayspeciessinistchaitemleftoversmegastonemegaidentityformidentitysinistcharolearchetypemovesmatchagotchashadowballragepowderprotectkeymovesmatchagotchashadowballidentitykeysinistchasinistchaleftovers": {
+      "multiplier": 1.09,
       "notes": "Observed in archive source pools."
     }
   }

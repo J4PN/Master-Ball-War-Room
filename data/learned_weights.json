@@ -1,10 +1,10 @@
 {
-  "version": 4,
-  "updatedAt": "2026-04-23T12:30:31+00:00",
+  "version": 5,
+  "updatedAt": "2026-04-23T12:31:50+00:00",
   "candidateScoreWeights": {
-    "rolePrior": 7.18,
-    "moveWeight": 5.845,
-    "threatPenalty": 11.811,
+    "rolePrior": 7.296,
+    "moveWeight": 5.946,
+    "threatPenalty": 11.607,
     "archiveBias": 4.16
   },
   "leadPairBias": {
@@ -14,21 +14,36 @@
   "threatSeverityWeights": {
     "default": 1,
     "byThreat": {
-      "incineroar": 1.8,
-      "whimsicott": 1.695,
-      "pelipper": 1.499,
-      "garchomp": 1.491,
-      "kingambit": 0.938,
-      "basculegion": 0.852,
-      "starmie": 0.686,
+      "basespecieswhimsicottdisplayspecieswhimsicottitemmegastonemegaidentityformidentitywhimsicottrolearchetypemoveskeymovesidentitykeywhimsicottwhimsicott": 1.8,
+      "basespeciesincineroardisplayspeciesincineroaritemmegastonemegaidentityformidentityincineroarrolearchetypemoveskeymovesidentitykeyincineroarincineroar": 1.581,
+      "basespeciespelipperdisplayspeciespelipperitemmegastonemegaidentityformidentitypelipperrolearchetypemoveskeymovesidentitykeypelipperpelipper": 1.442,
+      "basespecieskingambitdisplayspecieskingambititemmegastonemegaidentityformidentitykingambitrolearchetypemoveskeymovesidentitykeykingambitkingambit": 1.315,
+      "basespeciesdragonitedisplayspeciesdragoniteitemmegastonemegaidentityformidentitydragoniterolearchetypemoveskeymovesidentitykeydragonitedragonite": 1.298,
+      "basespeciesgarchompdisplayspeciesgarchompitemmegastonemegaidentityformidentitygarchomprolearchetypemoveskeymovesidentitykeygarchompgarchomp": 1.201,
+      "basespeciesstarmiedisplayspeciesstarmieitemmegastonemegaidentityformidentitystarmierolearchetypemoveskeymovesidentitykeystarmiestarmie": 1.155,
+      "basespeciessinistchadisplayspeciessinistchaitemmegastonemegaidentityformidentitysinistcharolearchetypemoveskeymovesidentitykeysinistchasinistcha": 1.091,
+      "basespeciesbasculegiondisplayspeciesbasculegionitemmegastonemegaidentityformidentitybasculegionrolearchetypemoveskeymovesidentitykeybasculegionbasculegion": 1.073,
+      "basespeciesfarigirafdisplayspeciesfarigirafitemmegastonemegaidentityformidentityfarigirafrolearchetypemoveskeymovesidentitykeyfarigiraffarigiraf": 1.003,
+      "basespeciesrotomwashdisplayspeciesrotomwashitemmegastonemegaidentityformidentityrotomwashrolearchetypemoveskeymovesidentitykeyrotomwashrotomwash": 0.888,
+      "basespeciescharizarddisplayspeciescharizarditemmegastonemegaidentityformidentitycharizardrolearchetypemoveskeymovesidentitykeycharizardcharizard": 0.781,
+      "basespeciesgengardisplayspeciesgengaritemmegastonemegaidentityformidentitygengarrolearchetypemoveskeymovesidentitykeygengargengar": 0.751,
+      "basespeciesarchaludondisplayspeciesarchaludonitemmegastonemegaidentityformidentityarchaludonrolearchetypemoveskeymovesidentitykeyarchaludonarchaludon": 0.709,
+      "basespeciestyranitardisplayspeciestyranitaritemmegastonemegaidentityformidentitytyranitarrolearchetypemoveskeymovesidentitykeytyranitartyranitar": 0.6,
+      "incineroar": 0.6,
+      "whimsicott": 0.6,
+      "garchomp": 0.6,
+      "pelipper": 0.6,
+      "basespeciesgarchompdisplayspeciesgarchompitemchoicescarfmegastonemegaidentityformidentitygarchomprolearchetypemovesearthquakerockslidedragonclawprotectkeymovesearthquakerockslideidentitykeygarchompgarchompchoicescarf": 0.6,
+      "basespecieskingambitdisplayspecieskingambititemblackglassesmegastonemegaidentityformidentitykingambitrolearchetypemovessuckerpunchkowtowcleavelowkickprotectkeymovessuckerpunchkowtowcleaveidentitykeykingambitkingambitblackglasses": 0.6,
+      "basespeciespelipperdisplayspeciespelipperitemchoicescarfmegastonemegaidentityformidentitypelipperrolearchetypemoveshurricanemuddywatertailwindprotectkeymoveshurricanemuddywateridentitykeypelipperpelipperchoicescarf": 0.6,
+      "kingambit": 0.6,
+      "basculegion": 0.6,
+      "basespeciesincineroardisplayspeciesincineroaritemmegastonemegaidentityformidentityincineroarrolearchetypemovesfakeoutpartingshotkeymovesfakeoutpartingshotidentitykeyincineroarincineroar": 0.6,
+      "basespeciesgarchompdisplayspeciesgarchompitemmegastonemegaidentityformidentitygarchomprolearchetypemovesearthquakerockslidekeymovesearthquakerockslideidentitykeygarchompgarchomp": 0.6,
       "sinistcha": 0.6,
-      "dragonite": 0.6,
-      "archaludon": 0.6,
-      "rotomwash": 0.6,
-      "farigiraf": 0.6,
-      "gengar": 0.6,
-      "tyranitar": 0.6,
-      "charizard": 0.6
+      "basespeciesincineroardisplayspeciesincineroaritemsitrusberrymegastonemegaidentityformidentityincineroarrolearchetypemovesfakeoutpartingshotflareblitzknockoffkeymovesfakeoutpartingshotidentitykeyincineroarincineroarsitrusberry": 0.6,
+      "basespeciesincineroardisplayspeciesincineroaritemsitrusberrymegastonemegaidentityformidentityincineroarrolearchetypemovesfakeoutflareblitzpartingshotknockoffkeymovesfakeoutflareblitzidentitykeyincineroarincineroarsitrusberry": 0.6,
+      "basespeciessinistchadisplayspeciessinistchaitemleftoversmegastonemegaidentityformidentitysinistcharolearchetypemovesmatchagotchashadowballragepowderprotectkeymovesmatchagotchashadowballidentitykeysinistchasinistchaleftovers": 0.6
     }
   },
   "sourceSamplingWeights": {
@@ -55,7 +70,7 @@
     "weather_diversity_target": 0.26,
     "applied": false
   },
-  "persistent_shell_count": 105,
+  "persistent_shell_count": 220,
   "rain_shell_pressure": 0.0,
   "sun_shell_support": 0.216
 }

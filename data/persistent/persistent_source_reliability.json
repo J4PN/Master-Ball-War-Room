@@ -2,14 +2,14 @@
   "sources": {
     "archive": {
       "quality_class": "archive",
-      "sample_count": 14,
-      "reliability_score": 3.8806,
+      "sample_count": 34,
+      "reliability_score": 5.8488,
       "tags": []
     },
     "self-generated": {
-      "quality_class": "unknown",
-      "sample_count": 89,
-      "reliability_score": 3.1843,
+      "quality_class": "archive",
+      "sample_count": 424,
+      "reliability_score": 3.9627,
       "tags": [
         "selfplay",
         "generated",
@@ -17,19 +17,92 @@
       ]
     },
     "random-a": {
-      "quality_class": "unknown",
-      "sample_count": 1,
-      "reliability_score": 0.315,
+      "quality_class": "archive",
+      "sample_count": 3,
+      "reliability_score": 0.9045,
       "tags": [
         "random"
       ]
     },
     "random-b": {
-      "quality_class": "unknown",
-      "sample_count": 1,
-      "reliability_score": 0.315,
+      "quality_class": "archive",
+      "sample_count": 3,
+      "reliability_score": 0.9045,
       "tags": [
         "random"
+      ]
+    },
+    "Pikalytics Champions snapshot": {
+      "quality_class": "unknown",
+      "sample_count": 1,
+      "reliability_score": 0.864,
+      "tags": [
+        "pikalytics",
+        "meta"
+      ]
+    },
+    "Curated Pikalytics import": {
+      "quality_class": "unknown",
+      "sample_count": 1,
+      "reliability_score": 0.891,
+      "tags": [
+        "pikalytics",
+        "meta",
+        "curated"
+      ]
+    },
+    "r/stunfisk post": {
+      "quality_class": "unknown",
+      "sample_count": 1,
+      "reliability_score": 0.492,
+      "tags": [
+        "reddit",
+        "community",
+        "pokepaste"
+      ]
+    },
+    "Curated Reddit balance team": {
+      "quality_class": "unknown",
+      "sample_count": 1,
+      "reliability_score": 0.738,
+      "tags": [
+        "reddit",
+        "curated",
+        "verified"
+      ]
+    },
+    "Curated YouTube showcase team": {
+      "quality_class": "unknown",
+      "sample_count": 1,
+      "reliability_score": 0.711,
+      "tags": [
+        "youtube",
+        "curated",
+        "verified"
+      ]
+    },
+    "team_archive": {
+      "quality_class": "unknown",
+      "sample_count": 95,
+      "reliability_score": 2.9992,
+      "tags": [
+        "archive"
+      ]
+    },
+    "self-built-a": {
+      "quality_class": "unknown",
+      "sample_count": 1,
+      "reliability_score": 0.522,
+      "tags": [
+        "selfplay"
+      ]
+    },
+    "self-built-b": {
+      "quality_class": "unknown",
+      "sample_count": 1,
+      "reliability_score": 0.522,
+      "tags": [
+        "selfplay"
       ]
     }
   }
