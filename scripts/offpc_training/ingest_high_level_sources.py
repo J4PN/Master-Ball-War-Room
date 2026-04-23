@@ -2,6 +2,7 @@ import json
 import os
 from pathlib import Path
 
+from common import build_pool_document, normalize_team_entry
 
 ROOT = Path(__file__).resolve().parents[2]
 DATA_DIR = ROOT / "data"
@@ -32,24 +33,6 @@ def save_json(path, payload):
         handle.write("\n")
 
 
-def normalize_team_slots(team, source_name, quality_class, tags):
-    normalized = []
-    for slot in team or []:
-        if not isinstance(slot, dict):
-            continue
-        normalized.append({
-            "species": slot.get("species") or slot.get("name") or "",
-            "item": slot.get("item") or "",
-            "ability": slot.get("ability") or "",
-            "role": slot.get("role") or "",
-            "moves": [move for move in slot.get("moves", []) if move][:4],
-            "tags": list(dict.fromkeys((slot.get("tags", []) or []) + list(tags))),
-            "source_name": source_name,
-            "quality_class": quality_class,
-        })
-    return normalized
-
-
 def match_registry_entry(source_name, registry):
     lowered = source_name.lower()
     for entry in registry:
@@ -59,51 +42,76 @@ def match_registry_entry(source_name, registry):
     return None
 
 
-def main():
-    require_remote_only()
-    registry = load_json(CURATED_FILE, {"sources": []}).get("sources", [])
-    youtube = load_json(RAW_YOUTUBE, {"entries": []})
-    reddit = load_json(RAW_REDDIT, {"entries": []})
-    normalized = {"teams": []}
+def get_bucket_entries(payload, *field_names):
+    for field_name in field_names:
+        values = payload.get(field_name, [])
+        if isinstance(values, list) and values:
+            return values
+    for field_name in field_names:
+        values = payload.get(field_name, [])
+        if isinstance(values, list):
+            return values
+    return []
 
-    for source_bucket, origin_source_type in ((youtube.get("entries", []), "youtube"), (reddit.get("entries", []), "reddit")):
+
+def build_high_level_creator_pool():
+    registry = load_json(CURATED_FILE, {"sources": []}).get("sources", [])
+    youtube = load_json(RAW_YOUTUBE, {"videos": []})
+    reddit = load_json(RAW_REDDIT, {"posts": []})
+    teams = []
+
+    for source_bucket, origin_source_type in (
+        (get_bucket_entries(youtube, "videos", "entries"), "youtube"),
+        (get_bucket_entries(reddit, "posts", "entries"), "reddit"),
+    ):
         for entry in source_bucket:
-            source_name = str(entry.get("source_name") or entry.get("channel") or entry.get("author") or "")
+            source_name = str(entry.get("source_name") or entry.get("sourceName") or entry.get("channel") or entry.get("author") or entry.get("title") or "")
             matched = match_registry_entry(source_name, registry)
             if not matched:
                 continue
             quality_class = matched.get("quality_class", "high_level_analysis")
             tags = list(dict.fromkeys((matched.get("tags", []) or []) + (entry.get("tags", []) or []) + ["high_level", origin_source_type]))
-            normalized["teams"].append({
-                "source_type": "high_level",
-                "origin_source_type": origin_source_type,
-                "source_name": source_name,
-                "source_url": entry.get("source_url") or entry.get("url") or "",
-                "quality_class": quality_class,
-                "archetype": entry.get("archetype") or "",
-                "confidence": float(entry.get("confidence", 0.8) or 0.8),
-                "tags": tags,
-                "team": normalize_team_slots(entry.get("team") or entry.get("members") or [], source_name, quality_class, tags),
-            })
+            normalized_entry = normalize_team_entry(
+                source_type="high_level",
+                source_name=source_name or "high_level_creator",
+                source_url=entry.get("source_url") or entry.get("sourceUrl") or entry.get("url") or "",
+                archetype=entry.get("archetype", ""),
+                slots=entry.get("team") or entry.get("members") or [],
+                tags=tags,
+                confidence=entry.get("confidence", 0.8),
+                import_strategy=entry.get("importStrategy", "creator-source-match"),
+                notes=entry.get("notes", f"Matched curated high-level creator registry from {origin_source_type}."),
+            )
+            normalized_entry["qualityClass"] = quality_class
+            normalized_entry["originSourceType"] = origin_source_type
+            teams.append(normalized_entry)
 
     curated_imports = load_json(CURATED_FILE, {"manual_teams": []}).get("manual_teams", [])
     for entry in curated_imports:
-        source_name = entry.get("source_name") or "curated_high_level"
+        source_name = entry.get("source_name") or entry.get("sourceName") or "curated_high_level"
         quality_class = entry.get("quality_class", "high_level_analysis")
         tags = list(dict.fromkeys((entry.get("tags", []) or []) + ["high_level", "creator"]))
-        normalized["teams"].append({
-            "source_type": "high_level",
-            "origin_source_type": "creator",
-            "source_name": source_name,
-            "source_url": entry.get("source_url") or "",
-            "quality_class": quality_class,
-            "archetype": entry.get("archetype") or "",
-            "confidence": float(entry.get("confidence", 0.95) or 0.95),
-            "tags": tags,
-            "team": normalize_team_slots(entry.get("team") or [], source_name, quality_class, tags),
-        })
+        normalized_entry = normalize_team_entry(
+            source_type="high_level",
+            source_name=source_name,
+            source_url=entry.get("source_url") or entry.get("sourceUrl") or "",
+            archetype=entry.get("archetype", ""),
+            slots=entry.get("team") or entry.get("members") or [],
+            tags=tags,
+            confidence=entry.get("confidence", 0.95),
+            import_strategy=entry.get("importStrategy", "curated-high-level-import"),
+            notes=entry.get("notes", "Curated high-level creator team import."),
+        )
+        normalized_entry["qualityClass"] = quality_class
+        normalized_entry["originSourceType"] = "creator"
+        teams.append(normalized_entry)
 
-    save_json(NORMALIZED_FILE, normalized)
+    return build_pool_document("high_level", teams, "Built from creator-registry-matched YouTube/Reddit sources and curated high-level imports.")
+
+
+def main():
+    require_remote_only()
+    save_json(NORMALIZED_FILE, build_high_level_creator_pool())
 
 
 if __name__ == "__main__":

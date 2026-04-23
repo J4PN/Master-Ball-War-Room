@@ -26,6 +26,7 @@ DATA_DIR = ROOT / "data"
 NORMALIZED_DIR = DATA_DIR / "normalized"
 REPORT_DIR = ROOT / "reports"
 BATTLE_LOG_DIR = DATA_DIR / "battle_logs"
+CURATED_DIR = DATA_DIR / "curated"
 
 SOURCE_CONFIDENCE_DEFAULTS = {
     "meta": 1.0,
@@ -61,6 +62,21 @@ SOURCE_SHARE_MINIMUMS = {
 
 SOURCE_GROUP_MINIMUMS = {
     ("meta", "pikalytics", "high_level"): 0.25,
+}
+
+RETAINED_SOURCE_CAPS = {
+    "selfplay": 0.30,
+    "archive": 0.35,
+    "random": 0.05,
+}
+
+RETAINED_SOURCE_MINIMUMS = {
+    "archive": 0.18,
+    "high_level": 0.10,
+}
+
+RETAINED_SOURCE_GROUP_MINIMUMS = {
+    ("meta", "pikalytics", "high_level", "archive"): 0.55,
 }
 
 MIN_EVALUATION_POOL_FLOOR = 24
@@ -325,6 +341,61 @@ def load_normalized_pool(path: Path) -> List[dict]:
     return [normalized for row in teams if (normalized := normalize_pool_row(row, fallback_source_type)) and species_list(normalized)]
 
 
+def match_registry_entry(source_name: str, registry: Sequence[dict]) -> dict | None:
+    lowered = str(source_name or "").lower()
+    for entry in registry:
+        for pattern in entry.get("patterns", []):
+            if str(pattern).lower() in lowered:
+                return entry
+    return None
+
+
+def build_high_level_pool_from_sources(youtube_pool: Sequence[dict], reddit_pool: Sequence[dict]) -> List[dict]:
+    registry = read_json(CURATED_DIR / "high_level_source_registry.json", {"sources": [], "manual_teams": []})
+    teams: List[dict] = []
+    for source_bucket, origin_source in ((youtube_pool, "youtube"), (reddit_pool, "reddit")):
+        for row in source_bucket:
+            source_name = row.get("sourceName") or row.get("source_name") or row.get("label") or ""
+            matched = match_registry_entry(source_name, registry.get("sources", []))
+            if not matched:
+                continue
+            normalized = normalize_pool_row({**row}, "high_level")
+            normalized["sourceType"] = "high_level"
+            normalized["sourceName"] = source_name
+            normalized["tags"] = list(dict.fromkeys(list(normalized.get("tags", [])) + ["high_level", origin_source] + list(matched.get("tags", []))))
+            normalized["qualityClass"] = matched.get("quality_class", "high_level_analysis")
+            normalized["originSourceType"] = origin_source
+            normalized["confidence"] = round(max(float(normalized.get("confidence", 0.8) or 0.8), 0.78), 3)
+            teams.append(normalized)
+    for entry in registry.get("manual_teams", []):
+        slots = canonical_team_slots(entry.get("team") or entry.get("members") or [])
+        if not slots:
+            continue
+        teams.append(
+            {
+                "id": normalize_key(f"high-level-{entry.get('source_name', 'creator')}-{'-'.join(slot['name'] for slot in slots)}"),
+                "sourceType": "high_level",
+                "sourceName": entry.get("source_name") or "curated_high_level",
+                "sourceUrl": entry.get("source_url") or "",
+                "archetype": entry.get("archetype") or "",
+                "team": slots,
+                "confidence": round(max(0.1, min(1.0, float(entry.get("confidence", 0.95) or 0.95))), 3),
+                "completeness": round(max(0.0, min(1.0, float(entry.get("completeness", 0.85) or 0.85))), 3),
+                "tags": list(dict.fromkeys(["high_level", "creator", *(entry.get("tags", []) or [])])),
+                "qualityClass": entry.get("quality_class", "high_level_analysis"),
+                "originSourceType": "creator",
+            }
+        )
+    deduped = {}
+    for row in teams:
+        key = "|".join(species_list(row))
+        if key:
+            incumbent = deduped.get(key)
+            if incumbent is None or candidate_quality_score(row) > candidate_quality_score(incumbent):
+                deduped[key] = row
+    return list(deduped.values())
+
+
 @dataclass
 class CandidateResult:
     label: str
@@ -334,6 +405,7 @@ class CandidateResult:
     team: List[dict]
     overall: float
     by_source: Dict[str, float]
+    diagnostics: Dict[str, dict]
 
 
 def team_confidence(row: dict) -> float:
@@ -414,6 +486,113 @@ def evaluate_vs_pool(
         )
         scores.append(max(0.0, min(1.0, score * source_weight * 0.35 + confidence_weight * 0.65)))
     return sum(scores) / len(scores)
+
+
+def team_move_set(team_row: dict) -> set[str]:
+    moves = set()
+    for slot in canonical_team_slots(team_row.get("team", [])):
+        for move in slot.get("moves", []):
+            key = normalize_key(move)
+            if key:
+                moves.add(key)
+    return moves
+
+
+def compute_high_level_similarity(candidate: dict, reference: dict) -> dict:
+    candidate_species = {normalize_key(name) for name in species_list(candidate) if normalize_key(name)}
+    reference_species = {normalize_key(name) for name in species_list(reference) if normalize_key(name)}
+    if not candidate_species or not reference_species:
+        return {
+            "similarity": 0.0,
+            "shell_overlap": 0.0,
+            "core_overlap": 0.0,
+            "archetype_overlap": 0.0,
+            "move_overlap": 0.0,
+        }
+    shared_species = candidate_species & reference_species
+    shell_overlap = len(shared_species) / max(1, min(len(candidate_species), len(reference_species)))
+    core_overlap = min(1.0, len(shared_species) / 3.0)
+    candidate_archetype = str(candidate.get("archetype", "") or "").strip().lower()
+    reference_archetype = str(reference.get("archetype", "") or "").strip().lower()
+    archetype_overlap = 1.0 if candidate_archetype and reference_archetype and candidate_archetype == reference_archetype else 0.0
+    candidate_moves = team_move_set(candidate)
+    reference_moves = team_move_set(reference)
+    move_overlap = len(candidate_moves & reference_moves) / max(1, len(candidate_moves | reference_moves)) if candidate_moves and reference_moves else 0.0
+    similarity = (
+        shell_overlap * 0.55
+        + core_overlap * 0.2
+        + archetype_overlap * 0.15
+        + move_overlap * 0.1
+    )
+    return {
+        "similarity": round(similarity, 4),
+        "shell_overlap": round(shell_overlap, 4),
+        "core_overlap": round(core_overlap, 4),
+        "archetype_overlap": round(archetype_overlap, 4),
+        "move_overlap": round(move_overlap, 4),
+    }
+
+
+def evaluate_high_level_pool(candidate: dict, pool: Sequence[dict]) -> tuple[float, dict]:
+    if not pool:
+        return 0.5, {
+            "poolSize": 0,
+            "fallbackUsed": True,
+            "reason": "high_level pool empty",
+            "matched": False,
+            "matchedSource": "",
+            "similarity": 0.0,
+            "shellOverlap": 0.0,
+            "coreOverlap": 0.0,
+            "archetypeOverlap": 0.0,
+            "moveOverlap": 0.0,
+            "finalContribution": 0.5,
+        }
+    scored_matches = []
+    for reference in pool:
+        similarity = compute_high_level_similarity(candidate, reference)
+        confidence = team_confidence(reference)
+        quality_class = str(reference.get("qualityClass") or reference.get("quality_class") or "").strip().lower()
+        quality_bonus = {
+            "tournament_result": 0.12,
+            "serious_ladder": 0.08,
+            "high_level_analysis": 0.06,
+            "experimental_high_level": 0.02,
+        }.get(quality_class, 0.03)
+        contribution = max(0.0, min(1.0, similarity["similarity"] * 0.72 + confidence * 0.22 + quality_bonus))
+        scored_matches.append(
+            {
+                "sourceName": reference.get("sourceName", "high_level"),
+                "originSourceType": reference.get("originSourceType") or reference.get("origin_source_type") or "",
+                "qualityClass": quality_class or "unknown",
+                "confidence": round(confidence, 4),
+                **similarity,
+                "contribution": round(contribution, 4),
+            }
+        )
+    scored_matches.sort(key=lambda row: row["contribution"], reverse=True)
+    best = scored_matches[0]
+    top_matches = scored_matches[:3]
+    weighted = sum(match["contribution"] * max(0.2, 1.0 - index * 0.18) for index, match in enumerate(top_matches))
+    divisor = sum(max(0.2, 1.0 - index * 0.18) for index, _ in enumerate(top_matches)) or 1.0
+    final_score = round(max(0.0, min(1.0, weighted / divisor)), 4)
+    return final_score, {
+        "poolSize": len(pool),
+        "fallbackUsed": False,
+        "reason": "creator shell similarity",
+        "matched": best["contribution"] > 0.0,
+        "matchedSource": best["sourceName"],
+        "originSourceType": best["originSourceType"],
+        "qualityClass": best["qualityClass"],
+        "similarity": best["similarity"],
+        "shellOverlap": best["shell_overlap"],
+        "coreOverlap": best["core_overlap"],
+        "archetypeOverlap": best["archetype_overlap"],
+        "moveOverlap": best["move_overlap"],
+        "referenceConfidence": best["confidence"],
+        "finalContribution": final_score,
+        "topMatches": top_matches,
+    }
 
 
 def make_team_row(
@@ -510,9 +689,48 @@ def result_quality_score(result: CandidateResult) -> float:
     return result.overall * 0.72 + result.confidence * 0.28 + niche_bonus + archetype_bonus
 
 
+def get_source_backed_retention_adjustment(result: CandidateResult) -> float:
+    external_sources = ("archive", "meta", "pikalytics", "high_level", "reddit", "youtube")
+    external_scores = {source: float(result.by_source.get(source, 0.0) or 0.0) for source in external_sources}
+    strong_support = [source for source, score in external_scores.items() if score >= 0.7]
+    moderate_support = [source for source, score in external_scores.items() if score >= 0.6]
+    source_type = canonical_source_type(result.source_type)
+    if source_type != "selfplay":
+        bonus = 0.0
+        if source_type in {"archive", "meta", "pikalytics", "high_level"}:
+            bonus += 0.04
+        if strong_support:
+            bonus += 0.03
+        return round(bonus, 4)
+    adjustment = 0.0
+    if "high_level" in strong_support or "archive" in strong_support or "pikalytics" in strong_support:
+        adjustment += 0.1
+    elif len(moderate_support) >= 2:
+        adjustment += 0.05
+    if not moderate_support:
+        adjustment -= 0.16
+    if external_scores["high_level"] < 0.55 and external_scores["archive"] < 0.58:
+        adjustment -= 0.08
+    if max(external_scores.values() or [0.0]) < 0.52:
+        adjustment -= 0.08
+    return round(adjustment, 4)
+
+
+def retention_priority_score(result: CandidateResult) -> float:
+    source_type = canonical_source_type(result.source_type)
+    base = result_quality_score(result) + get_source_backed_retention_adjustment(result)
+    if source_type == "selfplay":
+        base -= 0.07
+    elif source_type == "high_level":
+        base += 0.05
+    elif source_type in {"archive", "meta", "pikalytics"}:
+        base += 0.04
+    return base
+
+
 def diversify_results(rows: Sequence[CandidateResult]) -> List[CandidateResult]:
     archetype_buckets: Dict[str, List[CandidateResult]] = defaultdict(list)
-    for row in sorted(rows, key=result_quality_score, reverse=True):
+    for row in sorted(rows, key=retention_priority_score, reverse=True):
         candidate_tags = [
             str(tag).strip().lower()
             for tag in row.tags
@@ -532,7 +750,7 @@ def diversify_results(rows: Sequence[CandidateResult]) -> List[CandidateResult]:
                 continue
             score = (
                 selected_per_archetype[archetype],
-                -result_quality_score(bucket[0]),
+                -retention_priority_score(bucket[0]),
                 -len(bucket),
                 archetype,
             )
@@ -606,7 +824,7 @@ def rebalance_retained_results(
             available_sources = [source for source in sources if counts[source] < cap_counts.get(source, len(ordered_by_source.get(source, []))) and cursors[source] < len(ordered_by_source.get(source, []))]
             if not available_sources:
                 break
-            available_sources.sort(key=lambda source: (counts[source], -result_quality_score(ordered_by_source[source][cursors[source]]), source))
+            available_sources.sort(key=lambda source: (counts[source], -retention_priority_score(ordered_by_source[source][cursors[source]]), source))
             if not take_from_source(available_sources[0]):
                 break
 
@@ -619,7 +837,7 @@ def rebalance_retained_results(
         ]
         if not available_sources:
             break
-        available_sources.sort(key=lambda source: (-result_quality_score(ordered_by_source[source][cursors[source]]), counts[source], source))
+        available_sources.sort(key=lambda source: (-retention_priority_score(ordered_by_source[source][cursors[source]]), counts[source], source))
         if not take_from_source(available_sources[0]):
             break
 
@@ -631,7 +849,7 @@ def rebalance_retained_results(
         ]
         if not available_sources:
             break
-        available_sources.sort(key=lambda source: (-result_quality_score(ordered_by_source[source][cursors[source]]), counts[source], source))
+        available_sources.sort(key=lambda source: (-retention_priority_score(ordered_by_source[source][cursors[source]]), counts[source], source))
         if not take_from_source(available_sources[0], ignore_cap=True):
             break
 
@@ -899,10 +1117,34 @@ def write_battle_log(results: Sequence[CandidateResult]) -> Path:
                         "team": [slot["name"] for slot in result.team],
                         "overall": round(result.overall, 4),
                         "bySource": {key: round(value, 4) for key, value in result.by_source.items()},
+                        "diagnostics": result.diagnostics,
                     }
                 )
                 + "\n"
             )
+    return path
+
+
+def write_high_level_debug(results: Sequence[CandidateResult], high_level_pool_size: int) -> Path:
+    REPORT_DIR.mkdir(parents=True, exist_ok=True)
+    path = REPORT_DIR / "high_level_debug.json"
+    payload = {
+        "updatedAt": utc_now(),
+        "highLevelPoolSize": high_level_pool_size,
+        "topTeams": [],
+    }
+    for result in results[:12]:
+        payload["topTeams"].append(
+            {
+                "label": result.label,
+                "sourceType": result.source_type,
+                "confidence": round(result.confidence, 4),
+                "overall": round(result.overall, 4),
+                "team": [slot["name"] for slot in result.team],
+                "highLevel": result.diagnostics.get("high_level", {}),
+            }
+        )
+    path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
     return path
 
 
@@ -934,23 +1176,20 @@ def write_summary(
         f"- Evaluated candidates: {len(results)}",
         f"- Retained learning candidates: {len(retained_results)}",
         f"- Battle log: `{log_path.as_posix().replace(str(ROOT).replace(os.sep, '/'), '').lstrip('/')}`",
+        "- High-level debug: `reports/high_level_debug.json`",
         "",
         "## Source Counts",
         "",
     ]
     for source_type in EVALUATION_SOURCE_ORDER:
-        count = source_counts.get(source_type)
-        if count is None:
-            continue
+        count = source_counts.get(source_type, 0)
         lines.append(f"- `{source_type}`: {count}")
     remaining_sources = sorted(source for source in source_counts if source not in EVALUATION_SOURCE_ORDER)
     for source_type in remaining_sources:
         lines.append(f"- `{source_type}`: {source_counts[source_type]}")
     lines.extend(["", "## Source Share", ""])
     for source_type in EVALUATION_SOURCE_ORDER:
-        share = source_shares.get(source_type)
-        if share is None:
-            continue
+        share = source_shares.get(source_type, 0.0)
         lines.append(f"- `{source_type}`: {share * 100:.1f}%")
     for source_type in remaining_sources:
         lines.append(f"- `{source_type}`: {source_shares[source_type] * 100:.1f}%")
@@ -962,18 +1201,14 @@ def write_summary(
         lines.extend(["", f"WARNING: evaluation pool critically low for run size ({len(results)} candidates)"])
     lines.extend(["", "## Retained Source Counts", ""])
     for source_type in EVALUATION_SOURCE_ORDER:
-        count = retained_source_counts.get(source_type)
-        if count is None:
-            continue
+        count = retained_source_counts.get(source_type, 0)
         lines.append(f"- `{source_type}`: {count}")
     retained_remaining_sources = sorted(source for source in retained_source_counts if source not in EVALUATION_SOURCE_ORDER)
     for source_type in retained_remaining_sources:
         lines.append(f"- `{source_type}`: {retained_source_counts[source_type]}")
     lines.extend(["", "## Retained Source Share", ""])
     for source_type in EVALUATION_SOURCE_ORDER:
-        share = retained_source_shares.get(source_type)
-        if share is None:
-            continue
+        share = retained_source_shares.get(source_type, 0.0)
         lines.append(f"- `{source_type}`: {share * 100:.1f}%")
     for source_type in retained_remaining_sources:
         lines.append(f"- `{source_type}`: {retained_source_shares[source_type] * 100:.1f}%")
@@ -1005,9 +1240,21 @@ def main() -> None:
 
     normalized_meta = load_normalized_pool(NORMALIZED_DIR / "meta_pool.json")
     normalized_pikalytics = load_normalized_pool(NORMALIZED_DIR / "pikalytics_pool.json")
-    normalized_high_level = load_normalized_pool(NORMALIZED_DIR / "high_level_creator_pool.json")
     normalized_reddit = load_normalized_pool(NORMALIZED_DIR / "reddit_pool.json")
     normalized_youtube = load_normalized_pool(NORMALIZED_DIR / "youtube_pool.json")
+    normalized_high_level = load_normalized_pool(NORMALIZED_DIR / "high_level_creator_pool.json")
+    if not normalized_high_level:
+        normalized_high_level = build_high_level_pool_from_sources(normalized_youtube, normalized_reddit)
+        if normalized_high_level:
+            write_json(
+                NORMALIZED_DIR / "high_level_creator_pool.json",
+                {
+                    "updatedAt": utc_now(),
+                    "sourceType": "high_level",
+                    "notes": "Fallback build from normalized YouTube/Reddit creator-registry matches.",
+                    "teams": normalized_high_level,
+                },
+            )
     normalized_random = load_normalized_pool(NORMALIZED_DIR / "random_pool.json")
     normalized_selfplay = load_normalized_pool(NORMALIZED_DIR / "self_play_pool.json")
 
@@ -1062,10 +1309,11 @@ def main() -> None:
 
     results: List[CandidateResult] = []
     for candidate in candidates:
+        high_level_score, high_level_debug = evaluate_high_level_pool(candidate, normalized_high_level)
         by_source = {
             "meta": evaluate_vs_pool(candidate, normalized_meta, species_role_priors.get("priors", {}), move_choice_weights.get("weights", {}), threat_penalties.get("byThreat", {})),
             "pikalytics": evaluate_vs_pool(candidate, normalized_pikalytics, species_role_priors.get("priors", {}), move_choice_weights.get("weights", {}), threat_penalties.get("byThreat", {})),
-            "high_level": evaluate_vs_pool(candidate, normalized_high_level, species_role_priors.get("priors", {}), move_choice_weights.get("weights", {}), threat_penalties.get("byThreat", {})),
+            "high_level": high_level_score,
             "reddit": evaluate_vs_pool(candidate, normalized_reddit, species_role_priors.get("priors", {}), move_choice_weights.get("weights", {}), threat_penalties.get("byThreat", {})),
             "youtube": evaluate_vs_pool(candidate, normalized_youtube, species_role_priors.get("priors", {}), move_choice_weights.get("weights", {}), threat_penalties.get("byThreat", {})),
             "archive": evaluate_vs_pool(candidate, archive_pool, species_role_priors.get("priors", {}), move_choice_weights.get("weights", {}), threat_penalties.get("byThreat", {})),
@@ -1086,6 +1334,7 @@ def main() -> None:
                 team=canonical_team_slots(candidate.get("team", [])),
                 overall=weighted_score,
                 by_source=by_source,
+                diagnostics={"high_level": high_level_debug},
             )
         )
 
@@ -1093,9 +1342,9 @@ def main() -> None:
     retained_results = rebalance_retained_results(
         results,
         min(RETENTION_POOL_SIZE, len(results)),
-        SOURCE_SHARE_CAPS,
-        SOURCE_SHARE_MINIMUMS,
-        SOURCE_GROUP_MINIMUMS,
+        RETAINED_SOURCE_CAPS,
+        RETAINED_SOURCE_MINIMUMS,
+        RETAINED_SOURCE_GROUP_MINIMUMS,
     )
     write_json(
         NORMALIZED_DIR / "combined_training_pool.json",
@@ -1121,6 +1370,7 @@ def main() -> None:
         },
     )
     log_path = write_battle_log(results)
+    write_high_level_debug(results, len(normalized_high_level))
 
     updated_archive = update_team_archive(archive_state, retained_results)
     updated_priors = update_species_role_priors(species_role_priors, retained_results[:14])
