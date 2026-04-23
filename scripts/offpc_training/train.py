@@ -83,6 +83,7 @@ MIN_EVALUATION_POOL_FLOOR = 24
 MAX_EVALUATION_POOL_TARGET = 300
 MIN_EVALUATION_WARNING_THRESHOLD = 100
 RETENTION_POOL_SIZE = 24
+MIN_SERIOUS_RETENTION_TEAM_SIZE = 4
 
 EVALUATION_SOURCE_ORDER = (
     "meta",
@@ -305,6 +306,10 @@ def species_list(team_row: dict) -> List[str]:
     return [slot["name"] for slot in canonical_team_slots(team_row.get("team", []))]
 
 
+def team_size(team_row: dict) -> int:
+    return len(species_list(team_row))
+
+
 def get_summary_team_species_list(team_row: dict) -> List[str]:
     return species_list(team_row)
 
@@ -339,6 +344,34 @@ def load_normalized_pool(path: Path) -> List[dict]:
     teams = payload.get("teams", [])
     fallback_source_type = canonical_source_type(payload.get("sourceType") or path.stem.replace("_pool", ""))
     return [normalized for row in teams if (normalized := normalize_pool_row(row, fallback_source_type)) and species_list(normalized)]
+
+
+def inspect_pool_file(path: Path) -> dict:
+    payload = read_json(path, {"teams": []})
+    teams = payload.get("teams", []) if isinstance(payload, dict) else []
+    reasons = Counter()
+    valid = 0
+    samples = []
+    for row in teams:
+        normalized = normalize_pool_row(row, canonical_source_type(payload.get("sourceType") or path.stem.replace("_pool", "")))
+        size = team_size(normalized)
+        if size <= 0:
+            reasons["normalization_failure_or_empty_team"] += 1
+        else:
+            valid += 1
+        if len(samples) < 5:
+            samples.append({
+                "sourceType": normalized.get("sourceType"),
+                "sourceName": normalized.get("sourceName"),
+                "teamSize": size,
+            })
+    return {
+        "exists": path.exists(),
+        "rawTeamCount": len(teams),
+        "validTeamCount": valid,
+        "droppedReasons": dict(reasons),
+        "samples": samples,
+    }
 
 
 def match_registry_entry(source_name: str, registry: Sequence[dict]) -> dict | None:
@@ -686,7 +719,9 @@ def result_quality_score(result: CandidateResult) -> float:
     niche_bonus = 0.04 if {"niche_competitive", "anti_rain", "anti_meta"} & tags else 0.0
     archetype_like_tags = tags - set(EVALUATION_SOURCE_ORDER) - {"generated", "exploratory"}
     archetype_bonus = 0.02 if archetype_like_tags else 0.0
-    return result.overall * 0.72 + result.confidence * 0.28 + niche_bonus + archetype_bonus
+    structure_bonus = min(0.05, len(result.team) * 0.01)
+    structure_penalty = 0.18 if len(result.team) < MIN_SERIOUS_RETENTION_TEAM_SIZE else 0.0
+    return result.overall * 0.72 + result.confidence * 0.28 + niche_bonus + archetype_bonus + structure_bonus - structure_penalty
 
 
 def get_source_backed_retention_adjustment(result: CandidateResult) -> float:
@@ -775,8 +810,10 @@ def rebalance_retained_results(
 ) -> List[CandidateResult]:
     if target_size <= 0:
         return []
+    structurally_valid_results = [result for result in results if len(result.team) >= MIN_SERIOUS_RETENTION_TEAM_SIZE]
+    candidate_results = structurally_valid_results or list(results)
     grouped: Dict[str, List[CandidateResult]] = defaultdict(list)
-    for result in results:
+    for result in candidate_results:
         grouped[canonical_source_type(result.source_type)].append(result)
     ordered_by_source = {source: diversify_results(rows) for source, rows in grouped.items()}
     selected: List[CandidateResult] = []
@@ -828,7 +865,7 @@ def rebalance_retained_results(
             if not take_from_source(available_sources[0]):
                 break
 
-    while len(selected) < min(target_size, len(results)):
+    while len(selected) < min(target_size, len(candidate_results)):
         available_sources = [
             source
             for source in ordered_by_source
@@ -843,7 +880,7 @@ def rebalance_retained_results(
 
     # Soft-cap fallback: if the target size is still not met because real-source coverage is sparse,
     # fill the remaining slots with the best leftover results rather than collapsing the retained pool.
-    while len(selected) < min(target_size, len(results)):
+    while len(selected) < min(target_size, len(candidate_results)):
         available_sources = [
             source for source in ordered_by_source if cursors[source] < len(ordered_by_source.get(source, []))
         ]
@@ -1158,6 +1195,7 @@ def write_summary(
     evaluation_target: int,
 ) -> None:
     REPORT_DIR.mkdir(parents=True, exist_ok=True)
+    summary_results = list(retained_results[:6] or results[:6])
     total_sources = sum(source_counts.values()) or 1
     source_shares = {
         source_type: count / total_sources
@@ -1215,7 +1253,7 @@ def write_summary(
     if retained_source_shares.get("selfplay", 0.0) > 0.45:
         lines.extend(["", "WARNING: retained selfplay exceeds safe learning share"])
     lines.extend(["", "## Top Teams", ""])
-    for result in results[:6]:
+    for result in summary_results:
         summary_species = ", ".join(get_summary_team_species_list({"team": result.team}))
         lines.append(
             f"- [{result.source_type}] score `{result.overall:.3f}` confidence `{result.confidence:.2f}`"
@@ -1242,6 +1280,7 @@ def main() -> None:
     normalized_pikalytics = load_normalized_pool(NORMALIZED_DIR / "pikalytics_pool.json")
     normalized_reddit = load_normalized_pool(NORMALIZED_DIR / "reddit_pool.json")
     normalized_youtube = load_normalized_pool(NORMALIZED_DIR / "youtube_pool.json")
+    high_level_file_status = inspect_pool_file(NORMALIZED_DIR / "high_level_creator_pool.json")
     normalized_high_level = load_normalized_pool(NORMALIZED_DIR / "high_level_creator_pool.json")
     if not normalized_high_level:
         normalized_high_level = build_high_level_pool_from_sources(normalized_youtube, normalized_reddit)
@@ -1255,6 +1294,8 @@ def main() -> None:
                     "teams": normalized_high_level,
                 },
             )
+        high_level_file_status["fallbackBuildCount"] = len(normalized_high_level)
+    write_json(REPORT_DIR / "high_level_pool_status.json", high_level_file_status)
     normalized_random = load_normalized_pool(NORMALIZED_DIR / "random_pool.json")
     normalized_selfplay = load_normalized_pool(NORMALIZED_DIR / "self_play_pool.json")
 
