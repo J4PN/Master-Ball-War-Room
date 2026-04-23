@@ -817,8 +817,10 @@ def merge_current_entries():
     combined_pool = load_json(CURRENT_FILES["combined_training_pool"], {"teams": []})
     team_archive = load_json(CURRENT_FILES["team_archive"], {"teams": []})
     high_level_pool = load_json(CURRENT_FILES["high_level_creator_pool"], {"teams": []})
+    retained_pool = combined_pool.get("retainedTeams", [])
+    active_learning_pool = retained_pool if isinstance(retained_pool, list) and retained_pool else combined_pool.get("teams", [])
     current_entries = []
-    for team in combined_pool.get("teams", []):
+    for team in active_learning_pool:
         normalized = normalize_team_entry(team)
         if normalized:
             current_entries.append(normalized)

@@ -63,6 +63,11 @@ SOURCE_GROUP_MINIMUMS = {
     ("meta", "pikalytics", "high_level"): 0.25,
 }
 
+MIN_EVALUATION_POOL_FLOOR = 24
+MAX_EVALUATION_POOL_TARGET = 300
+MIN_EVALUATION_WARNING_THRESHOLD = 100
+RETENTION_POOL_SIZE = 24
+
 EVALUATION_SOURCE_ORDER = (
     "meta",
     "pikalytics",
@@ -491,121 +496,143 @@ def compute_source_cap_count(total_candidates: int, share: float, available_coun
     return min(available_count, max(0, math.floor(total_candidates * share)))
 
 
-def rebalance_candidate_sources(
-    candidates: Sequence[dict],
+def get_minimum_evaluation_pool_size(iterations: int, generated_count: int) -> int:
+    if generated_count <= 0:
+        return 0
+    return min(max(MIN_EVALUATION_POOL_FLOOR, math.ceil(iterations * 0.5)), MAX_EVALUATION_POOL_TARGET)
+
+
+def result_quality_score(result: CandidateResult) -> float:
+    tags = {str(tag).strip().lower() for tag in getattr(result, "tags", []) if str(tag).strip()}
+    niche_bonus = 0.04 if {"niche_competitive", "anti_rain", "anti_meta"} & tags else 0.0
+    archetype_like_tags = tags - set(EVALUATION_SOURCE_ORDER) - {"generated", "exploratory"}
+    archetype_bonus = 0.02 if archetype_like_tags else 0.0
+    return result.overall * 0.72 + result.confidence * 0.28 + niche_bonus + archetype_bonus
+
+
+def diversify_results(rows: Sequence[CandidateResult]) -> List[CandidateResult]:
+    archetype_buckets: Dict[str, List[CandidateResult]] = defaultdict(list)
+    for row in sorted(rows, key=result_quality_score, reverse=True):
+        candidate_tags = [
+            str(tag).strip().lower()
+            for tag in row.tags
+            if str(tag).strip()
+            and str(tag).strip().lower() not in EVALUATION_SOURCE_ORDER
+            and str(tag).strip().lower() not in {"generated", "exploratory"}
+        ]
+        archetype = candidate_tags[0] if candidate_tags else row.source_type
+        archetype_buckets[archetype].append(row)
+    ordered: List[CandidateResult] = []
+    selected_per_archetype = Counter()
+    while archetype_buckets:
+        best_archetype = None
+        best_score = None
+        for archetype, bucket in archetype_buckets.items():
+            if not bucket:
+                continue
+            score = (
+                selected_per_archetype[archetype],
+                -result_quality_score(bucket[0]),
+                -len(bucket),
+                archetype,
+            )
+            if best_score is None or score < best_score:
+                best_archetype = archetype
+                best_score = score
+        if best_archetype is None:
+            break
+        ordered.append(archetype_buckets[best_archetype].pop(0))
+        selected_per_archetype[best_archetype] += 1
+        if not archetype_buckets[best_archetype]:
+            del archetype_buckets[best_archetype]
+    return ordered
+
+
+def rebalance_retained_results(
+    results: Sequence[CandidateResult],
+    target_size: int,
     source_caps: Dict[str, float],
     source_minimums: Dict[str, float],
     source_group_minimums: Dict[tuple, float],
-) -> List[dict]:
-    grouped: Dict[str, List[dict]] = defaultdict(list)
-    for row in candidates:
-        source_type = canonical_source_type(row.get("sourceType", "unknown"))
-        normalized = normalize_pool_row(row, source_type)
-        grouped[source_type].append(normalized)
-
-    ordered_by_source = {source: diversify_source_rows(rows) for source, rows in grouped.items()}
-    original_total = sum(len(rows) for rows in ordered_by_source.values())
-    available_counts = {source: len(rows) for source, rows in ordered_by_source.items()}
-
-    target_total = 0
-    for proposed_total in range(original_total, 0, -1):
-        capacity = 0
-        for source, available in available_counts.items():
-            if source in source_caps:
-                capacity += min(
-                    available,
-                    max(
-                        compute_source_cap_count(proposed_total, source_caps[source], available),
-                        compute_source_target_count(proposed_total, source_minimums.get(source, 0.0), available),
-                    ),
-                )
-            else:
-                capacity += available
-        if capacity >= proposed_total:
-            target_total = proposed_total
-            break
-    if target_total == 0:
+) -> List[CandidateResult]:
+    if target_size <= 0:
         return []
-
+    grouped: Dict[str, List[CandidateResult]] = defaultdict(list)
+    for result in results:
+        grouped[canonical_source_type(result.source_type)].append(result)
+    ordered_by_source = {source: diversify_results(rows) for source, rows in grouped.items()}
+    selected: List[CandidateResult] = []
+    selected_labels = set()
     counts = Counter()
     cursors = defaultdict(int)
-    selected: List[dict] = []
-    selected_ids = set()
     cap_counts = {
         source: max(
-            compute_source_cap_count(target_total, share, len(ordered_by_source.get(source, []))),
-            compute_source_target_count(target_total, source_minimums.get(source, 0.0), len(ordered_by_source.get(source, []))),
+            compute_source_cap_count(target_size, share, len(ordered_by_source.get(source, []))),
+            compute_source_target_count(target_size, source_minimums.get(source, 0.0), len(ordered_by_source.get(source, []))),
         )
         for source, share in source_caps.items()
     }
 
-    def next_row(source: str):
+    def next_result(source: str):
         rows = ordered_by_source.get(source, [])
         while cursors[source] < len(rows):
             row = rows[cursors[source]]
             cursors[source] += 1
-            row_id = row.get("id") or f"{source}:{cursors[source]}"
-            if row_id in selected_ids:
+            key = row.label
+            if key in selected_labels:
                 continue
             return row
         return None
 
-    def can_take(source: str) -> bool:
-        return counts[source] < cap_counts.get(source, len(ordered_by_source.get(source, [])))
-
-    def take_from_source(source: str) -> bool:
-        if not can_take(source):
+    def take_from_source(source: str, ignore_cap: bool = False) -> bool:
+        if not ignore_cap and counts[source] >= cap_counts.get(source, len(ordered_by_source.get(source, []))):
             return False
-        row = next_row(source)
+        row = next_result(source)
         if not row:
             return False
         selected.append(row)
-        row_id = row.get("id") or f"{source}:{len(selected)}"
-        selected_ids.add(row_id)
+        selected_labels.add(row.label)
         counts[source] += 1
         return True
 
     for source, share in sorted(source_minimums.items(), key=lambda item: item[1], reverse=True):
-        target = compute_source_target_count(target_total, share, len(ordered_by_source.get(source, [])))
+        target = compute_source_target_count(target_size, share, len(ordered_by_source.get(source, [])))
         while counts[source] < target and take_from_source(source):
             pass
 
     for sources, share in source_group_minimums.items():
-        target = compute_source_target_count(
-            target_total,
-            share,
-            sum(len(ordered_by_source.get(source, [])) for source in sources),
-        )
+        target = compute_source_target_count(target_size, share, sum(len(ordered_by_source.get(source, [])) for source in sources))
         while sum(counts[source] for source in sources) < target:
-            available_sources = [source for source in sources if can_take(source) and cursors[source] < len(ordered_by_source.get(source, []))]
+            available_sources = [source for source in sources if counts[source] < cap_counts.get(source, len(ordered_by_source.get(source, []))) and cursors[source] < len(ordered_by_source.get(source, []))]
             if not available_sources:
                 break
-            available_sources.sort(
-                key=lambda source: (
-                    counts[source],
-                    -candidate_quality_score(ordered_by_source[source][cursors[source]]),
-                    source,
-                )
-            )
+            available_sources.sort(key=lambda source: (counts[source], -result_quality_score(ordered_by_source[source][cursors[source]]), source))
             if not take_from_source(available_sources[0]):
                 break
 
-    while len(selected) < target_total:
+    while len(selected) < min(target_size, len(results)):
         available_sources = [
             source
             for source in ordered_by_source
-            if can_take(source) and cursors[source] < len(ordered_by_source.get(source, []))
+            if counts[source] < cap_counts.get(source, len(ordered_by_source.get(source, [])))
+            and cursors[source] < len(ordered_by_source.get(source, []))
         ]
         if not available_sources:
             break
-        available_sources.sort(
-            key=lambda source: (
-                -candidate_quality_score(ordered_by_source[source][cursors[source]]),
-                counts[source],
-                source,
-            )
-        )
+        available_sources.sort(key=lambda source: (-result_quality_score(ordered_by_source[source][cursors[source]]), counts[source], source))
         if not take_from_source(available_sources[0]):
+            break
+
+    # Soft-cap fallback: if the target size is still not met because real-source coverage is sparse,
+    # fill the remaining slots with the best leftover results rather than collapsing the retained pool.
+    while len(selected) < min(target_size, len(results)):
+        available_sources = [
+            source for source in ordered_by_source if cursors[source] < len(ordered_by_source.get(source, []))
+        ]
+        if not available_sources:
+            break
+        available_sources.sort(key=lambda source: (-result_quality_score(ordered_by_source[source][cursors[source]]), counts[source], source))
+        if not take_from_source(available_sources[0], ignore_cap=True):
             break
 
     return selected
@@ -667,9 +694,10 @@ def build_candidate_pool(
         + list(random_pool)
         + list(selfplay_pool)
     )
-    seed_rows = rebalance_candidate_sources(seed_rows, SOURCE_SHARE_CAPS, SOURCE_SHARE_MINIMUMS, SOURCE_GROUP_MINIMUMS)
+    seed_rows = [normalize_pool_row(row, row.get("sourceType", "unknown")) for row in seed_rows if species_list(row)]
     universe = species_universe(meta_pool, pikalytics_pool, high_level_pool, reddit_pool, youtube_pool, archive_pool, random_pool, selfplay_pool)
     candidates = [row for row in seed_rows if species_list(row)]
+    generated_candidates: List[dict] = []
     weighted_seed_rows = [
         row
         for row in seed_rows
@@ -686,12 +714,30 @@ def build_candidate_pool(
         mutated["sourceUrl"] = ""
         mutated["tags"] = list(dict.fromkeys(mutated.get("tags", []) + ["generated"]))
         candidates.append(mutated)
+        generated_candidates.append(mutated)
     deduped = {}
+    duplicate_candidates: List[dict] = []
     for row in candidates:
         key = "|".join(species_list(row))
         if key:
-            deduped[key] = row
-    return rebalance_candidate_sources(list(deduped.values()), SOURCE_SHARE_CAPS, SOURCE_SHARE_MINIMUMS, SOURCE_GROUP_MINIMUMS)
+            incumbent = deduped.get(key)
+            if incumbent is None or candidate_quality_score(row) > candidate_quality_score(incumbent):
+                if incumbent is not None:
+                    duplicate_candidates.append(incumbent)
+                deduped[key] = row
+            else:
+                duplicate_candidates.append(row)
+    evaluation_pool = list(deduped.values())
+    minimum_pool_size = get_minimum_evaluation_pool_size(iterations, len(generated_candidates))
+    if len(evaluation_pool) < minimum_pool_size and duplicate_candidates:
+        for row in sorted(duplicate_candidates, key=candidate_quality_score, reverse=True):
+            row_id = row.get("id") or f"candidate-{len(evaluation_pool) + 1}"
+            if any(existing.get("id") == row_id for existing in evaluation_pool):
+                continue
+            evaluation_pool.append(row)
+            if len(evaluation_pool) >= minimum_pool_size:
+                break
+    return evaluation_pool
 
 
 def update_species_role_priors(previous: dict, top_results: Sequence[CandidateResult]) -> dict:
@@ -860,12 +906,25 @@ def write_battle_log(results: Sequence[CandidateResult]) -> Path:
     return path
 
 
-def write_summary(results: Sequence[CandidateResult], log_path: Path, iterations: int, source_counts: Dict[str, int]) -> None:
+def write_summary(
+    results: Sequence[CandidateResult],
+    retained_results: Sequence[CandidateResult],
+    log_path: Path,
+    iterations: int,
+    source_counts: Dict[str, int],
+    retained_source_counts: Dict[str, int],
+    evaluation_target: int,
+) -> None:
     REPORT_DIR.mkdir(parents=True, exist_ok=True)
     total_sources = sum(source_counts.values()) or 1
     source_shares = {
         source_type: count / total_sources
         for source_type, count in source_counts.items()
+    }
+    retained_total_sources = sum(retained_source_counts.values()) or 1
+    retained_source_shares = {
+        source_type: count / retained_total_sources
+        for source_type, count in retained_source_counts.items()
     }
     lines = [
         "# Off-PC Training Summary",
@@ -873,6 +932,7 @@ def write_summary(results: Sequence[CandidateResult], log_path: Path, iterations
         f"- Timestamp: {utc_now()}",
         f"- Candidate iterations: {iterations}",
         f"- Evaluated candidates: {len(results)}",
+        f"- Retained learning candidates: {len(retained_results)}",
         f"- Battle log: `{log_path.as_posix().replace(str(ROOT).replace(os.sep, '/'), '').lstrip('/')}`",
         "",
         "## Source Counts",
@@ -896,6 +956,29 @@ def write_summary(results: Sequence[CandidateResult], log_path: Path, iterations
         lines.append(f"- `{source_type}`: {source_shares[source_type] * 100:.1f}%")
     if source_shares.get("selfplay", 0.0) > 0.45:
         lines.extend(["", "WARNING: selfplay exceeds safe learning share"])
+    if evaluation_target and len(results) < evaluation_target:
+        lines.extend(["", f"WARNING: evaluation pool below expected size ({len(results)} < {evaluation_target})"])
+    if iterations >= 1000 and len(results) < MIN_EVALUATION_WARNING_THRESHOLD:
+        lines.extend(["", f"WARNING: evaluation pool critically low for run size ({len(results)} candidates)"])
+    lines.extend(["", "## Retained Source Counts", ""])
+    for source_type in EVALUATION_SOURCE_ORDER:
+        count = retained_source_counts.get(source_type)
+        if count is None:
+            continue
+        lines.append(f"- `{source_type}`: {count}")
+    retained_remaining_sources = sorted(source for source in retained_source_counts if source not in EVALUATION_SOURCE_ORDER)
+    for source_type in retained_remaining_sources:
+        lines.append(f"- `{source_type}`: {retained_source_counts[source_type]}")
+    lines.extend(["", "## Retained Source Share", ""])
+    for source_type in EVALUATION_SOURCE_ORDER:
+        share = retained_source_shares.get(source_type)
+        if share is None:
+            continue
+        lines.append(f"- `{source_type}`: {share * 100:.1f}%")
+    for source_type in retained_remaining_sources:
+        lines.append(f"- `{source_type}`: {retained_source_shares[source_type] * 100:.1f}%")
+    if retained_source_shares.get("selfplay", 0.0) > 0.45:
+        lines.extend(["", "WARNING: retained selfplay exceeds safe learning share"])
     lines.extend(["", "## Top Teams", ""])
     for result in results[:6]:
         summary_species = ", ".join(get_summary_team_species_list({"team": result.team}))
@@ -972,12 +1055,9 @@ def main() -> None:
         args.iterations,
         rng,
     )
-    write_json(
-        NORMALIZED_DIR / "combined_training_pool.json",
-        {
-            "updatedAt": utc_now(),
-            "teams": candidates,
-        },
+    evaluation_target = get_minimum_evaluation_pool_size(
+        args.iterations,
+        sum(1 for row in candidates if canonical_source_type(row.get("sourceType", "unknown")) == "selfplay"),
     )
 
     results: List[CandidateResult] = []
@@ -1010,13 +1090,43 @@ def main() -> None:
         )
 
     results.sort(key=lambda row: row.overall * row.confidence, reverse=True)
+    retained_results = rebalance_retained_results(
+        results,
+        min(RETENTION_POOL_SIZE, len(results)),
+        SOURCE_SHARE_CAPS,
+        SOURCE_SHARE_MINIMUMS,
+        SOURCE_GROUP_MINIMUMS,
+    )
+    write_json(
+        NORMALIZED_DIR / "combined_training_pool.json",
+        {
+            "updatedAt": utc_now(),
+            "teams": candidates,
+            "retainedTeams": [
+                {
+                    "id": result.label,
+                    "sourceType": result.source_type,
+                    "sourceName": result.label,
+                    "sourceUrl": "",
+                    "archetype": "",
+                    "team": result.team,
+                    "confidence": round(result.confidence, 3),
+                    "completeness": 1.0,
+                    "tags": result.tags,
+                    "score": round(result.overall, 4),
+                }
+                for result in retained_results
+            ],
+            "evaluationTarget": evaluation_target,
+        },
+    )
     log_path = write_battle_log(results)
 
-    updated_archive = update_team_archive(archive_state, results)
-    updated_priors = update_species_role_priors(species_role_priors, results[:14])
-    updated_moves = update_move_choice_weights(move_choice_weights, results[:12])
-    updated_penalties = update_threat_penalties(threat_penalties, results, source_meta_snapshot)
-    updated_weights = update_learned_weights(learned_weights, results[:12], source_meta_snapshot)
+    updated_archive = update_team_archive(archive_state, retained_results)
+    updated_priors = update_species_role_priors(species_role_priors, retained_results[:14])
+    updated_moves = update_move_choice_weights(move_choice_weights, retained_results[:12])
+    updated_penalties = update_threat_penalties(threat_penalties, retained_results or results, source_meta_snapshot)
+    updated_weights = update_learned_weights(learned_weights, retained_results[:12] or results[:12], source_meta_snapshot)
 
     write_json(DATA_DIR / "team_archive.json", updated_archive)
     write_json(DATA_DIR / "species_role_priors.json", updated_priors)
@@ -1025,7 +1135,8 @@ def main() -> None:
     write_json(DATA_DIR / "learned_weights.json", updated_weights)
 
     source_counts = Counter(canonical_source_type(row.get("sourceType", "unknown")) for row in candidates)
-    write_summary(results, log_path, args.iterations, dict(source_counts))
+    retained_source_counts = Counter(result.source_type for result in retained_results)
+    write_summary(results, retained_results, log_path, args.iterations, dict(source_counts), dict(retained_source_counts), evaluation_target)
 
 
 if __name__ == "__main__":
