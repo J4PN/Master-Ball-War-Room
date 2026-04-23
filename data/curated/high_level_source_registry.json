@@ -1,0 +1,23 @@
+{
+  "sources": [
+    {
+      "source_name": "PokeaimMD",
+      "patterns": ["pokeaim", "pokeaimmd", "joey"],
+      "quality_class": "high_level_analysis",
+      "tags": ["tailwind_balance", "niche_competitive", "experimental_high_level"]
+    },
+    {
+      "source_name": "Wolfe Glick",
+      "patterns": ["wolfe", "wolfe glick", "world champ"],
+      "quality_class": "tournament_result",
+      "tags": ["standard_meta", "mega_sun", "bulky_offense", "anti_rain"]
+    },
+    {
+      "source_name": "Moxie Boosted",
+      "patterns": ["moxie boosted", "moxie"],
+      "quality_class": "serious_ladder",
+      "tags": ["niche_competitive", "tailwind_balance", "hard_tr"]
+    }
+  ],
+  "manual_teams": []
+}
