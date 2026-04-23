@@ -1,29 +1,29 @@
 {
-  "updatedAt": "2026-04-23T14:17:37+00:00",
+  "updatedAt": "2026-04-23T16:32:01+00:00",
   "priors": {
     "incineroar": {
-      "weight": 0.024,
+      "weight": 0.087,
       "roles": [
         "pivot_support",
         "fake_out"
       ]
     },
     "whimsicott": {
-      "weight": 0.024,
+      "weight": 0.1,
       "roles": [
         "speed_control",
         "support"
       ]
     },
     "garchomp": {
-      "weight": 0.024,
+      "weight": 0.1,
       "roles": [
         "physical_pressure",
         "spread_damage"
       ]
     },
     "pelipper": {
-      "weight": 0.024,
+      "weight": 0.087,
       "roles": [
         "weather",
         "speed_control"
@@ -31,47 +31,47 @@
     },
     "basculegion": {
       "roles": [],
-      "weight": 0.012
+      "weight": 0.05
     },
     "archaludon": {
       "roles": [],
-      "weight": 0.012
+      "weight": 0.025
     },
     "sinistcha": {
       "roles": [],
-      "weight": 0.012
+      "weight": 0.05
     },
     "kingambit": {
       "roles": [],
-      "weight": 0.012
+      "weight": 0.087
     },
     "starmie": {
       "roles": [],
-      "weight": 0.024
+      "weight": 0.05
     },
     "dragonite": {
       "roles": [],
-      "weight": 0.012
+      "weight": 0.113
     },
     "rotomwash": {
       "roles": [],
-      "weight": 0.012
+      "weight": 0.062
     },
     "farigiraf": {
       "roles": [],
-      "weight": 0.05
+      "weight": 0.062
     },
     "gengar": {
       "roles": [],
-      "weight": 0.05
+      "weight": 0.062
     },
     "tyranitar": {
       "roles": [],
-      "weight": 0.013
+      "weight": 0.025
     },
     "charizard": {
       "roles": [],
-      "weight": 0.013
+      "weight": 0.037
     },
     "basespeciespelipperdisplayspeciespelipperitemmegastonemegaidentityformidentitypelipperrolearchetypemoveskeymovesidentitykeypelipperpelipper": {
       "roles": [],

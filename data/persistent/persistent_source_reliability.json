@@ -2,14 +2,14 @@
   "sources": {
     "archive": {
       "quality_class": "archive",
-      "sample_count": 51,
-      "reliability_score": 6.6035,
+      "sample_count": 66,
+      "reliability_score": 5.2738,
       "tags": []
     },
     "self-generated": {
       "quality_class": "archive",
-      "sample_count": 3000,
-      "reliability_score": 3.8169,
+      "sample_count": 3583,
+      "reliability_score": 3.5753,
       "tags": [
         "selfplay",
         "generated",
@@ -18,16 +18,16 @@
     },
     "random-a": {
       "quality_class": "archive",
-      "sample_count": 6,
-      "reliability_score": 1.4231,
+      "sample_count": 7,
+      "reliability_score": 1.5531,
       "tags": [
         "random"
       ]
     },
     "random-b": {
       "quality_class": "archive",
-      "sample_count": 6,
-      "reliability_score": 1.4231,
+      "sample_count": 7,
+      "reliability_score": 1.5531,
       "tags": [
         "random"
       ]
@@ -53,8 +53,8 @@
     },
     "r/stunfisk post": {
       "quality_class": "archive",
-      "sample_count": 7,
-      "reliability_score": 2.7054,
+      "sample_count": 8,
+      "reliability_score": 2.9953,
       "tags": [
         "reddit",
         "community",
@@ -83,16 +83,16 @@
     },
     "team_archive": {
       "quality_class": "archive",
-      "sample_count": 891,
-      "reliability_score": 4.019,
+      "sample_count": 989,
+      "reliability_score": 4.0859,
       "tags": [
         "archive"
       ]
     },
     "self-built-a": {
       "quality_class": "unknown",
-      "sample_count": 4,
-      "reliability_score": 1.7149,
+      "sample_count": 5,
+      "reliability_score": 2.014,
       "tags": [
         "selfplay"
       ]
@@ -107,8 +107,8 @@
     },
     "YouTube description extract": {
       "quality_class": "archive",
-      "sample_count": 5,
-      "reliability_score": 2.1996,
+      "sample_count": 6,
+      "reliability_score": 2.5521,
       "tags": [
         "youtube",
         "community",

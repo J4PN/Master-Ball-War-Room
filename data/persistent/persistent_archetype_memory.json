@@ -1,8 +1,8 @@
 {
   "archetypes": {
     "unknown": {
-      "count": 3962,
-      "quality_score": 4.8108,
+      "count": 4661,
+      "quality_score": 4.5446,
       "mega_count": 0,
       "anti_rain_count": 0,
       "weather_count": 0
@@ -22,11 +22,11 @@
       "weather_count": 0
     },
     "rain": {
-      "count": 7,
-      "quality_score": 2.6336,
+      "count": 8,
+      "quality_score": 2.9065,
       "mega_count": 0,
       "anti_rain_count": 0,
-      "weather_count": 7
+      "weather_count": 8
     },
     "balance": {
       "count": 4,
@@ -43,8 +43,8 @@
       "weather_count": 0
     },
     "bulky-offense": {
-      "count": 5,
-      "quality_score": 2.1586,
+      "count": 6,
+      "quality_score": 2.4948,
       "mega_count": 0,
       "anti_rain_count": 0,
       "weather_count": 0
