@@ -100,6 +100,14 @@
         "unknown": 131
       },
       "mega_team_count": 0
+    },
+    {
+      "run_index": 10,
+      "team_count": 133,
+      "archetype_counts": {
+        "unknown": 133
+      },
+      "mega_team_count": 0
     }
   ]
 }

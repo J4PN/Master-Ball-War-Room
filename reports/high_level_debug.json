@@ -1,12 +1,12 @@
 {
-  "updatedAt": "2026-04-23T23:16:10+00:00",
+  "updatedAt": "2026-04-23T23:31:47+00:00",
   "highLevelPoolSize": 0,
   "topTeams": [
     {
       "label": "pikalyticscuratedpikalyticsimportpelipperbasculegionincineroarwhimsicottarchaludongarchomp",
       "sourceType": "pikalytics",
       "confidence": 0.9925,
-      "overall": 0.6396,
+      "overall": 0.6363,
       "team": [
         "Pelipper",
         "Basculegion",
@@ -33,7 +33,7 @@
       "label": "pikalyticspikalyticschampionssnapshotincineroarwhimsicottgarchompsinistchakingambitpelipper",
       "sourceType": "pikalytics",
       "confidence": 0.97,
-      "overall": 0.6438,
+      "overall": 0.6402,
       "team": [
         "Incineroar",
         "Whimsicott",
@@ -57,37 +57,10 @@
       }
     },
     {
-      "label": "redditcuratedredditbalanceteamincineroarstarmiegarchompwhimsicottkingambitpelipper",
-      "sourceType": "reddit",
-      "confidence": 0.865,
-      "overall": 0.6463,
-      "team": [
-        "Incineroar",
-        "Starmie",
-        "Garchomp",
-        "Whimsicott",
-        "Kingambit",
-        "Pelipper"
-      ],
-      "highLevel": {
-        "poolSize": 0,
-        "fallbackUsed": true,
-        "reason": "high_level pool empty",
-        "matched": false,
-        "matchedSource": "",
-        "similarity": 0.0,
-        "shellOverlap": 0.0,
-        "coreOverlap": 0.0,
-        "archetypeOverlap": 0.0,
-        "moveOverlap": 0.0,
-        "finalContribution": 0.5
-      }
-    },
-    {
       "label": "youtubecuratedyoutubeshowcaseteamincineroargarchompwhimsicottstarmiedragoniterotomwash",
       "sourceType": "youtube",
       "confidence": 0.8425,
-      "overall": 0.6612,
+      "overall": 0.661,
       "team": [
         "Incineroar",
         "Garchomp",
@@ -111,10 +84,37 @@
       }
     },
     {
+      "label": "redditcuratedredditbalanceteamincineroarstarmiegarchompwhimsicottkingambitpelipper",
+      "sourceType": "reddit",
+      "confidence": 0.865,
+      "overall": 0.6428,
+      "team": [
+        "Incineroar",
+        "Starmie",
+        "Garchomp",
+        "Whimsicott",
+        "Kingambit",
+        "Pelipper"
+      ],
+      "highLevel": {
+        "poolSize": 0,
+        "fallbackUsed": true,
+        "reason": "high_level pool empty",
+        "matched": false,
+        "matchedSource": "",
+        "similarity": 0.0,
+        "shellOverlap": 0.0,
+        "coreOverlap": 0.0,
+        "archetypeOverlap": 0.0,
+        "moveOverlap": 0.0,
+        "finalContribution": 0.5
+      }
+    },
+    {
       "label": "redditrstunfiskpostpelipperbasculegionincineroarwhimsicott",
       "sourceType": "reddit",
       "confidence": 0.685,
-      "overall": 0.659,
+      "overall": 0.6516,
       "team": [
         "Pelipper",
         "Basculegion",
@@ -136,32 +136,10 @@
       }
     },
     {
-      "label": "archivefarigiraf",
-      "sourceType": "archive",
-      "confidence": 0.4775,
-      "overall": 0.6844,
-      "team": [
-        "Farigiraf"
-      ],
-      "highLevel": {
-        "poolSize": 0,
-        "fallbackUsed": true,
-        "reason": "high_level pool empty",
-        "matched": false,
-        "matchedSource": "",
-        "similarity": 0.0,
-        "shellOverlap": 0.0,
-        "coreOverlap": 0.0,
-        "archetypeOverlap": 0.0,
-        "moveOverlap": 0.0,
-        "finalContribution": 0.5
-      }
-    },
-    {
-      "label": "archiveincineroargarchomp",
-      "sourceType": "archive",
-      "confidence": 0.5015,
-      "overall": 0.644,
+      "label": "youtubeyoutubedescriptionextractincineroargarchompstarmiewhimsicott",
+      "sourceType": "youtube",
+      "confidence": 0.5025,
+      "overall": 0.6581,
       "team": [
         "Incineroar",
         "Garchomp",
@@ -183,11 +161,109 @@
       }
     },
     {
+      "label": "archivefarigiraf",
+      "sourceType": "archive",
+      "confidence": 0.4828,
+      "overall": 0.6846,
+      "team": [
+        "Farigiraf"
+      ],
+      "highLevel": {
+        "poolSize": 0,
+        "fallbackUsed": true,
+        "reason": "high_level pool empty",
+        "matched": false,
+        "matchedSource": "",
+        "similarity": 0.0,
+        "shellOverlap": 0.0,
+        "coreOverlap": 0.0,
+        "archetypeOverlap": 0.0,
+        "moveOverlap": 0.0,
+        "finalContribution": 0.5
+      }
+    },
+    {
+      "label": "archiverotomwash",
+      "sourceType": "archive",
+      "confidence": 0.4775,
+      "overall": 0.6849,
+      "team": [
+        "Rotom-Wash"
+      ],
+      "highLevel": {
+        "poolSize": 0,
+        "fallbackUsed": true,
+        "reason": "high_level pool empty",
+        "matched": false,
+        "matchedSource": "",
+        "similarity": 0.0,
+        "shellOverlap": 0.0,
+        "coreOverlap": 0.0,
+        "archetypeOverlap": 0.0,
+        "moveOverlap": 0.0,
+        "finalContribution": 0.5
+      }
+    },
+    {
+      "label": "archivegengararchaludon",
+      "sourceType": "archive",
+      "confidence": 0.4828,
+      "overall": 0.6662,
+      "team": [
+        "Gengar",
+        "Archaludon",
+        "Dragonite",
+        "Farigiraf",
+        "Rotom-Wash",
+        "Kingambit"
+      ],
+      "highLevel": {
+        "poolSize": 0,
+        "fallbackUsed": true,
+        "reason": "high_level pool empty",
+        "matched": false,
+        "matchedSource": "",
+        "similarity": 0.0,
+        "shellOverlap": 0.0,
+        "coreOverlap": 0.0,
+        "archetypeOverlap": 0.0,
+        "moveOverlap": 0.0,
+        "finalContribution": 0.5
+      }
+    },
+    {
       "label": "archiveselfgenerated",
       "sourceType": "archive",
       "confidence": 0.47,
-      "overall": 0.684,
+      "overall": 0.6839,
       "team": [
+        "Dragonite"
+      ],
+      "highLevel": {
+        "poolSize": 0,
+        "fallbackUsed": true,
+        "reason": "high_level pool empty",
+        "matched": false,
+        "matchedSource": "",
+        "similarity": 0.0,
+        "shellOverlap": 0.0,
+        "coreOverlap": 0.0,
+        "archetypeOverlap": 0.0,
+        "moveOverlap": 0.0,
+        "finalContribution": 0.5
+      }
+    },
+    {
+      "label": "archivearchiveteamarchive",
+      "sourceType": "archive",
+      "confidence": 0.4775,
+      "overall": 0.6726,
+      "team": [
+        "Incineroar",
+        "Farigiraf",
+        "Whimsicott",
+        "Charizard",
+        "Dragonite",
         "Rotom-Wash"
       ],
       "highLevel": {
@@ -208,75 +284,9 @@
       "label": "archiveselfgenerated",
       "sourceType": "archive",
       "confidence": 0.47,
-      "overall": 0.6837,
-      "team": [
-        "Dragonite"
-      ],
-      "highLevel": {
-        "poolSize": 0,
-        "fallbackUsed": true,
-        "reason": "high_level pool empty",
-        "matched": false,
-        "matchedSource": "",
-        "similarity": 0.0,
-        "shellOverlap": 0.0,
-        "coreOverlap": 0.0,
-        "archetypeOverlap": 0.0,
-        "moveOverlap": 0.0,
-        "finalContribution": 0.5
-      }
-    },
-    {
-      "label": "archiveselfgenerated",
-      "sourceType": "archive",
-      "confidence": 0.47,
-      "overall": 0.6834,
-      "team": [
-        "Gengar"
-      ],
-      "highLevel": {
-        "poolSize": 0,
-        "fallbackUsed": true,
-        "reason": "high_level pool empty",
-        "matched": false,
-        "matchedSource": "",
-        "similarity": 0.0,
-        "shellOverlap": 0.0,
-        "coreOverlap": 0.0,
-        "archetypeOverlap": 0.0,
-        "moveOverlap": 0.0,
-        "finalContribution": 0.5
-      }
-    },
-    {
-      "label": "archiveselfgenerated",
-      "sourceType": "archive",
-      "confidence": 0.47,
-      "overall": 0.6826,
+      "overall": 0.6823,
       "team": [
         "Tyranitar"
-      ],
-      "highLevel": {
-        "poolSize": 0,
-        "fallbackUsed": true,
-        "reason": "high_level pool empty",
-        "matched": false,
-        "matchedSource": "",
-        "similarity": 0.0,
-        "shellOverlap": 0.0,
-        "coreOverlap": 0.0,
-        "archetypeOverlap": 0.0,
-        "moveOverlap": 0.0,
-        "finalContribution": 0.5
-      }
-    },
-    {
-      "label": "archiveselfgenerated",
-      "sourceType": "archive",
-      "confidence": 0.47,
-      "overall": 0.6799,
-      "team": [
-        "Kingambit"
       ],
       "highLevel": {
         "poolSize": 0,

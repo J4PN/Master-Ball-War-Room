@@ -1,0 +1,33 @@
+{
+  "updatedAt": "2026-04-23T23:31:37+00:00",
+  "registrySourceCount": 3,
+  "acceptedTeamCount": 0,
+  "rejections": [
+    {
+      "originSourceType": "youtube",
+      "sourceName": "YouTube description extract",
+      "reason": "registry_mismatch",
+      "teamLength": 4
+    },
+    {
+      "originSourceType": "reddit",
+      "sourceName": "r/stunfisk post",
+      "reason": "registry_mismatch",
+      "teamLength": 4
+    }
+  ],
+  "sources": {
+    "youtube": {
+      "rows": 1,
+      "accepted": 0
+    },
+    "reddit": {
+      "rows": 1,
+      "accepted": 0
+    },
+    "creator": {
+      "rows": 0,
+      "accepted": 0
+    }
+  }
+}
