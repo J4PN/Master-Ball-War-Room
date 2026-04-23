@@ -13,6 +13,69 @@ NORMALIZED_FILE = DATA_DIR / "normalized" / "high_level_creator_pool.json"
 REPORTS_DIR = ROOT / "reports"
 DEBUG_FILE = REPORTS_DIR / "high_level_ingestion_debug.json"
 
+DEFAULT_CREATOR_PROFILES = [
+    {
+        "source_name": "PokeaimMD",
+        "patterns": ["pokeaim", "pokeaimmd", "joey"],
+        "title_patterns": ["top teams", "sample team", "bulky offense", "balance"],
+        "archetypes": ["bulky-offense", "balance", "tailwind_balance"],
+        "signature_cores": [
+            ["Incineroar", "Garchomp", "Whimsicott"],
+            ["Incineroar", "Starmie", "Whimsicott"],
+        ],
+        "quality_class": "high_level_analysis",
+        "tags": ["tailwind_balance", "niche_competitive", "experimental_high_level"],
+    },
+    {
+        "source_name": "Wolfe Glick",
+        "patterns": ["wolfe", "wolfe glick", "world champ"],
+        "title_patterns": ["world champ", "tournament", "championship", "sun", "charizard"],
+        "archetypes": ["sun", "bulky-offense", "balance", "trick-room"],
+        "signature_cores": [
+            ["Charizard", "Venusaur"],
+            ["Incineroar", "Whimsicott"],
+            ["Farigiraf", "Incineroar"],
+        ],
+        "quality_class": "tournament_result",
+        "tags": ["standard_meta", "mega_sun", "bulky_offense", "anti_rain"],
+    },
+    {
+        "source_name": "Moxie Boosted",
+        "patterns": ["moxie boosted", "moxie"],
+        "title_patterns": ["rain shell", "ladder", "trick room", "off meta"],
+        "archetypes": ["rain", "hard-tr", "balance", "tailwind_balance"],
+        "signature_cores": [
+            ["Pelipper", "Basculegion"],
+            ["Farigiraf", "Kingambit"],
+            ["Incineroar", "Whimsicott"],
+        ],
+        "quality_class": "serious_ladder",
+        "tags": ["niche_competitive", "tailwind_balance", "hard_tr"],
+    },
+]
+
+
+def creator_profile_catalog(registry):
+    merged = {}
+    for profile in DEFAULT_CREATOR_PROFILES:
+        key = normalize_key(profile.get("source_name") or "")
+        if not key:
+            continue
+        merged[key] = dict(profile)
+    for entry in registry:
+        key = normalize_key(entry.get("source_name") or "")
+        if not key:
+            continue
+        baseline = dict(merged.get(key, {}))
+        baseline.update({k: v for k, v in entry.items() if v not in (None, "", [], {})})
+        baseline["patterns"] = list(dict.fromkeys([*(merged.get(key, {}).get("patterns", []) or []), *(entry.get("patterns", []) or [])]))
+        baseline["tags"] = list(dict.fromkeys([*(merged.get(key, {}).get("tags", []) or []), *(entry.get("tags", []) or [])]))
+        baseline["title_patterns"] = list(dict.fromkeys([*(merged.get(key, {}).get("title_patterns", []) or []), *(entry.get("title_patterns", []) or [])]))
+        baseline["archetypes"] = list(dict.fromkeys([*(merged.get(key, {}).get("archetypes", []) or []), *(entry.get("archetypes", []) or [])]))
+        baseline["signature_cores"] = [*(merged.get(key, {}).get("signature_cores", []) or []), *(entry.get("signature_cores", []) or [])]
+        merged[key] = baseline
+    return list(merged.values())
+
 
 def require_remote_only():
     if os.environ.get("GITHUB_ACTIONS") != "true":
@@ -42,6 +105,62 @@ def match_registry_entry(source_name, registry):
             if pattern.lower() in lowered:
                 return entry
     return None
+
+
+def normalize_key(value):
+    return "".join(ch.lower() for ch in str(value or "") if ch.isalnum())
+
+
+def resolve_creator_profile(entry, registry):
+    source_name = str(entry.get("source_name") or entry.get("sourceName") or entry.get("channel") or entry.get("author") or entry.get("title") or "")
+    direct = match_registry_entry(source_name, registry)
+    if direct:
+        return {
+            "matched": True,
+            "profile": direct,
+            "reason": "source_name_pattern",
+            "score": 1.0,
+            "core_overlap": 0.0,
+        }
+
+    text_blob = " ".join(
+        str(entry.get(field) or "")
+        for field in ("source_name", "sourceName", "channel", "author", "title", "notes", "archetype")
+    ).lower()
+    archetype = str(entry.get("archetype") or "").strip().lower()
+    tags = {str(tag).strip().lower() for tag in entry.get("tags", []) if str(tag).strip()}
+    species = {
+        normalize_key(slot.get("name") or slot.get("species"))
+        for slot in (entry.get("team") or entry.get("members") or [])
+        if isinstance(slot, dict) and (slot.get("name") or slot.get("species"))
+    }
+    best = None
+    for profile in creator_profile_catalog(registry):
+        score = 0.0
+        core_overlap = 0.0
+        if any(pattern in text_blob for pattern in [p.lower() for p in profile.get("title_patterns", [])]):
+            score += 0.24
+        if archetype and archetype in {value.lower() for value in profile.get("archetypes", [])}:
+            score += 0.16
+        if tags & {tag.lower() for tag in profile.get("tags", [])}:
+            score += 0.08
+        for core in profile.get("signature_cores", []):
+            core_keys = {normalize_key(name) for name in core}
+            overlap = len(species & core_keys) / max(1, len(core_keys))
+            core_overlap = max(core_overlap, overlap)
+        if len(species) >= 4 and core_overlap >= 0.5:
+            score += 0.08
+        score += core_overlap * 0.58
+        candidate = {
+            "matched": score >= 0.42 and (core_overlap >= 0.34 or score >= 0.62),
+            "profile": profile,
+            "reason": "content_profile",
+            "score": round(score, 4),
+            "core_overlap": round(core_overlap, 4),
+        }
+        if best is None or candidate["score"] > best["score"]:
+            best = candidate
+    return best or {"matched": False, "profile": None, "reason": "no_profiles", "score": 0.0, "core_overlap": 0.0}
 
 
 def get_bucket_entries(payload, *field_names):
@@ -80,7 +199,8 @@ def build_high_level_creator_pool():
         debug["sources"][origin_source_type]["rows"] = len(source_bucket)
         for entry in source_bucket:
             source_name = str(entry.get("source_name") or entry.get("sourceName") or entry.get("channel") or entry.get("author") or entry.get("title") or "")
-            matched = match_registry_entry(source_name, registry)
+            matched_result = resolve_creator_profile(entry, registry)
+            matched = matched_result.get("profile")
             team_slots = entry.get("team") or entry.get("members") or []
             if not source_name:
                 debug["rejections"].append({
@@ -94,6 +214,9 @@ def build_high_level_creator_pool():
                     "originSourceType": origin_source_type,
                     "sourceName": source_name,
                     "reason": "registry_mismatch",
+                    "matchMode": matched_result.get("reason"),
+                    "matchScore": matched_result.get("score", 0.0),
+                    "coreOverlap": matched_result.get("core_overlap", 0.0),
                     "teamLength": len(team_slots) if isinstance(team_slots, list) else 0,
                 })
                 continue
@@ -105,10 +228,11 @@ def build_high_level_creator_pool():
                 })
                 continue
             quality_class = matched.get("quality_class", "high_level_analysis")
+            matched_creator = matched.get("source_name") or source_name
             tags = list(dict.fromkeys((matched.get("tags", []) or []) + (entry.get("tags", []) or []) + ["high_level", origin_source_type]))
             normalized_entry = normalize_team_entry(
                 source_type="high_level",
-                source_name=source_name or "high_level_creator",
+                source_name=matched_creator or "high_level_creator",
                 source_url=entry.get("source_url") or entry.get("sourceUrl") or entry.get("url") or "",
                 archetype=entry.get("archetype", ""),
                 slots=team_slots,
@@ -127,6 +251,11 @@ def build_high_level_creator_pool():
                 continue
             normalized_entry["qualityClass"] = quality_class
             normalized_entry["originSourceType"] = origin_source_type
+            normalized_entry["rawSourceName"] = source_name
+            normalized_entry["matchedCreator"] = matched_creator
+            normalized_entry["creatorMatchReason"] = matched_result.get("reason")
+            normalized_entry["creatorMatchScore"] = matched_result.get("score", 1.0)
+            normalized_entry["creatorCoreOverlap"] = matched_result.get("core_overlap", 0.0)
             teams.append(normalized_entry)
             debug["sources"][origin_source_type]["accepted"] += 1
 

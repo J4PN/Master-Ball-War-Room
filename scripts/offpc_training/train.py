@@ -46,8 +46,8 @@ SOURCE_SAMPLING_DEFAULTS = {
     "archive": 0.8,
     "reddit": 0.55,
     "youtube": 0.45,
-    "selfplay": 0.3,
-    "random": 0.3,
+    "selfplay": 0.2,
+    "random": 0.2,
 }
 
 SOURCE_SHARE_CAPS = {
@@ -65,18 +65,18 @@ SOURCE_GROUP_MINIMUMS = {
 }
 
 RETAINED_SOURCE_CAPS = {
-    "selfplay": 0.30,
-    "archive": 0.35,
-    "random": 0.05,
+    "selfplay": 0.10,
+    "archive": 0.40,
+    "random": 0.02,
 }
 
 RETAINED_SOURCE_MINIMUMS = {
-    "archive": 0.18,
-    "high_level": 0.10,
+    "archive": 0.22,
+    "high_level": 0.15,
 }
 
 RETAINED_SOURCE_GROUP_MINIMUMS = {
-    ("meta", "pikalytics", "high_level", "archive"): 0.55,
+    ("meta", "pikalytics", "high_level", "archive"): 0.75,
 }
 
 MIN_EVALUATION_POOL_FLOOR = 24
@@ -84,6 +84,8 @@ MAX_EVALUATION_POOL_TARGET = 300
 MIN_EVALUATION_WARNING_THRESHOLD = 100
 RETENTION_POOL_SIZE = 24
 MIN_SERIOUS_RETENTION_TEAM_SIZE = 4
+STRICT_RETAINED_CAP_SOURCES = {"selfplay", "random"}
+SAFE_RETAINED_SELFPLAY_SHARE = 0.15
 
 EVALUATION_SOURCE_ORDER = (
     "meta",
@@ -346,6 +348,23 @@ def load_normalized_pool(path: Path) -> List[dict]:
     return [normalized for row in teams if (normalized := normalize_pool_row(row, fallback_source_type)) and species_list(normalized)]
 
 
+def load_raw_source_pool(path: Path, source_type: str, *field_names: str) -> List[dict]:
+    payload = read_json(path, {})
+    rows = []
+    for field_name in field_names:
+        candidate_rows = payload.get(field_name, [])
+        if isinstance(candidate_rows, list) and candidate_rows:
+            rows = candidate_rows
+            break
+        if isinstance(candidate_rows, list):
+            rows = candidate_rows
+    return [
+        normalized
+        for row in rows
+        if (normalized := normalize_pool_row(row, source_type)) and species_list(normalized)
+    ]
+
+
 def inspect_pool_file(path: Path) -> dict:
     payload = read_json(path, {"teams": []})
     teams = payload.get("teams", []) if isinstance(payload, dict) else []
@@ -383,22 +402,144 @@ def match_registry_entry(source_name: str, registry: Sequence[dict]) -> dict | N
     return None
 
 
+DEFAULT_CREATOR_PROFILES = [
+    {
+        "source_name": "PokeaimMD",
+        "patterns": ["pokeaim", "pokeaimmd", "joey"],
+        "title_patterns": ["top teams", "sample team", "bulky offense", "balance"],
+        "archetypes": ["bulky-offense", "balance", "tailwind_balance"],
+        "signature_cores": [
+            ["Incineroar", "Garchomp", "Whimsicott"],
+            ["Incineroar", "Starmie", "Whimsicott"],
+        ],
+        "quality_class": "high_level_analysis",
+        "tags": ["tailwind_balance", "niche_competitive", "experimental_high_level"],
+    },
+    {
+        "source_name": "Wolfe Glick",
+        "patterns": ["wolfe", "wolfe glick", "world champ"],
+        "title_patterns": ["world champ", "tournament", "championship", "sun", "charizard"],
+        "archetypes": ["sun", "bulky-offense", "balance", "trick-room"],
+        "signature_cores": [
+            ["Charizard", "Venusaur"],
+            ["Incineroar", "Whimsicott"],
+            ["Farigiraf", "Incineroar"],
+        ],
+        "quality_class": "tournament_result",
+        "tags": ["standard_meta", "mega_sun", "bulky_offense", "anti_rain"],
+    },
+    {
+        "source_name": "Moxie Boosted",
+        "patterns": ["moxie boosted", "moxie"],
+        "title_patterns": ["rain shell", "ladder", "trick room", "off meta"],
+        "archetypes": ["rain", "hard-tr", "balance", "tailwind_balance"],
+        "signature_cores": [
+            ["Pelipper", "Basculegion"],
+            ["Farigiraf", "Kingambit"],
+            ["Incineroar", "Whimsicott"],
+        ],
+        "quality_class": "serious_ladder",
+        "tags": ["niche_competitive", "tailwind_balance", "hard_tr"],
+    },
+]
+
+
+def creator_profile_catalog(registry: Sequence[dict]) -> List[dict]:
+    merged: Dict[str, dict] = {}
+    for profile in DEFAULT_CREATOR_PROFILES:
+        key = normalize_key(profile.get("source_name") or "")
+        if not key:
+            continue
+        merged[key] = dict(profile)
+    for entry in registry:
+        key = normalize_key(entry.get("source_name") or "")
+        if not key:
+            continue
+        baseline = dict(merged.get(key, {}))
+        baseline.update({k: v for k, v in entry.items() if v not in (None, "", [], {})})
+        baseline["patterns"] = list(
+            dict.fromkeys([*(merged.get(key, {}).get("patterns", []) or []), *(entry.get("patterns", []) or [])])
+        )
+        baseline["tags"] = list(
+            dict.fromkeys([*(merged.get(key, {}).get("tags", []) or []), *(entry.get("tags", []) or [])])
+        )
+        baseline["title_patterns"] = list(
+            dict.fromkeys([*(merged.get(key, {}).get("title_patterns", []) or []), *(entry.get("title_patterns", []) or [])])
+        )
+        baseline["archetypes"] = list(
+            dict.fromkeys([*(merged.get(key, {}).get("archetypes", []) or []), *(entry.get("archetypes", []) or [])])
+        )
+        baseline["signature_cores"] = [
+            *(merged.get(key, {}).get("signature_cores", []) or []),
+            *(entry.get("signature_cores", []) or []),
+        ]
+        merged[key] = baseline
+    return list(merged.values())
+
+
+def resolve_creator_profile(entry: dict, registry: Sequence[dict]) -> dict:
+    source_name = str(entry.get("sourceName") or entry.get("source_name") or entry.get("channel") or entry.get("author") or entry.get("label") or entry.get("title") or "")
+    direct = match_registry_entry(source_name, registry)
+    if direct:
+        return {"matched": True, "profile": direct, "reason": "source_name_pattern", "score": 1.0, "core_overlap": 0.0}
+    text_blob = " ".join(
+        str(entry.get(field) or "")
+        for field in ("sourceName", "source_name", "channel", "author", "label", "title", "notes", "archetype")
+    ).lower()
+    archetype = str(entry.get("archetype") or "").strip().lower()
+    tags = {str(tag).strip().lower() for tag in entry.get("tags", []) if str(tag).strip()}
+    species = {normalize_key(name) for name in species_list(entry) if normalize_key(name)}
+    best = {"matched": False, "profile": None, "reason": "no_profiles", "score": 0.0, "core_overlap": 0.0}
+    for profile in creator_profile_catalog(registry):
+        score = 0.0
+        core_overlap = 0.0
+        if any(pattern in text_blob for pattern in [value.lower() for value in profile.get("title_patterns", [])]):
+            score += 0.24
+        if archetype and archetype in {value.lower() for value in profile.get("archetypes", [])}:
+            score += 0.16
+        if tags & {tag.lower() for tag in profile.get("tags", [])}:
+            score += 0.08
+        for core in profile.get("signature_cores", []):
+            core_keys = {normalize_key(name) for name in core}
+            overlap = len(species & core_keys) / max(1, len(core_keys))
+            core_overlap = max(core_overlap, overlap)
+        if len(species) >= 4 and core_overlap >= 0.5:
+            score += 0.08
+        score += core_overlap * 0.58
+        candidate = {
+            "matched": score >= 0.42 and (core_overlap >= 0.34 or score >= 0.62),
+            "profile": profile,
+            "reason": "content_profile",
+            "score": round(score, 4),
+            "core_overlap": round(core_overlap, 4),
+        }
+        if candidate["score"] > best["score"]:
+            best = candidate
+    return best
+
+
 def build_high_level_pool_from_sources(youtube_pool: Sequence[dict], reddit_pool: Sequence[dict]) -> List[dict]:
     registry = read_json(CURATED_DIR / "high_level_source_registry.json", {"sources": [], "manual_teams": []})
     teams: List[dict] = []
     for source_bucket, origin_source in ((youtube_pool, "youtube"), (reddit_pool, "reddit")):
         for row in source_bucket:
-            source_name = row.get("sourceName") or row.get("source_name") or row.get("label") or ""
-            matched = match_registry_entry(source_name, registry.get("sources", []))
-            if not matched:
+            match = resolve_creator_profile(row, registry.get("sources", []))
+            matched = match.get("profile")
+            source_name = row.get("sourceName") or row.get("source_name") or row.get("label") or row.get("title") or ""
+            if not matched or not match.get("matched"):
                 continue
             normalized = normalize_pool_row({**row}, "high_level")
             normalized["sourceType"] = "high_level"
-            normalized["sourceName"] = source_name
+            normalized["sourceName"] = matched.get("source_name") or source_name
+            normalized["rawSourceName"] = source_name
             normalized["tags"] = list(dict.fromkeys(list(normalized.get("tags", [])) + ["high_level", origin_source] + list(matched.get("tags", []))))
             normalized["qualityClass"] = matched.get("quality_class", "high_level_analysis")
             normalized["originSourceType"] = origin_source
             normalized["confidence"] = round(max(float(normalized.get("confidence", 0.8) or 0.8), 0.78), 3)
+            normalized["matchedCreator"] = matched.get("source_name") or ""
+            normalized["creatorMatchReason"] = match.get("reason")
+            normalized["creatorMatchScore"] = match.get("score", 0.0)
+            normalized["creatorCoreOverlap"] = match.get("core_overlap", 0.0)
             teams.append(normalized)
     for entry in registry.get("manual_teams", []):
         slots = canonical_team_slots(entry.get("team") or entry.get("members") or [])
@@ -501,6 +642,7 @@ def evaluate_vs_pool(
     candidate_species = species_list(candidate)
     base_role_bonus = role_bonus(candidate, priors)
     base_move_bonus = move_bonus(candidate, move_weights)
+    candidate_signals = get_team_structure_signals(candidate)
     scores = []
     for opponent in pool:
         opponent_species = species_list(opponent)
@@ -509,6 +651,7 @@ def evaluate_vs_pool(
         overlap = overlap_penalty(candidate_species, opponent_species)
         pressure = threat_pressure(opponent_species, threat_penalties)
         partial_penalty = max(0.0, 1.0 - float(opponent.get("completeness", 0)))
+        structure_alignment = compute_structure_alignment(candidate, opponent)["alignment"]
         score = (
             1.25
             - overlap * 0.42
@@ -516,6 +659,8 @@ def evaluate_vs_pool(
             - partial_penalty * 0.08
             + base_role_bonus * 0.28
             + base_move_bonus * 0.24
+            + structure_alignment * 0.2
+            + candidate_signals["shell_integrity"] * 0.08
         )
         scores.append(max(0.0, min(1.0, score * source_weight * 0.35 + confidence_weight * 0.65)))
     return sum(scores) / len(scores)
@@ -529,6 +674,42 @@ def team_move_set(team_row: dict) -> set[str]:
             if key:
                 moves.add(key)
     return moves
+
+
+def get_team_structure_signals(team_row: dict) -> dict:
+    species = {normalize_key(name) for name in species_list(team_row) if normalize_key(name)}
+    moves = team_move_set(team_row)
+    has_tailwind = "tailwind" in moves
+    has_trick_room = "trickroom" in moves
+    has_fake_out = "fakeout" in moves
+    has_parting_shot = "partingshot" in moves or "uturn" in moves
+    mega_sun = (
+        ("charizard" in species or "megacharizardy" in species)
+        and ("venusaur" in species or "ninetales" in species or "torkoal" in species)
+    )
+    rain_shell = "pelipper" in species and ("basculegion" in species or "whimsicott" in species)
+    hard_tr = has_trick_room and ("farigiraf" in species or "kingambit" in species or "sinistcha" in species)
+    speed_control = has_tailwind or has_trick_room
+    shell_integrity = min(1.0, len(species) / 6.0)
+    coherence_bonus = 0.0
+    if speed_control:
+        coherence_bonus += 0.03
+    if has_fake_out and has_parting_shot:
+        coherence_bonus += 0.03
+    if mega_sun:
+        coherence_bonus += 0.09
+    if hard_tr:
+        coherence_bonus += 0.08
+    if rain_shell:
+        coherence_bonus += 0.05
+    return {
+        "mega_sun": mega_sun,
+        "rain_shell": rain_shell,
+        "hard_tr": hard_tr,
+        "speed_control": speed_control,
+        "shell_integrity": round(shell_integrity, 4),
+        "coherence_bonus": round(coherence_bonus, 4),
+    }
 
 
 def compute_high_level_similarity(candidate: dict, reference: dict) -> dict:
@@ -566,6 +747,27 @@ def compute_high_level_similarity(candidate: dict, reference: dict) -> dict:
     }
 
 
+def compute_structure_alignment(candidate: dict, reference: dict) -> dict:
+    candidate_signals = get_team_structure_signals(candidate)
+    reference_signals = get_team_structure_signals(reference)
+    structure_hits = 0.0
+    if candidate_signals["mega_sun"] and reference_signals["mega_sun"]:
+        structure_hits += 0.45
+    if candidate_signals["hard_tr"] and reference_signals["hard_tr"]:
+        structure_hits += 0.4
+    if candidate_signals["rain_shell"] and reference_signals["rain_shell"]:
+        structure_hits += 0.3
+    if candidate_signals["speed_control"] and reference_signals["speed_control"]:
+        structure_hits += 0.18
+    shell_integrity = min(candidate_signals["shell_integrity"], reference_signals["shell_integrity"])
+    alignment = min(1.0, structure_hits + shell_integrity * 0.2)
+    return {
+        "alignment": round(alignment, 4),
+        "candidateSignals": candidate_signals,
+        "referenceSignals": reference_signals,
+    }
+
+
 def evaluate_high_level_pool(candidate: dict, pool: Sequence[dict]) -> tuple[float, dict]:
     if not pool:
         return 0.5, {
@@ -596,6 +798,8 @@ def evaluate_high_level_pool(candidate: dict, pool: Sequence[dict]) -> tuple[flo
         scored_matches.append(
             {
                 "sourceName": reference.get("sourceName", "high_level"),
+                "matchedCreator": reference.get("matchedCreator") or reference.get("sourceName", "high_level"),
+                "rawSourceName": reference.get("rawSourceName") or reference.get("sourceName", "high_level"),
                 "originSourceType": reference.get("originSourceType") or reference.get("origin_source_type") or "",
                 "qualityClass": quality_class or "unknown",
                 "confidence": round(confidence, 4),
@@ -615,6 +819,8 @@ def evaluate_high_level_pool(candidate: dict, pool: Sequence[dict]) -> tuple[flo
         "reason": "creator shell similarity",
         "matched": best["contribution"] > 0.0,
         "matchedSource": best["sourceName"],
+        "matchedCreator": best["matchedCreator"],
+        "rawSourceName": best["rawSourceName"],
         "originSourceType": best["originSourceType"],
         "qualityClass": best["qualityClass"],
         "similarity": best["similarity"],
@@ -721,7 +927,26 @@ def result_quality_score(result: CandidateResult) -> float:
     archetype_bonus = 0.02 if archetype_like_tags else 0.0
     structure_bonus = min(0.05, len(result.team) * 0.01)
     structure_penalty = 0.18 if len(result.team) < MIN_SERIOUS_RETENTION_TEAM_SIZE else 0.0
-    return result.overall * 0.72 + result.confidence * 0.28 + niche_bonus + archetype_bonus + structure_bonus - structure_penalty
+    signals = get_team_structure_signals({"team": result.team})
+    real_source_strength = (
+        float(result.by_source.get("archive", 0.0) or 0.0) * 0.28
+        + float(result.by_source.get("meta", 0.0) or 0.0) * 0.28
+        + float(result.by_source.get("pikalytics", 0.0) or 0.0) * 0.22
+        + float(result.by_source.get("high_level", 0.0) or 0.0) * 0.22
+    )
+    real_source_bonus = min(0.16, real_source_strength * 0.12)
+    novelty_penalty = 0.08 if canonical_source_type(result.source_type) == "selfplay" and real_source_strength < 0.5 else 0.0
+    return (
+        result.overall * 0.68
+        + result.confidence * 0.24
+        + niche_bonus
+        + archetype_bonus
+        + structure_bonus
+        + signals["coherence_bonus"]
+        + real_source_bonus
+        - structure_penalty
+        - novelty_penalty
+    )
 
 
 def get_source_backed_retention_adjustment(result: CandidateResult) -> float:
@@ -733,20 +958,22 @@ def get_source_backed_retention_adjustment(result: CandidateResult) -> float:
     if source_type != "selfplay":
         bonus = 0.0
         if source_type in {"archive", "meta", "pikalytics", "high_level"}:
-            bonus += 0.04
+            bonus += 0.05
         if strong_support:
-            bonus += 0.03
+            bonus += 0.04
         return round(bonus, 4)
     adjustment = 0.0
     if "high_level" in strong_support or "archive" in strong_support or "pikalytics" in strong_support:
-        adjustment += 0.1
+        adjustment += 0.08
     elif len(moderate_support) >= 2:
-        adjustment += 0.05
+        adjustment += 0.04
     if not moderate_support:
-        adjustment -= 0.16
-    if external_scores["high_level"] < 0.55 and external_scores["archive"] < 0.58:
-        adjustment -= 0.08
-    if max(external_scores.values() or [0.0]) < 0.52:
+        adjustment -= 0.28
+    if external_scores["high_level"] < 0.58 and external_scores["archive"] < 0.62:
+        adjustment -= 0.12
+    if max(external_scores.values() or [0.0]) < 0.58:
+        adjustment -= 0.1
+    if result.confidence < 0.45:
         adjustment -= 0.08
     return round(adjustment, 4)
 
@@ -755,11 +982,11 @@ def retention_priority_score(result: CandidateResult) -> float:
     source_type = canonical_source_type(result.source_type)
     base = result_quality_score(result) + get_source_backed_retention_adjustment(result)
     if source_type == "selfplay":
-        base -= 0.07
+        base -= 0.16
     elif source_type == "high_level":
-        base += 0.05
+        base += 0.08
     elif source_type in {"archive", "meta", "pikalytics"}:
-        base += 0.04
+        base += 0.06
     return base
 
 
@@ -886,9 +1113,27 @@ def rebalance_retained_results(
         ]
         if not available_sources:
             break
+        available_sources = [
+            source
+            for source in available_sources
+            if source not in STRICT_RETAINED_CAP_SOURCES
+            or counts[source] < cap_counts.get(source, len(ordered_by_source.get(source, [])))
+        ]
+        if not available_sources:
+            break
         available_sources.sort(key=lambda source: (-retention_priority_score(ordered_by_source[source][cursors[source]]), counts[source], source))
         if not take_from_source(available_sources[0], ignore_cap=True):
             break
+
+    for source, share in source_caps.items():
+        while selected and counts[source] and (counts[source] / max(1, len(selected))) > share:
+            removable = [row for row in selected if canonical_source_type(row.source_type) == source]
+            if not removable:
+                break
+            row = min(removable, key=retention_priority_score)
+            selected.remove(row)
+            selected_labels.discard(row.label)
+            counts[source] -= 1
 
     return selected
 
@@ -1064,6 +1309,16 @@ def update_learned_weights(previous: dict, top_results: Sequence[CandidateResult
 def update_team_archive(previous: dict, top_results: Sequence[CandidateResult]) -> dict:
     archived = list(previous.get("teams", []))
     for result in top_results[:14]:
+        source_type = canonical_source_type(result.source_type)
+        if source_type == "selfplay":
+            external_support = max(
+                float(result.by_source.get("archive", 0.0) or 0.0),
+                float(result.by_source.get("meta", 0.0) or 0.0),
+                float(result.by_source.get("pikalytics", 0.0) or 0.0),
+                float(result.by_source.get("high_level", 0.0) or 0.0),
+            )
+            if external_support < 0.74 or len(result.team) < 5:
+                continue
         archived.append(
             {
                 "source": result.source_type,
@@ -1091,14 +1346,14 @@ def get_source_feedback_loop_penalty(candidate: dict, by_source: Dict[str, float
     external_overlap = sum(1 for score in external_scores if score >= 0.58)
     penalty = 0.0
     if external_overlap == 0:
-        penalty += 0.12
+        penalty += 0.18
     if not archive_supported:
-        penalty += 0.05
-    if max(external_scores or [0.0]) < 0.52:
-        penalty += 0.05
+        penalty += 0.07
+    if max(external_scores or [0.0]) < 0.58:
+        penalty += 0.09
     if team_confidence(candidate) < 0.45:
-        penalty += 0.06
-    return round(min(0.28, penalty), 4)
+        penalty += 0.08
+    return round(min(0.42, penalty), 4)
 
 
 def build_source_meta_snapshot(*pools: Sequence[dict]) -> dict:
@@ -1179,6 +1434,7 @@ def write_high_level_debug(results: Sequence[CandidateResult], high_level_pool_s
                 "overall": round(result.overall, 4),
                 "team": [slot["name"] for slot in result.team],
                 "highLevel": result.diagnostics.get("high_level", {}),
+                "structureSignals": get_team_structure_signals({"team": result.team}),
             }
         )
     path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
@@ -1250,11 +1506,12 @@ def write_summary(
         lines.append(f"- `{source_type}`: {share * 100:.1f}%")
     for source_type in retained_remaining_sources:
         lines.append(f"- `{source_type}`: {retained_source_shares[source_type] * 100:.1f}%")
-    if retained_source_shares.get("selfplay", 0.0) > 0.45:
+    if retained_source_shares.get("selfplay", 0.0) > SAFE_RETAINED_SELFPLAY_SHARE:
         lines.extend(["", "WARNING: retained selfplay exceeds safe learning share"])
     lines.extend(["", "## Top Teams", ""])
     for result in summary_results:
         summary_species = ", ".join(get_summary_team_species_list({"team": result.team}))
+        creator_debug = result.diagnostics.get("high_level", {})
         lines.append(
             f"- [{result.source_type}] score `{result.overall:.3f}` confidence `{result.confidence:.2f}`"
         )
@@ -1265,6 +1522,32 @@ def write_summary(
             f"archive `{result.by_source['archive']:.3f}` | random `{result.by_source['random']:.3f}` | "
             f"selfplay `{result.by_source['selfplay']:.3f}`"
         )
+        if creator_debug.get("fallbackUsed"):
+            lines.append("  creator match `none` | fallback `high_level pool empty`")
+        elif creator_debug.get("matched"):
+            lines.append(
+                f"  creator match `{creator_debug.get('matchedCreator') or creator_debug.get('matchedSource')}` "
+                f"| shell `{creator_debug.get('shellOverlap', 0.0):.2f}` "
+                f"| core `{creator_debug.get('coreOverlap', 0.0):.2f}` "
+                f"| archetype `{creator_debug.get('archetypeOverlap', 0.0):.2f}` "
+                f"| final `{creator_debug.get('finalContribution', 0.0):.3f}`"
+            )
+        else:
+            lines.append("  creator match `none` | unsupported by high-level pool")
+    lines.extend(["", "## Creator Matches", ""])
+    for result in summary_results:
+        creator_debug = result.diagnostics.get("high_level", {})
+        label = creator_debug.get("matchedCreator") or creator_debug.get("matchedSource") or "none"
+        if creator_debug.get("fallbackUsed"):
+            lines.append(f"- `{result.label}`: fallback used because high_level pool was empty")
+        elif creator_debug.get("matched"):
+            lines.append(
+                f"- `{result.label}`: matched `{label}` from `{creator_debug.get('originSourceType', '')}` "
+                f"with similarity `{creator_debug.get('similarity', 0.0):.3f}` "
+                f"(shell `{creator_debug.get('shellOverlap', 0.0):.2f}`, core `{creator_debug.get('coreOverlap', 0.0):.2f}`, archetype `{creator_debug.get('archetypeOverlap', 0.0):.2f}`)"
+            )
+        else:
+            lines.append(f"- `{result.label}`: no creator support; penalized in retained ranking")
     (REPORT_DIR / "training_summary.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
@@ -1283,7 +1566,9 @@ def main() -> None:
     high_level_file_status = inspect_pool_file(NORMALIZED_DIR / "high_level_creator_pool.json")
     normalized_high_level = load_normalized_pool(NORMALIZED_DIR / "high_level_creator_pool.json")
     if not normalized_high_level:
-        normalized_high_level = build_high_level_pool_from_sources(normalized_youtube, normalized_reddit)
+        fallback_youtube = normalized_youtube or load_raw_source_pool(DATA_DIR / "raw" / "youtube_sources.json", "youtube", "videos", "entries")
+        fallback_reddit = normalized_reddit or load_raw_source_pool(DATA_DIR / "raw" / "reddit_threads.json", "reddit", "posts", "entries")
+        normalized_high_level = build_high_level_pool_from_sources(fallback_youtube, fallback_reddit)
         if normalized_high_level:
             write_json(
                 NORMALIZED_DIR / "high_level_creator_pool.json",
@@ -1300,19 +1585,26 @@ def main() -> None:
     normalized_selfplay = load_normalized_pool(NORMALIZED_DIR / "self_play_pool.json")
 
     archive_state = read_json(DATA_DIR / "team_archive.json", {"teams": []})
-    archive_pool = [
-        make_team_row(
-            label=row.get("label") or row.get("source_name") or "-".join(species_list({"team": row.get("team", [])})[:2]) or "archive-team",
-            source_type="archive",
-            slots=canonical_team_slots(row.get("team", [])),
-            confidence=float(row.get("confidence", 0.85)),
-            completeness=0.5,
-            tags=["archive"],
-            source_name="team_archive",
+    archive_pool = []
+    for row in archive_state.get("teams", []):
+        slots = canonical_team_slots(row.get("team", []))
+        if not slots:
+            continue
+        archived_source = canonical_source_type(row.get("source", "archive"))
+        archived_label = str(row.get("label") or "")
+        if archived_source == "selfplay" or archived_label.startswith("generated"):
+            continue
+        archive_pool.append(
+            make_team_row(
+                label=archived_label or row.get("source_name") or "-".join(species_list({"team": row.get("team", [])})[:2]) or "archive-team",
+                source_type="archive",
+                slots=slots,
+                confidence=float(row.get("confidence", 0.85)),
+                completeness=0.5,
+                tags=["archive"],
+                source_name="team_archive",
+            )
         )
-        for row in archive_state.get("teams", [])
-        if row.get("team")
-    ]
 
     learned_weights = read_json(DATA_DIR / "learned_weights.json", {})
     species_role_priors = read_json(DATA_DIR / "species_role_priors.json", {"priors": {}})
