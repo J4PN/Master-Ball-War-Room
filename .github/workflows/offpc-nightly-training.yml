@@ -100,13 +100,14 @@ jobs:
             data/team_archive.json
             data/battle_logs
             reports/training_summary.md
+            reports/high_level_debug.json
             reports/training_memory_report.md
 
       - name: Commit refreshed remote outputs
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/normalized data/persistent data/learned_weights.json data/species_role_priors.json data/move_choice_weights.json data/threat_penalties.json data/team_archive.json data/battle_logs reports/training_summary.md reports/training_memory_report.md
+          git add data/normalized data/persistent data/learned_weights.json data/species_role_priors.json data/move_choice_weights.json data/threat_penalties.json data/team_archive.json data/battle_logs reports/training_summary.md reports/high_level_debug.json reports/training_memory_report.md
           if git diff --cached --quiet; then
             echo "No remote-learning changes to commit."
             exit 0
