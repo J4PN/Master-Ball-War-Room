@@ -2,6 +2,7 @@ import json
 import math
 import os
 import re
+import ast
 from collections import Counter, defaultdict
 from copy import deepcopy
 from pathlib import Path
@@ -96,6 +97,27 @@ def slugify(value):
     return normalize_text(value).lower().replace("_", "-")
 
 
+CANONICAL_SLOT_KEYS = {
+    "base_species",
+    "display_species",
+    "identity_key",
+}
+
+SERIALIZED_SLOT_MARKERS = (
+    "base_species",
+    "display_species",
+    "identity_key",
+    "form_identity",
+    "mega_identity",
+    "mega_stone",
+    "moves",
+    "ability",
+    "item",
+    "role",
+    "archetype",
+)
+
+
 MALFORMED_THREAT_KEY_MARKERS = (
     "basespecies",
     "displayspecies",
@@ -135,6 +157,134 @@ def extract_clean_species_name(value):
                 return match.group(2).strip(" '\"{},")
         return text
     return ""
+
+
+def is_serialized_slot_blob(value):
+    if not isinstance(value, str):
+        return False
+    text = normalize_text(value)
+    if len(text) < 16 or text[0] != "{" or text[-1] != "}":
+        return False
+    lowered = text.lower()
+    return sum(marker in lowered for marker in SERIALIZED_SLOT_MARKERS) >= 3
+
+
+def try_parse_serialized_slot(value):
+    if not is_serialized_slot_blob(value):
+        return None
+    try:
+        parsed = ast.literal_eval(normalize_text(value))
+    except (SyntaxError, ValueError):
+        return None
+    return parsed if isinstance(parsed, dict) else None
+
+
+def is_canonical_learning_slot(slot):
+    return isinstance(slot, dict) and CANONICAL_SLOT_KEYS.issubset(slot.keys())
+
+
+def normalize_move_list(value):
+    if isinstance(value, str):
+        parsed = try_parse_serialized_slot(value)
+        if parsed:
+            value = parsed.get("moves", [])
+        else:
+            value = [part.strip() for part in value.split(",")]
+    if not isinstance(value, list):
+        return []
+    return [normalize_text(move) for move in value if normalize_text(move)]
+
+
+def unwrap_learning_slot_payload(slot, depth=0):
+    if depth > 4:
+        return {}
+    if isinstance(slot, str):
+        parsed = try_parse_serialized_slot(slot)
+        if parsed:
+            return unwrap_learning_slot_payload(parsed, depth + 1)
+        return {
+            "name": slot,
+            "species": slot,
+            "item": "",
+            "mega_stone": "",
+            "ability": "",
+            "moves": [],
+            "role": "",
+            "archetype": "",
+        }
+    if not isinstance(slot, dict):
+        return {}
+
+    parsed_fields = {}
+    for key in ("base_species", "display_species", "species", "name", "form_identity"):
+        parsed = try_parse_serialized_slot(slot.get(key))
+        if parsed:
+            nested = unwrap_learning_slot_payload(parsed, depth + 1)
+            if nested:
+                parsed_fields.update(nested)
+                break
+
+    merged = {**deepcopy(slot), **parsed_fields}
+    for field in ("base_species", "display_species", "species", "name", "form_identity", "mega_identity", "identity_key"):
+        parsed = try_parse_serialized_slot(merged.get(field))
+        if parsed:
+            nested = unwrap_learning_slot_payload(parsed, depth + 1)
+            if nested:
+                merged.update(nested)
+
+    merged["moves"] = normalize_move_list(merged.get("moves", []))
+    return merged
+
+
+def canonical_slot_has_blob_fields(slot):
+    if not isinstance(slot, dict):
+        return True
+    for key in ("base_species", "display_species", "form_identity", "identity_key"):
+        value = slot.get(key)
+        if is_serialized_slot_blob(value):
+            return True
+        text = normalize_text(value)
+        if "base_species" in text.lower() and "display_species" in text.lower():
+            return True
+    return False
+
+
+def get_clean_team_archetype(team_entry):
+    explicit = slugify(team_entry.get("archetype"))
+    if explicit in {"rain", "sun", "sand", "snow"}:
+        return explicit
+    weather_counts = Counter()
+    for slot in team_entry.get("team", []):
+        weather = get_effective_weather_controller(slot).get("weather")
+        if weather:
+            weather_counts[weather] += 1
+    if weather_counts:
+        return weather_counts.most_common(1)[0][0]
+    return explicit or "unknown"
+
+
+def is_corrupted_team_entry(entry):
+    if not isinstance(entry, dict):
+        return True
+    source_name = normalize_text(entry.get("source_name") or entry.get("sourceName") or entry.get("label"))
+    source_type = normalize_text(entry.get("source_type") or entry.get("sourceType") or entry.get("source"))
+    if slugify(source_name) == "archivearchive" or slugify(source_type) == "archivearchive":
+        return True
+    members = entry.get("team") or entry.get("members") or []
+    if not isinstance(members, list):
+        return True
+    for slot in members:
+        raw_slot = unwrap_learning_slot_payload(slot)
+        if not raw_slot:
+            return True
+        for field in ("base_species", "display_species", "species", "name", "identity_key"):
+            value = raw_slot.get(field)
+            if is_serialized_slot_blob(value):
+                return True
+            text = normalize_text(value)
+            if "{'base_species'" in text or '"base_species"' in text:
+                return True
+    return False
 
 
 def normalize_species_key(value):
@@ -220,6 +370,9 @@ def sanitize_source_meta_snapshot_threats(snapshot, current_entries):
 
 
 def coerce_learning_slot(slot):
+    parsed = try_parse_serialized_slot(slot) if isinstance(slot, str) else None
+    if parsed:
+        return coerce_learning_slot(parsed)
     if isinstance(slot, str):
         return {
             "name": slot,
@@ -246,6 +399,8 @@ def coerce_learning_slot(slot):
 
 
 def get_learning_species_identity(slot):
+    if is_canonical_learning_slot(slot):
+        return normalize_text(slot.get("base_species") or slot.get("display_species") or slot.get("form_identity"))
     return normalize_text(
         slot.get("base_species")
         or slot.get("baseSpecies")
@@ -255,6 +410,8 @@ def get_learning_species_identity(slot):
 
 
 def get_learning_mega_identity(slot):
+    if is_canonical_learning_slot(slot):
+        return normalize_text(slot.get("mega_identity"))
     item = slugify(slot.get("mega_stone") or slot.get("megaStone") or slot.get("item"))
     if item in MEGA_STONE_MAP:
         return MEGA_STONE_MAP[item]
@@ -268,6 +425,8 @@ def get_learning_mega_identity(slot):
 
 
 def get_learning_form_identity(slot):
+    if is_canonical_learning_slot(slot):
+        return normalize_text(slot.get("form_identity") or slot.get("display_species") or slot.get("base_species"))
     mega_identity = get_learning_mega_identity(slot)
     if mega_identity:
         return mega_identity
@@ -275,16 +434,47 @@ def get_learning_form_identity(slot):
 
 
 def canonicalize_learning_slot(slot):
+    slot = unwrap_learning_slot_payload(slot)
     slot = deepcopy(coerce_learning_slot(slot))
+    if is_canonical_learning_slot(slot):
+        base_species = normalize_text(slot.get("base_species"))
+        display_species = normalize_text(slot.get("display_species") or base_species)
+        mega_identity = normalize_text(slot.get("mega_identity"))
+        form_identity = normalize_text(slot.get("form_identity") or display_species or base_species)
+        item = normalize_text(slot.get("item"))
+        mega_stone = normalize_text((slot.get("mega_stone") or item) if mega_identity else "")
+        moves = normalize_move_list(slot.get("moves", []))
+        identity_key = normalize_text(slot.get("identity_key")) or "::".join([
+            slugify(base_species),
+            slugify(form_identity),
+            slugify(item),
+            slugify(mega_identity),
+        ])
+        normalized = {
+            "base_species": base_species,
+            "display_species": display_species,
+            "item": item,
+            "mega_stone": mega_stone,
+            "mega_identity": mega_identity,
+            "form_identity": form_identity,
+            "role": normalize_text(slot.get("role")),
+            "archetype": normalize_text(slot.get("archetype")),
+            "moves": moves[:4],
+            "key_moves": [normalize_text(move) for move in slot.get("key_moves", []) if normalize_text(move)] or moves[:2],
+            "identity_key": identity_key,
+        }
+        if canonical_slot_has_blob_fields(normalized):
+            return {}
+        return normalized
     base_species = get_learning_species_identity(slot)
     mega_identity = get_learning_mega_identity(slot)
     form_identity = get_learning_form_identity(slot)
-    moves = [normalize_text(move) for move in slot.get("moves", []) if normalize_text(move)]
-    return {
+    moves = normalize_move_list(slot.get("moves", []))
+    normalized = {
         "base_species": base_species,
         "display_species": normalize_text(slot.get("species") or form_identity or base_species),
         "item": normalize_text(slot.get("item")),
-        "mega_stone": normalize_text(slot.get("mega_stone") or slot.get("megaStone") or slot.get("item") if mega_identity else ""),
+        "mega_stone": normalize_text((slot.get("mega_stone") or slot.get("megaStone") or slot.get("item")) if mega_identity else ""),
         "mega_identity": mega_identity,
         "form_identity": form_identity or base_species,
         "role": normalize_text(slot.get("role")),
@@ -298,22 +488,35 @@ def canonicalize_learning_slot(slot):
             slugify(mega_identity),
         ]),
     }
+    if canonical_slot_has_blob_fields(normalized):
+        return {}
+    return normalized
 
 
 def normalize_team_entry(entry, fallback_archetype=""):
+    if is_corrupted_team_entry(entry):
+        return None
     team = []
     members = entry.get("team") or entry.get("members") or []
     for slot in members:
-        coerced_slot = coerce_learning_slot(slot)
+        coerced_slot = unwrap_learning_slot_payload(slot)
         normalized = canonicalize_learning_slot({
             **coerced_slot,
             "archetype": coerced_slot.get("archetype") or entry.get("archetype") or fallback_archetype,
         })
-        if normalized["base_species"] or normalized["form_identity"]:
+        if normalized and (normalized["base_species"] or normalized["form_identity"]):
             team.append(normalized)
-    return {
-        "source_type": normalize_text(entry.get("source_type") or entry.get("sourceType") or entry.get("source") or "unknown"),
-        "source_name": normalize_text(entry.get("source_name") or entry.get("sourceName")),
+    if not team:
+        return None
+    source_type = normalize_text(entry.get("source_type") or entry.get("sourceType") or entry.get("source") or "unknown")
+    if slugify(source_type) == "archivearchive":
+        source_type = "archive"
+    source_name = normalize_text(entry.get("source_name") or entry.get("sourceName"))
+    if slugify(source_name) == "archivearchive":
+        source_name = "archive"
+    normalized_entry = {
+        "source_type": source_type,
+        "source_name": source_name,
         "source_url": normalize_text(entry.get("source_url") or entry.get("sourceUrl")),
         "quality_class": normalize_text(entry.get("quality_class") or entry.get("qualityClass") or entry.get("source_quality") or entry.get("sourceQuality")),
         "archetype": normalize_text(entry.get("archetype") or fallback_archetype),
@@ -322,6 +525,8 @@ def normalize_team_entry(entry, fallback_archetype=""):
         "confidence": float(entry.get("confidence", 1.0) or 1.0),
         "score": float(entry.get("score", 0.0) or 0.0),
     }
+    normalized_entry["archetype"] = get_clean_team_archetype(normalized_entry)
+    return normalized_entry
 
 
 def normalize_output_team_entry(entry):
@@ -330,10 +535,33 @@ def normalize_output_team_entry(entry):
         normalized["sourceType"] = normalized.get("source_type", "archive")
     if "sourceName" not in normalized:
         normalized["sourceName"] = normalized.get("source_name", normalized["sourceType"])
+    if slugify(normalized.get("sourceName")) == "archivearchive":
+        normalized["sourceName"] = "archive"
     if "sourceUrl" not in normalized:
         normalized["sourceUrl"] = normalized.get("source_url", "")
     if "team" not in normalized or not isinstance(normalized["team"], list):
         normalized["team"] = []
+    clean_team = []
+    for slot in normalized.get("team", []):
+        canonical_slot = canonicalize_learning_slot(slot)
+        if not canonical_slot:
+            continue
+        clean_team.append({
+            "name": canonical_slot.get("display_species") or canonical_slot.get("base_species"),
+            "species": canonical_slot.get("display_species") or canonical_slot.get("base_species"),
+            "base_species": canonical_slot.get("base_species"),
+            "display_species": canonical_slot.get("display_species"),
+            "item": canonical_slot.get("item"),
+            "mega_stone": canonical_slot.get("mega_stone"),
+            "mega_identity": canonical_slot.get("mega_identity"),
+            "form_identity": canonical_slot.get("form_identity"),
+            "role": canonical_slot.get("role"),
+            "archetype": canonical_slot.get("archetype"),
+            "moves": canonical_slot.get("moves", []),
+            "identity_key": canonical_slot.get("identity_key"),
+        })
+    normalized["team"] = clean_team[:6]
+    normalized["archetype"] = get_clean_team_archetype({"team": clean_team, "archetype": normalized.get("archetype", "")})
     return normalized
 
 
@@ -349,20 +577,39 @@ def compute_team_quality(team_entry):
     mega_bonus = 0.12 if any(slot.get("mega_identity") for slot in team_entry.get("team", [])) else 0.0
     niche_bonus = 0.08 if "niche_competitive" in team_entry.get("tags", []) else 0.0
     anti_rain_bonus = 0.1 if "anti_rain" in team_entry.get("tags", []) else 0.0
-    rain_penalty = 0.12 if team_entry.get("archetype") == "rain" else 0.0
+    rain_penalty = 0.12 if get_clean_team_archetype(team_entry) == "rain" else 0.0
     return max(0.1, quality * confidence + (score * 0.01) + mega_bonus + niche_bonus + anti_rain_bonus - rain_penalty)
 
 
 def merge_persistent_shell_memory(current_entries, history):
-    prior_shells = {entry["shell_signature"]: entry for entry in history.get("shells", [])}
+    prior_shells = {}
+    for entry in history.get("shells", []):
+        normalized = normalize_team_entry({
+            **entry,
+            "team": entry.get("team", []),
+            "source_type": "archive",
+            "quality_class": "archive",
+        }, fallback_archetype=entry.get("archetype", ""))
+        if not normalized:
+            continue
+        signature = entry.get("shell_signature") or get_shell_signature(normalized)
+        if not signature:
+            continue
+        prior_shells[signature] = {
+            **entry,
+            "shell_signature": signature,
+            "archetype": get_clean_team_archetype(normalized),
+            "team": normalized.get("team", []),
+        }
     for team_entry in current_entries:
         signature = get_shell_signature(team_entry)
         if not signature:
             continue
+        clean_archetype = get_clean_team_archetype(team_entry)
         quality = compute_team_quality(team_entry)
         shell = prior_shells.get(signature, {
             "shell_signature": signature,
-            "archetype": team_entry.get("archetype"),
+            "archetype": clean_archetype,
             "sample_count": 0,
             "quality_score": 0.0,
             "last_sources": [],
@@ -372,11 +619,11 @@ def merge_persistent_shell_memory(current_entries, history):
         })
         shell["sample_count"] += 1
         shell["quality_score"] = round((shell["quality_score"] * 0.84) + quality, 4)
-        shell["archetype"] = team_entry.get("archetype") or shell.get("archetype")
+        shell["archetype"] = clean_archetype or shell.get("archetype")
         shell["team"] = team_entry.get("team", shell.get("team", []))
         source_name = team_entry.get("source_name") or team_entry.get("source_type")
         shell["last_sources"] = list(dict.fromkeys(([source_name] + shell.get("last_sources", []))))[:6]
-        if team_entry.get("archetype") == "rain":
+        if clean_archetype == "rain":
             shell["rain_bias_count"] = shell.get("rain_bias_count", 0) + 1
         if any(slot.get("mega_identity") for slot in team_entry.get("team", [])):
             shell["mega_count"] = shell.get("mega_count", 0) + 1
@@ -386,9 +633,15 @@ def merge_persistent_shell_memory(current_entries, history):
 
 
 def merge_archetype_memory(current_entries, history):
-    prior = history.get("archetypes", {})
+    prior = {
+        name: payload
+        for name, payload in (history.get("archetypes", {}) or {}).items()
+        if normalize_text(name)
+        and not is_serialized_slot_blob(name)
+        and "base_species" not in normalize_text(name).lower()
+    }
     for entry in current_entries:
-        archetype = entry.get("archetype") or "unknown"
+        archetype = get_clean_team_archetype(entry)
         bucket = prior.setdefault(archetype, {
             "count": 0,
             "quality_score": 0.0,
@@ -535,11 +788,21 @@ def apply_diversity_pressure(shell_memory, archetype_memory, learned_weights):
     total = sum(archetype_counts.values()) or 1
     rain_share = archetype_counts.get("rain", 0) / total
     sun_share = archetype_counts.get("sun", 0) / total
+    weather_shell_counts = Counter(get_clean_team_archetype(shell) for shell in shells if shell.get("team"))
+    shell_total = sum(weather_shell_counts.values()) or 1
+    rain_shell_share = weather_shell_counts.get("rain", 0) / shell_total
+    sun_shell_share = weather_shell_counts.get("sun", 0) / shell_total
+    effective_rain_share = max(rain_share, rain_shell_share)
+    effective_sun_share = max(sun_share, sun_shell_share)
     diversity_pressure = {
-        "rain_penalty": round(max(0.0, rain_share - 0.26) * 1.7, 4),
-        "sun_support": round(max(0.0, 0.18 - sun_share) * 1.2, 4),
+        "rain_penalty": round(max(0.0, effective_rain_share - 0.26) * 1.7, 4),
+        "sun_support": round(max(0.0, 0.18 - effective_sun_share) * 1.2, 4),
         "weather_diversity_target": 0.26,
-        "applied": rain_share > 0.26,
+        "rain_share": round(rain_share, 4),
+        "sun_share": round(sun_share, 4),
+        "rain_shell_share": round(rain_shell_share, 4),
+        "sun_shell_share": round(sun_shell_share, 4),
+        "applied": effective_rain_share > 0.26,
     }
     learned_weights["archetype_diversity_pressure"] = diversity_pressure
     learned_weights["persistent_shell_count"] = len(shells)
@@ -554,11 +817,17 @@ def merge_current_entries():
     high_level_pool = load_json(CURRENT_FILES["high_level_creator_pool"], {"teams": []})
     current_entries = []
     for team in combined_pool.get("teams", []):
-        current_entries.append(normalize_team_entry(team))
+        normalized = normalize_team_entry(team)
+        if normalized:
+            current_entries.append(normalized)
     for team in team_archive.get("teams", []):
-        current_entries.append(normalize_team_entry({**team, "source_type": "archive", "quality_class": "archive"}))
+        normalized = normalize_team_entry({**team, "source_type": "archive", "quality_class": "archive"})
+        if normalized:
+            current_entries.append(normalized)
     for team in high_level_pool.get("teams", []):
-        current_entries.append(normalize_team_entry(team))
+        normalized = normalize_team_entry(team)
+        if normalized:
+            current_entries.append(normalized)
     deduped = {}
     for entry in current_entries:
         signature = get_shell_signature(entry)

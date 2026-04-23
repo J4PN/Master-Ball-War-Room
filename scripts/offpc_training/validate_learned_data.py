@@ -14,6 +14,17 @@ def assert_range(name: str, value: float, low: float, high: float) -> None:
         raise SystemExit(f"{name} out of range: {numeric} not in [{low}, {high}]")
 
 
+def contains_serialized_slot_blob(value) -> bool:
+    if isinstance(value, str):
+        lowered = value.strip().lower()
+        return lowered.startswith("{") and "base_species" in lowered and "display_species" in lowered
+    if isinstance(value, dict):
+        return any(contains_serialized_slot_blob(field) for field in value.values())
+    if isinstance(value, list):
+        return any(contains_serialized_slot_blob(field) for field in value)
+    return False
+
+
 def validate_team_document(path: Path) -> None:
     payload = read_json(path, {"teams": []})
     if "teams" not in payload:
@@ -25,6 +36,8 @@ def validate_team_document(path: Path) -> None:
             raise SystemExit(f"{path.name} team {index} missing team list")
         if len(row["team"]) > 6:
             raise SystemExit(f"{path.name} team {index} exceeds 6 Pokemon")
+        if contains_serialized_slot_blob(row.get("team", [])):
+            raise SystemExit(f"{path.name} team {index} contains serialized slot blob content")
         assert_range(f"{path.name}.team[{index}].confidence", row.get("confidence", 0.5), 0.1, 1.0)
         assert_range(f"{path.name}.team[{index}].completeness", row.get("completeness", 0.0), 0.0, 1.0)
 
@@ -61,6 +74,8 @@ def main() -> None:
             raise SystemExit(f"teamArchive row {index} has no team list")
         if len(team) > 6:
             raise SystemExit(f"teamArchive row {index} exceeds 6 Pokemon")
+        if contains_serialized_slot_blob(team):
+            raise SystemExit(f"teamArchive row {index} contains serialized slot blob content")
 
     for pool_name in [
         "meta_pool.json",

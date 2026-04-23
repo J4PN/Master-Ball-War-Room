@@ -9,6 +9,7 @@ an approved remote CI environment.
 from __future__ import annotations
 
 import argparse
+import ast
 import json
 import os
 import random
@@ -74,27 +75,74 @@ def normalize_key(value: str) -> str:
     return "".join(ch.lower() for ch in str(value or "") if ch.isalnum())
 
 
+def is_serialized_slot_blob(value) -> bool:
+    if not isinstance(value, str):
+        return False
+    text = str(value or "").strip()
+    if len(text) < 16 or not (text.startswith("{") and text.endswith("}")):
+        return False
+    lowered = text.lower()
+    markers = ("base_species", "display_species", "identity_key", "form_identity", "mega_identity")
+    return sum(marker in lowered for marker in markers) >= 2
+
+
+def try_parse_serialized_slot(value):
+    if not is_serialized_slot_blob(value):
+        return None
+    try:
+        parsed = ast.literal_eval(str(value).strip())
+    except (SyntaxError, ValueError):
+        return None
+    return parsed if isinstance(parsed, dict) else None
+
+
+def recover_team_slot(slot) -> dict:
+    parsed = try_parse_serialized_slot(slot) if isinstance(slot, str) else None
+    if parsed:
+        return recover_team_slot(parsed)
+    if isinstance(slot, dict):
+        for key in ("name", "display_species", "species", "base_species", "form_identity"):
+            nested = try_parse_serialized_slot(slot.get(key))
+            if nested:
+                return recover_team_slot({**nested, **slot})
+        name = ""
+        for key in ("name", "display_species", "species", "base_species", "form_identity"):
+            candidate = str(slot.get(key, "")).strip()
+            if candidate and not is_serialized_slot_blob(candidate):
+                name = candidate
+                break
+        return {
+            "name": name,
+            "item": str(slot.get("item", "")).strip(),
+            "ability": str(slot.get("ability", "")).strip(),
+            "moves": [str(move).strip() for move in slot.get("moves", []) if str(move).strip()] if isinstance(slot.get("moves", []), list) else [],
+            "nature": str(slot.get("nature", "")).strip(),
+            "spreads": slot.get("spreads", {}) if isinstance(slot.get("spreads", {}), dict) else {},
+        }
+    name = str(slot or "").strip()
+    return {
+        "name": name,
+        "item": "",
+        "ability": "",
+        "moves": [],
+        "nature": "",
+        "spreads": {},
+    }
+
+
 def canonical_team_slots(slots: Sequence[dict]) -> List[dict]:
     normalized = []
     seen = set()
     for slot in slots or []:
-        name = str(slot.get("name", "")).strip()
+        recovered = recover_team_slot(slot)
+        name = recovered["name"]
         if not name:
             continue
         key = normalize_key(name)
         if key in seen:
             continue
         seen.add(key)
-        normalized.append(
-            {
-                "name": name,
-                "item": str(slot.get("item", "")).strip(),
-                "ability": str(slot.get("ability", "")).strip(),
-                "moves": [str(move).strip() for move in slot.get("moves", []) if str(move).strip()],
-                "nature": str(slot.get("nature", "")).strip(),
-                "spreads": slot.get("spreads", {}) if isinstance(slot.get("spreads", {}), dict) else {},
-            }
-        )
+        normalized.append(recovered)
         if len(normalized) >= 6:
             break
     return normalized
@@ -102,6 +150,10 @@ def canonical_team_slots(slots: Sequence[dict]) -> List[dict]:
 
 def species_list(team_row: dict) -> List[str]:
     return [slot["name"] for slot in canonical_team_slots(team_row.get("team", []))]
+
+
+def get_summary_team_species_list(team_row: dict) -> List[str]:
+    return species_list(team_row)
 
 
 def species_universe(*pools: Iterable[dict]) -> List[str]:
@@ -462,10 +514,11 @@ def write_summary(results: Sequence[CandidateResult], log_path: Path, iterations
         lines.append(f"- `{source_type}`: {count}")
     lines.extend(["", "## Top Teams", ""])
     for result in results[:6]:
+        summary_species = ", ".join(get_summary_team_species_list({"team": result.team}))
         lines.append(
-            f"- `{result.label}` [{result.source_type}] score `{result.overall:.3f}` confidence `{result.confidence:.2f}`"
+            f"- [{result.source_type}] score `{result.overall:.3f}` confidence `{result.confidence:.2f}`"
         )
-        lines.append(f"  `{', '.join(slot['name'] for slot in result.team)}`")
+        lines.append(f"  `{summary_species}`")
         lines.append(
             f"  meta `{result.by_source['meta']:.3f}` | pikalytics `{result.by_source['pikalytics']:.3f}` | "
             f"reddit `{result.by_source['reddit']:.3f}` | youtube `{result.by_source['youtube']:.3f}` | "
@@ -493,9 +546,9 @@ def main() -> None:
     archive_state = read_json(DATA_DIR / "team_archive.json", {"teams": []})
     archive_pool = [
         make_team_row(
-            label=row.get("label", "archive"),
+            label=row.get("label") or row.get("source_name") or "-".join(species_list({"team": row.get("team", [])})[:2]) or "archive-team",
             source_type="archive",
-            slots=[{"name": name} for name in row.get("team", [])],
+            slots=canonical_team_slots(row.get("team", [])),
             confidence=float(row.get("confidence", 0.85)),
             completeness=0.5,
             tags=["archive"],
