@@ -1,6 +1,7 @@
 import json
 import math
 import os
+import re
 from collections import Counter, defaultdict
 from copy import deepcopy
 from pathlib import Path
@@ -93,6 +94,129 @@ def normalize_text(value):
 
 def slugify(value):
     return normalize_text(value).lower().replace("_", "-")
+
+
+MALFORMED_THREAT_KEY_MARKERS = (
+    "basespecies",
+    "displayspecies",
+    "megastone",
+    "megaidentity",
+    "formidentity",
+    "identitykey",
+    "source_type",
+    "sourcetype",
+    "source_name",
+    "sourcename",
+    "moves",
+    "ability",
+    "item",
+)
+
+
+def extract_clean_species_name(value):
+    if isinstance(value, dict):
+        for key in ("display_species", "species", "name", "base_species"):
+            candidate = normalize_text(value.get(key))
+            if candidate:
+                return candidate
+        return ""
+    if isinstance(value, str):
+        text = normalize_text(value)
+        if not text:
+            return ""
+        lowered = text.lower()
+        if "basespecies" in lowered:
+            match = re.search(r"basespecies([a-z0-9\- .']+?)(displayspecies|item|ability|moves|role|archetype|mega|formidentity|identitykey|$)", lowered)
+            if match:
+                return match.group(1).strip(" -_:.")
+        if "display_species" in lowered or "base_species" in lowered or "species" in lowered:
+            match = re.search(r"(display_species|species|name|base_species)['\"]?\s*[:=]\s*['\"]?([a-z0-9\- .']+)", lowered)
+            if match:
+                return match.group(2).strip(" '\"{},")
+        return text
+    return ""
+
+
+def normalize_species_key(value):
+    species = extract_clean_species_name(value)
+    species = species.replace("Mega ", "").replace("mega ", "")
+    species = re.sub(r"[^A-Za-z0-9]+", "", species).lower()
+    return species
+
+
+def is_malformed_threat_key(key):
+    normalized = normalize_text(key).lower()
+    if not normalized:
+        return True
+    if len(normalized) > 40:
+        return True
+    return any(marker in normalized for marker in MALFORMED_THREAT_KEY_MARKERS)
+
+
+def sanitize_threat_key_map(raw_map):
+    cleaned = {}
+    if not isinstance(raw_map, dict):
+        return cleaned
+    for raw_key, raw_value in raw_map.items():
+        clean_key = normalize_species_key(raw_key)
+        if not clean_key:
+            continue
+        if is_malformed_threat_key(raw_key) and clean_key == normalize_species_key(str(raw_key)):
+            recovered = extract_clean_species_name(raw_key)
+            clean_key = normalize_species_key(recovered)
+        if not clean_key or is_malformed_threat_key(clean_key):
+            continue
+        try:
+            value = float(raw_value)
+        except (TypeError, ValueError):
+            continue
+        cleaned[clean_key] = round(max(cleaned.get(clean_key, 0.0), value), 4)
+    return cleaned
+
+
+def collect_clean_threat_weights(current_entries):
+    counts = Counter()
+    for entry in current_entries:
+        quality = compute_team_quality(entry)
+        for slot in entry.get("team", []):
+            key = normalize_species_key(slot)
+            if key:
+                counts[key] += quality
+    if not counts:
+        return {}
+    max_count = max(counts.values()) or 1.0
+    return {
+        key: round(1.0 + min(1.25, value / max_count), 4)
+        for key, value in counts.items()
+    }
+
+
+def sanitize_learned_threat_weights(learned_weights, current_entries):
+    learned_weights = dict(learned_weights or {})
+    threat_weights = dict(learned_weights.get("threatSeverityWeights") or {})
+    existing_clean = sanitize_threat_key_map(threat_weights.get("byThreat") or {})
+    rebuilt_clean = collect_clean_threat_weights(current_entries)
+    merged = dict(existing_clean)
+    for key, value in rebuilt_clean.items():
+        merged[key] = round(max(merged.get(key, 0.0), value), 4)
+    threat_weights["byThreat"] = {
+        key: merged[key]
+        for key in sorted(merged)
+        if key and not is_malformed_threat_key(key)
+    }
+    learned_weights["threatSeverityWeights"] = threat_weights
+    return learned_weights
+
+
+def sanitize_source_meta_snapshot_threats(snapshot, current_entries):
+    snapshot = dict(snapshot or {})
+    for field in ("byThreat", "threatImportance", "threatPenalties"):
+        if isinstance(snapshot.get(field), dict):
+            snapshot[field] = sanitize_threat_key_map(snapshot[field])
+    rebuilt = collect_clean_threat_weights(current_entries)
+    if rebuilt:
+        snapshot["cleanThreatImportance"] = rebuilt
+    return snapshot
 
 
 def coerce_learning_slot(slot):
@@ -475,6 +599,7 @@ def rewrite_combined_pool(current_entries, diversity_pressure):
 def rewrite_source_meta_snapshot(current_entries, diversity_pressure):
     archetype_counts = Counter(entry.get("archetype") or "unknown" for entry in current_entries)
     payload = load_json(CURRENT_FILES["source_meta_snapshot"], {})
+    payload = sanitize_source_meta_snapshot_threats(payload, current_entries)
     payload["persistent_archetype_counts"] = dict(archetype_counts)
     payload["archetype_diversity_pressure"] = diversity_pressure
     payload["top_sources"] = Counter(entry.get("source_name") or entry.get("source_type") for entry in current_entries).most_common(12)
@@ -485,6 +610,7 @@ def main():
     require_remote_only()
     current_entries = merge_current_entries()
     learned_weights = load_json(CURRENT_FILES["learned_weights"], {})
+    learned_weights = sanitize_learned_threat_weights(learned_weights, current_entries)
     training_history = build_training_history(current_entries, load_json(PERSISTENT_FILES["training_history"], {"runs": []}))
     shell_memory = merge_persistent_shell_memory(current_entries, load_json(PERSISTENT_FILES["persistent_shell_memory"], {"shells": []}))
     archetype_memory = merge_archetype_memory(current_entries, load_json(PERSISTENT_FILES["persistent_archetype_memory"], {"archetypes": {}}))
