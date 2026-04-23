@@ -11233,3 +11233,279 @@ function installAutobuilderMovesetQualityPatch() {
 }
 
 installAutobuilderMovesetQualityPatch();
+
+const WEATHER_STABILITY_SETTERS = {
+  rain: ["Pelipper", "Politoed", "Kyogre"],
+  sun: ["Torkoal", "Ninetales", "Mega Charizard Y", "Groudon"],
+  sand: ["Tyranitar", "Mega Tyranitar", "Hippowdon"],
+  snow: ["Alolan Ninetales", "Abomasnow"],
+};
+
+const WEATHER_STABILITY_ABUSERS = {
+  rain: ["Basculegion", "Barraskewda", "Kingdra", "Archaludon", "Floatzel", "Ludicolo"],
+  sun: ["Venusaur", "Lilligant", "Walking Wake", "Charizard", "Mega Charizard Y", "Torkoal"],
+  sand: ["Excadrill", "Dracozolt", "Lycanroc", "Garchomp"],
+  snow: ["Cetitan", "Baxcalibur", "Alolan Ninetales"],
+};
+
+const INDEPENDENT_PRESSURE_SPECIES = new Set([
+  "Incineroar",
+  "Garchomp",
+  "Kingambit",
+  "Dragonite",
+  "Flutter Mane",
+  "Rillaboom",
+  "Landorus-Therian",
+  "Iron Hands",
+  "Urshifu",
+  "Amoonguss",
+  "Farigiraf",
+  "Sinistcha",
+]);
+
+function getTeamSpeciesNames(teamState = []) {
+  return (teamState || []).map(getTeamEntrySpeciesName).filter(Boolean);
+}
+
+function getTeamMoveNames(teamState = []) {
+  return (teamState || []).flatMap(getTeamEntryMoves).filter(Boolean);
+}
+
+function getPrimaryWeatherArchetype(structureReport = null, teamState = []) {
+  const archetype = inferMovesetArchetype(structureReport, teamState);
+  if (["rain", "sun", "sand", "snow"].includes(archetype)) {
+    return archetype;
+  }
+  const species = getTeamSpeciesNames(teamState);
+  return Object.keys(WEATHER_STABILITY_SETTERS).find((weather) =>
+    (WEATHER_STABILITY_SETTERS[weather] || []).some((setter) => species.includes(setter))
+  ) || "";
+}
+
+function getWeatherSetterCount(teamState = [], weather = "") {
+  const species = getTeamSpeciesNames(teamState);
+  return (WEATHER_STABILITY_SETTERS[weather] || []).filter((setter) => species.includes(setter)).length;
+}
+
+function getWeatherAbuserCount(teamState = [], weather = "") {
+  const species = getTeamSpeciesNames(teamState);
+  return (WEATHER_STABILITY_ABUSERS[weather] || []).filter((abuser) => species.includes(abuser)).length;
+}
+
+function getNoWeatherFallbackScore(teamState = [], structureReport = null) {
+  const species = getTeamSpeciesNames(teamState);
+  const moves = getTeamMoveNames(teamState);
+  let score = 0;
+  const independentPressure = species.filter((name) => INDEPENDENT_PRESSURE_SPECIES.has(name)).length;
+  score += independentPressure * 10;
+  if (moves.includes("Tailwind")) score += 10;
+  if (moves.includes("Trick Room")) score += 10;
+  if (moves.includes("Fake Out")) score += 7;
+  if (moves.includes("Rage Powder") || moves.includes("Follow Me")) score += 7;
+  if (moves.includes("Parting Shot") || moves.includes("Volt Switch") || moves.includes("U-turn") || moves.includes("Flip Turn")) score += 6;
+  const weather = getPrimaryWeatherArchetype(structureReport, teamState);
+  const abuserCount = getWeatherAbuserCount(teamState, weather);
+  if (weather && abuserCount >= 3 && independentPressure <= 1) score -= 18;
+  if (weather && abuserCount >= 2 && independentPressure <= 0) score -= 14;
+  return Math.max(0, Math.min(60, score));
+}
+
+function getWeatherFragilityPenalty(teamState = [], structureReport = null) {
+  const weather = getPrimaryWeatherArchetype(structureReport, teamState);
+  if (!weather) return 0;
+  const setterCount = getWeatherSetterCount(teamState, weather);
+  const abuserCount = getWeatherAbuserCount(teamState, weather);
+  const fallbackScore = getNoWeatherFallbackScore(teamState, structureReport);
+  let penalty = 0;
+  if (setterCount <= 0) penalty += 18;
+  if (setterCount === 1 && abuserCount >= 2) penalty += 18;
+  if (abuserCount >= 3) penalty += 10;
+  if (fallbackScore < 18) penalty += 18;
+  if (fallbackScore < 10) penalty += 10;
+  return penalty;
+}
+
+function getSinglePointOfFailurePenalty(teamState = [], structureReport = null) {
+  const species = getTeamSpeciesNames(teamState);
+  const moves = getTeamMoveNames(teamState);
+  const weather = getPrimaryWeatherArchetype(structureReport, teamState);
+  let penalty = 0;
+  if (weather && getWeatherSetterCount(teamState, weather) === 1 && getWeatherAbuserCount(teamState, weather) >= 2) {
+    penalty += 14;
+  }
+  if (moves.includes("Trick Room") && moves.filter((move) => move === "Trick Room").length === 1) {
+    penalty += 12;
+  }
+  if (moves.includes("Tailwind") && moves.filter((move) => move === "Tailwind").length === 1) {
+    penalty += 8;
+  }
+  const uniquePressure = species.filter((name) => INDEPENDENT_PRESSURE_SPECIES.has(name)).length;
+  if (uniquePressure <= 1 && species.length >= 5) penalty += 8;
+  return penalty;
+}
+
+function getTempoDependencyPenalty(teamState = [], structureReport = null) {
+  const moves = getTeamMoveNames(teamState);
+  let penalty = 0;
+  const setupMoves = ["Tailwind", "Trick Room", "Swords Dance", "Nasty Plot"];
+  const setupCount = moves.filter((move) => setupMoves.includes(move)).length;
+  const immediateDisruption = moves.filter((move) => ["Fake Out", "Rage Powder", "Follow Me", "Protect", "Parting Shot"].includes(move)).length;
+  if (setupCount >= 2 && immediateDisruption <= 1) penalty += 10;
+  if (setupCount >= 1 && !moves.includes("Protect")) penalty += 8;
+  return penalty;
+}
+
+function getSetupDisruptionPenalty(teamState = [], structureReport = null) {
+  const moves = getTeamMoveNames(teamState);
+  let penalty = 0;
+  if ((moves.includes("Tailwind") || moves.includes("Trick Room")) && !moves.includes("Fake Out") && !moves.includes("Rage Powder") && !moves.includes("Follow Me")) {
+    penalty += 12;
+  }
+  if (!moves.includes("Protect") && getTeamSpeciesNames(teamState).length >= 5) {
+    penalty += 10;
+  }
+  return penalty;
+}
+
+function getPredictabilityPenalty(teamState = [], structureReport = null) {
+  const weather = getPrimaryWeatherArchetype(structureReport, teamState);
+  const species = getTeamSpeciesNames(teamState);
+  let penalty = 0;
+  if (weather && getWeatherSetterCount(teamState, weather) === 1 && getWeatherAbuserCount(teamState, weather) >= 3) {
+    penalty += 12;
+  }
+  const repeatedCoreSignals = ["Pelipper", "Basculegion", "Whimsicott", "Archaludon"].filter((name) => species.includes(name)).length;
+  if (repeatedCoreSignals >= 3 && getNoWeatherFallbackScore(teamState, structureReport) < 24) {
+    penalty += 10;
+  }
+  return penalty;
+}
+
+function getDisruptionSusceptibilityPenalty(teamState = [], structureReport = null) {
+  return (
+    getTempoDependencyPenalty(teamState, structureReport) +
+    getSetupDisruptionPenalty(teamState, structureReport) +
+    getPredictabilityPenalty(teamState, structureReport)
+  );
+}
+
+function getCounterplayExposurePenalty(teamState = [], threatRows = [], structureReport = null) {
+  const species = getTeamSpeciesNames(teamState);
+  const weather = getPrimaryWeatherArchetype(structureReport, teamState);
+  let penalty = 0;
+  if (weather) {
+    const opposingWeatherThreats = (threatRows || []).filter((row) => {
+      const name = row?.name || row?.species || row?.threat || "";
+      return ["Torkoal", "Ninetales", "Mega Charizard Y", "Tyranitar", "Mega Tyranitar", "Abomasnow", "Pelipper"].includes(name) && !species.includes(name);
+    }).length;
+    penalty += Math.min(18, opposingWeatherThreats * 6);
+  }
+  const fakeOutWeak = !getTeamMoveNames(teamState).some((move) => ["Protect", "Covert Cloak", "Rage Powder", "Follow Me"].includes(move));
+  if (fakeOutWeak) penalty += 8;
+  return penalty;
+}
+
+function getLinearityPenalty(teamState = [], structureReport = null) {
+  const weather = getPrimaryWeatherArchetype(structureReport, teamState);
+  const species = getTeamSpeciesNames(teamState);
+  const moves = getTeamMoveNames(teamState);
+  let penalty = 0;
+  const pivotTools = moves.filter((move) => ["Parting Shot", "Volt Switch", "U-turn", "Flip Turn"].includes(move)).length;
+  const speedModes = [moves.includes("Tailwind"), moves.includes("Trick Room"), weather !== ""].filter(Boolean).length;
+  if (speedModes <= 1 && species.length >= 5) penalty += 8;
+  if (pivotTools <= 0 && species.length >= 5) penalty += 8;
+  if (weather && getWeatherAbuserCount(teamState, weather) >= 3 && getNoWeatherFallbackScore(teamState, structureReport) < 24) {
+    penalty += 14;
+  }
+  return penalty;
+}
+
+function getPrimaryPlanCollapsePenalty(teamState = [], structureReport = null) {
+  const fallbackScore = getNoWeatherFallbackScore(teamState, structureReport);
+  const singlePointPenalty = getSinglePointOfFailurePenalty(teamState, structureReport);
+  return Math.max(0, singlePointPenalty + Math.max(0, 24 - fallbackScore));
+}
+
+function getArchetypeStabilityScore(teamState = [], structureReport = null, threatRows = []) {
+  const archetype = inferMovesetArchetype(structureReport, teamState);
+  const noWeatherFallbackScore = getNoWeatherFallbackScore(teamState, structureReport);
+  const weatherFragility = getWeatherFragilityPenalty(teamState, structureReport);
+  const singlePointOfFailurePenalty = getSinglePointOfFailurePenalty(teamState, structureReport);
+  const disruptionSusceptibility = getDisruptionSusceptibilityPenalty(teamState, structureReport);
+  const counterplayExposure = getCounterplayExposurePenalty(teamState, threatRows, structureReport);
+  const linearityPenalty = getLinearityPenalty(teamState, structureReport);
+  const primaryPlanCollapsePenalty = getPrimaryPlanCollapsePenalty(teamState, structureReport);
+  const totalPenalty = weatherFragility + singlePointOfFailurePenalty + disruptionSusceptibility + counterplayExposure + linearityPenalty + primaryPlanCollapsePenalty;
+  const stabilityScore = Math.max(0, Math.min(100, 58 + noWeatherFallbackScore - totalPenalty));
+  const finalResilienceAdjustment = Math.max(-38, Math.min(26, (stabilityScore - 50) * 0.55));
+  const reasons = [];
+  if (weatherFragility > 0) reasons.push("weather plan has fragility risk");
+  if (noWeatherFallbackScore >= 28) reasons.push("credible fallback plan without ideal weather");
+  if (singlePointOfFailurePenalty > 0) reasons.push("primary plan depends on too few pieces");
+  if (disruptionSusceptibility > 0) reasons.push("setup or tempo can be disrupted");
+  if (linearityPenalty > 0) reasons.push("team is too linear without enough secondary mode support");
+  if (!reasons.length) reasons.push("stable role and matchup structure");
+  return {
+    archetype,
+    stabilityScore,
+    weatherFragility,
+    noWeatherFallbackScore,
+    singlePointOfFailurePenalty,
+    disruptionSusceptibility,
+    counterplayExposure,
+    linearityPenalty,
+    primaryPlanCollapsePenalty,
+    finalResilienceAdjustment,
+    reasons,
+  };
+}
+
+function installArchetypeStabilityRankingPatch() {
+  if (typeof evaluateTeamState !== "function" || evaluateTeamState.__mbwrStabilityPatchApplied) {
+    return;
+  }
+  const originalEvaluateTeamState = evaluateTeamState;
+  evaluateTeamState = function patchedEvaluateTeamStateStability(teamState, structureReport, ...rest) {
+    const result = originalEvaluateTeamState.call(this, teamState, structureReport, ...rest);
+    const threatRows = result?.threatRows || result?.metaThreats || [];
+    const stabilitySummary = getArchetypeStabilityScore(Array.isArray(teamState) ? teamState : [], structureReport || null, threatRows);
+    if (result && typeof result === "object") {
+      result.archetypeStability = stabilitySummary;
+      if (typeof result.metaMatchupScore === "number") {
+        result.metaMatchupScore = clampScore(result.metaMatchupScore + stabilitySummary.finalResilienceAdjustment);
+      }
+      if (typeof result.score === "number") {
+        result.score = clampScore(result.score + stabilitySummary.finalResilienceAdjustment);
+      }
+      if (typeof result.totalScore === "number") {
+        result.totalScore = clampScore(result.totalScore + stabilitySummary.finalResilienceAdjustment);
+      }
+    }
+    if (typeof window !== "undefined") {
+      window.__MBWR_STABILITY_DEBUG = window.__MBWR_STABILITY_DEBUG || [];
+      window.__MBWR_WEATHER_FRAGILITY_DEBUG = window.__MBWR_WEATHER_FRAGILITY_DEBUG || [];
+      window.__MBWR_STABILITY_DEBUG.push({
+        team: getTeamSpeciesNames(Array.isArray(teamState) ? teamState : []),
+        ...stabilitySummary,
+      });
+      window.__MBWR_WEATHER_FRAGILITY_DEBUG.push({
+        team: getTeamSpeciesNames(Array.isArray(teamState) ? teamState : []),
+        archetype: stabilitySummary.archetype,
+        weatherFragility: stabilitySummary.weatherFragility,
+        noWeatherFallbackScore: stabilitySummary.noWeatherFallbackScore,
+        finalResilienceAdjustment: stabilitySummary.finalResilienceAdjustment,
+        why: stabilitySummary.reasons.slice(),
+      });
+      if (window.__MBWR_STABILITY_DEBUG.length > 200) {
+        window.__MBWR_STABILITY_DEBUG = window.__MBWR_STABILITY_DEBUG.slice(-200);
+      }
+      if (window.__MBWR_WEATHER_FRAGILITY_DEBUG.length > 200) {
+        window.__MBWR_WEATHER_FRAGILITY_DEBUG = window.__MBWR_WEATHER_FRAGILITY_DEBUG.slice(-200);
+      }
+    }
+    return result;
+  };
+  evaluateTeamState.__mbwrStabilityPatchApplied = true;
+}
+
+installArchetypeStabilityRankingPatch();
