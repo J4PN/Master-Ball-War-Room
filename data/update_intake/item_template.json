@@ -1,0 +1,47 @@
+{
+  "entity_type": "item",
+  "item": "",
+  "category": "",
+  "effect": "",
+  "champions_legal": null,
+  "baseline_data": {
+    "category": "",
+    "effect": ""
+  },
+  "champions_overrides": {
+    "category_override": "",
+    "effect_override": "",
+    "related_forms": []
+  },
+  "current_champions_registry": {
+    "present_in_registry": false,
+    "category": "",
+    "effect": ""
+  },
+  "patch_note_reference": "TBD",
+  "source_evidence": [],
+  "source_notes": [],
+  "verification_status": "unverified",
+  "verification": {
+    "status": "unverified",
+    "checklist": {
+      "official_patch_notes_checked": false,
+      "existing_source_files_checked": false,
+      "moveset_legality_verified": false,
+      "ability_legality_verified": false,
+      "item_form_legality_verified": false,
+      "calc_compatibility_verified": false
+    },
+    "sources": [],
+    "uncertainty_notes": [
+      "Item behavior can diverge from cartridge behavior in Champions."
+    ],
+    "reviewed_by": "",
+    "reviewed_at": null
+  },
+  "apply_targets": [
+    "items.json",
+    "items-data.js",
+    "app.js"
+  ]
+}

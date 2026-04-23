@@ -1,0 +1,66 @@
+{
+  "entity_type": "pokemon",
+  "species": "",
+  "forms": [],
+  "base_stats": {},
+  "abilities": [],
+  "hidden_ability": "",
+  "typing": [],
+  "legal_items": [],
+  "champions_legal": null,
+  "champions_specific_moves": [],
+  "removed_moves": [],
+  "new_moves": [],
+  "baseline_data": {
+    "typing": [],
+    "base_stats": {},
+    "abilities": [],
+    "hidden_ability": "",
+    "standard_moves": [],
+    "legal_items": []
+  },
+  "champions_overrides": {
+    "typing_override": [],
+    "base_stat_overrides": {},
+    "ability_overrides": [],
+    "champions_specific_moves": [],
+    "removed_moves": [],
+    "new_moves": [],
+    "form_overrides": [],
+    "item_overrides": [],
+    "mega_behavior_notes": []
+  },
+  "current_champions_registry": {
+    "present_in_registry": false,
+    "types": [],
+    "base_stats": [],
+    "legal_moves": [],
+    "abilities": []
+  },
+  "patch_note_reference": "TBD",
+  "source_evidence": [],
+  "source_notes": [],
+  "verification_status": "unverified",
+  "verification": {
+    "status": "unverified",
+    "checklist": {
+      "official_patch_notes_checked": false,
+      "existing_source_files_checked": false,
+      "moveset_legality_verified": false,
+      "ability_legality_verified": false,
+      "item_form_legality_verified": false,
+      "calc_compatibility_verified": false
+    },
+    "sources": [],
+    "uncertainty_notes": [
+      "Do not assume cartridge legality equals Champions legality."
+    ],
+    "reviewed_by": "",
+    "reviewed_at": null
+  },
+  "apply_targets": [
+    "champions_database_complete.js",
+    "abilities-data.js",
+    "app.js"
+  ]
+}

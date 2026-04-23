@@ -1,0 +1,49 @@
+{
+  "entity_type": "move",
+  "move": "",
+  "move_type": "",
+  "category": "",
+  "power": null,
+  "accuracy": null,
+  "champions_legal": null,
+  "baseline_data": {
+    "move_type": "",
+    "category": "",
+    "power": null,
+    "accuracy": null
+  },
+  "champions_overrides": {
+    "power_override": null,
+    "accuracy_override": null,
+    "distribution_notes": []
+  },
+  "current_champions_registry": {
+    "present_in_registry": false
+  },
+  "patch_note_reference": "TBD",
+  "source_evidence": [],
+  "source_notes": [],
+  "verification_status": "unverified",
+  "verification": {
+    "status": "unverified",
+    "checklist": {
+      "official_patch_notes_checked": false,
+      "existing_source_files_checked": false,
+      "moveset_legality_verified": false,
+      "ability_legality_verified": false,
+      "item_form_legality_verified": false,
+      "calc_compatibility_verified": false
+    },
+    "sources": [],
+    "uncertainty_notes": [
+      "Move distribution must be verified in Champions instead of inferred."
+    ],
+    "reviewed_by": "",
+    "reviewed_at": null
+  },
+  "apply_targets": [
+    "champions_database_complete.js",
+    "pokemon_move_discourage_policy.json",
+    "app.js"
+  ]
+}
