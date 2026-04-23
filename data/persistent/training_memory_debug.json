@@ -1,18 +1,18 @@
 {
-  "prior_runs_reused": 6,
+  "prior_runs_reused": 7,
   "persistent_shells_retained": 220,
   "mega_identities": [],
   "archetype_counts": {
     "unknown": {
-      "count": 4661,
-      "quality_score": 4.5446,
+      "count": 4783,
+      "quality_score": 4.3496,
       "mega_count": 0,
       "anti_rain_count": 0,
       "weather_count": 0
     },
     "pivot-balance": {
-      "count": 4,
-      "quality_score": 2.7956,
+      "count": 5,
+      "quality_score": 3.2682,
       "mega_count": 0,
       "anti_rain_count": 0,
       "weather_count": 0
@@ -25,11 +25,11 @@
       "weather_count": 0
     },
     "rain": {
-      "count": 8,
-      "quality_score": 2.9065,
+      "count": 9,
+      "quality_score": 2.9916,
       "mega_count": 0,
       "anti_rain_count": 0,
-      "weather_count": 8
+      "weather_count": 9
     },
     "balance": {
       "count": 4,
@@ -39,8 +39,8 @@
       "weather_count": 0
     },
     "fast-offense": {
-      "count": 4,
-      "quality_score": 2.3006,
+      "count": 5,
+      "quality_score": 2.6895,
       "mega_count": 0,
       "anti_rain_count": 0,
       "weather_count": 0
@@ -57,7 +57,7 @@
     "rain_penalty": 0.0,
     "sun_support": 0.216,
     "weather_diversity_target": 0.26,
-    "rain_share": 0.0017,
+    "rain_share": 0.0019,
     "sun_share": 0.0,
     "rain_shell_share": 0.0091,
     "sun_shell_share": 0.0,

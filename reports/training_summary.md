@@ -1,33 +1,45 @@
 # Off-PC Training Summary
 
-- Timestamp: 2026-04-23T16:32:01+00:00
+- Timestamp: 2026-04-23T22:51:40+00:00
 - Candidate iterations: 1000
-- Evaluated candidates: 688
-- Battle log: `data/battle_logs/training-20260423T163201Z.jsonl`
+- Evaluated candidates: 9
+- Battle log: `data/battle_logs/training-20260423T225140Z.jsonl`
 
 ## Source Counts
 
-- `archive`: 52
-- `random`: 2
-- `selfplay`: 634
+- `meta`: 1
+- `pikalytics`: 1
+- `reddit`: 1
+- `youtube`: 2
+- `archive`: 1
+- `selfplay`: 3
+
+## Source Share
+
+- `meta`: 11.1%
+- `pikalytics`: 11.1%
+- `reddit`: 11.1%
+- `youtube`: 22.2%
+- `archive`: 11.1%
+- `selfplay`: 33.3%
 
 ## Top Teams
 
-- [archive] score `0.676` confidence `0.87`
-  `Pelipper, Basculegion, Incineroar, Whimsicott, Archaludon, Garchomp`
-  meta `0.776` | pikalytics `0.902` | reddit `0.654` | youtube `0.572` | archive `0.623` | random `0.307` | selfplay `0.469`
-- [archive] score `0.679` confidence `0.84`
+- [pikalytics] score `0.637` confidence `0.97`
   `Incineroar, Whimsicott, Garchomp, Sinistcha, Kingambit, Pelipper`
-  meta `0.782` | pikalytics `0.908` | reddit `0.660` | youtube `0.575` | archive `0.625` | random `0.301` | selfplay `0.466`
-- [archive] score `0.680` confidence `0.74`
-  `Incineroar, Starmie, Garchomp, Whimsicott, Kingambit, Pelipper`
-  meta `0.792` | pikalytics `0.918` | reddit `0.652` | youtube `0.560` | archive `0.623` | random `0.301` | selfplay `0.465`
-- [archive] score `0.698` confidence `0.72`
+  meta `0.777` | pikalytics `0.903` | high_level `0.500` | reddit `0.658` | youtube `0.573` | archive `0.566` | random `0.302` | selfplay `0.317`
+- [youtube] score `0.653` confidence `0.84`
   `Incineroar, Garchomp, Whimsicott, Starmie, Dragonite, Rotom-Wash`
-  meta `0.828` | pikalytics `0.951` | reddit `0.675` | youtube `0.548` | archive `0.628` | random `0.300` | selfplay `0.464`
-- [archive] score `0.695` confidence `0.64`
+  meta `0.823` | pikalytics `0.947` | high_level `0.500` | reddit `0.673` | youtube `0.547` | archive `0.570` | random `0.301` | selfplay `0.316`
+- [meta] score `0.614` confidence `0.80`
+  `Pelipper, Basculegion, Incineroar, Whimsicott, Archaludon, Garchomp`
+  meta `0.739` | pikalytics `0.867` | high_level `0.500` | reddit `0.633` | youtube `0.556` | archive `0.537` | random `0.297` | selfplay `0.309`
+- [reddit] score `0.652` confidence `0.69`
   `Pelipper, Basculegion, Incineroar, Whimsicott`
-  meta `0.812` | pikalytics `0.936` | reddit `0.660` | youtube `0.585` | archive `0.633` | random `0.307` | selfplay `0.474`
-- [archive] score `0.697` confidence `0.55`
+  meta `0.808` | pikalytics `0.933` | high_level `0.500` | reddit `0.658` | youtube `0.584` | archive `0.580` | random `0.307` | selfplay `0.323`
+- [archive] score `0.616` confidence `0.68`
+  `Incineroar, Starmie, Garchomp, Whimsicott, Kingambit, Pelipper`
+  meta `0.752` | pikalytics `0.879` | high_level `0.500` | reddit `0.630` | youtube `0.542` | archive `0.536` | random `0.290` | selfplay `0.306`
+- [youtube] score `0.656` confidence `0.50`
   `Incineroar, Garchomp, Starmie, Whimsicott`
-  meta `0.821` | pikalytics `0.945` | reddit `0.671` | youtube `0.556` | archive `0.631` | random `0.306` | selfplay `0.473`
+  meta `0.821` | pikalytics `0.945` | high_level `0.500` | reddit `0.672` | youtube `0.557` | archive `0.581` | random `0.307` | selfplay `0.323`

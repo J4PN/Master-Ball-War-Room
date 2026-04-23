@@ -2,14 +2,14 @@
   "sources": {
     "archive": {
       "quality_class": "archive",
-      "sample_count": 66,
-      "reliability_score": 5.2738,
+      "sample_count": 77,
+      "reliability_score": 5.1033,
       "tags": []
     },
     "self-generated": {
       "quality_class": "archive",
-      "sample_count": 3583,
-      "reliability_score": 3.5753,
+      "sample_count": 3648,
+      "reliability_score": 3.9627,
       "tags": [
         "selfplay",
         "generated",
@@ -34,8 +34,8 @@
     },
     "Pikalytics Champions snapshot": {
       "quality_class": "unknown",
-      "sample_count": 4,
-      "reliability_score": 2.8386,
+      "sample_count": 5,
+      "reliability_score": 3.3336,
       "tags": [
         "pikalytics",
         "meta"
@@ -53,8 +53,8 @@
     },
     "r/stunfisk post": {
       "quality_class": "archive",
-      "sample_count": 8,
-      "reliability_score": 2.9953,
+      "sample_count": 9,
+      "reliability_score": 3.0979,
       "tags": [
         "reddit",
         "community",
@@ -73,8 +73,8 @@
     },
     "Curated YouTube showcase team": {
       "quality_class": "unknown",
-      "sample_count": 4,
-      "reliability_score": 2.336,
+      "sample_count": 5,
+      "reliability_score": 2.7433,
       "tags": [
         "youtube",
         "curated",
@@ -83,8 +83,8 @@
     },
     "team_archive": {
       "quality_class": "archive",
-      "sample_count": 989,
-      "reliability_score": 4.0859,
+      "sample_count": 1035,
+      "reliability_score": 3.9634,
       "tags": [
         "archive"
       ]
