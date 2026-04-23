@@ -82,11 +82,14 @@ def main() -> None:
         "random_pool.json",
         "self_play_pool.json",
         "pikalytics_pool.json",
+        "high_level_creator_pool.json",
         "reddit_pool.json",
         "youtube_pool.json",
         "combined_training_pool.json",
     ]:
-        validate_team_document(NORMALIZED_DIR / pool_name)
+        path = NORMALIZED_DIR / pool_name
+        if path.exists():
+            validate_team_document(path)
 
     source_snapshot = read_json(NORMALIZED_DIR / "source_meta_snapshot.json", {"threats": []})
     for index, row in enumerate(source_snapshot.get("threats", [])):

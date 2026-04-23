@@ -66,16 +66,17 @@ def main():
     reddit = load_json(RAW_REDDIT, {"entries": []})
     normalized = {"teams": []}
 
-    for source_bucket, source_type in ((youtube.get("entries", []), "youtube"), (reddit.get("entries", []), "reddit")):
+    for source_bucket, origin_source_type in ((youtube.get("entries", []), "youtube"), (reddit.get("entries", []), "reddit")):
         for entry in source_bucket:
             source_name = str(entry.get("source_name") or entry.get("channel") or entry.get("author") or "")
             matched = match_registry_entry(source_name, registry)
             if not matched:
                 continue
             quality_class = matched.get("quality_class", "high_level_analysis")
-            tags = list(dict.fromkeys((matched.get("tags", []) or []) + (entry.get("tags", []) or [])))
+            tags = list(dict.fromkeys((matched.get("tags", []) or []) + (entry.get("tags", []) or []) + ["high_level", origin_source_type]))
             normalized["teams"].append({
-                "source_type": source_type,
+                "source_type": "high_level",
+                "origin_source_type": origin_source_type,
                 "source_name": source_name,
                 "source_url": entry.get("source_url") or entry.get("url") or "",
                 "quality_class": quality_class,
@@ -89,9 +90,10 @@ def main():
     for entry in curated_imports:
         source_name = entry.get("source_name") or "curated_high_level"
         quality_class = entry.get("quality_class", "high_level_analysis")
-        tags = entry.get("tags", []) or []
+        tags = list(dict.fromkeys((entry.get("tags", []) or []) + ["high_level", "creator"]))
         normalized["teams"].append({
-            "source_type": "curated_high_level",
+            "source_type": "high_level",
+            "origin_source_type": "creator",
             "source_name": source_name,
             "source_url": entry.get("source_url") or "",
             "quality_class": quality_class,

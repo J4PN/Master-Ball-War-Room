@@ -61,10 +61,12 @@ SOURCE_QUALITY_WEIGHTS = {
     "niche_showcase": 0.95,
     "experimental_high_level": 0.92,
     "entertainment_low_confidence": 0.65,
+    "high_level": 1.08,
+    "creator": 1.06,
     "archive": 1.12,
     "meta": 1.05,
     "random": 0.55,
-    "selfplay": 0.78,
+    "selfplay": 0.62,
 }
 
 

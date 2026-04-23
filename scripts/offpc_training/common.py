@@ -19,10 +19,11 @@ NORMALIZED_DIR = DATA_DIR / "normalized"
 SOURCE_CONFIDENCE_DEFAULTS = {
     "meta": 1.0,
     "pikalytics": 0.96,
+    "high_level": 0.9,
     "archive": 0.9,
     "reddit": 0.72,
     "youtube": 0.62,
-    "selfplay": 0.58,
+    "selfplay": 0.4,
     "random": 0.35,
 }
 
@@ -135,4 +136,3 @@ def build_pool_document(source_type: str, teams: Sequence[dict], notes: str = ""
         "notes": notes,
         "teams": list(teams),
     }
-
