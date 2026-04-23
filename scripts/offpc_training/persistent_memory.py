@@ -95,6 +95,32 @@ def slugify(value):
     return normalize_text(value).lower().replace("_", "-")
 
 
+def coerce_learning_slot(slot):
+    if isinstance(slot, str):
+        return {
+            "name": slot,
+            "species": slot,
+            "item": "",
+            "mega_stone": "",
+            "ability": "",
+            "moves": [],
+            "role": "",
+            "archetype": "",
+        }
+    if isinstance(slot, dict):
+        return slot
+    return {
+        "name": "",
+        "species": "",
+        "item": "",
+        "mega_stone": "",
+        "ability": "",
+        "moves": [],
+        "role": "",
+        "archetype": "",
+    }
+
+
 def get_learning_species_identity(slot):
     return normalize_text(
         slot.get("base_species")
@@ -125,7 +151,7 @@ def get_learning_form_identity(slot):
 
 
 def canonicalize_learning_slot(slot):
-    slot = deepcopy(slot or {})
+    slot = deepcopy(coerce_learning_slot(slot))
     base_species = get_learning_species_identity(slot)
     mega_identity = get_learning_mega_identity(slot)
     form_identity = get_learning_form_identity(slot)
@@ -154,9 +180,10 @@ def normalize_team_entry(entry, fallback_archetype=""):
     team = []
     members = entry.get("team") or entry.get("members") or []
     for slot in members:
+        coerced_slot = coerce_learning_slot(slot)
         normalized = canonicalize_learning_slot({
-            **slot,
-            "archetype": slot.get("archetype") or entry.get("archetype") or fallback_archetype,
+            **coerced_slot,
+            "archetype": coerced_slot.get("archetype") or entry.get("archetype") or fallback_archetype,
         })
         if normalized["base_species"] or normalized["form_identity"]:
             team.append(normalized)
