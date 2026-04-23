@@ -2,13 +2,13 @@
   "sources": {
     "archive": {
       "quality_class": "archive",
-      "sample_count": 93,
-      "reliability_score": 5.4633,
+      "sample_count": 114,
+      "reliability_score": 5.2765,
       "tags": []
     },
     "self-generated": {
       "quality_class": "archive",
-      "sample_count": 3707,
+      "sample_count": 3765,
       "reliability_score": 3.8371,
       "tags": [
         "selfplay",
@@ -83,7 +83,7 @@
     },
     "team_archive": {
       "quality_class": "archive",
-      "sample_count": 1075,
+      "sample_count": 1103,
       "reliability_score": 3.9634,
       "tags": [
         "archive"
@@ -118,17 +118,17 @@
       ]
     },
     "archiveteamarchive": {
-      "quality_class": "unknown",
-      "sample_count": 1,
-      "reliability_score": 0.4297,
+      "quality_class": "archive",
+      "sample_count": 3,
+      "reliability_score": 1.2254,
       "tags": [
         "archive"
       ]
     },
     "pikalyticscuratedpikalyticsimportpelipperbasculegionincineroarwhimsicottarchaludongarchomp": {
       "quality_class": "unknown",
-      "sample_count": 1,
-      "reliability_score": 0.8991,
+      "sample_count": 2,
+      "reliability_score": 1.6814,
       "tags": [
         "pikalytics",
         "meta",
@@ -137,8 +137,8 @@
     },
     "pikalyticspikalyticschampionssnapshotincineroarwhimsicottgarchompsinistchakingambitpelipper": {
       "quality_class": "unknown",
-      "sample_count": 1,
-      "reliability_score": 0.8794,
+      "sample_count": 2,
+      "reliability_score": 1.6445,
       "tags": [
         "pikalytics",
         "meta"
@@ -146,8 +146,8 @@
     },
     "youtubecuratedyoutubeshowcaseteamincineroargarchompwhimsicottstarmiedragoniterotomwash": {
       "quality_class": "unknown",
-      "sample_count": 1,
-      "reliability_score": 0.7653,
+      "sample_count": 2,
+      "reliability_score": 1.4311,
       "tags": [
         "youtube",
         "curated",
@@ -156,8 +156,8 @@
     },
     "redditcuratedredditbalanceteamincineroarstarmiegarchompwhimsicottkingambitpelipper": {
       "quality_class": "unknown",
-      "sample_count": 1,
-      "reliability_score": 0.7849,
+      "sample_count": 2,
+      "reliability_score": 1.4678,
       "tags": [
         "reddit",
         "curated",
@@ -165,9 +165,9 @@
       ]
     },
     "generated154": {
-      "quality_class": "unknown",
-      "sample_count": 1,
-      "reliability_score": 0.3662,
+      "quality_class": "archive",
+      "sample_count": 2,
+      "reliability_score": 0.7666,
       "tags": [
         "selfplay",
         "generated",
@@ -175,9 +175,9 @@
       ]
     },
     "generated664": {
-      "quality_class": "unknown",
-      "sample_count": 1,
-      "reliability_score": 0.3662,
+      "quality_class": "archive",
+      "sample_count": 2,
+      "reliability_score": 0.7666,
       "tags": [
         "selfplay",
         "generated",
@@ -185,9 +185,9 @@
       ]
     },
     "generated346": {
-      "quality_class": "unknown",
-      "sample_count": 1,
-      "reliability_score": 0.3662,
+      "quality_class": "archive",
+      "sample_count": 2,
+      "reliability_score": 0.7666,
       "tags": [
         "selfplay",
         "generated",
@@ -215,9 +215,9 @@
       ]
     },
     "generated223": {
-      "quality_class": "unknown",
-      "sample_count": 1,
-      "reliability_score": 0.3662,
+      "quality_class": "archive",
+      "sample_count": 2,
+      "reliability_score": 0.7666,
       "tags": [
         "selfplay",
         "generated",
@@ -225,9 +225,9 @@
       ]
     },
     "generated865": {
-      "quality_class": "unknown",
-      "sample_count": 1,
-      "reliability_score": 0.3662,
+      "quality_class": "archive",
+      "sample_count": 2,
+      "reliability_score": 0.7666,
       "tags": [
         "selfplay",
         "generated",
@@ -235,9 +235,9 @@
       ]
     },
     "generated898": {
-      "quality_class": "unknown",
-      "sample_count": 1,
-      "reliability_score": 0.3662,
+      "quality_class": "archive",
+      "sample_count": 2,
+      "reliability_score": 0.7666,
       "tags": [
         "selfplay",
         "generated",
@@ -245,9 +245,9 @@
       ]
     },
     "generated263": {
-      "quality_class": "unknown",
-      "sample_count": 1,
-      "reliability_score": 0.3662,
+      "quality_class": "archive",
+      "sample_count": 2,
+      "reliability_score": 0.7666,
       "tags": [
         "selfplay",
         "generated",
@@ -255,6 +255,86 @@
       ]
     },
     "generated501": {
+      "quality_class": "archive",
+      "sample_count": 2,
+      "reliability_score": 0.7666,
+      "tags": [
+        "selfplay",
+        "generated",
+        "exploratory"
+      ]
+    },
+    "generated708": {
+      "quality_class": "archive",
+      "sample_count": 2,
+      "reliability_score": 0.7666,
+      "tags": [
+        "selfplay",
+        "generated",
+        "exploratory"
+      ]
+    },
+    "redditrstunfiskpostpelipperbasculegionincineroarwhimsicott": {
+      "quality_class": "unknown",
+      "sample_count": 1,
+      "reliability_score": 0.6231,
+      "tags": [
+        "reddit",
+        "community",
+        "pokepaste"
+      ]
+    },
+    "generated302": {
+      "quality_class": "unknown",
+      "sample_count": 1,
+      "reliability_score": 0.3663,
+      "tags": [
+        "selfplay",
+        "generated",
+        "exploratory"
+      ]
+    },
+    "generated195": {
+      "quality_class": "unknown",
+      "sample_count": 1,
+      "reliability_score": 0.3663,
+      "tags": [
+        "selfplay",
+        "generated",
+        "exploratory"
+      ]
+    },
+    "generated630": {
+      "quality_class": "unknown",
+      "sample_count": 1,
+      "reliability_score": 0.3663,
+      "tags": [
+        "selfplay",
+        "generated",
+        "exploratory"
+      ]
+    },
+    "generated616": {
+      "quality_class": "unknown",
+      "sample_count": 1,
+      "reliability_score": 0.3663,
+      "tags": [
+        "selfplay",
+        "generated",
+        "exploratory"
+      ]
+    },
+    "generated672": {
+      "quality_class": "unknown",
+      "sample_count": 1,
+      "reliability_score": 0.3663,
+      "tags": [
+        "selfplay",
+        "generated",
+        "exploratory"
+      ]
+    },
+    "generated506": {
       "quality_class": "unknown",
       "sample_count": 1,
       "reliability_score": 0.3662,
@@ -264,7 +344,7 @@
         "exploratory"
       ]
     },
-    "generated708": {
+    "generated524": {
       "quality_class": "unknown",
       "sample_count": 1,
       "reliability_score": 0.3662,
@@ -272,6 +352,14 @@
         "selfplay",
         "generated",
         "exploratory"
+      ]
+    },
+    "randomrandombwhimsicottcharizardstarmietyranitarincineroarsinistcha": {
+      "quality_class": "unknown",
+      "sample_count": 1,
+      "reliability_score": 0.2873,
+      "tags": [
+        "random"
       ]
     }
   }

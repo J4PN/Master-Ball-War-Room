@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-04-23T22:59:33+00:00",
+  "updatedAt": "2026-04-23T23:16:00+00:00",
   "sources": [
     "archive",
     "meta",
@@ -28,7 +28,7 @@
     {
       "name": "incineroar",
       "displayName": "incineroar",
-      "importance": 1.7,
+      "importance": 1.665,
       "sources": [
         "archive",
         "meta",
@@ -41,23 +41,9 @@
       "notes": "Observed in archive, meta, pikalytics, random, reddit, selfplay, youtube source pools."
     },
     {
-      "name": "pelipper",
-      "displayName": "pelipper",
-      "importance": 1.464,
-      "sources": [
-        "archive",
-        "meta",
-        "pikalytics",
-        "random",
-        "reddit",
-        "selfplay"
-      ],
-      "notes": "Observed in archive, meta, pikalytics, random, reddit, selfplay source pools."
-    },
-    {
       "name": "garchomp",
       "displayName": "garchomp",
-      "importance": 1.425,
+      "importance": 1.491,
       "sources": [
         "archive",
         "meta",
@@ -69,48 +55,9 @@
       "notes": "Observed in archive, meta, pikalytics, reddit, selfplay, youtube source pools."
     },
     {
-      "name": "basculegion",
-      "displayName": "basculegion",
-      "importance": 1.052,
-      "sources": [
-        "archive",
-        "meta",
-        "pikalytics",
-        "reddit",
-        "selfplay"
-      ],
-      "notes": "Observed in archive, meta, pikalytics, reddit, selfplay source pools."
-    },
-    {
-      "name": "sinistcha",
-      "displayName": "sinistcha",
-      "importance": 0.986,
-      "sources": [
-        "archive",
-        "meta",
-        "pikalytics",
-        "random",
-        "selfplay"
-      ],
-      "notes": "Observed in archive, meta, pikalytics, random, selfplay source pools."
-    },
-    {
-      "name": "starmie",
-      "displayName": "starmie",
-      "importance": 0.916,
-      "sources": [
-        "archive",
-        "random",
-        "reddit",
-        "selfplay",
-        "youtube"
-      ],
-      "notes": "Observed in archive, random, reddit, selfplay, youtube source pools."
-    },
-    {
-      "name": "kingambit",
-      "displayName": "kingambit",
-      "importance": 0.903,
+      "name": "pelipper",
+      "displayName": "pelipper",
+      "importance": 1.441,
       "sources": [
         "archive",
         "meta",
@@ -122,9 +69,62 @@
       "notes": "Observed in archive, meta, pikalytics, random, reddit, selfplay source pools."
     },
     {
+      "name": "starmie",
+      "displayName": "starmie",
+      "importance": 1.012,
+      "sources": [
+        "archive",
+        "random",
+        "reddit",
+        "selfplay",
+        "youtube"
+      ],
+      "notes": "Observed in archive, random, reddit, selfplay, youtube source pools."
+    },
+    {
+      "name": "basculegion",
+      "displayName": "basculegion",
+      "importance": 0.996,
+      "sources": [
+        "archive",
+        "meta",
+        "pikalytics",
+        "reddit",
+        "selfplay"
+      ],
+      "notes": "Observed in archive, meta, pikalytics, reddit, selfplay source pools."
+    },
+    {
+      "name": "kingambit",
+      "displayName": "kingambit",
+      "importance": 0.93,
+      "sources": [
+        "archive",
+        "meta",
+        "pikalytics",
+        "random",
+        "reddit",
+        "selfplay"
+      ],
+      "notes": "Observed in archive, meta, pikalytics, random, reddit, selfplay source pools."
+    },
+    {
+      "name": "sinistcha",
+      "displayName": "sinistcha",
+      "importance": 0.911,
+      "sources": [
+        "archive",
+        "meta",
+        "pikalytics",
+        "random",
+        "selfplay"
+      ],
+      "notes": "Observed in archive, meta, pikalytics, random, selfplay source pools."
+    },
+    {
       "name": "dragonite",
       "displayName": "dragonite",
-      "importance": 0.826,
+      "importance": 0.901,
       "sources": [
         "archive",
         "random",
@@ -136,7 +136,7 @@
     {
       "name": "rotomwash",
       "displayName": "rotomwash",
-      "importance": 0.6,
+      "importance": 0.705,
       "sources": [
         "archive",
         "random",
@@ -146,9 +146,19 @@
       "notes": "Observed in archive, random, selfplay, youtube source pools."
     },
     {
+      "name": "charizard",
+      "displayName": "charizard",
+      "importance": 0.643,
+      "sources": [
+        "archive",
+        "random"
+      ],
+      "notes": "Observed in archive, random source pools."
+    },
+    {
       "name": "archaludon",
       "displayName": "archaludon",
-      "importance": 0.6,
+      "importance": 0.638,
       "sources": [
         "archive",
         "meta",
@@ -157,19 +167,9 @@
       "notes": "Observed in archive, meta, pikalytics source pools."
     },
     {
-      "name": "charizard",
-      "displayName": "charizard",
-      "importance": 0.6,
-      "sources": [
-        "archive",
-        "random"
-      ],
-      "notes": "Observed in archive, random source pools."
-    },
-    {
       "name": "farigiraf",
       "displayName": "farigiraf",
-      "importance": 0.6,
+      "importance": 0.623,
       "sources": [
         "archive",
         "random",
@@ -199,25 +199,24 @@
     }
   ],
   "cleanThreatImportance": {
-    "farigiraf": 1.3754,
-    "incineroar": 1.913,
+    "farigiraf": 1.451,
+    "rotomwash": 1.5453,
+    "gengar": 1.2755,
+    "archaludon": 1.4047,
+    "dragonite": 1.6787,
+    "kingambit": 1.5559,
+    "incineroar": 1.9414,
+    "garchomp": 1.9006,
+    "sinistcha": 1.5892,
+    "starmie": 1.7456,
+    "tyranitar": 1.3228,
+    "pelipper": 1.7713,
+    "basculegion": 1.5522,
     "whimsicott": 2.0,
-    "charizard": 1.3976,
-    "dragonite": 1.5475,
-    "rotomwash": 1.4236,
-    "gengar": 1.2554,
-    "archaludon": 1.358,
-    "kingambit": 1.5206,
-    "garchomp": 1.8139,
-    "starmie": 1.5986,
-    "pelipper": 1.7906,
-    "basculegion": 1.5712,
-    "sinistcha": 1.5246,
-    "tyranitar": 1.23
+    "charizard": 1.4823
   },
   "persistent_archetype_counts": {
-    "unknown": 131,
-    "rain": 1
+    "unknown": 131
   },
   "archetype_diversity_pressure": {
     "rain_penalty": 0.0,
@@ -225,25 +224,29 @@
     "weather_diversity_target": 0.26,
     "rain_share": 0.002,
     "sun_share": 0.0,
-    "rain_shell_share": 0.0091,
+    "rain_shell_share": 0.0045,
     "sun_shell_share": 0.0,
     "applied": false
   },
   "top_sources": [
     [
       "self-generated",
-      59
+      58
     ],
     [
       "team_archive",
-      40
+      28
     ],
     [
       "archive",
-      16
+      21
     ],
     [
       "archiveteamarchive",
+      2
+    ],
+    [
+      "generated664",
       1
     ],
     [
@@ -255,6 +258,10 @@
       1
     ],
     [
+      "generated346",
+      1
+    ],
+    [
       "youtubecuratedyoutubeshowcaseteamincineroargarchompwhimsicottstarmiedragoniterotomwash",
       1
     ],
@@ -263,19 +270,11 @@
       1
     ],
     [
-      "r/stunfisk post",
+      "redditrstunfiskpostpelipperbasculegionincineroarwhimsicott",
       1
     ],
     [
-      "generated154",
-      1
-    ],
-    [
-      "generated664",
-      1
-    ],
-    [
-      "generated346",
+      "generated302",
       1
     ]
   ]

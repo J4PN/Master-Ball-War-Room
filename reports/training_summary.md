@@ -1,68 +1,75 @@
 # Off-PC Training Summary
 
-- Timestamp: 2026-04-23T22:59:40+00:00
+- Timestamp: 2026-04-23T23:16:10+00:00
 - Candidate iterations: 1000
-- Evaluated candidates: 959
+- Evaluated candidates: 955
 - Retained learning candidates: 24
-- Battle log: `data/battle_logs/training-20260423T225940Z.jsonl`
+- Battle log: `data/battle_logs/training-20260423T231610Z.jsonl`
+- High-level debug: `reports/high_level_debug.json`
 
 ## Source Counts
 
+- `meta`: 0
 - `pikalytics`: 2
+- `high_level`: 0
 - `reddit`: 2
 - `youtube`: 1
-- `archive`: 100
-- `random`: 2
-- `selfplay`: 852
+- `archive`: 108
+- `random`: 1
+- `selfplay`: 841
 
 ## Source Share
 
+- `meta`: 0.0%
 - `pikalytics`: 0.2%
+- `high_level`: 0.0%
 - `reddit`: 0.2%
 - `youtube`: 0.1%
-- `archive`: 10.4%
-- `random`: 0.2%
-- `selfplay`: 88.8%
+- `archive`: 11.3%
+- `random`: 0.1%
+- `selfplay`: 88.1%
 
 WARNING: selfplay exceeds safe learning share
 
 ## Retained Source Counts
 
+- `meta`: 0
 - `pikalytics`: 2
+- `high_level`: 0
 - `reddit`: 2
 - `youtube`: 1
-- `archive`: 7
+- `archive`: 11
 - `random`: 1
-- `selfplay`: 11
+- `selfplay`: 7
 
 ## Retained Source Share
 
+- `meta`: 0.0%
 - `pikalytics`: 8.3%
+- `high_level`: 0.0%
 - `reddit`: 8.3%
 - `youtube`: 4.2%
-- `archive`: 29.2%
+- `archive`: 45.8%
 - `random`: 4.2%
-- `selfplay`: 45.8%
-
-WARNING: retained selfplay exceeds safe learning share
+- `selfplay`: 29.2%
 
 ## Top Teams
 
-- [pikalytics] score `0.634` confidence `0.99`
+- [pikalytics] score `0.640` confidence `0.99`
   `Pelipper, Basculegion, Incineroar, Whimsicott, Archaludon, Garchomp`
-  meta `0.773` | pikalytics `0.899` | high_level `0.500` | reddit `0.652` | youtube `0.570` | archive `0.563` | random `0.307` | selfplay `0.319`
-- [pikalytics] score `0.640` confidence `0.97`
+  meta `0.781` | pikalytics `0.907` | high_level `0.500` | reddit `0.657` | youtube `0.573` | archive `0.572` | random `0.307` | selfplay `0.320`
+- [pikalytics] score `0.644` confidence `0.97`
   `Incineroar, Whimsicott, Garchomp, Sinistcha, Kingambit, Pelipper`
-  meta `0.783` | pikalytics `0.909` | high_level `0.500` | reddit `0.660` | youtube `0.574` | archive `0.569` | random `0.303` | selfplay `0.319`
-- [reddit] score `0.642` confidence `0.86`
+  meta `0.789` | pikalytics `0.914` | high_level `0.500` | reddit `0.664` | youtube `0.576` | archive `0.577` | random `0.302` | selfplay `0.319`
+- [reddit] score `0.646` confidence `0.86`
   `Incineroar, Starmie, Garchomp, Whimsicott, Kingambit, Pelipper`
-  meta `0.794` | pikalytics `0.920` | high_level `0.500` | reddit `0.653` | youtube `0.560` | archive `0.570` | random `0.303` | selfplay `0.318`
-- [youtube] score `0.656` confidence `0.84`
+  meta `0.801` | pikalytics `0.926` | high_level `0.500` | reddit `0.658` | youtube `0.563` | archive `0.576` | random `0.302` | selfplay `0.319`
+- [youtube] score `0.661` confidence `0.84`
   `Incineroar, Garchomp, Whimsicott, Starmie, Dragonite, Rotom-Wash`
-  meta `0.829` | pikalytics `0.952` | high_level `0.500` | reddit `0.676` | youtube `0.548` | archive `0.573` | random `0.302` | selfplay `0.318`
-- [reddit] score `0.654` confidence `0.69`
+  meta `0.837` | pikalytics `0.961` | high_level `0.500` | reddit `0.681` | youtube `0.551` | archive `0.578` | random `0.302` | selfplay `0.319`
+- [reddit] score `0.659` confidence `0.69`
   `Pelipper, Basculegion, Incineroar, Whimsicott`
-  meta `0.813` | pikalytics `0.937` | high_level `0.500` | reddit `0.660` | youtube `0.585` | archive `0.582` | random `0.308` | selfplay `0.324`
-- [archive] score `0.640` confidence `0.50`
-  `Incineroar, Garchomp, Starmie, Whimsicott`
-  meta `0.796` | pikalytics `0.921` | high_level `0.500` | reddit `0.657` | youtube `0.544` | archive `0.560` | random `0.299` | selfplay `0.315`
+  meta `0.821` | pikalytics `0.945` | high_level `0.500` | reddit `0.665` | youtube `0.588` | archive `0.590` | random `0.308` | selfplay `0.325`
+- [archive] score `0.684` confidence `0.48`
+  `Farigiraf`
+  meta `0.872` | pikalytics `0.993` | high_level `0.500` | reddit `0.707` | youtube `0.600` | archive `0.598` | random `0.305` | selfplay `0.329`

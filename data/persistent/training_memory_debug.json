@@ -1,11 +1,11 @@
 {
-  "prior_runs_reused": 8,
+  "prior_runs_reused": 9,
   "persistent_shells_retained": 220,
   "mega_identities": [],
   "archetype_counts": {
     "unknown": {
-      "count": 4914,
-      "quality_score": 5.0169,
+      "count": 5045,
+      "quality_score": 4.8355,
       "mega_count": 0,
       "anti_rain_count": 0,
       "weather_count": 0
@@ -59,7 +59,7 @@
     "weather_diversity_target": 0.26,
     "rain_share": 0.002,
     "sun_share": 0.0,
-    "rain_shell_share": 0.0091,
+    "rain_shell_share": 0.0045,
     "sun_shell_share": 0.0,
     "applied": false
   },
