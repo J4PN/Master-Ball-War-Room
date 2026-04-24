@@ -1,10 +1,10 @@
 # Off-PC Training Summary
 
-- Timestamp: 2026-04-24T05:44:27+00:00
-- Candidate iterations: 32
-- Evaluated candidates: 143
+- Timestamp: 2026-04-24T13:52:04+00:00
+- Candidate iterations: 1000
+- Evaluated candidates: 969
 - Retained learning candidates: 13
-- Battle log: `data/battle_logs/training-20260424T054427Z.jsonl`
+- Battle log: `data/battle_logs/training-20260424T135204Z.jsonl`
 - High-level debug: `reports/high_level_debug.json`
 
 ## Source Counts
@@ -14,20 +14,22 @@
 - `high_level`: 2
 - `reddit`: 1
 - `youtube`: 1
-- `archive`: 106
+- `archive`: 99
 - `random`: 0
-- `selfplay`: 31
+- `selfplay`: 864
 
 ## Source Share
 
 - `meta`: 0.0%
-- `pikalytics`: 1.4%
-- `high_level`: 1.4%
-- `reddit`: 0.7%
-- `youtube`: 0.7%
-- `archive`: 74.1%
+- `pikalytics`: 0.2%
+- `high_level`: 0.2%
+- `reddit`: 0.1%
+- `youtube`: 0.1%
+- `archive`: 10.2%
 - `random`: 0.0%
-- `selfplay`: 21.7%
+- `selfplay`: 89.2%
+
+WARNING: selfplay exceeds safe learning share
 
 ## Retained Source Counts
 
@@ -55,36 +57,36 @@ WARNING: retained selfplay exceeds safe learning share
 
 ## Top Teams
 
-- [archive] score `0.736` confidence `0.47`
-  `Pelipper, Basculegion, Incineroar, Whimsicott, Starmie`
-  meta `0.862` | pikalytics `0.996` | high_level `0.746` | reddit `0.688` | youtube `0.585` | archive `0.605` | random `0.274` | selfplay `0.296`
+- [archive] score `0.737` confidence `0.47`
+  `Pelipper, Basculegion, Incineroar, Whimsicott, Charizard, Garchomp`
+  meta `0.854` | pikalytics `0.988` | high_level `0.746` | reddit `0.695` | youtube `0.593` | archive `0.617` | random `0.280` | selfplay `0.300`
   creator match `Moxie Boosted` | shell `1.00` | core `1.00` | archetype `0.00` | final `0.746`
-- [archive] score `0.726` confidence `0.47`
-  `Pelipper, Basculegion, Incineroar, Whimsicott, Rotom-Wash`
-  meta `0.862` | pikalytics `0.996` | high_level `0.680` | reddit `0.694` | youtube `0.593` | archive `0.608` | random `0.274` | selfplay `0.296`
-  creator match `Moxie Boosted` | shell `1.00` | core `1.00` | archetype `0.00` | final `0.680`
-- [archive] score `0.708` confidence `0.44`
-  `Pelipper, Gengar, Incineroar, Whimsicott, Starmie, Garchomp`
-  meta `0.835` | pikalytics `0.959` | high_level `0.693` | reddit `0.675` | youtube `0.561` | archive `0.584` | random `0.269` | selfplay `0.293`
-  creator match `PokeaimMD` | shell `1.00` | core `1.00` | archetype `0.00` | final `0.693`
+- [archive] score `0.713` confidence `0.47`
+  `Incineroar, Starmie, Garchomp, Charizard, Dragonite, Pelipper`
+  meta `0.868` | pikalytics `0.997` | high_level `0.591` | reddit `0.703` | youtube `0.587` | archive `0.608` | random `0.277` | selfplay `0.298`
+  creator match `PokeaimMD` | shell `0.75` | core `1.00` | archetype `0.00` | final `0.591`
 - [archive] score `0.706` confidence `0.48`
-  `Incineroar, Garchomp, Sinistcha, Starmie, Dragonite, Rotom-Wash`
-  meta `0.891` | pikalytics `0.996` | high_level `0.521` | reddit `0.719` | youtube `0.582` | archive `0.609` | random `0.277` | selfplay `0.296`
-  creator match `PokeaimMD` | shell `0.75` | core `1.00` | archetype `0.00` | final `0.521`
-- [archive] score `0.690` confidence `0.44`
-  `Charizard, Starmie, Tyranitar, Whimsicott, Kingambit, Pelipper`
-  meta `0.872` | pikalytics `0.987` | high_level `0.498` | reddit `0.692` | youtube `0.589` | archive `0.587` | random `0.267` | selfplay `0.298`
-  creator match `Moxie Boosted` | shell `0.50` | core `0.67` | archetype `0.00` | final `0.498`
-- [high_level] score `0.734` confidence `0.69`
+  `Incineroar, Farigiraf, Whimsicott, Charizard, Dragonite, Rotom-Wash`
+  meta `0.892` | pikalytics `1.000` | high_level `0.511` | reddit `0.716` | youtube `0.595` | archive `0.611` | random `0.274` | selfplay `0.298`
+  creator match `Moxie Boosted` | shell `0.50` | core `0.67` | archetype `0.00` | final `0.511`
+- [archive] score `0.710` confidence `0.48`
+  `Pelipper, Basculegion, Incineroar, Whimsicott, Starmie`
+  meta `0.838` | pikalytics `0.961` | high_level `0.699` | reddit `0.667` | youtube `0.572` | archive `0.588` | random `0.271` | selfplay `0.292`
+  creator match `Moxie Boosted` | shell `1.00` | core `1.00` | archetype `0.00` | final `0.699`
+- [archive] score `0.706` confidence `0.46`
+  `Pelipper, Gengar, Incineroar, Whimsicott, Starmie, Garchomp`
+  meta `0.832` | pikalytics `0.955` | high_level `0.693` | reddit `0.673` | youtube `0.561` | archive `0.585` | random `0.270` | selfplay `0.293`
+  creator match `PokeaimMD` | shell `1.00` | core `1.00` | archetype `0.00` | final `0.693`
+- [high_level] score `0.742` confidence `0.69`
   `Pelipper, Basculegion, Incineroar, Whimsicott`
-  meta `0.854` | pikalytics `0.989` | high_level `0.739` | reddit `0.691` | youtube `0.596` | archive `0.610` | random `0.275` | selfplay `0.297`
+  meta `0.866` | pikalytics `0.998` | high_level `0.739` | reddit `0.697` | youtube `0.602` | archive `0.624` | random `0.280` | selfplay `0.300`
   creator match `Moxie Boosted` | shell `1.00` | core `1.00` | archetype `1.00` | final `0.739`
 
 ## Creator Matches
 
 - `archiveselfgenerated`: matched `Moxie Boosted` from `reddit` with similarity `0.850` (shell `1.00`, core `1.00`, archetype `0.00`)
-- `archiveteamarchive`: matched `Moxie Boosted` from `reddit` with similarity `0.850` (shell `1.00`, core `1.00`, archetype `0.00`)
+- `archiveteamarchive`: matched `PokeaimMD` from `youtube` with similarity `0.641` (shell `0.75`, core `1.00`, archetype `0.00`)
+- `archivearchivearchiveteamarchive`: matched `Moxie Boosted` from `reddit` with similarity `0.432` (shell `0.50`, core `0.67`, archetype `0.00`)
+- `archivepelipperbasculegion`: matched `Moxie Boosted` from `reddit` with similarity `0.750` (shell `1.00`, core `1.00`, archetype `0.00`)
 - `archivepelippergengar`: matched `PokeaimMD` from `youtube` with similarity `0.750` (shell `1.00`, core `1.00`, archetype `0.00`)
-- `archivearchiveteamarchive`: matched `PokeaimMD` from `youtube` with similarity `0.641` (shell `0.75`, core `1.00`, archetype `0.00`)
-- `archivecharizardstarmie`: matched `Moxie Boosted` from `reddit` with similarity `0.408` (shell `0.50`, core `0.67`, archetype `0.00`)
 - `highlevelmoxieboostedpelipperbasculegionincineroarwhimsicott`: matched `Moxie Boosted` from `reddit` with similarity `1.000` (shell `1.00`, core `1.00`, archetype `1.00`)
