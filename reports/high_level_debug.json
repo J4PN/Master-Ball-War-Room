@@ -1,12 +1,12 @@
 {
-  "updatedAt": "2026-04-24T13:52:04+00:00",
+  "updatedAt": "2026-04-24T17:35:14+00:00",
   "highLevelPoolSize": 2,
   "topTeams": [
     {
       "label": "pikalyticscuratedpikalyticsimportpelipperbasculegionincineroarwhimsicottarchaludongarchomp",
       "sourceType": "pikalytics",
       "confidence": 0.9925,
-      "overall": 0.7255,
+      "overall": 0.7251,
       "team": [
         "Pelipper",
         "Basculegion",
@@ -20,7 +20,7 @@
         "fallbackUsed": false,
         "reason": "creator shell similarity",
         "matched": true,
-        "matchedSource": "Moxie Boosted",
+        "matchedSource": "moxieboosted",
         "matchedCreator": "Moxie Boosted",
         "rawSourceName": "r/stunfisk post",
         "originSourceType": "reddit",
@@ -34,7 +34,7 @@
         "finalContribution": 0.7183,
         "topMatches": [
           {
-            "sourceName": "Moxie Boosted",
+            "sourceName": "moxieboosted",
             "matchedCreator": "Moxie Boosted",
             "rawSourceName": "r/stunfisk post",
             "originSourceType": "reddit",
@@ -48,7 +48,7 @@
             "contribution": 0.7947
           },
           {
-            "sourceName": "PokeaimMD",
+            "sourceName": "pokeaimmd",
             "matchedCreator": "PokeaimMD",
             "rawSourceName": "YouTube description extract",
             "originSourceType": "youtube",
@@ -76,7 +76,7 @@
       "label": "pikalyticspikalyticschampionssnapshotincineroarwhimsicottgarchompsinistchakingambitpelipper",
       "sourceType": "pikalytics",
       "confidence": 0.97,
-      "overall": 0.7177,
+      "overall": 0.7175,
       "team": [
         "Incineroar",
         "Whimsicott",
@@ -90,7 +90,7 @@
         "fallbackUsed": false,
         "reason": "creator shell similarity",
         "matched": true,
-        "matchedSource": "Moxie Boosted",
+        "matchedSource": "moxieboosted",
         "matchedCreator": "Moxie Boosted",
         "rawSourceName": "r/stunfisk post",
         "originSourceType": "reddit",
@@ -104,7 +104,7 @@
         "finalContribution": 0.6608,
         "topMatches": [
           {
-            "sourceName": "Moxie Boosted",
+            "sourceName": "moxieboosted",
             "matchedCreator": "Moxie Boosted",
             "rawSourceName": "r/stunfisk post",
             "originSourceType": "reddit",
@@ -118,7 +118,7 @@
             "contribution": 0.6888
           },
           {
-            "sourceName": "PokeaimMD",
+            "sourceName": "pokeaimmd",
             "matchedCreator": "PokeaimMD",
             "rawSourceName": "YouTube description extract",
             "originSourceType": "youtube",
@@ -146,7 +146,7 @@
       "label": "redditcuratedredditbalanceteamincineroarstarmiegarchompwhimsicottkingambitpelipper",
       "sourceType": "reddit",
       "confidence": 0.865,
-      "overall": 0.7287,
+      "overall": 0.729,
       "team": [
         "Incineroar",
         "Starmie",
@@ -160,7 +160,7 @@
         "fallbackUsed": false,
         "reason": "creator shell similarity",
         "matched": true,
-        "matchedSource": "PokeaimMD",
+        "matchedSource": "pokeaimmd",
         "matchedCreator": "PokeaimMD",
         "rawSourceName": "YouTube description extract",
         "originSourceType": "youtube",
@@ -174,7 +174,7 @@
         "finalContribution": 0.7091,
         "topMatches": [
           {
-            "sourceName": "PokeaimMD",
+            "sourceName": "pokeaimmd",
             "matchedCreator": "PokeaimMD",
             "rawSourceName": "YouTube description extract",
             "originSourceType": "youtube",
@@ -188,7 +188,7 @@
             "contribution": 0.7257
           },
           {
-            "sourceName": "Moxie Boosted",
+            "sourceName": "moxieboosted",
             "matchedCreator": "Moxie Boosted",
             "rawSourceName": "r/stunfisk post",
             "originSourceType": "reddit",
@@ -213,38 +213,52 @@
       }
     },
     {
-      "label": "youtubecuratedyoutubeshowcaseteamincineroargarchompwhimsicottstarmiedragoniterotomwash",
-      "sourceType": "youtube",
-      "confidence": 0.8425,
-      "overall": 0.7206,
+      "label": "pikalyticsvariant440curatedpikalyticsimport",
+      "sourceType": "pikalytics_variant",
+      "confidence": 0.838,
+      "overall": 0.7396,
       "team": [
+        "Pelipper",
+        "Basculegion",
         "Incineroar",
-        "Garchomp",
         "Whimsicott",
         "Starmie",
-        "Dragonite",
-        "Rotom-Wash"
+        "Garchomp"
       ],
       "highLevel": {
         "poolSize": 2,
         "fallbackUsed": false,
         "reason": "creator shell similarity",
         "matched": true,
-        "matchedSource": "PokeaimMD",
-        "matchedCreator": "PokeaimMD",
-        "rawSourceName": "YouTube description extract",
-        "originSourceType": "youtube",
-        "qualityClass": "high_level_analysis",
-        "similarity": 0.7735,
+        "matchedSource": "moxieboosted",
+        "matchedCreator": "Moxie Boosted",
+        "rawSourceName": "r/stunfisk post",
+        "originSourceType": "reddit",
+        "qualityClass": "serious_ladder",
+        "similarity": 0.7912,
         "shellOverlap": 1.0,
         "coreOverlap": 1.0,
         "archetypeOverlap": 0.0,
-        "moveOverlap": 0.2353,
-        "referenceConfidence": 0.5025,
-        "finalContribution": 0.6426,
+        "moveOverlap": 0.4118,
+        "referenceConfidence": 0.685,
+        "finalContribution": 0.7676,
         "topMatches": [
           {
-            "sourceName": "PokeaimMD",
+            "sourceName": "moxieboosted",
+            "matchedCreator": "Moxie Boosted",
+            "rawSourceName": "r/stunfisk post",
+            "originSourceType": "reddit",
+            "qualityClass": "serious_ladder",
+            "confidence": 0.685,
+            "similarity": 0.7912,
+            "shell_overlap": 1.0,
+            "core_overlap": 1.0,
+            "archetype_overlap": 0.0,
+            "move_overlap": 0.4118,
+            "contribution": 0.8004
+          },
+          {
+            "sourceName": "pokeaimmd",
             "matchedCreator": "PokeaimMD",
             "rawSourceName": "YouTube description extract",
             "originSourceType": "youtube",
@@ -256,88 +270,6 @@
             "archetype_overlap": 0.0,
             "move_overlap": 0.2353,
             "contribution": 0.7275
-          },
-          {
-            "sourceName": "Moxie Boosted",
-            "matchedCreator": "Moxie Boosted",
-            "rawSourceName": "r/stunfisk post",
-            "originSourceType": "reddit",
-            "qualityClass": "serious_ladder",
-            "confidence": 0.685,
-            "similarity": 0.4283,
-            "shell_overlap": 0.5,
-            "core_overlap": 0.6667,
-            "archetype_overlap": 0.0,
-            "move_overlap": 0.2,
-            "contribution": 0.5391
-          }
-        ]
-      },
-      "structureSignals": {
-        "mega_sun": false,
-        "rain_shell": false,
-        "hard_tr": false,
-        "speed_control": true,
-        "shell_integrity": 1.0,
-        "coherence_bonus": 0.06
-      }
-    },
-    {
-      "label": "highlevelmoxieboostedpelipperbasculegionincineroarwhimsicott",
-      "sourceType": "high_level",
-      "confidence": 0.685,
-      "overall": 0.7423,
-      "team": [
-        "Pelipper",
-        "Basculegion",
-        "Incineroar",
-        "Whimsicott"
-      ],
-      "highLevel": {
-        "poolSize": 2,
-        "fallbackUsed": false,
-        "reason": "creator shell similarity",
-        "matched": true,
-        "matchedSource": "Moxie Boosted",
-        "matchedCreator": "Moxie Boosted",
-        "rawSourceName": "r/stunfisk post",
-        "originSourceType": "reddit",
-        "qualityClass": "serious_ladder",
-        "similarity": 1.0,
-        "shellOverlap": 1.0,
-        "coreOverlap": 1.0,
-        "archetypeOverlap": 1.0,
-        "moveOverlap": 1.0,
-        "referenceConfidence": 0.685,
-        "finalContribution": 0.7389,
-        "topMatches": [
-          {
-            "sourceName": "Moxie Boosted",
-            "matchedCreator": "Moxie Boosted",
-            "rawSourceName": "r/stunfisk post",
-            "originSourceType": "reddit",
-            "qualityClass": "serious_ladder",
-            "confidence": 0.685,
-            "similarity": 1.0,
-            "shell_overlap": 1.0,
-            "core_overlap": 1.0,
-            "archetype_overlap": 1.0,
-            "move_overlap": 1.0,
-            "contribution": 0.9507
-          },
-          {
-            "sourceName": "PokeaimMD",
-            "matchedCreator": "PokeaimMD",
-            "rawSourceName": "YouTube description extract",
-            "originSourceType": "youtube",
-            "qualityClass": "high_level_analysis",
-            "confidence": 0.5025,
-            "similarity": 0.4306,
-            "shell_overlap": 0.5,
-            "core_overlap": 0.6667,
-            "archetype_overlap": 0.0,
-            "move_overlap": 0.2222,
-            "contribution": 0.4806
           }
         ]
       },
@@ -346,83 +278,225 @@
         "rain_shell": true,
         "hard_tr": false,
         "speed_control": true,
-        "shell_integrity": 0.6667,
+        "shell_integrity": 1.0,
         "coherence_bonus": 0.11
       }
     },
     {
-      "label": "highlevelpokeaimmdincineroargarchompstarmiewhimsicott",
-      "sourceType": "high_level",
-      "confidence": 0.5025,
-      "overall": 0.7294,
+      "label": "pikalyticsvariant196curatedpikalyticsimport",
+      "sourceType": "pikalytics_variant",
+      "confidence": 0.838,
+      "overall": 0.7389,
       "team": [
+        "Pelipper",
+        "Basculegion",
         "Incineroar",
+        "Whimsicott",
         "Garchomp",
-        "Starmie",
-        "Whimsicott"
+        "Starmie"
       ],
       "highLevel": {
         "poolSize": 2,
         "fallbackUsed": false,
         "reason": "creator shell similarity",
         "matched": true,
-        "matchedSource": "PokeaimMD",
-        "matchedCreator": "PokeaimMD",
-        "rawSourceName": "YouTube description extract",
-        "originSourceType": "youtube",
-        "qualityClass": "high_level_analysis",
-        "similarity": 1.0,
+        "matchedSource": "moxieboosted",
+        "matchedCreator": "Moxie Boosted",
+        "rawSourceName": "r/stunfisk post",
+        "originSourceType": "reddit",
+        "qualityClass": "serious_ladder",
+        "similarity": 0.8,
         "shellOverlap": 1.0,
         "coreOverlap": 1.0,
-        "archetypeOverlap": 1.0,
-        "moveOverlap": 1.0,
-        "referenceConfidence": 0.5025,
-        "finalContribution": 0.7329,
+        "archetypeOverlap": 0.0,
+        "moveOverlap": 0.5,
+        "referenceConfidence": 0.685,
+        "finalContribution": 0.7674,
         "topMatches": [
           {
-            "sourceName": "PokeaimMD",
-            "matchedCreator": "PokeaimMD",
-            "rawSourceName": "YouTube description extract",
-            "originSourceType": "youtube",
-            "qualityClass": "high_level_analysis",
-            "confidence": 0.5025,
-            "similarity": 1.0,
-            "shell_overlap": 1.0,
-            "core_overlap": 1.0,
-            "archetype_overlap": 1.0,
-            "move_overlap": 1.0,
-            "contribution": 0.8905
-          },
-          {
-            "sourceName": "Moxie Boosted",
+            "sourceName": "moxieboosted",
             "matchedCreator": "Moxie Boosted",
             "rawSourceName": "r/stunfisk post",
             "originSourceType": "reddit",
             "qualityClass": "serious_ladder",
             "confidence": 0.685,
-            "similarity": 0.4306,
-            "shell_overlap": 0.5,
-            "core_overlap": 0.6667,
+            "similarity": 0.8,
+            "shell_overlap": 1.0,
+            "core_overlap": 1.0,
             "archetype_overlap": 0.0,
-            "move_overlap": 0.2222,
-            "contribution": 0.5407
+            "move_overlap": 0.5,
+            "contribution": 0.8067
+          },
+          {
+            "sourceName": "pokeaimmd",
+            "matchedCreator": "PokeaimMD",
+            "rawSourceName": "YouTube description extract",
+            "originSourceType": "youtube",
+            "qualityClass": "high_level_analysis",
+            "confidence": 0.5025,
+            "similarity": 0.7625,
+            "shell_overlap": 1.0,
+            "core_overlap": 1.0,
+            "archetype_overlap": 0.0,
+            "move_overlap": 0.125,
+            "contribution": 0.7195
           }
         ]
       },
       "structureSignals": {
         "mega_sun": false,
-        "rain_shell": false,
+        "rain_shell": true,
         "hard_tr": false,
-        "speed_control": false,
-        "shell_integrity": 0.6667,
-        "coherence_bonus": 0.03
+        "speed_control": true,
+        "shell_integrity": 1.0,
+        "coherence_bonus": 0.11
       }
     },
     {
-      "label": "archiveselfgenerated",
-      "sourceType": "archive",
-      "confidence": 0.47,
-      "overall": 0.7372,
+      "label": "pikalyticsvariant683curatedpikalyticsimport",
+      "sourceType": "pikalytics_variant",
+      "confidence": 0.838,
+      "overall": 0.7357,
+      "team": [
+        "Pelipper",
+        "Basculegion",
+        "Incineroar",
+        "Whimsicott",
+        "Starmie",
+        "Archaludon"
+      ],
+      "highLevel": {
+        "poolSize": 2,
+        "fallbackUsed": false,
+        "reason": "creator shell similarity",
+        "matched": true,
+        "matchedSource": "moxieboosted",
+        "matchedCreator": "Moxie Boosted",
+        "rawSourceName": "r/stunfisk post",
+        "originSourceType": "reddit",
+        "qualityClass": "serious_ladder",
+        "similarity": 0.8,
+        "shellOverlap": 1.0,
+        "coreOverlap": 1.0,
+        "archetypeOverlap": 0.0,
+        "moveOverlap": 0.5,
+        "referenceConfidence": 0.685,
+        "finalContribution": 0.7228,
+        "topMatches": [
+          {
+            "sourceName": "moxieboosted",
+            "matchedCreator": "Moxie Boosted",
+            "rawSourceName": "r/stunfisk post",
+            "originSourceType": "reddit",
+            "qualityClass": "serious_ladder",
+            "confidence": 0.685,
+            "similarity": 0.8,
+            "shell_overlap": 1.0,
+            "core_overlap": 1.0,
+            "archetype_overlap": 0.0,
+            "move_overlap": 0.5,
+            "contribution": 0.8067
+          },
+          {
+            "sourceName": "pokeaimmd",
+            "matchedCreator": "PokeaimMD",
+            "rawSourceName": "YouTube description extract",
+            "originSourceType": "youtube",
+            "qualityClass": "high_level_analysis",
+            "confidence": 0.5025,
+            "similarity": 0.625,
+            "shell_overlap": 0.75,
+            "core_overlap": 1.0,
+            "archetype_overlap": 0.0,
+            "move_overlap": 0.125,
+            "contribution": 0.6205
+          }
+        ]
+      },
+      "structureSignals": {
+        "mega_sun": false,
+        "rain_shell": true,
+        "hard_tr": false,
+        "speed_control": true,
+        "shell_integrity": 1.0,
+        "coherence_bonus": 0.11
+      }
+    },
+    {
+      "label": "pikalyticsvariant93curatedpikalyticsimport",
+      "sourceType": "pikalytics_variant",
+      "confidence": 0.838,
+      "overall": 0.7337,
+      "team": [
+        "Pelipper",
+        "Basculegion",
+        "Incineroar",
+        "Whimsicott",
+        "Gengar",
+        "Garchomp"
+      ],
+      "highLevel": {
+        "poolSize": 2,
+        "fallbackUsed": false,
+        "reason": "creator shell similarity",
+        "matched": true,
+        "matchedSource": "moxieboosted",
+        "matchedCreator": "Moxie Boosted",
+        "rawSourceName": "r/stunfisk post",
+        "originSourceType": "reddit",
+        "qualityClass": "serious_ladder",
+        "similarity": 0.7912,
+        "shellOverlap": 1.0,
+        "coreOverlap": 1.0,
+        "archetypeOverlap": 0.0,
+        "moveOverlap": 0.4118,
+        "referenceConfidence": 0.685,
+        "finalContribution": 0.723,
+        "topMatches": [
+          {
+            "sourceName": "moxieboosted",
+            "matchedCreator": "Moxie Boosted",
+            "rawSourceName": "r/stunfisk post",
+            "originSourceType": "reddit",
+            "qualityClass": "serious_ladder",
+            "confidence": 0.685,
+            "similarity": 0.7912,
+            "shell_overlap": 1.0,
+            "core_overlap": 1.0,
+            "archetype_overlap": 0.0,
+            "move_overlap": 0.4118,
+            "contribution": 0.8004
+          },
+          {
+            "sourceName": "pokeaimmd",
+            "matchedCreator": "PokeaimMD",
+            "rawSourceName": "YouTube description extract",
+            "originSourceType": "youtube",
+            "qualityClass": "high_level_analysis",
+            "confidence": 0.5025,
+            "similarity": 0.636,
+            "shell_overlap": 0.75,
+            "core_overlap": 1.0,
+            "archetype_overlap": 0.0,
+            "move_overlap": 0.2353,
+            "contribution": 0.6285
+          }
+        ]
+      },
+      "structureSignals": {
+        "mega_sun": false,
+        "rain_shell": true,
+        "hard_tr": false,
+        "speed_control": true,
+        "shell_integrity": 1.0,
+        "coherence_bonus": 0.11
+      }
+    },
+    {
+      "label": "pikalyticsvariant74curatedpikalyticsimport",
+      "sourceType": "pikalytics_variant",
+      "confidence": 0.838,
+      "overall": 0.7337,
       "team": [
         "Pelipper",
         "Basculegion",
@@ -436,46 +510,46 @@
         "fallbackUsed": false,
         "reason": "creator shell similarity",
         "matched": true,
-        "matchedSource": "Moxie Boosted",
+        "matchedSource": "moxieboosted",
         "matchedCreator": "Moxie Boosted",
         "rawSourceName": "r/stunfisk post",
         "originSourceType": "reddit",
         "qualityClass": "serious_ladder",
-        "similarity": 0.85,
+        "similarity": 0.7912,
         "shellOverlap": 1.0,
         "coreOverlap": 1.0,
         "archetypeOverlap": 0.0,
-        "moveOverlap": 1.0,
+        "moveOverlap": 0.4118,
         "referenceConfidence": 0.685,
-        "finalContribution": 0.7457,
+        "finalContribution": 0.723,
         "topMatches": [
           {
-            "sourceName": "Moxie Boosted",
+            "sourceName": "moxieboosted",
             "matchedCreator": "Moxie Boosted",
             "rawSourceName": "r/stunfisk post",
             "originSourceType": "reddit",
             "qualityClass": "serious_ladder",
             "confidence": 0.685,
-            "similarity": 0.85,
+            "similarity": 0.7912,
             "shell_overlap": 1.0,
             "core_overlap": 1.0,
             "archetype_overlap": 0.0,
-            "move_overlap": 1.0,
-            "contribution": 0.8427
+            "move_overlap": 0.4118,
+            "contribution": 0.8004
           },
           {
-            "sourceName": "PokeaimMD",
+            "sourceName": "pokeaimmd",
             "matchedCreator": "PokeaimMD",
             "rawSourceName": "YouTube description extract",
             "originSourceType": "youtube",
             "qualityClass": "high_level_analysis",
             "confidence": 0.5025,
-            "similarity": 0.6347,
+            "similarity": 0.636,
             "shell_overlap": 0.75,
             "core_overlap": 1.0,
             "archetype_overlap": 0.0,
-            "move_overlap": 0.2222,
-            "contribution": 0.6275
+            "move_overlap": 0.2353,
+            "contribution": 0.6285
           }
         ]
       },
@@ -489,225 +563,16 @@
       }
     },
     {
-      "label": "archiveselfgenerated",
-      "sourceType": "archive",
-      "confidence": 0.47,
-      "overall": 0.7352,
+      "label": "pikalyticsvariant83curatedpikalyticsimport",
+      "sourceType": "pikalytics_variant",
+      "confidence": 0.838,
+      "overall": 0.7332,
       "team": [
         "Pelipper",
         "Basculegion",
         "Incineroar",
         "Whimsicott",
-        "Garchomp"
-      ],
-      "highLevel": {
-        "poolSize": 2,
-        "fallbackUsed": false,
-        "reason": "creator shell similarity",
-        "matched": true,
-        "matchedSource": "Moxie Boosted",
-        "matchedCreator": "Moxie Boosted",
-        "rawSourceName": "r/stunfisk post",
-        "originSourceType": "reddit",
-        "qualityClass": "serious_ladder",
-        "similarity": 0.85,
-        "shellOverlap": 1.0,
-        "coreOverlap": 1.0,
-        "archetypeOverlap": 0.0,
-        "moveOverlap": 1.0,
-        "referenceConfidence": 0.685,
-        "finalContribution": 0.7457,
-        "topMatches": [
-          {
-            "sourceName": "Moxie Boosted",
-            "matchedCreator": "Moxie Boosted",
-            "rawSourceName": "r/stunfisk post",
-            "originSourceType": "reddit",
-            "qualityClass": "serious_ladder",
-            "confidence": 0.685,
-            "similarity": 0.85,
-            "shell_overlap": 1.0,
-            "core_overlap": 1.0,
-            "archetype_overlap": 0.0,
-            "move_overlap": 1.0,
-            "contribution": 0.8427
-          },
-          {
-            "sourceName": "PokeaimMD",
-            "matchedCreator": "PokeaimMD",
-            "rawSourceName": "YouTube description extract",
-            "originSourceType": "youtube",
-            "qualityClass": "high_level_analysis",
-            "confidence": 0.5025,
-            "similarity": 0.6347,
-            "shell_overlap": 0.75,
-            "core_overlap": 1.0,
-            "archetype_overlap": 0.0,
-            "move_overlap": 0.2222,
-            "contribution": 0.6275
-          }
-        ]
-      },
-      "structureSignals": {
-        "mega_sun": false,
-        "rain_shell": true,
-        "hard_tr": false,
-        "speed_control": true,
-        "shell_integrity": 0.8333,
-        "coherence_bonus": 0.11
-      }
-    },
-    {
-      "label": "archiveselfgenerated",
-      "sourceType": "archive",
-      "confidence": 0.47,
-      "overall": 0.7334,
-      "team": [
-        "Incineroar",
-        "Garchomp",
-        "Starmie",
-        "Whimsicott",
-        "Pelipper",
-        "Dragonite"
-      ],
-      "highLevel": {
-        "poolSize": 2,
-        "fallbackUsed": false,
-        "reason": "creator shell similarity",
-        "matched": true,
-        "matchedSource": "PokeaimMD",
-        "matchedCreator": "PokeaimMD",
-        "rawSourceName": "YouTube description extract",
-        "originSourceType": "youtube",
-        "qualityClass": "high_level_analysis",
-        "similarity": 0.85,
-        "shellOverlap": 1.0,
-        "coreOverlap": 1.0,
-        "archetypeOverlap": 0.0,
-        "moveOverlap": 1.0,
-        "referenceConfidence": 0.5025,
-        "finalContribution": 0.7398,
-        "topMatches": [
-          {
-            "sourceName": "PokeaimMD",
-            "matchedCreator": "PokeaimMD",
-            "rawSourceName": "YouTube description extract",
-            "originSourceType": "youtube",
-            "qualityClass": "high_level_analysis",
-            "confidence": 0.5025,
-            "similarity": 0.85,
-            "shell_overlap": 1.0,
-            "core_overlap": 1.0,
-            "archetype_overlap": 0.0,
-            "move_overlap": 1.0,
-            "contribution": 0.7826
-          },
-          {
-            "sourceName": "Moxie Boosted",
-            "matchedCreator": "Moxie Boosted",
-            "rawSourceName": "r/stunfisk post",
-            "originSourceType": "reddit",
-            "qualityClass": "serious_ladder",
-            "confidence": 0.685,
-            "similarity": 0.6347,
-            "shell_overlap": 0.75,
-            "core_overlap": 1.0,
-            "archetype_overlap": 0.0,
-            "move_overlap": 0.2222,
-            "contribution": 0.6877
-          }
-        ]
-      },
-      "structureSignals": {
-        "mega_sun": false,
-        "rain_shell": true,
-        "hard_tr": false,
-        "speed_control": false,
-        "shell_integrity": 1.0,
-        "coherence_bonus": 0.08
-      }
-    },
-    {
-      "label": "archiveselfgenerated",
-      "sourceType": "archive",
-      "confidence": 0.47,
-      "overall": 0.7322,
-      "team": [
-        "Incineroar",
-        "Starmie",
-        "Garchomp",
-        "Whimsicott",
-        "Sinistcha",
-        "Pelipper"
-      ],
-      "highLevel": {
-        "poolSize": 2,
-        "fallbackUsed": false,
-        "reason": "creator shell similarity",
-        "matched": true,
-        "matchedSource": "PokeaimMD",
-        "matchedCreator": "PokeaimMD",
-        "rawSourceName": "YouTube description extract",
-        "originSourceType": "youtube",
-        "qualityClass": "high_level_analysis",
-        "similarity": 0.7808,
-        "shellOverlap": 1.0,
-        "coreOverlap": 1.0,
-        "archetypeOverlap": 0.0,
-        "moveOverlap": 0.3077,
-        "referenceConfidence": 0.5025,
-        "finalContribution": 0.716,
-        "topMatches": [
-          {
-            "sourceName": "PokeaimMD",
-            "matchedCreator": "PokeaimMD",
-            "rawSourceName": "YouTube description extract",
-            "originSourceType": "youtube",
-            "qualityClass": "high_level_analysis",
-            "confidence": 0.5025,
-            "similarity": 0.7808,
-            "shell_overlap": 1.0,
-            "core_overlap": 1.0,
-            "archetype_overlap": 0.0,
-            "move_overlap": 0.3077,
-            "contribution": 0.7327
-          },
-          {
-            "sourceName": "Moxie Boosted",
-            "matchedCreator": "Moxie Boosted",
-            "rawSourceName": "r/stunfisk post",
-            "originSourceType": "reddit",
-            "qualityClass": "serious_ladder",
-            "confidence": 0.685,
-            "similarity": 0.6458,
-            "shell_overlap": 0.75,
-            "core_overlap": 1.0,
-            "archetype_overlap": 0.0,
-            "move_overlap": 0.3333,
-            "contribution": 0.6957
-          }
-        ]
-      },
-      "structureSignals": {
-        "mega_sun": false,
-        "rain_shell": true,
-        "hard_tr": false,
-        "speed_control": true,
-        "shell_integrity": 1.0,
-        "coherence_bonus": 0.11
-      }
-    },
-    {
-      "label": "archiveselfgenerated",
-      "sourceType": "archive",
-      "confidence": 0.47,
-      "overall": 0.7314,
-      "team": [
-        "Pelipper",
         "Tyranitar",
-        "Incineroar",
-        "Whimsicott",
-        "Charizard",
         "Garchomp"
       ],
       "highLevel": {
@@ -715,46 +580,46 @@
         "fallbackUsed": false,
         "reason": "creator shell similarity",
         "matched": true,
-        "matchedSource": "Moxie Boosted",
+        "matchedSource": "moxieboosted",
         "matchedCreator": "Moxie Boosted",
         "rawSourceName": "r/stunfisk post",
         "originSourceType": "reddit",
         "qualityClass": "serious_ladder",
-        "similarity": 0.6458,
-        "shellOverlap": 0.75,
+        "similarity": 0.7912,
+        "shellOverlap": 1.0,
         "coreOverlap": 1.0,
         "archetypeOverlap": 0.0,
-        "moveOverlap": 0.3333,
+        "moveOverlap": 0.4118,
         "referenceConfidence": 0.685,
-        "finalContribution": 0.6678,
+        "finalContribution": 0.723,
         "topMatches": [
           {
-            "sourceName": "Moxie Boosted",
+            "sourceName": "moxieboosted",
             "matchedCreator": "Moxie Boosted",
             "rawSourceName": "r/stunfisk post",
             "originSourceType": "reddit",
             "qualityClass": "serious_ladder",
             "confidence": 0.685,
-            "similarity": 0.6458,
-            "shell_overlap": 0.75,
+            "similarity": 0.7912,
+            "shell_overlap": 1.0,
             "core_overlap": 1.0,
             "archetype_overlap": 0.0,
-            "move_overlap": 0.3333,
-            "contribution": 0.6957
+            "move_overlap": 0.4118,
+            "contribution": 0.8004
           },
           {
-            "sourceName": "PokeaimMD",
+            "sourceName": "pokeaimmd",
             "matchedCreator": "PokeaimMD",
             "rawSourceName": "YouTube description extract",
             "originSourceType": "youtube",
             "qualityClass": "high_level_analysis",
             "confidence": 0.5025,
-            "similarity": 0.6433,
+            "similarity": 0.636,
             "shell_overlap": 0.75,
             "core_overlap": 1.0,
             "archetype_overlap": 0.0,
-            "move_overlap": 0.3077,
-            "contribution": 0.6337
+            "move_overlap": 0.2353,
+            "contribution": 0.6285
           }
         ]
       },
@@ -768,62 +633,63 @@
       }
     },
     {
-      "label": "archiveselfgenerated",
-      "sourceType": "archive",
-      "confidence": 0.47,
-      "overall": 0.729,
+      "label": "pikalyticsvariant119curatedpikalyticsimport",
+      "sourceType": "pikalytics_variant",
+      "confidence": 0.838,
+      "overall": 0.7331,
       "team": [
         "Pelipper",
         "Basculegion",
         "Incineroar",
         "Whimsicott",
-        "Sinistcha"
+        "Farigiraf",
+        "Garchomp"
       ],
       "highLevel": {
         "poolSize": 2,
         "fallbackUsed": false,
         "reason": "creator shell similarity",
         "matched": true,
-        "matchedSource": "Moxie Boosted",
+        "matchedSource": "moxieboosted",
         "matchedCreator": "Moxie Boosted",
         "rawSourceName": "r/stunfisk post",
         "originSourceType": "reddit",
         "qualityClass": "serious_ladder",
-        "similarity": 0.85,
+        "similarity": 0.7912,
         "shellOverlap": 1.0,
         "coreOverlap": 1.0,
         "archetypeOverlap": 0.0,
-        "moveOverlap": 1.0,
+        "moveOverlap": 0.4118,
         "referenceConfidence": 0.685,
-        "finalContribution": 0.6796,
+        "finalContribution": 0.723,
         "topMatches": [
           {
-            "sourceName": "Moxie Boosted",
+            "sourceName": "moxieboosted",
             "matchedCreator": "Moxie Boosted",
             "rawSourceName": "r/stunfisk post",
             "originSourceType": "reddit",
             "qualityClass": "serious_ladder",
             "confidence": 0.685,
-            "similarity": 0.85,
+            "similarity": 0.7912,
             "shell_overlap": 1.0,
             "core_overlap": 1.0,
             "archetype_overlap": 0.0,
-            "move_overlap": 1.0,
-            "contribution": 0.8427
+            "move_overlap": 0.4118,
+            "contribution": 0.8004
           },
           {
-            "sourceName": "PokeaimMD",
+            "sourceName": "pokeaimmd",
             "matchedCreator": "PokeaimMD",
             "rawSourceName": "YouTube description extract",
             "originSourceType": "youtube",
             "qualityClass": "high_level_analysis",
             "confidence": 0.5025,
-            "similarity": 0.4306,
-            "shell_overlap": 0.5,
-            "core_overlap": 0.6667,
+            "similarity": 0.636,
+            "shell_overlap": 0.75,
+            "core_overlap": 1.0,
             "archetype_overlap": 0.0,
-            "move_overlap": 0.2222,
-            "contribution": 0.4806
+            "move_overlap": 0.2353,
+            "contribution": 0.6285
           }
         ]
       },
@@ -832,7 +698,147 @@
         "rain_shell": true,
         "hard_tr": false,
         "speed_control": true,
-        "shell_integrity": 0.8333,
+        "shell_integrity": 1.0,
+        "coherence_bonus": 0.11
+      }
+    },
+    {
+      "label": "pikalyticsvariant65curatedpikalyticsimport",
+      "sourceType": "pikalytics_variant",
+      "confidence": 0.838,
+      "overall": 0.733,
+      "team": [
+        "Pelipper",
+        "Basculegion",
+        "Incineroar",
+        "Whimsicott",
+        "Rotom-Wash",
+        "Garchomp"
+      ],
+      "highLevel": {
+        "poolSize": 2,
+        "fallbackUsed": false,
+        "reason": "creator shell similarity",
+        "matched": true,
+        "matchedSource": "moxieboosted",
+        "matchedCreator": "Moxie Boosted",
+        "rawSourceName": "r/stunfisk post",
+        "originSourceType": "reddit",
+        "qualityClass": "serious_ladder",
+        "similarity": 0.7912,
+        "shellOverlap": 1.0,
+        "coreOverlap": 1.0,
+        "archetypeOverlap": 0.0,
+        "moveOverlap": 0.4118,
+        "referenceConfidence": 0.685,
+        "finalContribution": 0.723,
+        "topMatches": [
+          {
+            "sourceName": "moxieboosted",
+            "matchedCreator": "Moxie Boosted",
+            "rawSourceName": "r/stunfisk post",
+            "originSourceType": "reddit",
+            "qualityClass": "serious_ladder",
+            "confidence": 0.685,
+            "similarity": 0.7912,
+            "shell_overlap": 1.0,
+            "core_overlap": 1.0,
+            "archetype_overlap": 0.0,
+            "move_overlap": 0.4118,
+            "contribution": 0.8004
+          },
+          {
+            "sourceName": "pokeaimmd",
+            "matchedCreator": "PokeaimMD",
+            "rawSourceName": "YouTube description extract",
+            "originSourceType": "youtube",
+            "qualityClass": "high_level_analysis",
+            "confidence": 0.5025,
+            "similarity": 0.636,
+            "shell_overlap": 0.75,
+            "core_overlap": 1.0,
+            "archetype_overlap": 0.0,
+            "move_overlap": 0.2353,
+            "contribution": 0.6285
+          }
+        ]
+      },
+      "structureSignals": {
+        "mega_sun": false,
+        "rain_shell": true,
+        "hard_tr": false,
+        "speed_control": true,
+        "shell_integrity": 1.0,
+        "coherence_bonus": 0.11
+      }
+    },
+    {
+      "label": "pikalyticsvariant779curatedpikalyticsimport",
+      "sourceType": "pikalytics_variant",
+      "confidence": 0.838,
+      "overall": 0.733,
+      "team": [
+        "Pelipper",
+        "Basculegion",
+        "Incineroar",
+        "Whimsicott",
+        "Garchomp",
+        "Gengar"
+      ],
+      "highLevel": {
+        "poolSize": 2,
+        "fallbackUsed": false,
+        "reason": "creator shell similarity",
+        "matched": true,
+        "matchedSource": "moxieboosted",
+        "matchedCreator": "Moxie Boosted",
+        "rawSourceName": "r/stunfisk post",
+        "originSourceType": "reddit",
+        "qualityClass": "serious_ladder",
+        "similarity": 0.8,
+        "shellOverlap": 1.0,
+        "coreOverlap": 1.0,
+        "archetypeOverlap": 0.0,
+        "moveOverlap": 0.5,
+        "referenceConfidence": 0.685,
+        "finalContribution": 0.7228,
+        "topMatches": [
+          {
+            "sourceName": "moxieboosted",
+            "matchedCreator": "Moxie Boosted",
+            "rawSourceName": "r/stunfisk post",
+            "originSourceType": "reddit",
+            "qualityClass": "serious_ladder",
+            "confidence": 0.685,
+            "similarity": 0.8,
+            "shell_overlap": 1.0,
+            "core_overlap": 1.0,
+            "archetype_overlap": 0.0,
+            "move_overlap": 0.5,
+            "contribution": 0.8067
+          },
+          {
+            "sourceName": "pokeaimmd",
+            "matchedCreator": "PokeaimMD",
+            "rawSourceName": "YouTube description extract",
+            "originSourceType": "youtube",
+            "qualityClass": "high_level_analysis",
+            "confidence": 0.5025,
+            "similarity": 0.625,
+            "shell_overlap": 0.75,
+            "core_overlap": 1.0,
+            "archetype_overlap": 0.0,
+            "move_overlap": 0.125,
+            "contribution": 0.6205
+          }
+        ]
+      },
+      "structureSignals": {
+        "mega_sun": false,
+        "rain_shell": true,
+        "hard_tr": false,
+        "speed_control": true,
+        "shell_integrity": 1.0,
         "coherence_bonus": 0.11
       }
     }

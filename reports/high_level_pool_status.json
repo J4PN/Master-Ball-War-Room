@@ -6,12 +6,12 @@
   "samples": [
     {
       "sourceType": "high_level",
-      "sourceName": "PokeaimMD",
+      "sourceName": "pokeaimmd",
       "teamSize": 4
     },
     {
       "sourceType": "high_level",
-      "sourceName": "Moxie Boosted",
+      "sourceName": "moxieboosted",
       "teamSize": 4
     }
   ]
