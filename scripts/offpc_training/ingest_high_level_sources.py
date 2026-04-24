@@ -7,6 +7,7 @@ from common import build_pool_document, normalize_team_entry
 ROOT = Path(__file__).resolve().parents[2]
 DATA_DIR = ROOT / "data"
 CURATED_FILE = DATA_DIR / "curated" / "high_level_source_registry.json"
+EXPANDED_FILE = DATA_DIR / "curated" / "high_level_expanded_candidates.json"
 RAW_YOUTUBE = DATA_DIR / "raw" / "youtube_sources.json"
 RAW_REDDIT = DATA_DIR / "raw" / "reddit_threads.json"
 NORMALIZED_FILE = DATA_DIR / "normalized" / "high_level_creator_pool.json"
@@ -51,6 +52,19 @@ DEFAULT_CREATOR_PROFILES = [
         ],
         "quality_class": "serious_ladder",
         "tags": ["niche_competitive", "tailwind_balance", "hard_tr"],
+    },
+    {
+        "source_name": "CybertronVGC",
+        "patterns": ["cybertron", "cybertronvgc", "aaron zheng", "aaron"],
+        "title_patterns": ["vgc", "tournament", "regionals", "balance", "tailwind"],
+        "archetypes": ["balance", "bulky-offense", "tailwind_balance"],
+        "signature_cores": [
+            ["Incineroar", "Whimsicott"],
+            ["Amoonguss", "Landorus"],
+            ["Urshifu", "Rillaboom"],
+        ],
+        "quality_class": "tournament_result",
+        "tags": ["standard_meta", "balance", "tournament"],
     },
 ]
 
@@ -177,6 +191,7 @@ def get_bucket_entries(payload, *field_names):
 
 def build_high_level_creator_pool():
     registry = load_json(CURATED_FILE, {"sources": []}).get("sources", [])
+    expanded_payload = load_json(EXPANDED_FILE, {"teams": []})
     youtube = load_json(RAW_YOUTUBE, {"videos": []})
     reddit = load_json(RAW_REDDIT, {"posts": []})
     teams = []
@@ -189,6 +204,7 @@ def build_high_level_creator_pool():
             "youtube": {"rows": 0, "accepted": 0},
             "reddit": {"rows": 0, "accepted": 0},
             "creator": {"rows": 0, "accepted": 0},
+            "expanded": {"rows": 0, "accepted": 0},
         },
     }
 
@@ -296,6 +312,45 @@ def build_high_level_creator_pool():
         normalized_entry["originSourceType"] = "creator"
         teams.append(normalized_entry)
         debug["sources"]["creator"]["accepted"] += 1
+
+    expanded_teams = expanded_payload.get("teams", []) if isinstance(expanded_payload.get("teams", []), list) else []
+    debug["sources"]["expanded"]["rows"] = len(expanded_teams)
+    for entry in expanded_teams:
+        if str(entry.get("classification") or "") not in {"high_level_verified", "high_level_partial"}:
+            debug["rejections"].append({
+                "originSourceType": entry.get("originSourceType", ""),
+                "sourceName": entry.get("sourceName", ""),
+                "reason": "expansion_not_accepted",
+            })
+            continue
+        normalized_entry = normalize_team_entry(
+            source_type="high_level",
+            source_name=entry.get("matchedCreator") or entry.get("sourceName") or "expanded_high_level",
+            source_url=entry.get("sourceUrl") or "",
+            archetype=entry.get("archetype", ""),
+            slots=entry.get("team") or [],
+            tags=list(dict.fromkeys((entry.get("tags", []) or []) + ["high_level", "expanded"])),
+            confidence=entry.get("confidence", 0.78),
+            import_strategy=entry.get("importStrategy", "expansion-reviewed-import"),
+            notes=entry.get("notes", "Accepted from reviewed high-level expansion."),
+        )
+        if not normalized_entry.get("team"):
+            debug["rejections"].append({
+                "originSourceType": entry.get("originSourceType", ""),
+                "sourceName": entry.get("sourceName", ""),
+                "reason": "expansion_normalization_failure",
+            })
+            continue
+        normalized_entry["qualityClass"] = entry.get("qualityClass") or "high_level_analysis"
+        normalized_entry["originSourceType"] = entry.get("originSourceType") or entry.get("expansionBucket", "")
+        normalized_entry["rawSourceName"] = entry.get("rawSourceName") or entry.get("sourceName", "")
+        normalized_entry["matchedCreator"] = entry.get("matchedCreator") or entry.get("sourceName", "")
+        normalized_entry["creatorMatchReason"] = entry.get("creatorMatchReason") or "expansion_review"
+        normalized_entry["creatorMatchScore"] = entry.get("creatorMatchScore", 0.0)
+        normalized_entry["creatorCoreOverlap"] = entry.get("creatorCoreOverlap", 0.0)
+        normalized_entry["classification"] = entry.get("classification")
+        teams.append(normalized_entry)
+        debug["sources"]["expanded"]["accepted"] += 1
 
     deduped = {}
     for row in teams:
