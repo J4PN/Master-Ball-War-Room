@@ -31,10 +31,15 @@ CURATED_DIR = DATA_DIR / "curated"
 SOURCE_CONFIDENCE_DEFAULTS = {
     "meta": 1.0,
     "pikalytics": 0.96,
+    "pikalytics_variant": 0.768,
     "high_level": 0.9,
+    "high_level_variant": 0.72,
     "archive": 0.9,
+    "archive_variant": 0.72,
     "reddit": 0.72,
+    "reddit_variant": 0.576,
     "youtube": 0.62,
+    "youtube_variant": 0.496,
     "selfplay": 0.4,
     "random": 0.35,
 }
@@ -42,26 +47,44 @@ SOURCE_CONFIDENCE_DEFAULTS = {
 SOURCE_SAMPLING_DEFAULTS = {
     "meta": 1.0,
     "pikalytics": 0.95,
+    "pikalytics_variant": 0.74,
     "high_level": 0.9,
+    "high_level_variant": 0.72,
     "archive": 0.8,
+    "archive_variant": 0.64,
     "reddit": 0.55,
+    "reddit_variant": 0.44,
     "youtube": 0.45,
+    "youtube_variant": 0.36,
     "selfplay": 0.2,
     "random": 0.2,
 }
 
-SOURCE_SHARE_CAPS = {
-    "selfplay": 0.35,
-    "archive": 0.30,
-    "random": 0.08,
+EVALUATION_SOURCE_CAPS = {
+    "selfplay": 0.60,
+    "random": 0.05,
 }
 
-SOURCE_SHARE_MINIMUMS = {
-    "archive": 0.15,
+EVALUATION_SOURCE_MINIMUMS = {
+    "archive": 0.10,
+    "archive_variant": 0.10,
+    "high_level": 0.05,
+    "pikalytics": 0.05,
 }
 
-SOURCE_GROUP_MINIMUMS = {
-    ("meta", "pikalytics", "high_level"): 0.25,
+EVALUATION_SOURCE_GROUP_MINIMUMS = {
+    ("archive", "archive_variant"): 0.22,
+    (
+        "high_level",
+        "high_level_variant",
+        "pikalytics",
+        "pikalytics_variant",
+        "reddit",
+        "reddit_variant",
+        "youtube",
+        "youtube_variant",
+        "meta",
+    ): 0.20,
 }
 
 RETAINED_SOURCE_CAPS = {
@@ -80,20 +103,66 @@ RETAINED_SOURCE_GROUP_MINIMUMS = {
 }
 
 MIN_EVALUATION_POOL_FLOOR = 24
-MAX_EVALUATION_POOL_TARGET = 300
+MIN_EVALUATION_POOL_FLOOR_LARGE_RUN = 300
+MAX_EVALUATION_POOL_TARGET = 1000
 MIN_EVALUATION_WARNING_THRESHOLD = 100
 RETENTION_POOL_SIZE = 24
 MIN_SERIOUS_RETENTION_TEAM_SIZE = 4
 STRICT_RETAINED_CAP_SOURCES = {"selfplay", "random"}
 SAFE_RETAINED_SELFPLAY_SHARE = 0.15
+GUARDRAIL_MAX_EVALUATION_SELFPLAY_SHARE = 0.65
+GUARDRAIL_MAX_RETAINED_SELFPLAY_SHARE = 0.18
+REAL_VARIANT_SOURCE_TYPES = {
+    "archive": "archive_variant",
+    "high_level": "high_level_variant",
+    "pikalytics": "pikalytics_variant",
+    "reddit": "reddit_variant",
+    "youtube": "youtube_variant",
+}
+VARIANT_SOURCE_TYPES = set(REAL_VARIANT_SOURCE_TYPES.values())
+VALID_SOURCE_TYPES = {
+    "meta",
+    "pikalytics",
+    "pikalytics_variant",
+    "high_level",
+    "high_level_variant",
+    "archive",
+    "archive_variant",
+    "reddit",
+    "reddit_variant",
+    "youtube",
+    "youtube_variant",
+    "selfplay",
+    "random",
+}
+ORIGINAL_PRIORITY_BONUS = {
+    "meta": 0.14,
+    "high_level": 0.12,
+    "pikalytics": 0.1,
+    "archive": 0.09,
+    "reddit": 0.05,
+    "youtube": 0.04,
+    "archive_variant": -0.01,
+    "high_level_variant": -0.02,
+    "pikalytics_variant": -0.03,
+    "reddit_variant": -0.05,
+    "youtube_variant": -0.06,
+    "selfplay": -0.18,
+    "random": -0.12,
+}
 
 EVALUATION_SOURCE_ORDER = (
     "meta",
     "pikalytics",
+    "pikalytics_variant",
     "high_level",
+    "high_level_variant",
     "reddit",
+    "reddit_variant",
     "youtube",
+    "youtube_variant",
     "archive",
+    "archive_variant",
     "random",
     "selfplay",
 )
@@ -127,18 +196,34 @@ def normalize_key(value: str) -> str:
     return "".join(ch.lower() for ch in str(value or "") if ch.isalnum())
 
 
+def collapse_repeated_source_prefix(text: str, source_type: str) -> str:
+    cleaned = str(text or "").strip()
+    prefix = canonical_source_type(source_type, "").replace("_", "")
+    if not cleaned or not prefix:
+        return cleaned
+    lowered = normalize_key(cleaned)
+    while lowered.startswith(prefix * 2):
+        lowered = prefix + lowered[len(prefix) * 2:]
+    return lowered or prefix
+
+
 def canonical_source_type(value: str, fallback: str = "unknown") -> str:
     key = normalize_key(value)
     mapping = {
         "selfplay": "selfplay",
         "self_play": "selfplay",
         "archive": "archive",
+        "archivevariant": "archive_variant",
         "meta": "meta",
         "pikalytics": "pikalytics",
+        "pikalyticsvariant": "pikalytics_variant",
         "reddit": "reddit",
+        "redditvariant": "reddit_variant",
         "youtube": "youtube",
+        "youtubevariant": "youtube_variant",
         "random": "random",
         "highlevel": "high_level",
+        "highlevelvariant": "high_level_variant",
         "curatedhighlevel": "high_level",
         "creator": "high_level",
     }
@@ -334,7 +419,10 @@ def normalize_pool_row(row: dict, fallback_source_type: str = "") -> dict:
         or "unknown"
     )
     normalized["sourceType"] = source_type
-    normalized["sourceName"] = normalized.get("sourceName") or normalized.get("source_name") or source_type
+    normalized["sourceName"] = collapse_repeated_source_prefix(
+        normalized.get("sourceName") or normalized.get("source_name") or source_type,
+        source_type,
+    )
     normalized["sourceUrl"] = normalized.get("sourceUrl") or normalized.get("source_url") or normalized.get("url") or ""
     normalized["archetype"] = str(normalized.get("archetype", "") or "").strip()
     normalized["tags"] = list(dict.fromkeys([str(tag).strip() for tag in normalized.get("tags", []) if str(tag).strip()] + [source_type]))
@@ -363,6 +451,38 @@ def load_raw_source_pool(path: Path, source_type: str, *field_names: str) -> Lis
         for row in rows
         if (normalized := normalize_pool_row(row, source_type)) and species_list(normalized)
     ]
+
+
+def root_source_type(row: dict) -> str:
+    source_type = canonical_source_type(row.get("sourceType", "unknown"))
+    if source_type in VARIANT_SOURCE_TYPES:
+        return canonical_source_type(row.get("originSourceType", "unknown"))
+    return source_type
+
+
+def is_variant_source_type(source_type: str) -> bool:
+    return canonical_source_type(source_type) in VARIANT_SOURCE_TYPES
+
+
+def is_variant_row(row: dict) -> bool:
+    return is_variant_source_type(row.get("sourceType", ""))
+
+
+def source_confidence_for(source_type: str) -> float:
+    return float(SOURCE_CONFIDENCE_DEFAULTS.get(canonical_source_type(source_type), 0.5))
+
+
+def source_sampling_for(source_type: str) -> float:
+    return float(SOURCE_SAMPLING_DEFAULTS.get(canonical_source_type(source_type), 0.5))
+
+
+def count_sources(rows: Sequence[dict]) -> Dict[str, int]:
+    return dict(Counter(canonical_source_type(row.get("sourceType", "unknown")) for row in rows))
+
+
+def compute_source_shares_from_counts(source_counts: Dict[str, int]) -> Dict[str, float]:
+    total = sum(source_counts.values()) or 1
+    return {source_type: count / total for source_type, count in source_counts.items()}
 
 
 def inspect_pool_file(path: Path) -> dict:
@@ -844,11 +964,13 @@ def make_team_row(
     source_name: str = "",
     source_url: str = "",
     archetype: str = "",
+    provenance: dict | None = None,
 ) -> dict:
-    return {
-        "id": normalize_key(f"{source_type}-{label}"),
+    cleaned_label = collapse_repeated_source_prefix(label, source_type)
+    row = {
+        "id": normalize_key(cleaned_label if normalize_key(cleaned_label).startswith(normalize_key(source_type)) else f"{source_type}-{cleaned_label}"),
         "sourceType": source_type,
-        "sourceName": source_name or source_type,
+        "sourceName": collapse_repeated_source_prefix(source_name or source_type, source_type),
         "sourceUrl": source_url,
         "archetype": archetype,
         "team": canonical_team_slots(slots),
@@ -856,6 +978,9 @@ def make_team_row(
         "completeness": round(max(0.0, min(1.0, completeness)), 3),
         "tags": list(dict.fromkeys([source_type, *tags])),
     }
+    if provenance:
+        row.update(provenance)
+    return row
 
 
 def candidate_quality_score(row: dict) -> float:
@@ -867,7 +992,10 @@ def candidate_quality_score(row: dict) -> float:
     niche_bonus = 0.07 if {"niche_competitive", "anti_rain", "anti_meta"} & tags else 0.0
     archetype_bonus = 0.04 if archetype and archetype not in {"unknown", "standard"} else 0.0
     source_bonus = SOURCE_SAMPLING_DEFAULTS.get(source_type, 0.5) * 0.18
-    return confidence * 0.52 + completeness * 0.26 + source_bonus + niche_bonus + archetype_bonus
+    provenance_penalty = 0.06 if source_type in VARIANT_SOURCE_TYPES else 0.0
+    provenance_penalty += 0.12 if source_type == "selfplay" else 0.0
+    authority_bonus = ORIGINAL_PRIORITY_BONUS.get(source_type, 0.0)
+    return confidence * 0.52 + completeness * 0.26 + source_bonus + niche_bonus + archetype_bonus + authority_bonus - provenance_penalty
 
 
 def diversify_source_rows(rows: Sequence[dict]) -> List[dict]:
@@ -917,7 +1045,8 @@ def compute_source_cap_count(total_candidates: int, share: float, available_coun
 def get_minimum_evaluation_pool_size(iterations: int, generated_count: int) -> int:
     if generated_count <= 0:
         return 0
-    return min(max(MIN_EVALUATION_POOL_FLOOR, math.ceil(iterations * 0.5)), MAX_EVALUATION_POOL_TARGET)
+    floor = MIN_EVALUATION_POOL_FLOOR_LARGE_RUN if iterations >= 1000 else MIN_EVALUATION_POOL_FLOOR
+    return min(max(floor, math.ceil(iterations * 0.5)), MAX_EVALUATION_POOL_TARGET)
 
 
 def result_quality_score(result: CandidateResult) -> float:
@@ -936,6 +1065,7 @@ def result_quality_score(result: CandidateResult) -> float:
     )
     real_source_bonus = min(0.16, real_source_strength * 0.12)
     novelty_penalty = 0.08 if canonical_source_type(result.source_type) == "selfplay" and real_source_strength < 0.5 else 0.0
+    variant_penalty = 0.07 if canonical_source_type(result.source_type) in VARIANT_SOURCE_TYPES else 0.0
     return (
         result.overall * 0.68
         + result.confidence * 0.24
@@ -946,6 +1076,7 @@ def result_quality_score(result: CandidateResult) -> float:
         + real_source_bonus
         - structure_penalty
         - novelty_penalty
+        - variant_penalty
     )
 
 
@@ -959,6 +1090,8 @@ def get_source_backed_retention_adjustment(result: CandidateResult) -> float:
         bonus = 0.0
         if source_type in {"archive", "meta", "pikalytics", "high_level"}:
             bonus += 0.05
+        elif source_type in VARIANT_SOURCE_TYPES:
+            bonus -= 0.03
         if strong_support:
             bonus += 0.04
         return round(bonus, 4)
@@ -983,6 +1116,8 @@ def retention_priority_score(result: CandidateResult) -> float:
     base = result_quality_score(result) + get_source_backed_retention_adjustment(result)
     if source_type == "selfplay":
         base -= 0.16
+    elif source_type in {"high_level_variant", "pikalytics_variant", "archive_variant", "reddit_variant", "youtube_variant"}:
+        base -= 0.06
     elif source_type == "high_level":
         base += 0.08
     elif source_type in {"archive", "meta", "pikalytics"}:
@@ -1138,6 +1273,134 @@ def rebalance_retained_results(
     return selected
 
 
+def get_locked_species_keys(team_row: dict) -> set[str]:
+    slots = canonical_team_slots(team_row.get("team", []))
+    moves = {normalize_key(move) for slot in slots for move in slot.get("moves", []) if normalize_key(move)}
+    species_keys = [normalize_key(slot["name"]) for slot in slots if normalize_key(slot.get("name", ""))]
+    locked = set(species_keys[:2])
+    for slot in slots:
+        species_key = normalize_key(slot.get("name", ""))
+        slot_moves = {normalize_key(move) for move in slot.get("moves", []) if normalize_key(move)}
+        if slot_moves & {"tailwind", "trickroom", "fakeout", "raindance", "sunnyday"}:
+            locked.add(species_key)
+    if "pelipper" in species_keys:
+        locked.add("pelipper")
+    if "basculegion" in species_keys:
+        locked.add("basculegion")
+    if "whimsicott" in species_keys and "pelipper" in species_keys:
+        locked.add("whimsicott")
+    if "charizard" in species_keys or "megacharizardy" in species_keys:
+        locked.update({"charizard", "megacharizardy"})
+        for partner in ("venusaur", "ninetales", "torkoal"):
+            if partner in species_keys:
+                locked.add(partner)
+    if "trickroom" in moves:
+        for partner in ("farigiraf", "kingambit", "sinistcha"):
+            if partner in species_keys:
+                locked.add(partner)
+    return locked
+
+
+def build_candidate_provenance(parent: dict, variant_source_type: str) -> dict:
+    origin_source_type = root_source_type(parent)
+    return {
+        "sourceType": variant_source_type,
+        "originSourceType": origin_source_type,
+        "parentSourceName": parent.get("sourceName") or parent.get("parentSourceName") or origin_source_type,
+        "generated": True,
+        "variantReason": "controlled-source-variant",
+        "sourceLineageConfidence": round(source_confidence_for(origin_source_type) * 0.8, 3),
+    }
+
+
+def choose_variant_replacement(
+    base_row: dict,
+    source_pool: Sequence[dict],
+    universe: Sequence[str],
+    rng: random.Random,
+) -> str | None:
+    current_species = {normalize_key(name) for name in species_list(base_row)}
+    archetype = str(base_row.get("archetype", "") or "").strip().lower()
+    candidate_species = []
+    for row in source_pool:
+        row_root = root_source_type(row)
+        if row_root != root_source_type(base_row):
+            continue
+        row_archetype = str(row.get("archetype", "") or "").strip().lower()
+        if archetype and row_archetype and row_archetype != archetype:
+            continue
+        signals = compute_structure_alignment(base_row, row)
+        if signals["alignment"] < 0.38:
+            continue
+        for name in species_list(row):
+            key = normalize_key(name)
+            if key and key not in current_species:
+                candidate_species.append(name)
+    if not candidate_species:
+        candidate_species = [name for name in universe if normalize_key(name) not in current_species]
+    if not candidate_species:
+        return None
+    return rng.choice(candidate_species)
+
+
+def generate_controlled_variant(
+    base_team: dict,
+    source_pool: Sequence[dict],
+    universe: Sequence[str],
+    rng: random.Random,
+) -> dict | None:
+    origin_source = root_source_type(base_team)
+    variant_source_type = REAL_VARIANT_SOURCE_TYPES.get(origin_source)
+    if not variant_source_type:
+        return None
+    slots = canonical_team_slots(base_team.get("team", []))
+    if len(slots) < 4:
+        return None
+    locked = get_locked_species_keys(base_team)
+    mutable_indexes = [index for index, slot in enumerate(slots) if normalize_key(slot.get("name", "")) not in locked]
+    variant_slots = [dict(slot) for slot in slots]
+    swap_count = 1
+    if len(mutable_indexes) >= 2 and rng.random() < 0.55:
+        swap_count = 2
+    for _ in range(swap_count):
+        replacement = choose_variant_replacement({"team": variant_slots, "archetype": base_team.get("archetype", ""), "sourceType": base_team.get("sourceType", "")}, source_pool, universe, rng)
+        if replacement is None:
+            if _ == 0:
+                return None
+            break
+        replacement_slot = {
+            "name": replacement,
+            "item": "",
+            "ability": "",
+            "moves": [],
+            "nature": "",
+            "spreads": {},
+        }
+        remaining_mutable = [index for index, slot in enumerate(variant_slots) if normalize_key(slot.get("name", "")) not in locked]
+        if remaining_mutable:
+            variant_slots[rng.choice(remaining_mutable)] = replacement_slot
+        elif len(variant_slots) < 6:
+            variant_slots.append(replacement_slot)
+        else:
+            break
+    if species_list({"team": variant_slots}) == species_list(base_team):
+        return None
+    parent_confidence = team_confidence(base_team)
+    provenance = build_candidate_provenance(base_team, variant_source_type)
+    return make_team_row(
+        label=f"{base_team.get('id', 'candidate')}-variant",
+        source_type=variant_source_type,
+        slots=variant_slots,
+        confidence=max(0.1, min(1.0, parent_confidence * 0.8)),
+        completeness=max(0.35, min(1.0, float(base_team.get("completeness", 0.6) or 0.6) * 0.97)),
+        tags=list(dict.fromkeys(list(base_team.get("tags", [])) + ["generated", "controlled-source-variant", variant_source_type])),
+        source_name=base_team.get("sourceName") or provenance["parentSourceName"],
+        source_url=base_team.get("sourceUrl") or "",
+        archetype=base_team.get("archetype") or "",
+        provenance=provenance,
+    )
+
+
 def generate_mutation(base_team: dict, universe: Sequence[str], rng: random.Random) -> dict:
     slots = canonical_team_slots(base_team.get("team", []))
     known_species = [slot["name"] for slot in slots]
@@ -1169,7 +1432,149 @@ def generate_mutation(base_team: dict, universe: Sequence[str], rng: random.Rand
         completeness=0.4,
         tags=["generated", "exploratory"],
         source_name="self-generated",
+        provenance={
+            "generated": True,
+            "variantReason": "selfplay-exploration",
+        },
     )
+
+
+def compute_desired_evaluation_pool_size(iterations: int, available_count: int) -> int:
+    if available_count <= 0:
+        return 0
+    if iterations >= 1000:
+        return min(available_count, max(MIN_EVALUATION_POOL_FLOOR_LARGE_RUN, math.ceil(iterations * 0.8)))
+    if iterations >= 200:
+        return min(available_count, max(120, math.ceil(iterations * 0.75)))
+    return available_count
+
+
+def rebalance_evaluation_pool(
+    rows: Sequence[dict],
+    target_size: int,
+    source_caps: Dict[str, float],
+    source_minimums: Dict[str, float],
+    source_group_minimums: Dict[tuple, float],
+) -> tuple[List[dict], Dict[str, int]]:
+    if target_size <= 0:
+        return [], {}
+    grouped: Dict[str, List[dict]] = defaultdict(list)
+    for row in rows:
+        grouped[canonical_source_type(row.get("sourceType", "unknown"))].append(row)
+    ordered_by_source = {source: diversify_source_rows(bucket) for source, bucket in grouped.items()}
+    selected: List[dict] = []
+    selected_ids = set()
+    counts = Counter()
+    cursors = defaultdict(int)
+    dropped = Counter()
+    cap_counts = {
+        source: max(
+            compute_source_cap_count(target_size, share, len(ordered_by_source.get(source, []))),
+            compute_source_target_count(target_size, source_minimums.get(source, 0.0), len(ordered_by_source.get(source, []))),
+        )
+        for source, share in source_caps.items()
+    }
+
+    def next_row(source: str):
+        rows_for_source = ordered_by_source.get(source, [])
+        while cursors[source] < len(rows_for_source):
+            row = rows_for_source[cursors[source]]
+            cursors[source] += 1
+            key = row.get("id") or row.get("sourceName") or "|".join(species_list(row))
+            if key in selected_ids:
+                continue
+            return row
+        return None
+
+    def take_from_source(source: str, ignore_cap: bool = False) -> bool:
+        if not ignore_cap and counts[source] >= cap_counts.get(source, len(ordered_by_source.get(source, []))):
+            dropped[f"cap_{source}"] += 1
+            return False
+        row = next_row(source)
+        if not row:
+            return False
+        selected.append(row)
+        selected_ids.add(row.get("id") or row.get("sourceName") or "|".join(species_list(row)))
+        counts[source] += 1
+        return True
+
+    for source, share in sorted(source_minimums.items(), key=lambda item: item[1], reverse=True):
+        target = compute_source_target_count(target_size, share, len(ordered_by_source.get(source, [])))
+        while counts[source] < target and len(selected) < target_size and take_from_source(source):
+            pass
+
+    for sources, share in source_group_minimums.items():
+        target = compute_source_target_count(target_size, share, sum(len(ordered_by_source.get(source, [])) for source in sources))
+        while len(selected) < target_size and sum(counts[source] for source in sources) < target:
+            available_sources = [
+                source
+                for source in sources
+                if counts[source] < cap_counts.get(source, len(ordered_by_source.get(source, [])))
+                and cursors[source] < len(ordered_by_source.get(source, []))
+            ]
+            if not available_sources:
+                break
+            available_sources.sort(
+                key=lambda source: (
+                    counts[source],
+                    -candidate_quality_score(ordered_by_source[source][cursors[source]]),
+                    EVALUATION_SOURCE_ORDER.index(source) if source in EVALUATION_SOURCE_ORDER else 999,
+                    source,
+                )
+            )
+            if not take_from_source(available_sources[0]):
+                break
+
+    while len(selected) < min(target_size, len(rows)):
+        available_sources = [
+            source
+            for source in ordered_by_source
+            if cursors[source] < len(ordered_by_source.get(source, []))
+            and counts[source] < cap_counts.get(source, len(ordered_by_source.get(source, [])))
+        ]
+        if not available_sources:
+            break
+        available_sources.sort(
+            key=lambda source: (
+                EVALUATION_SOURCE_ORDER.index(source) if source in EVALUATION_SOURCE_ORDER else 999,
+                counts[source],
+                -candidate_quality_score(ordered_by_source[source][cursors[source]]),
+                source,
+            )
+        )
+        if not take_from_source(available_sources[0]):
+            break
+
+    while len(selected) < min(target_size, len(rows)):
+        available_sources = [
+            source
+            for source in ordered_by_source
+            if source not in source_caps and cursors[source] < len(ordered_by_source.get(source, []))
+        ]
+        if not available_sources:
+            break
+        available_sources.sort(
+            key=lambda source: (
+                EVALUATION_SOURCE_ORDER.index(source) if source in EVALUATION_SOURCE_ORDER else 999,
+                counts[source],
+                -candidate_quality_score(ordered_by_source[source][cursors[source]]),
+                source,
+            )
+        )
+        if not take_from_source(available_sources[0], ignore_cap=True):
+            break
+
+    selected_source_keys = {row.get("id") or row.get("sourceName") or "|".join(species_list(row)) for row in selected}
+    for row in rows:
+        key = row.get("id") or row.get("sourceName") or "|".join(species_list(row))
+        if key in selected_source_keys:
+            continue
+        source_type = canonical_source_type(row.get("sourceType", "unknown"))
+        if source_type in source_caps and counts[source_type] >= cap_counts.get(source_type, len(ordered_by_source.get(source_type, []))):
+            dropped[f"source_cap_{source_type}"] += 1
+        else:
+            dropped["target_trim"] += 1
+    return selected, dict(dropped)
 
 
 def build_candidate_pool(
@@ -1183,7 +1588,7 @@ def build_candidate_pool(
     selfplay_pool: Sequence[dict],
     iterations: int,
     rng: random.Random,
-) -> List[dict]:
+) -> tuple[List[dict], dict]:
     seed_rows = (
         list(meta_pool)
         + list(pikalytics_pool)
@@ -1197,13 +1602,59 @@ def build_candidate_pool(
     seed_rows = [normalize_pool_row(row, row.get("sourceType", "unknown")) for row in seed_rows if species_list(row)]
     universe = species_universe(meta_pool, pikalytics_pool, high_level_pool, reddit_pool, youtube_pool, archive_pool, random_pool, selfplay_pool)
     candidates = [row for row in seed_rows if species_list(row)]
+    generation_stats = {
+        "variantCountsByOrigin": {},
+        "droppedCandidatesByReason": {},
+    }
+    variant_counts = Counter()
+    source_variant_inputs = {
+        "archive": list(archive_pool),
+        "high_level": list(high_level_pool),
+        "pikalytics": list(pikalytics_pool),
+        "reddit": list(reddit_pool),
+        "youtube": list(youtube_pool),
+    }
+    variant_seeds = [
+        normalize_pool_row(row, row.get("sourceType", "unknown"))
+        for source_rows in source_variant_inputs.values()
+        for row in source_rows
+        if species_list(row)
+    ]
+    controlled_variant_target = max(0, math.ceil(iterations * 0.8))
+    controlled_variants: List[dict] = []
+    if variant_seeds and controlled_variant_target > 0:
+        ordered_variant_sources = ["archive", "high_level", "pikalytics", "reddit", "youtube"]
+        source_cursors = {source: 0 for source in ordered_variant_sources}
+        diversified_variant_sources = {
+            source: diversify_source_rows([normalize_pool_row(row, row.get("sourceType", source)) for row in source_variant_inputs[source] if species_list(row)])
+            for source in ordered_variant_sources
+        }
+        attempts = 0
+        max_attempts = max(controlled_variant_target * 8, 100)
+        while len(controlled_variants) < controlled_variant_target and attempts < max_attempts:
+            attempts += 1
+            source = ordered_variant_sources[(attempts - 1) % len(ordered_variant_sources)]
+            source_rows = diversified_variant_sources.get(source, [])
+            if not source_rows:
+                continue
+            base_row = source_rows[source_cursors[source] % len(source_rows)]
+            source_cursors[source] += 1
+            variant = generate_controlled_variant(base_row, source_rows, universe, rng)
+            if not variant:
+                generation_stats["droppedCandidatesByReason"]["variant_generation_failed"] = generation_stats["droppedCandidatesByReason"].get("variant_generation_failed", 0) + 1
+                continue
+            variant["id"] = normalize_key(f"{variant['sourceType']}-{len(controlled_variants) + 1}-{variant.get('parentSourceName', '')}")
+            controlled_variants.append(variant)
+            variant_counts[variant.get("originSourceType", source)] += 1
+    candidates.extend(controlled_variants)
     generated_candidates: List[dict] = []
     weighted_seed_rows = [
         row
         for row in seed_rows
         for _ in range(max(1, int(round(SOURCE_SAMPLING_DEFAULTS.get(canonical_source_type(row.get("sourceType")), 0.5) * 10))))
     ]
-    for index in range(iterations):
+    selfplay_fill_target = max(0, iterations - len(controlled_variants))
+    for index in range(selfplay_fill_target):
         seed_choices = weighted_seed_rows or seed_rows
         if not seed_choices:
             break
@@ -1228,6 +1679,7 @@ def build_candidate_pool(
             else:
                 duplicate_candidates.append(row)
     evaluation_pool = list(deduped.values())
+    generation_stats["droppedCandidatesByReason"]["duplicate_team_species"] = len(duplicate_candidates)
     minimum_pool_size = get_minimum_evaluation_pool_size(iterations, len(generated_candidates))
     if len(evaluation_pool) < minimum_pool_size and duplicate_candidates:
         for row in sorted(duplicate_candidates, key=candidate_quality_score, reverse=True):
@@ -1237,7 +1689,21 @@ def build_candidate_pool(
             evaluation_pool.append(row)
             if len(evaluation_pool) >= minimum_pool_size:
                 break
-    return evaluation_pool
+    generation_stats["variantCountsByOrigin"] = dict(variant_counts)
+    desired_pool_size = compute_desired_evaluation_pool_size(iterations, len(evaluation_pool))
+    balanced_pool, rebalance_drops = rebalance_evaluation_pool(
+        evaluation_pool,
+        desired_pool_size,
+        EVALUATION_SOURCE_CAPS,
+        EVALUATION_SOURCE_MINIMUMS,
+        EVALUATION_SOURCE_GROUP_MINIMUMS,
+    )
+    for reason, count in rebalance_drops.items():
+        generation_stats["droppedCandidatesByReason"][reason] = generation_stats["droppedCandidatesByReason"].get(reason, 0) + count
+    generation_stats["preBalanceSourceCounts"] = count_sources(evaluation_pool)
+    generation_stats["postBalanceSourceCounts"] = count_sources(balanced_pool)
+    generation_stats["desiredEvaluationPoolSize"] = desired_pool_size
+    return balanced_pool, generation_stats
 
 
 def update_species_role_priors(previous: dict, top_results: Sequence[CandidateResult]) -> dict:
@@ -1391,6 +1857,81 @@ def build_source_meta_snapshot(*pools: Sequence[dict]) -> dict:
         "sources": sorted({source for row in top_rows for source in row.get("sources", [])}),
         "threats": top_rows
     }
+
+
+def validate_training_state(
+    candidates: Sequence[dict],
+    retained_results: Sequence[CandidateResult],
+    source_meta_snapshot: dict,
+    high_level_pool: Sequence[dict],
+    source_inputs: Dict[str, Sequence[dict]],
+) -> dict:
+    errors = []
+    variant_errors = 0
+    for index, row in enumerate(candidates):
+        source_type = canonical_source_type(row.get("sourceType", "unknown"))
+        if source_type not in VALID_SOURCE_TYPES:
+            errors.append(f"candidate[{index}] invalid sourceType `{source_type}`")
+        if source_type in VARIANT_SOURCE_TYPES and not canonical_source_type(row.get("originSourceType", "")):
+            variant_errors += 1
+        if "archivearchive" in json.dumps(row, ensure_ascii=True, default=str).lower():
+            errors.append(f"candidate[{index}] contains archivearchive artifact")
+        if contains_team_blob := any(is_serialized_slot_blob(slot.get("name", "")) for slot in canonical_team_slots(row.get("team", []))):
+            if contains_team_blob:
+                errors.append(f"candidate[{index}] contains serialized slot blob content")
+    if variant_errors:
+        errors.append(f"{variant_errors} variant candidates missing originSourceType")
+    for index, result in enumerate(retained_results):
+        if len(result.team) <= 1:
+            errors.append(f"retained[{index}] collapsed to {len(result.team)} slot")
+    if source_inputs.get("high_level") and not high_level_pool:
+        errors.append("high_level pool empty despite available high_level sources")
+    for threat in source_meta_snapshot.get("threats", []):
+        key = str(threat.get("name", "")).strip()
+        if not key or normalize_key(key) != key:
+            errors.append(f"threat key not normalized: `{key}`")
+    return {
+        "ok": not errors,
+        "errors": errors,
+    }
+
+
+def build_guardrail_report(
+    *,
+    iterations: int,
+    candidate_rows: Sequence[dict],
+    retained_results: Sequence[CandidateResult],
+    generation_stats: dict,
+    evaluation_target: int,
+    validation_status: dict,
+    failure_reasons: Sequence[str],
+) -> dict:
+    retained_source_counts = Counter(result.source_type for result in retained_results)
+    evaluation_counts = generation_stats.get("postBalanceSourceCounts") or count_sources(candidate_rows)
+    evaluation_shares = compute_source_shares_from_counts(evaluation_counts)
+    retained_shares = compute_source_shares_from_counts(dict(retained_source_counts))
+    report = {
+        "updatedAt": utc_now(),
+        "iterations": iterations,
+        "evaluationTarget": evaluation_target,
+        "evaluatedCandidates": len(candidate_rows),
+        "retainedCandidates": len(retained_results),
+        "preBalanceSourceCounts": generation_stats.get("preBalanceSourceCounts", {}),
+        "postBalanceSourceCounts": evaluation_counts,
+        "evaluationSelfplayShare": round(evaluation_shares.get("selfplay", 0.0), 4),
+        "retainedSelfplayShare": round(retained_shares.get("selfplay", 0.0), 4),
+        "variantCountsByOrigin": generation_stats.get("variantCountsByOrigin", {}),
+        "droppedCandidatesByReason": generation_stats.get("droppedCandidatesByReason", {}),
+        "validationStatus": validation_status,
+        "failureReasons": list(failure_reasons),
+    }
+    return report
+
+
+def write_guardrail_report(report: dict) -> Path:
+    path = REPORT_DIR / "training_guardrails.json"
+    write_json(path, report)
+    return path
 
 
 def write_battle_log(results: Sequence[CandidateResult]) -> Path:
@@ -1551,11 +2092,71 @@ def write_summary(
     (REPORT_DIR / "training_summary.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
+def snapshot_write_targets() -> Dict[str, float | None]:
+    paths = {
+        "team_archive": DATA_DIR / "team_archive.json",
+        "species_role_priors": DATA_DIR / "species_role_priors.json",
+        "move_choice_weights": DATA_DIR / "move_choice_weights.json",
+        "threat_penalties": DATA_DIR / "threat_penalties.json",
+        "learned_weights": DATA_DIR / "learned_weights.json",
+        "combined_training_pool": NORMALIZED_DIR / "combined_training_pool.json",
+    }
+    return {name: (path.stat().st_mtime if path.exists() else None) for name, path in paths.items()}
+
+
+def run_synthetic_guardrail_test() -> dict:
+    before = snapshot_write_targets()
+    passing_report = read_json(REPORT_DIR / "training_guardrails.json", {})
+    synthetic_pass = {
+        "evaluatedCandidates": int(passing_report.get("evaluatedCandidates", 0)),
+        "evaluationSelfplayShare": float(passing_report.get("evaluationSelfplayShare", 1.0)),
+        "retainedSelfplayShare": float(passing_report.get("retainedSelfplayShare", 1.0)),
+    }
+    synthetic_fail_report = {
+        "updatedAt": utc_now(),
+        "iterations": 1000,
+        "evaluationTarget": 800,
+        "evaluatedCandidates": 812,
+        "retainedCandidates": 24,
+        "preBalanceSourceCounts": {"selfplay": 760, "archive": 18, "high_level": 12, "random": 22},
+        "postBalanceSourceCounts": {"selfplay": 540, "archive": 120, "archive_variant": 72, "high_level": 40, "high_level_variant": 16, "random": 24},
+        "evaluationSelfplayShare": 0.665,
+        "retainedSelfplayShare": 0.2083,
+        "variantCountsByOrigin": {"archive": 72, "high_level": 16},
+        "droppedCandidatesByReason": {"source_cap_selfplay": 220},
+        "validationStatus": {"ok": True, "errors": []},
+        "failureReasons": [
+            "synthetic evaluation selfplay share exceeded fail-safe",
+            "synthetic retained selfplay share exceeded fail-safe",
+        ],
+    }
+    write_guardrail_report(synthetic_fail_report)
+    after = snapshot_write_targets()
+    unchanged = {name: before[name] == after[name] for name in before}
+    restored_report = write_guardrail_report(passing_report)
+    return {
+        "passScenario": {
+            "evaluatedCandidates": synthetic_pass["evaluatedCandidates"],
+            "evaluationSelfplayShare": round(synthetic_pass["evaluationSelfplayShare"], 4),
+            "retainedSelfplayShare": round(synthetic_pass["retainedSelfplayShare"], 4),
+            "meetsEvaluatedFloor": synthetic_pass["evaluatedCandidates"] >= 300,
+            "meetsEvaluationSelfplayCap": synthetic_pass["evaluationSelfplayShare"] <= 0.60,
+            "meetsRetainedSelfplayCap": synthetic_pass["retainedSelfplayShare"] <= 0.15,
+        },
+        "failScenario": {
+            "guardrailReportWritten": restored_report.exists(),
+            "learnedOutputsUnchanged": all(unchanged.values()),
+            "unchangedTargets": unchanged,
+        },
+    }
+
+
 def main() -> None:
     ensure_remote_only()
     parser = argparse.ArgumentParser()
     parser.add_argument("--iterations", type=int, default=32)
     parser.add_argument("--seed", type=int, default=11)
+    parser.add_argument("--synthetic-guardrail-test", action="store_true")
     args = parser.parse_args()
     rng = random.Random(args.seed)
 
@@ -1596,7 +2197,10 @@ def main() -> None:
             continue
         archive_pool.append(
             make_team_row(
-                label=archived_label or row.get("source_name") or "-".join(species_list({"team": row.get("team", [])})[:2]) or "archive-team",
+                label=collapse_repeated_source_prefix(
+                    archived_label or row.get("source_name") or "-".join(species_list({"team": row.get("team", [])})[:2]) or "archive-team",
+                    "archive",
+                ),
                 source_type="archive",
                 slots=slots,
                 confidence=float(row.get("confidence", 0.85)),
@@ -1623,7 +2227,7 @@ def main() -> None:
     )
     write_json(NORMALIZED_DIR / "source_meta_snapshot.json", source_meta_snapshot)
 
-    candidates = build_candidate_pool(
+    candidates, generation_stats = build_candidate_pool(
         normalized_meta,
         normalized_pikalytics,
         normalized_high_level,
@@ -1635,9 +2239,12 @@ def main() -> None:
         args.iterations,
         rng,
     )
-    evaluation_target = get_minimum_evaluation_pool_size(
-        args.iterations,
-        sum(1 for row in candidates if canonical_source_type(row.get("sourceType", "unknown")) == "selfplay"),
+    evaluation_target = max(
+        get_minimum_evaluation_pool_size(
+            args.iterations,
+            sum(1 for row in candidates if canonical_source_type(row.get("sourceType", "unknown")) == "selfplay"),
+        ),
+        generation_stats.get("desiredEvaluationPoolSize", 0),
     )
 
     results: List[CandidateResult] = []
@@ -1667,7 +2274,13 @@ def main() -> None:
                 team=canonical_team_slots(candidate.get("team", [])),
                 overall=weighted_score,
                 by_source=by_source,
-                diagnostics={"high_level": high_level_debug},
+                diagnostics={
+                    "high_level": high_level_debug,
+                    "originSourceType": candidate.get("originSourceType") or "",
+                    "parentSourceName": candidate.get("parentSourceName") or "",
+                    "generated": bool(candidate.get("generated", False)),
+                    "variantReason": candidate.get("variantReason") or "",
+                },
             )
         )
 
@@ -1679,6 +2292,51 @@ def main() -> None:
         RETAINED_SOURCE_MINIMUMS,
         RETAINED_SOURCE_GROUP_MINIMUMS,
     )
+    source_counts = Counter(canonical_source_type(row.get("sourceType", "unknown")) for row in candidates)
+    retained_source_counts = Counter(result.source_type for result in retained_results)
+    evaluation_selfplay_share = (source_counts.get("selfplay", 0) / max(1, len(candidates)))
+    retained_selfplay_share = (retained_source_counts.get("selfplay", 0) / max(1, len(retained_results)))
+    non_selfplay_evaluated = len(candidates) - source_counts.get("selfplay", 0)
+    validation_status = validate_training_state(
+        candidates,
+        retained_results,
+        source_meta_snapshot,
+        normalized_high_level,
+        {
+            "high_level": normalized_high_level,
+        },
+    )
+    failure_reasons = []
+    if evaluation_selfplay_share > GUARDRAIL_MAX_EVALUATION_SELFPLAY_SHARE:
+        failure_reasons.append(
+            f"evaluation selfplay share {evaluation_selfplay_share:.3f} exceeded {GUARDRAIL_MAX_EVALUATION_SELFPLAY_SHARE:.2f}"
+        )
+    if retained_selfplay_share > GUARDRAIL_MAX_RETAINED_SELFPLAY_SHARE and non_selfplay_evaluated >= 10:
+        failure_reasons.append(
+            f"retained selfplay share {retained_selfplay_share:.3f} exceeded {GUARDRAIL_MAX_RETAINED_SELFPLAY_SHARE:.2f}"
+        )
+    if args.iterations >= 1000 and len(candidates) < MIN_EVALUATION_POOL_FLOOR_LARGE_RUN:
+        failure_reasons.append(
+            f"evaluated candidate pool {len(candidates)} below minimum {MIN_EVALUATION_POOL_FLOOR_LARGE_RUN}"
+        )
+    if not validation_status["ok"]:
+        failure_reasons.append("schema validation failed before writing outputs")
+    guardrail_report = build_guardrail_report(
+        iterations=args.iterations,
+        candidate_rows=candidates,
+        retained_results=retained_results,
+        generation_stats=generation_stats,
+        evaluation_target=evaluation_target,
+        validation_status=validation_status,
+        failure_reasons=failure_reasons,
+    )
+    write_guardrail_report(guardrail_report)
+    if failure_reasons:
+        raise SystemExit(
+            "Training guardrail triggered; learned outputs were preserved. "
+            + " | ".join(failure_reasons)
+        )
+
     write_json(
         NORMALIZED_DIR / "combined_training_pool.json",
         {
@@ -1688,6 +2346,7 @@ def main() -> None:
                 {
                     "id": result.label,
                     "sourceType": result.source_type,
+                    "originSourceType": result.diagnostics.get("originSourceType") or "",
                     "sourceName": result.label,
                     "sourceUrl": "",
                     "archetype": "",
@@ -1716,10 +2375,9 @@ def main() -> None:
     write_json(DATA_DIR / "move_choice_weights.json", updated_moves)
     write_json(DATA_DIR / "threat_penalties.json", updated_penalties)
     write_json(DATA_DIR / "learned_weights.json", updated_weights)
-
-    source_counts = Counter(canonical_source_type(row.get("sourceType", "unknown")) for row in candidates)
-    retained_source_counts = Counter(result.source_type for result in retained_results)
     write_summary(results, retained_results, log_path, args.iterations, dict(source_counts), dict(retained_source_counts), evaluation_target)
+    if args.synthetic_guardrail_test:
+        write_json(REPORT_DIR / "synthetic_guardrail_test.json", run_synthetic_guardrail_test())
 
 
 if __name__ == "__main__":

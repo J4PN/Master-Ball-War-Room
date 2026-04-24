@@ -7,6 +7,29 @@ from pathlib import Path
 
 from common import DATA_DIR, NORMALIZED_DIR, ensure_remote_only, read_json
 
+VALID_SOURCE_TYPES = {
+    "meta",
+    "pikalytics",
+    "pikalytics_variant",
+    "high_level",
+    "high_level_variant",
+    "archive",
+    "archive_variant",
+    "reddit",
+    "reddit_variant",
+    "youtube",
+    "youtube_variant",
+    "selfplay",
+    "random",
+}
+VARIANT_SOURCE_TYPES = {
+    "pikalytics_variant",
+    "high_level_variant",
+    "archive_variant",
+    "reddit_variant",
+    "youtube_variant",
+}
+
 
 def assert_range(name: str, value: float, low: float, high: float) -> None:
     numeric = float(value)
@@ -32,14 +55,25 @@ def validate_team_document(path: Path) -> None:
     for index, row in enumerate(payload.get("teams", [])):
         if "sourceType" not in row:
             raise SystemExit(f"{path.name} team {index} missing sourceType")
+        if row["sourceType"] not in VALID_SOURCE_TYPES:
+            raise SystemExit(f"{path.name} team {index} invalid sourceType `{row['sourceType']}`")
+        if row["sourceType"] in VARIANT_SOURCE_TYPES and not row.get("originSourceType"):
+            raise SystemExit(f"{path.name} team {index} variant missing originSourceType")
         if "team" not in row or not isinstance(row["team"], list):
             raise SystemExit(f"{path.name} team {index} missing team list")
         if len(row["team"]) > 6:
             raise SystemExit(f"{path.name} team {index} exceeds 6 Pokemon")
+        if "archivearchive" in str(row).lower():
+            raise SystemExit(f"{path.name} team {index} contains archivearchive artifact")
         if contains_serialized_slot_blob(row.get("team", [])):
             raise SystemExit(f"{path.name} team {index} contains serialized slot blob content")
         assert_range(f"{path.name}.team[{index}].confidence", row.get("confidence", 0.5), 0.1, 1.0)
         assert_range(f"{path.name}.team[{index}].completeness", row.get("completeness", 0.0), 0.0, 1.0)
+    for index, row in enumerate(payload.get("retainedTeams", [])):
+        if len(row.get("team", [])) <= 1:
+            raise SystemExit(f"{path.name} retained team {index} collapsed below 2 Pokemon")
+        if row.get("sourceType") in VARIANT_SOURCE_TYPES and not row.get("originSourceType"):
+            raise SystemExit(f"{path.name} retained team {index} variant missing originSourceType")
 
 
 def main() -> None:
@@ -94,6 +128,9 @@ def main() -> None:
     source_snapshot = read_json(NORMALIZED_DIR / "source_meta_snapshot.json", {"threats": []})
     for index, row in enumerate(source_snapshot.get("threats", [])):
         assert_range(f"source_meta_snapshot.threats[{index}].importance", row.get("importance", 1), 0.5, 2.0)
+        name = str(row.get("name", "")).strip()
+        if not name or any(ch for ch in name if not ch.isalnum() or ch.lower() != ch):
+            raise SystemExit(f"source_meta_snapshot.threats[{index}] invalid normalized key `{name}`")
 
     print("validated learned and normalized data successfully")
 
