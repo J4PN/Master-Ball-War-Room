@@ -1,10 +1,10 @@
 {
-  "version": 13,
-  "updatedAt": "2026-04-23T23:31:47+00:00",
+  "version": 14,
+  "updatedAt": "2026-04-24T05:44:27+00:00",
   "candidateScoreWeights": {
-    "rolePrior": 7.178,
-    "moveWeight": 5.843,
-    "threatPenalty": 11.814,
+    "rolePrior": 7.354,
+    "moveWeight": 5.998,
+    "threatPenalty": 11.505,
     "archiveBias": 4.16
   },
   "leadPairBias": {
@@ -14,20 +14,20 @@
   "threatSeverityWeights": {
     "default": 1,
     "byThreat": {
-      "archaludon": 1.4758,
-      "basculegion": 1.5705,
-      "charizard": 1.5758,
-      "dragonite": 1.7731,
-      "farigiraf": 1.6038,
-      "garchomp": 1.9096,
-      "gengar": 1.2838,
-      "incineroar": 1.9657,
-      "kingambit": 1.5954,
-      "pelipper": 1.7527,
-      "rotomwash": 1.6362,
-      "sinistcha": 1.6084,
-      "starmie": 1.8526,
-      "tyranitar": 1.4535,
+      "archaludon": 1.4979,
+      "basculegion": 1.5855,
+      "charizard": 1.5539,
+      "dragonite": 1.7349,
+      "farigiraf": 1.5627,
+      "garchomp": 1.9059,
+      "gengar": 1.3002,
+      "incineroar": 1.9986,
+      "kingambit": 1.5397,
+      "pelipper": 1.7857,
+      "rotomwash": 1.6209,
+      "sinistcha": 1.6318,
+      "starmie": 1.8869,
+      "tyranitar": 1.4922,
       "whimsicott": 2.0
     }
   },
@@ -38,8 +38,8 @@
     "archive": 0.8,
     "reddit": 0.55,
     "youtube": 0.45,
-    "selfplay": 0.3,
-    "random": 0.3
+    "selfplay": 0.2,
+    "random": 0.2
   },
   "sourceConfidenceDefaults": {
     "meta": 1.0,
@@ -55,9 +55,9 @@
     "rain_penalty": 0.0,
     "sun_support": 0.216,
     "weather_diversity_target": 0.26,
-    "rain_share": 0.0019,
+    "rain_share": 0.0021,
     "sun_share": 0.0,
-    "rain_shell_share": 0.0045,
+    "rain_shell_share": 0.0091,
     "sun_shell_share": 0.0,
     "applied": false
   },

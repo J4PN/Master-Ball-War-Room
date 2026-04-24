@@ -1,8 +1,18 @@
 {
   "exists": true,
-  "rawTeamCount": 0,
-  "validTeamCount": 0,
+  "rawTeamCount": 2,
+  "validTeamCount": 2,
   "droppedReasons": {},
-  "samples": [],
-  "fallbackBuildCount": 0
+  "samples": [
+    {
+      "sourceType": "high_level",
+      "sourceName": "PokeaimMD",
+      "teamSize": 4
+    },
+    {
+      "sourceType": "high_level",
+      "sourceName": "Moxie Boosted",
+      "teamSize": 4
+    }
+  ]
 }

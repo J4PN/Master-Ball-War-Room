@@ -1,6 +1,148 @@
 {
-  "updatedAt": "2026-04-23T23:31:37+00:00",
+  "updatedAt": "2026-04-24T05:44:20+00:00",
   "sourceType": "high_level",
   "notes": "Built from creator-registry-matched YouTube/Reddit sources and curated high-level imports.",
-  "teams": []
+  "teams": [
+    {
+      "id": "highlevelpokeaimmdincineroargarchompstarmiewhimsicott",
+      "sourceType": "high_level",
+      "sourceName": "PokeaimMD",
+      "sourceUrl": "https://www.youtube.com/watch?v=example",
+      "archetype": "bulky-offense",
+      "team": [
+        {
+          "name": "Incineroar",
+          "item": "",
+          "ability": "",
+          "moves": [
+            "Fake Out",
+            "Parting Shot"
+          ],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Garchomp",
+          "item": "",
+          "ability": "",
+          "moves": [
+            "Earthquake",
+            "Rock Slide"
+          ],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Starmie",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Whimsicott",
+          "item": "",
+          "ability": "",
+          "moves": [],
+          "nature": "",
+          "spreads": {}
+        }
+      ],
+      "confidence": 0.57,
+      "completeness": 0.3,
+      "tags": [
+        "high_level",
+        "tailwind_balance",
+        "niche_competitive",
+        "experimental_high_level",
+        "description",
+        "pinned-comment",
+        "partial",
+        "youtube"
+      ],
+      "importStrategy": "description-or-comment-parse",
+      "notes": "Partial team inferred from description and pinned comment; incomplete on purpose.",
+      "qualityClass": "high_level_analysis",
+      "originSourceType": "youtube",
+      "rawSourceName": "YouTube description extract",
+      "matchedCreator": "PokeaimMD",
+      "creatorMatchReason": "content_profile",
+      "creatorMatchScore": 0.82,
+      "creatorCoreOverlap": 1.0
+    },
+    {
+      "id": "highlevelmoxieboostedpelipperbasculegionincineroarwhimsicott",
+      "sourceType": "high_level",
+      "sourceName": "Moxie Boosted",
+      "sourceUrl": "https://www.reddit.com/r/stunfisk/example-rain-shell",
+      "archetype": "rain",
+      "team": [
+        {
+          "name": "Pelipper",
+          "item": "Focus Sash",
+          "ability": "Drizzle",
+          "moves": [
+            "Tailwind",
+            "Hurricane"
+          ],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Basculegion",
+          "item": "Choice Scarf",
+          "ability": "Adaptability",
+          "moves": [
+            "Last Respects",
+            "Wave Crash"
+          ],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Incineroar",
+          "item": "Safety Goggles",
+          "ability": "Intimidate",
+          "moves": [
+            "Fake Out",
+            "Parting Shot"
+          ],
+          "nature": "",
+          "spreads": {}
+        },
+        {
+          "name": "Whimsicott",
+          "item": "",
+          "ability": "",
+          "moves": [
+            "Tailwind",
+            "Encore"
+          ],
+          "nature": "",
+          "spreads": {}
+        }
+      ],
+      "confidence": 0.68,
+      "completeness": 0.7,
+      "tags": [
+        "high_level",
+        "niche_competitive",
+        "tailwind_balance",
+        "hard_tr",
+        "pokepaste",
+        "community",
+        "reddit"
+      ],
+      "importStrategy": "raw-thread-parse",
+      "notes": "Partial post body plus Pokepaste summary.",
+      "qualityClass": "serious_ladder",
+      "originSourceType": "reddit",
+      "rawSourceName": "r/stunfisk post",
+      "matchedCreator": "Moxie Boosted",
+      "creatorMatchReason": "content_profile",
+      "creatorMatchScore": 1.06,
+      "creatorCoreOverlap": 1.0
+    }
+  ]
 }

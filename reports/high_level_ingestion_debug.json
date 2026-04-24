@@ -1,29 +1,16 @@
 {
-  "updatedAt": "2026-04-23T23:31:37+00:00",
+  "updatedAt": "2026-04-24T05:44:20+00:00",
   "registrySourceCount": 3,
-  "acceptedTeamCount": 0,
-  "rejections": [
-    {
-      "originSourceType": "youtube",
-      "sourceName": "YouTube description extract",
-      "reason": "registry_mismatch",
-      "teamLength": 4
-    },
-    {
-      "originSourceType": "reddit",
-      "sourceName": "r/stunfisk post",
-      "reason": "registry_mismatch",
-      "teamLength": 4
-    }
-  ],
+  "acceptedTeamCount": 2,
+  "rejections": [],
   "sources": {
     "youtube": {
       "rows": 1,
-      "accepted": 0
+      "accepted": 1
     },
     "reddit": {
       "rows": 1,
-      "accepted": 0
+      "accepted": 1
     },
     "creator": {
       "rows": 0,

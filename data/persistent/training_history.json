@@ -108,6 +108,16 @@
         "unknown": 133
       },
       "mega_team_count": 0
+    },
+    {
+      "run_index": 11,
+      "team_count": 127,
+      "archetype_counts": {
+        "unknown": 125,
+        "rain": 1,
+        "bulky-offense": 1
+      },
+      "mega_team_count": 0
     }
   ]
 }
