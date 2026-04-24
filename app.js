@@ -5446,10 +5446,6 @@
     const teamWeatherProfile = inferTeamWeatherProfile(teamState);
     const candidateWeatherMode = getWeatherSetterMode(entry);
     const entryLegalMoves = legalPokemonData[entry.name]?.legalMoves || [];
-    const currentMegaCount = teamState.filter((slot) => {
-      const resolved = resolveBattleEntry(slot);
-      return resolved && isMegaEntry(resolved);
-    }).length;
     weaknesses.forEach((weakness) => {
       const effect = getTypeEffectiveness(weakness.attackType, entry.types);
       if (effect < 1) {
@@ -5520,9 +5516,9 @@
     if (normalizeNameKey(entry.name) === "mega charizard y" && teamWeatherProfile.modes.some((mode) => mode && mode !== "sun")) {
       score -= 28;
     }
-    if (isMegaEntry(entry) && currentMegaCount > 0) {
-      score -= 18;
-    }
+    const megaCompatibility = scoreMegaCandidateCompatibility(entry, teamState, structureReport);
+    score += megaCompatibility.score;
+    reasons.push(...megaCompatibility.reasons);
     if (metaWeight) {
       score += Math.min(24, metaWeight / 2);
       reasons.push("Is already proving itself in current Champions meta.");
@@ -5568,16 +5564,20 @@
   }
 
   function inferTeamWeatherProfile(teamState) {
-    const modes = new Set();
+    const modeCounts = new Map();
     for (const slot of teamState.filter((row) => row.name)) {
+      const entry = resolveBattleEntry(slot) || getRosterEntry(slot.name);
       const ability = normalizeNameKey(slot.ability || "");
       const moveKeys = (slot.moves || []).map((move) => normalizeNameKey(move));
-      if (ability === "drought" || moveKeys.includes("sunny day")) modes.add("sun");
-      if (ability === "drizzle" || moveKeys.includes("rain dance")) modes.add("rain");
-      if (ability === "sand stream") modes.add("sand");
-      if (ability === "snow warning" || moveKeys.includes("snowscape")) modes.add("snow");
+      const setterMode = getWeatherSetterMode(entry);
+      if (ability === "drought" || moveKeys.includes("sunny day") || setterMode === "sun") modeCounts.set("sun", (modeCounts.get("sun") || 0) + 1);
+      if (ability === "drizzle" || moveKeys.includes("rain dance") || setterMode === "rain") modeCounts.set("rain", (modeCounts.get("rain") || 0) + 1);
+      if (ability === "sand stream" || setterMode === "sand") modeCounts.set("sand", (modeCounts.get("sand") || 0) + 1);
+      if (ability === "snow warning" || moveKeys.includes("snowscape") || setterMode === "snow") modeCounts.set("snow", (modeCounts.get("snow") || 0) + 1);
     }
-    return { modes: [...modes] };
+    const modes = [...modeCounts.keys()];
+    const primary = [...modeCounts.entries()].sort((a, b) => b[1] - a[1])[0]?.[0] || "";
+    return { modes, primary, counts: Object.fromEntries(modeCounts.entries()) };
   }
 
   function getWeatherSetterMode(entry) {
@@ -5587,6 +5587,332 @@
     if (["tyranitar", "mega tyranitar"].includes(key)) return "sand";
     if (["ninetales-alola", "abomasnow", "mega abomasnow"].includes(key)) return "snow";
     return "";
+  }
+
+  function getFilledTeamSlots(teamState = []) {
+    return (teamState || []).filter((slot) => slot?.name);
+  }
+
+  function getSlotMoveKeys(slot) {
+    return (slot?.moves || []).map((move) => normalizeNameKey(move)).filter(Boolean);
+  }
+
+  function getCoherenceSlotProfile(slot) {
+    const entry = resolveBattleEntry(slot) || getRosterEntry(slot?.name || "");
+    const key = normalizeNameKey(entry?.name || slot?.name || "");
+    const moveKeys = getSlotMoveKeys(slot);
+    const supportiveMoveCount = moveKeys.filter((move) => ["tailwind", "trick room", "encore", "taunt", "helping hand", "wide guard", "icy wind", "electroweb", "fake out"].includes(move)).length;
+    const preferredWeather = [];
+    const conflictingWeather = [];
+    let speedMode = "mid";
+    let role = supportiveMoveCount >= 2 ? "support" : "attacker";
+    let requiresTrSupport = false;
+    if (key === "mega camerupt") {
+      speedMode = "slow_tr";
+      role = "slowroom_breaker";
+      requiresTrSupport = true;
+      conflictingWeather.push("rain");
+    } else if (key === "mega sharpedo") {
+      speedMode = "fast";
+      role = "fast_cleaner";
+      preferredWeather.push("rain");
+    } else if (key === "mega charizard y") {
+      speedMode = "mid";
+      role = "sun_breaker";
+      preferredWeather.push("sun");
+      conflictingWeather.push("rain", "snow");
+    } else if (key === "pelipper") {
+      speedMode = "support";
+      role = "rain_support";
+      preferredWeather.push("rain");
+    } else if (key === "whimsicott") {
+      speedMode = "support_fast";
+      role = "speed_support";
+    } else if (key === "dragonite") {
+      speedMode = moveKeys.includes("tailwind") ? "support_fast" : "fast";
+      role = moveKeys.includes("tailwind") ? "speed_support" : "cleaner";
+    } else if ((entry?.baseSpeed || 0) <= 60) {
+      speedMode = "slow";
+    } else if ((entry?.baseSpeed || 0) >= 105) {
+      speedMode = "fast";
+    }
+    return {
+      slot,
+      entry,
+      key,
+      name: entry?.name || slot?.name || "",
+      moveKeys,
+      isMega: !!(entry && isMegaEntry(entry)),
+      speedMode,
+      role,
+      preferredWeather,
+      conflictingWeather,
+      requiresTrSupport,
+      supportiveMoveCount
+    };
+  }
+
+  function getMegaCompatibilityReport(teamState, structureReport = {}) {
+    const profiles = getFilledTeamSlots(teamState).map((slot) => getCoherenceSlotProfile(slot)).filter((profile) => profile.entry);
+    const megaProfiles = profiles.filter((profile) => profile.isMega);
+    const weatherProfile = inferTeamWeatherProfile(teamState);
+    const trSetterCount = structureReport.trSetterCount ?? profiles.filter((profile) => profile.moveKeys.includes("trick room")).length;
+    const fastModeSupportCount = (structureReport.tailwindCount ?? profiles.filter((profile) => profile.moveKeys.includes("tailwind")).length)
+      + (structureReport.extraSpeedControlCount ?? profiles.filter((profile) => profile.moveKeys.some((move) => ["icy wind", "electroweb", "thunder wave"].includes(move))).length);
+    let penalty = 0;
+    let bonus = 0;
+    const issues = [];
+    megaProfiles.forEach((profile) => {
+      if (profile.requiresTrSupport && trSetterCount <= 0) {
+        penalty += 30;
+        issues.push({
+          code: "mega_missing_tr_support",
+          severity: "blocker",
+          text: `${profile.name} needs a real Trick Room mode before it can anchor the team.`
+        });
+      }
+      const activeConflict = profile.conflictingWeather.find((mode) => weatherProfile.modes.includes(mode));
+      if (activeConflict) {
+        penalty += 26;
+        issues.push({
+          code: "mega_weather_conflict",
+          severity: "blocker",
+          text: `${profile.name} clashes with the current ${activeConflict} plan.`
+        });
+      }
+      const supportedWeather = profile.preferredWeather.find((mode) => weatherProfile.modes.includes(mode));
+      if (supportedWeather) bonus += 8;
+    });
+    for (let index = 0; index < megaProfiles.length; index += 1) {
+      for (let otherIndex = index + 1; otherIndex < megaProfiles.length; otherIndex += 1) {
+        const left = megaProfiles[index];
+        const right = megaProfiles[otherIndex];
+        const oppositeModes = [left.speedMode, right.speedMode].includes("slow_tr") && [left.speedMode, right.speedMode].includes("fast");
+        const weatherClash = left.conflictingWeather.some((mode) => right.preferredWeather.includes(mode))
+          || right.conflictingWeather.some((mode) => left.preferredWeather.includes(mode));
+        if (weatherClash) {
+          penalty += 34;
+          issues.push({
+            code: "mega_pair_weather_conflict",
+            severity: "blocker",
+            text: `${left.name} and ${right.name} demand conflicting weather shells.`
+          });
+        }
+        if (oppositeModes && (trSetterCount <= 0 || fastModeSupportCount <= 0)) {
+          penalty += 32;
+          issues.push({
+            code: "mega_pair_speed_conflict",
+            severity: "blocker",
+            text: `${left.name} and ${right.name} pull opposite speed modes without a clear dual-mode plan.`
+          });
+        } else if (oppositeModes) {
+          bonus += 6;
+        } else if (left.speedMode === right.speedMode || left.preferredWeather.some((mode) => right.preferredWeather.includes(mode))) {
+          bonus += 10;
+        }
+      }
+    }
+    return {
+      penalty,
+      bonus,
+      issues
+    };
+  }
+
+  function scoreMegaCandidateCompatibility(entry, teamState, structureReport = {}) {
+    if (!entry || !isMegaEntry(entry)) return { score: 0, reasons: [] };
+    const profiles = getFilledTeamSlots(teamState).map((slot) => getCoherenceSlotProfile(slot)).filter((profile) => profile.entry);
+    const weatherProfile = inferTeamWeatherProfile(teamState);
+    const trSetterCount = structureReport.trSetterCount ?? profiles.filter((profile) => profile.moveKeys.includes("trick room")).length;
+    const fastModeSupportCount = (structureReport.tailwindCount ?? profiles.filter((profile) => profile.moveKeys.includes("tailwind")).length)
+      + (structureReport.extraSpeedControlCount ?? profiles.filter((profile) => profile.moveKeys.some((move) => ["icy wind", "electroweb", "thunder wave"].includes(move))).length);
+    const existingMegas = profiles.filter((profile) => profile.isMega);
+    const candidate = getCoherenceSlotProfile({ name: entry.name, moves: [] });
+    let score = 0;
+    const reasons = [];
+    if (candidate.requiresTrSupport && trSetterCount <= 0) {
+      score -= 28;
+      reasons.push("Needs Trick Room support this team does not have yet.");
+    }
+    const activeConflict = candidate.conflictingWeather.find((mode) => weatherProfile.modes.includes(mode));
+    if (activeConflict) {
+      score -= 24;
+      reasons.push(`Conflicts with the current ${activeConflict} shell.`);
+    }
+    const supportedWeather = candidate.preferredWeather.find((mode) => weatherProfile.modes.includes(mode));
+    if (supportedWeather) {
+      score += 8;
+      reasons.push(`Fits the team's existing ${supportedWeather} plan.`);
+    }
+    existingMegas.forEach((existing) => {
+      const oppositeModes = [candidate.speedMode, existing.speedMode].includes("slow_tr") && [candidate.speedMode, existing.speedMode].includes("fast");
+      const weatherClash = candidate.conflictingWeather.some((mode) => existing.preferredWeather.includes(mode))
+        || existing.conflictingWeather.some((mode) => candidate.preferredWeather.includes(mode));
+      if (weatherClash) {
+        score -= 32;
+        reasons.push(`Clashes with ${existing.name}'s weather plan.`);
+      } else if (oppositeModes && (trSetterCount <= 0 || fastModeSupportCount <= 0)) {
+        score -= 30;
+        reasons.push(`Pulls against ${existing.name}'s speed mode without a real split plan.`);
+      } else {
+        score += 10;
+        reasons.push(`Can coexist with ${existing.name} in a legal double-Mega shell.`);
+      }
+    });
+    return {
+      score,
+      reasons: [...new Set(reasons)].slice(0, 3)
+    };
+  }
+
+  function scoreLeadPair(slotA, slotB) {
+    const profileA = getCoherenceSlotProfile(slotA);
+    const profileB = getCoherenceSlotProfile(slotB);
+    const attackRoles = new Set(["attacker", "fast_cleaner", "cleaner", "slowroom_breaker", "sun_breaker"]);
+    let score = 0;
+    if (profileA.moveKeys.includes("fake out") && (profileB.moveKeys.includes("trick room") || attackRoles.has(profileB.role))) score += 2;
+    if (profileB.moveKeys.includes("fake out") && (profileA.moveKeys.includes("trick room") || attackRoles.has(profileA.role))) score += 2;
+    if (profileA.moveKeys.includes("tailwind") && (attackRoles.has(profileB.role) || profileB.speedMode === "fast")) score += 2;
+    if (profileB.moveKeys.includes("tailwind") && (attackRoles.has(profileA.role) || profileA.speedMode === "fast")) score += 2;
+    if (profileA.moveKeys.includes("trick room") && (profileB.requiresTrSupport || profileB.speedMode === "slow")) score += 2;
+    if (profileB.moveKeys.includes("trick room") && (profileA.requiresTrSupport || profileA.speedMode === "slow")) score += 2;
+    if (profileA.preferredWeather.includes("rain") && ["rain_support", "fast_cleaner", "attacker"].includes(profileB.role) && (profileB.entry?.types || []).some((type) => ["Water", "Flying"].includes(type))) score += 2;
+    if (profileB.preferredWeather.includes("rain") && ["rain_support", "fast_cleaner", "attacker"].includes(profileA.role) && (profileA.entry?.types || []).some((type) => ["Water", "Flying"].includes(type))) score += 2;
+    if (profileA.moveKeys.some((move) => ["encore", "taunt", "helping hand", "icy wind", "wide guard"].includes(move)) && attackRoles.has(profileB.role)) score += 1;
+    if (profileB.moveKeys.some((move) => ["encore", "taunt", "helping hand", "icy wind", "wide guard"].includes(move)) && attackRoles.has(profileA.role)) score += 1;
+    return Number.isFinite(score) ? score : 0;
+  }
+
+  function evaluateFinalExportCoherence(teamState) {
+    const team = getFilledTeamSlots(teamState);
+    if (team.length < 6) {
+      return {
+        isValid: true,
+        penalty: 0,
+        issues: [],
+        blockers: [],
+        megaReport: { penalty: 0, bonus: 0, issues: [] },
+        structureReport: evaluateTeamStructure(team),
+        weatherProfile: inferTeamWeatherProfile(team),
+        leadPairScore: 0
+      };
+    }
+    const structureReport = evaluateTeamStructure(team);
+    const weatherProfile = inferTeamWeatherProfile(team);
+    const megaReport = getMegaCompatibilityReport(team, structureReport);
+    const issues = [...megaReport.issues];
+    let penalty = (Number.isFinite(structureReport.penalty) ? structureReport.penalty : 0) + megaReport.penalty;
+    const trSetterCount = structureReport.trSetterCount ?? 0;
+    const profiles = team.map((slot) => getCoherenceSlotProfile(slot)).filter((profile) => profile.entry);
+    profiles.forEach((profile) => {
+      const moveKeys = profile.moveKeys;
+      if (profile.key === "whimsicott" && !moveKeys.some((move) => ["tailwind", "encore", "taunt", "helping hand"].includes(move))) {
+        penalty += 22;
+        issues.push({
+          code: "whimsicott_missing_support",
+          severity: "major",
+          text: "Whimsicott needs Tailwind, Encore, Taunt, or Helping Hand to justify the slot."
+        });
+      }
+      if (profile.key === "pelipper" && !moveKeys.some((move) => ["tailwind", "wide guard", "hurricane", "icy wind"].includes(move))) {
+        penalty += 20;
+        issues.push({
+          code: "pelipper_missing_support",
+          severity: "major",
+          text: "Pelipper should carry Tailwind, Wide Guard, Hurricane, or Icy Wind so the rain slot does real support work."
+        });
+      }
+      if (profile.key === "mega camerupt" && trSetterCount <= 0) {
+        penalty += 28;
+        issues.push({
+          code: "camerupt_without_tr",
+          severity: "blocker",
+          text: "Mega Camerupt is present without any credible Trick Room support."
+        });
+      }
+      if (profile.key === "dragonite" && normalizeNameKey(profile.slot.item || "") === "focus sash" && !moveKeys.includes("tailwind")) {
+        penalty += 18;
+        issues.push({
+          code: "dragonite_bad_item",
+          severity: "major",
+          text: "Dragonite should not default to Focus Sash here without a dedicated utility lead reason."
+        });
+      }
+    });
+    if (weatherProfile.modes.includes("rain") && profiles.some((profile) => profile.key === "mega camerupt") && trSetterCount <= 0) {
+      penalty += 34;
+      issues.push({
+        code: "rain_camerupt_conflict",
+        severity: "blocker",
+        text: "Rain support is suppressing Mega Camerupt's fire pressure with no Trick Room fallback."
+      });
+    }
+    if (profiles.some((profile) => profile.requiresTrSupport) && trSetterCount <= 0) {
+      penalty += 18;
+      issues.push({
+        code: "slowroom_without_tr",
+        severity: "blocker",
+        text: "A slow Trick Room attacker is present, but the team has no Trick Room setter."
+      });
+    }
+    const fastCleanerCount = profiles.filter((profile) => ["fast", "fast_cleaner", "cleaner", "support_fast"].includes(profile.speedMode)).length;
+    if (profiles.some((profile) => profile.requiresTrSupport) && fastCleanerCount >= 2 && trSetterCount <= 0) {
+      penalty += 20;
+      issues.push({
+        code: "mode_split_missing",
+        severity: "blocker",
+        text: "Fast-mode pressure and slowroom pieces are mixed together without a real mode split."
+      });
+    }
+    let leadPairScore = 0;
+    for (let index = 0; index < team.length; index += 1) {
+      for (let otherIndex = index + 1; otherIndex < team.length; otherIndex += 1) {
+        leadPairScore = Math.max(leadPairScore, Number.isFinite(scoreLeadPair(team[index], team[otherIndex])) ? scoreLeadPair(team[index], team[otherIndex]) : 0);
+      }
+    }
+    if (leadPairScore < 2) {
+      penalty += 18;
+      issues.push({
+        code: "no_credible_lead",
+        severity: "major",
+        text: "No credible lead pair was found from the final six."
+      });
+    }
+    const blockers = issues.filter((issue) => issue.severity === "blocker");
+    const isValid = blockers.length === 0 && penalty < 80;
+    return {
+      isValid,
+      penalty,
+      issues,
+      blockers,
+      megaReport,
+      structureReport,
+      weatherProfile,
+      leadPairScore
+    };
+  }
+
+  function getTeamExportGate(teamState) {
+    const report = evaluateFinalExportCoherence(teamState);
+    if (window.__MBWR_BUILDER_LOAD_DEBUG && typeof window.__MBWR_BUILDER_LOAD_DEBUG === "object") {
+      window.__MBWR_BUILDER_LOAD_DEBUG.lastExportCoherence = {
+        isValid: report.isValid,
+        penalty: report.penalty,
+        blockers: report.blockers.map((issue) => issue.code),
+        issueCount: report.issues.length,
+        leadPairScore: report.leadPairScore,
+        weatherModes: report.weatherProfile?.modes || []
+      };
+    }
+    return report;
+  }
+
+  if (typeof window !== "undefined") {
+    window.__MBWR_EXPORT_DEBUG = {
+      ...(window.__MBWR_EXPORT_DEBUG || {}),
+      evaluateFinalExportCoherence,
+      getTeamExportGate
+    };
   }
 
   async function buildOffenseCoverageReport(teamState) {
@@ -8678,20 +9004,22 @@
     const megaStone = getMegaStoneForEntry(entry);
     if (megaStone) return megaStone;
     const buildRules = getCompetitiveBuildRules(context);
+    const entryKey = normalizeNameKey(entry.name);
     const normalizedMoves = moves.map((move) => normalizeNameKey(move));
     const roleProfile = inferSetRoleProfile(entry, context, moves, moves);
     const utilityHeavy = normalizedMoves.filter((move) => ["protect", "fake out", "tailwind", "trick room", "taunt", "helping hand", "icy wind", "electroweb", "parting shot", "will-o-wisp", "thunder wave", "coaching"].includes(move)).length >= 2;
     const hardTrAbuser = buildRules.intent === "hard_tr" && isRealTrAbuserEntry(entry);
+    if (entryKey === "dragonite") return legalItems.includes("Clear Amulet") ? "Clear Amulet" : (legalItems.includes("Dragon Fang") ? "Dragon Fang" : "Leftovers");
     if (shouldPrioritizeFocusSash(entry, context, moves)) return "Focus Sash";
-    if (normalizeNameKey(entry.name) === "charizard" && legalItems.includes("Charizardite Y")) return "Charizardite Y";
-    if (normalizeNameKey(entry.name) === "raichu" || normalizeNameKey(entry.name) === "raichu-alola") return legalItems.includes("Focus Sash") ? "Focus Sash" : "Magnet";
-    if (normalizeNameKey(entry.name) === "scizor") return legalItems.includes("Leftovers") ? "Leftovers" : "Metal Coat";
-    if (normalizeNameKey(entry.name) === "kleavor") return legalItems.includes("Hard Stone") ? "Hard Stone" : "Focus Sash";
-    if (normalizeNameKey(entry.name) === "hatterene") return legalItems.includes("Mental Herb") ? "Mental Herb" : "Leftovers";
-    if (normalizeNameKey(entry.name) === "meowscarada") return legalItems.includes("Focus Sash") ? "Focus Sash" : "Black Glasses";
-    if (normalizeNameKey(entry.name) === "dragapult") return legalItems.includes("Focus Sash") ? "Focus Sash" : "Spell Tag";
-    if (normalizeNameKey(entry.name) === "kingambit") return legalItems.includes("Black Glasses") ? "Black Glasses" : "Leftovers";
-    if (normalizeNameKey(entry.name) === "sneasler") return legalItems.includes("White Herb") ? "White Herb" : (legalItems.includes("Focus Sash") ? "Focus Sash" : "Mental Herb");
+    if (entryKey === "charizard" && legalItems.includes("Charizardite Y")) return "Charizardite Y";
+    if (entryKey === "raichu" || entryKey === "raichu-alola") return legalItems.includes("Focus Sash") ? "Focus Sash" : "Magnet";
+    if (entryKey === "scizor") return legalItems.includes("Leftovers") ? "Leftovers" : "Metal Coat";
+    if (entryKey === "kleavor") return legalItems.includes("Hard Stone") ? "Hard Stone" : "Focus Sash";
+    if (entryKey === "hatterene") return legalItems.includes("Mental Herb") ? "Mental Herb" : "Leftovers";
+    if (entryKey === "meowscarada") return legalItems.includes("Focus Sash") ? "Focus Sash" : "Black Glasses";
+    if (entryKey === "dragapult") return legalItems.includes("Focus Sash") ? "Focus Sash" : "Spell Tag";
+    if (entryKey === "kingambit") return legalItems.includes("Black Glasses") ? "Black Glasses" : "Leftovers";
+    if (entryKey === "sneasler") return legalItems.includes("White Herb") ? "White Herb" : (legalItems.includes("Focus Sash") ? "Focus Sash" : "Mental Herb");
     if (roleProfile.supportOrPivot) {
       if (normalizedMoves.includes("trick room")) return legalItems.includes("Mental Herb") ? "Mental Herb" : (legalItems.includes("Sitrus Berry") ? "Sitrus Berry" : "Leftovers");
       if (normalizedMoves.includes("fake out")) return legalItems.includes("Sitrus Berry") ? "Sitrus Berry" : (legalItems.includes("Covert Cloak") ? "Covert Cloak" : "Leftovers");
@@ -9145,6 +9473,31 @@
       const fallbackPool = ["Protect", "Moonblast", "Earth Power", "Air Slash", "Dragon Pulse", "Icy Wind"];
       fallbackPool.forEach((move) => {
         if (result.length < 4 && !result.includes(move) && damagingMovePool.includes(move)) result.push(move);
+      });
+    }
+    if (key === "whimsicott" && !result.some((move) => ["tailwind", "encore", "taunt", "helping hand"].includes(normalizeNameKey(move)))) {
+      const supportMove = ["Tailwind", "Encore", "Taunt", "Helping Hand"].find((move) => !result.includes(move) && (damagingMovePool.includes(move) || ["Tailwind", "Encore", "Taunt", "Helping Hand"].includes(move)));
+      if (supportMove) {
+        if (result.length < 4) result.push(supportMove);
+        else {
+          const replaceIndex = result.findIndex((move) => !["protect", "moonblast"].includes(normalizeNameKey(move)));
+          if (replaceIndex >= 0) result.splice(replaceIndex, 1, supportMove);
+        }
+      }
+    }
+    if (key === "pelipper" && !result.some((move) => ["tailwind", "wide guard", "hurricane", "icy wind"].includes(normalizeNameKey(move)))) {
+      const supportMove = ["Tailwind", "Wide Guard", "Hurricane", "Icy Wind"].find((move) => !result.includes(move) && (damagingMovePool.includes(move) || ["Tailwind", "Wide Guard", "Hurricane", "Icy Wind"].includes(move)));
+      if (supportMove) {
+        if (result.length < 4) result.push(supportMove);
+        else {
+          const replaceIndex = result.findIndex((move) => normalizeNameKey(move) !== "protect");
+          if (replaceIndex >= 0) result.splice(replaceIndex, 1, supportMove);
+        }
+      }
+    }
+    if (key === "mega camerupt") {
+      ["Protect", "Earth Power", "Heat Wave"].forEach((move) => {
+        if (result.length < 4 && !result.includes(move) && (damagingMovePool.includes(move) || move === "Protect")) result.push(move);
       });
     }
     return result.slice(0, 4);
@@ -9979,12 +10332,24 @@
     }).join("\n\n");
   }
 
+  function blockTeamExportIfNeeded(teamState) {
+    const report = getTeamExportGate(teamState);
+    if (report.isValid) return null;
+    const summary = report.blockers[0]?.text || report.issues[0]?.text || "The current team fails the export coherence gate.";
+    teamExportStatus.textContent = `Export blocked: ${summary}`;
+    return report;
+  }
+
   async function copyTeamExport() {
-    const text = buildTeamExportText();
-    if (!text) {
+    const team = getTeamBuilderState()
+      .map((slot, slotIndex) => ({ ...slot, originalSlotIndex: slotIndex }))
+      .filter((slot) => slot.name);
+    if (!team.length) {
       teamExportStatus.textContent = "Add at least one Pokemon before exporting.";
       return;
     }
+    if (blockTeamExportIfNeeded(team)) return;
+    const text = buildTeamExportText();
     try {
       await navigator.clipboard.writeText(text);
       teamExportStatus.textContent = "Team export copied to clipboard.";
@@ -9994,11 +10359,15 @@
   }
 
   function downloadTeamExport() {
-    const text = buildTeamExportText();
-    if (!text) {
+    const team = getTeamBuilderState()
+      .map((slot, slotIndex) => ({ ...slot, originalSlotIndex: slotIndex }))
+      .filter((slot) => slot.name);
+    if (!team.length) {
       teamExportStatus.textContent = "Add at least one Pokemon before exporting.";
       return;
     }
+    if (blockTeamExportIfNeeded(team)) return;
+    const text = buildTeamExportText();
     downloadTextFile(text, `champions-team-${Date.now()}.txt`);
     teamExportStatus.textContent = "Team text downloaded.";
   }
@@ -10009,6 +10378,7 @@
       teamExportStatus.textContent = "Add at least one Pokemon before exporting.";
       return;
     }
+    if (blockTeamExportIfNeeded(team)) return;
     try {
       const canvas = await renderTeamExportCanvas(team);
       const pngBlob = await new Promise((resolve) => canvas.toBlob(resolve, "image/png"));
