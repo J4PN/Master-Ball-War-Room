@@ -150,13 +150,75 @@
   const learnedBuilderState = {
     data: cloneLearnedBuilderDefaults(),
     loaded: false,
-    promise: null
+    promise: null,
+    debug: {
+      learnedPoolSize: 0,
+      firstInvalidSlotShape: null,
+      objectSlotsHandled: 0,
+      generationRecovered: false
+    }
   };
+
+  function updateLearnedBuilderLoadDebug(patch = {}) {
+    learnedBuilderState.debug = {
+      ...learnedBuilderState.debug,
+      ...patch
+    };
+    if (typeof window !== "undefined") {
+      window.__MBWR_BUILDER_LOAD_DEBUG = {
+        ...(window.__MBWR_BUILDER_LOAD_DEBUG || {}),
+        learnedPoolSize: learnedBuilderState.debug.learnedPoolSize,
+        firstInvalidSlotShape: learnedBuilderState.debug.firstInvalidSlotShape,
+        objectSlotsHandled: learnedBuilderState.debug.objectSlotsHandled,
+        generationRecovered: learnedBuilderState.debug.generationRecovered
+      };
+    }
+  }
+
+  function captureInvalidLearnedSlotShape(slot) {
+    if (learnedBuilderState.debug.firstInvalidSlotShape != null) return;
+    let snapshot = slot;
+    if (slot && typeof slot === "object") {
+      snapshot = {
+        keys: Object.keys(slot).slice(0, 8),
+        sample: {
+          name: slot.name,
+          species: slot.species,
+          display_species: slot.display_species,
+          base_species: slot.base_species
+        }
+      };
+    }
+    updateLearnedBuilderLoadDebug({ firstInvalidSlotShape: snapshot });
+  }
+
+  function getSlotSpeciesName(slot) {
+    if (typeof slot === "string") return slot;
+    if (slot && typeof slot === "object") {
+      updateLearnedBuilderLoadDebug({ objectSlotsHandled: (learnedBuilderState.debug.objectSlotsHandled || 0) + 1 });
+      const name = slot.name
+        || slot.species
+        || slot.display_species
+        || slot.displaySpecies
+        || slot.base_species
+        || slot.baseSpecies
+        || "";
+      if (!name) captureInvalidLearnedSlotShape(slot);
+      return name;
+    }
+    if (slot != null) captureInvalidLearnedSlotShape(slot);
+    return "";
+  }
+
+  function getNormalizedTeamKeys(team) {
+    return (Array.isArray(team) ? team : []).map((slot) => normalizeNameKey(slot)).filter(Boolean);
+  }
 
   async function primeLearnedBuilderData() {
     if (learnedBuilderState.promise) return learnedBuilderState.promise;
     if (typeof fetch !== "function") {
       learnedBuilderState.loaded = true;
+      updateLearnedBuilderLoadDebug({ learnedPoolSize: 0 });
       learnedBuilderState.promise = Promise.resolve(learnedBuilderState.data);
       return learnedBuilderState.promise;
     }
@@ -175,10 +237,14 @@
       });
       learnedBuilderState.data = merged;
       learnedBuilderState.loaded = true;
+      updateLearnedBuilderLoadDebug({
+        learnedPoolSize: Array.isArray(merged?.combinedTrainingPool?.teams) ? merged.combinedTrainingPool.teams.length : 0
+      });
       return merged;
     }).catch(() => {
       learnedBuilderState.data = cloneLearnedBuilderDefaults();
       learnedBuilderState.loaded = true;
+      updateLearnedBuilderLoadDebug({ learnedPoolSize: 0 });
       return learnedBuilderState.data;
     });
     return learnedBuilderState.promise;
@@ -200,7 +266,7 @@
     if (row?.weight != null) return clampLearnedNumber(row.weight, 0, -1, 1);
     const combinedPool = getLearnedBuilderData().combinedTrainingPool?.teams || [];
     const key = normalizeNameKey(speciesName || "");
-    const hits = combinedPool.filter((teamRow) => (teamRow?.team || []).some((slot) => normalizeNameKey(slot?.name || "") === key)).length;
+    const hits = combinedPool.filter((teamRow) => (teamRow?.team || []).some((slot) => normalizeNameKey(slot) === key)).length;
     if (!combinedPool.length) return 0;
     return clampLearnedNumber(hits / combinedPool.length, 0, -1, 1);
   }
@@ -264,7 +330,7 @@
     if (!speciesKey) return 0;
     const currentKeys = (currentTeam || []).filter((slot) => slot?.name).map((slot) => normalizeNameKey(slot.name));
     return getLearnedArchiveTeams().reduce((best, row) => {
-      const teamKeys = (row.team || []).map((slot) => normalizeNameKey(slot?.name || "")).filter(Boolean);
+      const teamKeys = getNormalizedTeamKeys(row.team || []);
       if (!teamKeys.includes(speciesKey)) return best;
       const overlap = currentKeys.filter((key) => teamKeys.includes(key)).length;
       const overlapRatio = currentKeys.length ? overlap / currentKeys.length : 0;
@@ -278,7 +344,7 @@
     const currentKeys = (currentTeam || []).filter((slot) => slot?.name).map((slot) => normalizeNameKey(slot.name));
     if (!speciesKey || !currentKeys.length) return 0;
     return getLearnedArchiveTeams().reduce((score, row) => {
-      const teamKeys = (row.team || []).map((slot) => normalizeNameKey(slot?.name || "")).filter(Boolean);
+      const teamKeys = getNormalizedTeamKeys(row.team || []);
       if (!teamKeys.includes(speciesKey)) return score;
       const pairHits = currentKeys.filter((key) => teamKeys.includes(key)).length;
       return score + pairHits * row.confidence;
@@ -304,7 +370,7 @@
     let reward = 0;
     let penalty = 0;
     getLearnedArchiveTeams().forEach((row) => {
-      const teamKeys = (row.team || []).map((slot) => normalizeNameKey(slot?.name || "")).filter(Boolean);
+      const teamKeys = getNormalizedTeamKeys(row.team || []);
       const overlap = currentKeys.filter((key) => teamKeys.includes(key)).length;
       if (overlap < 2) return;
       const remaining = teamKeys.filter((key) => !currentKeys.includes(key));
@@ -326,7 +392,7 @@
     const archetypeHint = normalizeNameKey(options.archetypeHint || "");
     const matches = learnedTeams.reduce((sum, row) => {
       const teamSlots = Array.isArray(row?.team) ? row.team : [];
-      const contains = teamSlots.some((slot) => normalizeNameKey(slot?.name || "") === speciesKey);
+      const contains = teamSlots.some((slot) => normalizeNameKey(slot) === speciesKey);
       if (!contains) return sum;
       const sourceType = normalizeNameKey(row?.sourceType || "");
       const confidence = clampLearnedNumber(row?.confidence, getLearnedSourceConfidenceWeight(sourceType), 0.1, 1.1);
@@ -360,7 +426,7 @@
     learnedTeams.forEach((row) => {
       const sourceType = normalizeNameKey(row?.sourceType || "");
       const teamSlots = Array.isArray(row?.team) ? row.team : [];
-      const teamKeys = teamSlots.map((slot) => normalizeNameKey(slot?.name || "")).filter(Boolean);
+      const teamKeys = getNormalizedTeamKeys(teamSlots);
       if (!teamKeys.length) return;
       const containsCandidate = teamKeys.includes(speciesKey);
       const overlapCount = currentKeys.filter((key) => teamKeys.includes(key)).length;
@@ -383,7 +449,7 @@
     });
 
     archiveTeams.forEach((row) => {
-      const teamKeys = (row.team || []).map((slot) => normalizeNameKey(slot?.name || "")).filter(Boolean);
+      const teamKeys = getNormalizedTeamKeys(row.team || []);
       if (!teamKeys.includes(speciesKey)) return;
       const overlapCount = currentKeys.filter((key) => teamKeys.includes(key)).length;
       if (!currentCount || overlapCount <= 0) return;
@@ -507,7 +573,7 @@
 
     const evaluatePool = (rows, isArchive = false) => {
       rows.forEach((row) => {
-        const teamKeys = (row?.team || []).map((slot) => normalizeNameKey(slot?.name || "")).filter(Boolean);
+        const teamKeys = getNormalizedTeamKeys(row?.team || []);
         if (!teamKeys.length) return;
         const overlap = currentKeys.filter((key) => teamKeys.includes(key)).length;
         const overlapRatio = overlap / currentCount;
@@ -539,6 +605,7 @@
 
     evaluatePool(learnedTeams, false);
     evaluatePool(archiveTeams, true);
+    updateLearnedBuilderLoadDebug({ generationRecovered: true });
 
     const roleNeeds = inferLearnedRoleNeeds(teamState, structureReport);
     filled.forEach((slot) => {
@@ -9764,8 +9831,9 @@
     return rosterByName.get((alias || name).toLowerCase()) || rosterByName.get(normalized) || null;
   }
 
-  function normalizeNameKey(name) {
-    return name.toLowerCase().trim().replace(/[.'"]/g, "").replace(/\s+/g, " ");
+  function normalizeNameKey(value) {
+    const name = getSlotSpeciesName(value);
+    return String(name || "").toLowerCase().trim().replace(/[.'"]/g, "").replace(/\s+/g, " ");
   }
 
   function normalizeApiName(name) {
