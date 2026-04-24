@@ -69,6 +69,14 @@ SOURCE_QUALITY_WEIGHTS = {
     "selfplay": 0.62,
 }
 
+VARIANT_SOURCE_TYPE_MAP = {
+    "archive_variant": "archive",
+    "high_level_variant": "high_level",
+    "pikalytics_variant": "pikalytics",
+    "reddit_variant": "reddit",
+    "youtube_variant": "youtube",
+}
+
 
 def require_remote_only():
     if os.environ.get("GITHUB_ACTIONS") != "true":
@@ -97,6 +105,76 @@ def normalize_text(value):
 
 def slugify(value):
     return normalize_text(value).lower().replace("_", "-")
+
+
+def canonical_source_type(value):
+    text = normalize_text(value).lower().replace("-", "_")
+    if text == "self_play":
+        return "selfplay"
+    if text == "highlevel":
+        return "high_level"
+    if text == "highlevelvariant":
+        return "high_level_variant"
+    if text == "archivevariant":
+        return "archive_variant"
+    if text == "pikalyticsvariant":
+        return "pikalytics_variant"
+    if text == "redditvariant":
+        return "reddit_variant"
+    if text == "youtubevariant":
+        return "youtube_variant"
+    return text
+
+
+def collapse_repeated_source_prefix(text, source_type):
+    cleaned = normalize_text(text)
+    prefix = canonical_source_type(source_type).replace("_", "")
+    lowered = slugify(cleaned).replace("-", "")
+    if not cleaned or not prefix:
+        return cleaned
+    while lowered.startswith(prefix * 2):
+        lowered = prefix + lowered[len(prefix) * 2:]
+    return lowered or prefix
+
+
+def derive_variant_origin_source_type(source_type):
+    source_type = canonical_source_type(source_type)
+    if source_type in VARIANT_SOURCE_TYPE_MAP:
+        return VARIANT_SOURCE_TYPE_MAP[source_type]
+    if source_type.endswith("_variant"):
+        return canonical_source_type(source_type[: -len("_variant")])
+    return ""
+
+
+def ensure_variant_provenance(entry):
+    normalized = dict(entry or {})
+    source_type = canonical_source_type(normalized.get("sourceType") or normalized.get("source_type") or normalized.get("source"))
+    if not source_type:
+        return normalized
+    normalized["sourceType"] = source_type
+    normalized["source_type"] = source_type
+    if source_type not in VARIANT_SOURCE_TYPE_MAP and not source_type.endswith("_variant"):
+        return normalized
+    origin_source_type = canonical_source_type(
+        normalized.get("originSourceType")
+        or normalized.get("origin_source_type")
+        or derive_variant_origin_source_type(source_type)
+    )
+    normalized["originSourceType"] = origin_source_type
+    normalized["origin_source_type"] = origin_source_type
+    parent_source_name = normalize_text(
+        normalized.get("parentSourceName")
+        or normalized.get("parent_source_name")
+        or normalized.get("sourceName")
+        or normalized.get("source_name")
+        or origin_source_type
+    )
+    normalized["parentSourceName"] = parent_source_name
+    normalized["parent_source_name"] = parent_source_name
+    normalized["generated"] = bool(normalized.get("generated", True))
+    normalized["variantReason"] = normalize_text(normalized.get("variantReason") or normalized.get("variant_reason") or "controlled-source-variant")
+    normalized["variant_reason"] = normalized["variantReason"]
+    return normalized
 
 
 CANONICAL_SLOT_KEYS = {
@@ -510,10 +588,10 @@ def normalize_team_entry(entry, fallback_archetype=""):
             team.append(normalized)
     if not team:
         return None
-    source_type = normalize_text(entry.get("source_type") or entry.get("sourceType") or entry.get("source") or "unknown")
+    source_type = canonical_source_type(entry.get("source_type") or entry.get("sourceType") or entry.get("source") or "unknown")
     if slugify(source_type) == "archivearchive":
         source_type = "archive"
-    source_name = normalize_text(entry.get("source_name") or entry.get("sourceName"))
+    source_name = collapse_repeated_source_prefix(entry.get("source_name") or entry.get("sourceName"), source_type)
     if slugify(source_name) == "archivearchive":
         source_name = "archive"
     normalized_entry = {
@@ -527,16 +605,25 @@ def normalize_team_entry(entry, fallback_archetype=""):
         "confidence": float(entry.get("confidence", 1.0) or 1.0),
         "score": float(entry.get("score", 0.0) or 0.0),
     }
+    normalized_entry["sourceType"] = source_type
+    normalized_entry["sourceName"] = source_name or source_type
+    normalized_entry["sourceUrl"] = normalized_entry["source_url"]
+    normalized_entry["originSourceType"] = normalize_text(entry.get("originSourceType") or entry.get("origin_source_type"))
+    normalized_entry["parentSourceName"] = normalize_text(entry.get("parentSourceName") or entry.get("parent_source_name"))
+    normalized_entry["generated"] = bool(entry.get("generated", False))
+    normalized_entry["variantReason"] = normalize_text(entry.get("variantReason") or entry.get("variant_reason"))
     normalized_entry["archetype"] = get_clean_team_archetype(normalized_entry)
-    return normalized_entry
+    return ensure_variant_provenance(normalized_entry)
 
 
 def normalize_output_team_entry(entry):
     normalized = dict(entry or {})
     if "sourceType" not in normalized:
         normalized["sourceType"] = normalized.get("source_type", "archive")
+    normalized["sourceType"] = canonical_source_type(normalized.get("sourceType"))
     if "sourceName" not in normalized:
         normalized["sourceName"] = normalized.get("source_name", normalized["sourceType"])
+    normalized["sourceName"] = collapse_repeated_source_prefix(normalized.get("sourceName"), normalized.get("sourceType"))
     if slugify(normalized.get("sourceName")) == "archivearchive":
         normalized["sourceName"] = "archive"
     if "sourceUrl" not in normalized:
@@ -564,6 +651,20 @@ def normalize_output_team_entry(entry):
         })
     normalized["team"] = clean_team[:6]
     normalized["archetype"] = get_clean_team_archetype({"team": clean_team, "archetype": normalized.get("archetype", "")})
+    return ensure_variant_provenance(normalized)
+
+
+def finalize_output_row(entry):
+    normalized = normalize_output_team_entry(entry)
+    normalized = ensure_variant_provenance(normalized)
+    normalized["sourceName"] = collapse_repeated_source_prefix(normalized.get("sourceName"), normalized.get("sourceType"))
+    if slugify(normalized.get("sourceName")) == "archivearchive":
+        normalized["sourceName"] = "archive"
+    if (
+        str(normalized.get("sourceType", "")).endswith("_variant")
+        and not normalize_text(normalized.get("originSourceType"))
+    ):
+        raise AssertionError(f"finalize_output_row missing originSourceType for variant row `{normalized.get('id') or normalized.get('sourceName')}`")
     return normalized
 
 
@@ -862,8 +963,14 @@ def rewrite_team_archive(current_entries):
 
 
 def rewrite_combined_pool(current_entries, diversity_pressure):
+    finalized_rows = [finalize_output_row(entry) for entry in current_entries[:240]]
+    for row in finalized_rows:
+        assert not (
+            str(row.get("sourceType", "")).endswith("_variant")
+            and not normalize_text(row.get("originSourceType"))
+        ), f"rewrite_combined_pool refusing invalid variant row `{row.get('id') or row.get('sourceName')}`"
     payload = {
-        "teams": [normalize_output_team_entry(entry) for entry in current_entries[:240]],
+        "teams": finalized_rows,
         "diversity_pressure": diversity_pressure,
     }
     save_json(CURRENT_FILES["combined_training_pool"], payload)
