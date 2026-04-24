@@ -32,6 +32,8 @@ jobs:
           python scripts/offpc_training/ingest_pikalytics.py
           python scripts/offpc_training/ingest_reddit.py
           python scripts/offpc_training/ingest_youtube.py
+          python scripts/offpc_training/expand_high_level_sources.py
+          python scripts/offpc_training/ingest_high_level_sources.py
 
       - name: Run lightweight evaluation
         env:

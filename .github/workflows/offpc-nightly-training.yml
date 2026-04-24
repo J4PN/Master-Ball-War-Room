@@ -62,6 +62,7 @@ jobs:
           GITHUB_ACTIONS: "true"
           RUNNER_ENVIRONMENT: "github-hosted"
         run: |
+          python scripts/offpc_training/expand_high_level_sources.py
           python scripts/offpc_training/ingest_high_level_sources.py
 
       - name: Run remote-only training
@@ -102,6 +103,8 @@ jobs:
             reports/training_guardrails.json
             reports/training_summary.md
             reports/high_level_debug.json
+            reports/high_level_expansion_review.json
+            reports/high_level_expansion_review.md
             reports/high_level_ingestion_debug.json
             reports/high_level_pool_status.json
             reports/training_memory_report.md
@@ -110,7 +113,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/normalized data/persistent data/learned_weights.json data/species_role_priors.json data/move_choice_weights.json data/threat_penalties.json data/team_archive.json data/battle_logs reports/training_guardrails.json reports/training_summary.md reports/high_level_debug.json reports/high_level_ingestion_debug.json reports/high_level_pool_status.json reports/training_memory_report.md
+          git add data/normalized data/persistent data/curated/high_level_expanded_candidates.json data/learned_weights.json data/species_role_priors.json data/move_choice_weights.json data/threat_penalties.json data/team_archive.json data/battle_logs reports/training_guardrails.json reports/training_summary.md reports/high_level_debug.json reports/high_level_expansion_review.json reports/high_level_expansion_review.md reports/high_level_ingestion_debug.json reports/high_level_pool_status.json reports/training_memory_report.md
           if git diff --cached --quiet; then
             echo "No remote-learning changes to commit."
             exit 0
