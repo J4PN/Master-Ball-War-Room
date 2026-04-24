@@ -426,7 +426,7 @@ def normalize_pool_row(row: dict, fallback_source_type: str = "") -> dict:
     normalized["sourceUrl"] = normalized.get("sourceUrl") or normalized.get("source_url") or normalized.get("url") or ""
     normalized["archetype"] = str(normalized.get("archetype", "") or "").strip()
     normalized["tags"] = list(dict.fromkeys([str(tag).strip() for tag in normalized.get("tags", []) if str(tag).strip()] + [source_type]))
-    return normalized
+    return ensure_variant_provenance(normalized)
 
 
 def load_normalized_pool(path: Path) -> List[dict]:
@@ -474,6 +474,38 @@ def source_confidence_for(source_type: str) -> float:
 
 def source_sampling_for(source_type: str) -> float:
     return float(SOURCE_SAMPLING_DEFAULTS.get(canonical_source_type(source_type), 0.5))
+
+
+def derive_variant_origin_source_type(source_type: str) -> str:
+    source_type = canonical_source_type(source_type, "")
+    if source_type in VARIANT_SOURCE_TYPES:
+        return canonical_source_type(source_type[: -len("_variant")], "")
+    return ""
+
+
+def ensure_variant_provenance(row: dict) -> dict:
+    normalized = dict(row or {})
+    source_type = canonical_source_type(normalized.get("sourceType", "unknown"))
+    normalized["sourceType"] = source_type
+    if source_type not in VARIANT_SOURCE_TYPES:
+        return normalized
+    origin_source_type = canonical_source_type(
+        normalized.get("originSourceType") or derive_variant_origin_source_type(source_type),
+        derive_variant_origin_source_type(source_type) or "unknown",
+    )
+    normalized["originSourceType"] = origin_source_type
+    normalized["parentSourceName"] = str(
+        normalized.get("parentSourceName")
+        or normalized.get("sourceName")
+        or origin_source_type
+    ).strip()
+    normalized["generated"] = bool(normalized.get("generated", True))
+    normalized["variantReason"] = str(
+        normalized.get("variantReason") or "controlled-source-variant"
+    ).strip()
+    if "sourceLineageConfidence" not in normalized:
+        normalized["sourceLineageConfidence"] = round(source_confidence_for(origin_source_type) * 0.8, 3)
+    return normalized
 
 
 def count_sources(rows: Sequence[dict]) -> Dict[str, int]:
@@ -2337,27 +2369,33 @@ def main() -> None:
             + " | ".join(failure_reasons)
         )
 
+    normalized_candidates_for_write = [ensure_variant_provenance(normalize_pool_row(row, row.get("sourceType", "unknown"))) for row in candidates]
+    normalized_retained_for_write = []
+    for result in retained_results:
+        retained_row = {
+            "id": result.label,
+            "sourceType": result.source_type,
+            "originSourceType": result.diagnostics.get("originSourceType") or "",
+            "parentSourceName": result.diagnostics.get("parentSourceName") or result.label,
+            "generated": bool(result.diagnostics.get("generated", False)),
+            "variantReason": result.diagnostics.get("variantReason") or "",
+            "sourceName": result.label,
+            "sourceUrl": "",
+            "archetype": "",
+            "team": result.team,
+            "confidence": round(result.confidence, 3),
+            "completeness": 1.0,
+            "tags": result.tags,
+            "score": round(result.overall, 4),
+        }
+        normalized_retained_for_write.append(ensure_variant_provenance(retained_row))
+
     write_json(
         NORMALIZED_DIR / "combined_training_pool.json",
         {
             "updatedAt": utc_now(),
-            "teams": candidates,
-            "retainedTeams": [
-                {
-                    "id": result.label,
-                    "sourceType": result.source_type,
-                    "originSourceType": result.diagnostics.get("originSourceType") or "",
-                    "sourceName": result.label,
-                    "sourceUrl": "",
-                    "archetype": "",
-                    "team": result.team,
-                    "confidence": round(result.confidence, 3),
-                    "completeness": 1.0,
-                    "tags": result.tags,
-                    "score": round(result.overall, 4),
-                }
-                for result in retained_results
-            ],
+            "teams": normalized_candidates_for_write,
+            "retainedTeams": normalized_retained_for_write,
             "evaluationTarget": evaluation_target,
         },
     )
