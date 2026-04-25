@@ -1,7 +1,7 @@
 {
   "exists": true,
-  "rawTeamCount": 2,
-  "validTeamCount": 2,
+  "rawTeamCount": 5,
+  "validTeamCount": 5,
   "droppedReasons": {},
   "samples": [
     {
@@ -13,6 +13,21 @@
       "sourceType": "high_level",
       "sourceName": "moxieboosted",
       "teamSize": 4
+    },
+    {
+      "sourceType": "high_level",
+      "sourceName": "curatedpikalyticsimport",
+      "teamSize": 6
+    },
+    {
+      "sourceType": "high_level",
+      "sourceName": "pokeaimmd",
+      "teamSize": 6
+    },
+    {
+      "sourceType": "high_level",
+      "sourceName": "curatedyoutubeshowcaseteam",
+      "teamSize": 6
     }
   ]
 }

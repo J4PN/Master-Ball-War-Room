@@ -1,8 +1,14 @@
 {
-  "updatedAt": "2026-04-24T17:38:10+00:00",
+  "updatedAt": "2026-04-25T05:23:24+00:00",
   "registrySourceCount": 3,
-  "acceptedTeamCount": 2,
-  "rejections": [],
+  "acceptedTeamCount": 5,
+  "rejections": [
+    {
+      "originSourceType": "reddit",
+      "sourceName": "Moxie Boosted",
+      "reason": "duplicate_collapse"
+    }
+  ],
   "sources": {
     "youtube": {
       "rows": 1,
@@ -15,6 +21,10 @@
     "creator": {
       "rows": 0,
       "accepted": 0
+    },
+    "expanded": {
+      "rows": 4,
+      "accepted": 4
     }
   }
 }

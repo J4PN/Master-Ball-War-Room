@@ -1,29 +1,29 @@
 {
-  "updatedAt": "2026-04-24T17:39:42+00:00",
+  "updatedAt": "2026-04-25T05:23:28+00:00",
   "priors": {
     "incineroar": {
-      "weight": 0.139,
+      "weight": 0.177,
       "roles": [
         "pivot_support",
         "fake_out"
       ]
     },
     "whimsicott": {
-      "weight": 0.152,
+      "weight": 0.177,
       "roles": [
         "speed_control",
         "support"
       ]
     },
     "garchomp": {
-      "weight": 0.101,
+      "weight": 0.139,
       "roles": [
         "physical_pressure",
         "spread_damage"
       ]
     },
     "pelipper": {
-      "weight": 0.139,
+      "weight": 0.152,
       "roles": [
         "weather",
         "speed_control"
@@ -31,15 +31,15 @@
     },
     "basculegion": {
       "roles": [],
-      "weight": 0.089
+      "weight": 0.101
     },
     "archaludon": {
       "roles": [],
-      "weight": 0.013
+      "weight": 0.025
     },
     "sinistcha": {
       "roles": [],
-      "weight": 0.025
+      "weight": 0.051
     },
     "kingambit": {
       "roles": [],
@@ -47,15 +47,15 @@
     },
     "starmie": {
       "roles": [],
-      "weight": 0.101
+      "weight": 0.089
     },
     "dragonite": {
       "roles": [],
-      "weight": 0.051
+      "weight": 0.013
     },
     "rotomwash": {
       "roles": [],
-      "weight": 0.025
+      "weight": 0.013
     },
     "farigiraf": {
       "roles": [],
@@ -71,7 +71,7 @@
     },
     "charizard": {
       "roles": [],
-      "weight": 0.051
+      "weight": 0.013
     },
     "basespeciespelipperdisplayspeciespelipperitemmegastonemegaidentityformidentitypelipperrolearchetypemoveskeymovesidentitykeypelipperpelipper": {
       "roles": [],

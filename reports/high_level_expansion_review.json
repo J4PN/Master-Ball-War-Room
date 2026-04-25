@@ -1,0 +1,169 @@
+{
+  "updatedAt": "2026-04-25T05:23:24+00:00",
+  "sourcesScanned": 5,
+  "acceptedCount": 4,
+  "rejectedCount": 1,
+  "acceptedByClass": {
+    "high_level_verified": 3,
+    "high_level_partial": 1
+  },
+  "acceptedArchetypes": {
+    "rain-balance": 1,
+    "balance": 1,
+    "fast-offense": 1,
+    "rain": 1
+  },
+  "rejectedByReason": {
+    "needs_review": 1
+  },
+  "acceptedSamples": [
+    {
+      "classification": "high_level_verified",
+      "matchedCreator": "Curated Pikalytics import",
+      "archetype": "rain-balance",
+      "confidence": 0.947,
+      "team": [
+        "Pelipper",
+        "Basculegion",
+        "Incineroar",
+        "Whimsicott",
+        "Archaludon",
+        "Garchomp"
+      ]
+    },
+    {
+      "classification": "high_level_verified",
+      "matchedCreator": "PokeaimMD",
+      "archetype": "balance",
+      "confidence": 0.925,
+      "team": [
+        "Incineroar",
+        "Starmie",
+        "Garchomp",
+        "Whimsicott",
+        "Kingambit",
+        "Pelipper"
+      ]
+    },
+    {
+      "classification": "high_level_verified",
+      "matchedCreator": "Curated YouTube showcase team",
+      "archetype": "fast-offense",
+      "confidence": 0.899,
+      "team": [
+        "Incineroar",
+        "Garchomp",
+        "Whimsicott",
+        "Starmie",
+        "Dragonite",
+        "Rotom-Wash"
+      ]
+    },
+    {
+      "classification": "high_level_partial",
+      "matchedCreator": "Moxie Boosted",
+      "archetype": "rain",
+      "confidence": 0.767,
+      "team": [
+        "Pelipper",
+        "Basculegion",
+        "Incineroar",
+        "Whimsicott"
+      ]
+    }
+  ],
+  "duplicateRejections": [],
+  "allCandidates": [
+    {
+      "sourceName": "r/stunfisk post",
+      "matchedCreator": "Moxie Boosted",
+      "classification": "high_level_partial",
+      "archetype": "rain",
+      "confidence": 0.767,
+      "reason": [
+        "high_level_partial"
+      ],
+      "sourceUrl": "https://www.reddit.com/r/stunfisk/example-rain-shell",
+      "team": [
+        "Pelipper",
+        "Basculegion",
+        "Incineroar",
+        "Whimsicott"
+      ]
+    },
+    {
+      "sourceName": "Curated Pikalytics import",
+      "matchedCreator": "Curated Pikalytics import",
+      "classification": "high_level_verified",
+      "archetype": "rain-balance",
+      "confidence": 0.947,
+      "reason": [
+        "high_level_verified"
+      ],
+      "sourceUrl": "https://www.pikalytics.com/pokedex/championspreview",
+      "team": [
+        "Pelipper",
+        "Basculegion",
+        "Incineroar",
+        "Whimsicott",
+        "Archaludon",
+        "Garchomp"
+      ]
+    },
+    {
+      "sourceName": "Curated Reddit balance team",
+      "matchedCreator": "PokeaimMD",
+      "classification": "high_level_verified",
+      "archetype": "balance",
+      "confidence": 0.925,
+      "reason": [
+        "high_level_verified"
+      ],
+      "sourceUrl": "https://www.reddit.com/r/stunfisk/example-balance-team",
+      "team": [
+        "Incineroar",
+        "Starmie",
+        "Garchomp",
+        "Whimsicott",
+        "Kingambit",
+        "Pelipper"
+      ]
+    },
+    {
+      "sourceName": "Curated YouTube showcase team",
+      "matchedCreator": "Curated YouTube showcase team",
+      "classification": "high_level_verified",
+      "archetype": "fast-offense",
+      "confidence": 0.899,
+      "reason": [
+        "high_level_verified"
+      ],
+      "sourceUrl": "https://www.youtube.com/watch?v=example-curated",
+      "team": [
+        "Incineroar",
+        "Garchomp",
+        "Whimsicott",
+        "Starmie",
+        "Dragonite",
+        "Rotom-Wash"
+      ]
+    },
+    {
+      "sourceName": "YouTube description extract",
+      "matchedCreator": "PokeaimMD",
+      "classification": "needs_review",
+      "archetype": "bulky-offense",
+      "confidence": 0.564,
+      "reason": [
+        "needs_review"
+      ],
+      "sourceUrl": "https://www.youtube.com/watch?v=example",
+      "team": [
+        "Incineroar",
+        "Garchomp",
+        "Starmie",
+        "Whimsicott"
+      ]
+    }
+  ]
+}

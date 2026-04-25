@@ -1,56 +1,56 @@
 # Off-PC Training Summary
 
-- Timestamp: 2026-04-24T17:39:42+00:00
-- Candidate iterations: 3000
-- Evaluated candidates: 1260
+- Timestamp: 2026-04-25T05:23:28+00:00
+- Candidate iterations: 32
+- Evaluated candidates: 80
 - Retained learning candidates: 24
-- Battle log: `data/battle_logs/training-20260424T173942Z.jsonl`
+- Battle log: `data/battle_logs/training-20260425T052328Z.jsonl`
 - High-level debug: `reports/high_level_debug.json`
 
 ## Source Counts
 
 - `meta`: 0
 - `pikalytics`: 2
-- `pikalytics_variant`: 108
-- `high_level`: 2
-- `high_level_variant`: 92
-- `reddit`: 1
-- `reddit_variant`: 36
-- `youtube`: 1
-- `youtube_variant`: 105
-- `archive`: 37
-- `archive_variant`: 380
+- `pikalytics_variant`: 6
+- `high_level`: 4
+- `high_level_variant`: 6
+- `reddit`: 0
+- `reddit_variant`: 4
+- `youtube`: 0
+- `youtube_variant`: 5
+- `archive`: 43
+- `archive_variant`: 3
 - `random`: 0
-- `selfplay`: 496
+- `selfplay`: 7
 
 ## Source Share
 
 - `meta`: 0.0%
-- `pikalytics`: 0.2%
-- `pikalytics_variant`: 8.6%
-- `high_level`: 0.2%
-- `high_level_variant`: 7.3%
-- `reddit`: 0.1%
-- `reddit_variant`: 2.9%
-- `youtube`: 0.1%
-- `youtube_variant`: 8.3%
-- `archive`: 2.9%
-- `archive_variant`: 30.2%
+- `pikalytics`: 2.5%
+- `pikalytics_variant`: 7.5%
+- `high_level`: 5.0%
+- `high_level_variant`: 7.5%
+- `reddit`: 0.0%
+- `reddit_variant`: 5.0%
+- `youtube`: 0.0%
+- `youtube_variant`: 6.2%
+- `archive`: 53.8%
+- `archive_variant`: 3.8%
 - `random`: 0.0%
-- `selfplay`: 39.4%
+- `selfplay`: 8.8%
 
-WARNING: evaluation pool below expected size (1260 < 1313)
+WARNING: evaluation pool below expected size (80 < 138)
 
 ## Retained Source Counts
 
 - `meta`: 0
 - `pikalytics`: 2
-- `pikalytics_variant`: 9
-- `high_level`: 2
-- `high_level_variant`: 0
-- `reddit`: 1
+- `pikalytics_variant`: 6
+- `high_level`: 4
+- `high_level_variant`: 3
+- `reddit`: 0
 - `reddit_variant`: 0
-- `youtube`: 1
+- `youtube`: 0
 - `youtube_variant`: 0
 - `archive`: 9
 - `archive_variant`: 0
@@ -61,12 +61,12 @@ WARNING: evaluation pool below expected size (1260 < 1313)
 
 - `meta`: 0.0%
 - `pikalytics`: 8.3%
-- `pikalytics_variant`: 37.5%
-- `high_level`: 8.3%
-- `high_level_variant`: 0.0%
-- `reddit`: 4.2%
+- `pikalytics_variant`: 25.0%
+- `high_level`: 16.7%
+- `high_level_variant`: 12.5%
+- `reddit`: 0.0%
 - `reddit_variant`: 0.0%
-- `youtube`: 4.2%
+- `youtube`: 0.0%
 - `youtube_variant`: 0.0%
 - `archive`: 37.5%
 - `archive_variant`: 0.0%
@@ -75,36 +75,36 @@ WARNING: evaluation pool below expected size (1260 < 1313)
 
 ## Top Teams
 
-- [archive] score `0.741` confidence `0.56`
-  `Pelipper, Basculegion, Incineroar, Whimsicott, Starmie`
-  meta `0.866` | pikalytics `0.998` | high_level `0.746` | reddit `0.688` | youtube `0.587` | archive `0.621` | random `0.277` | selfplay `0.298`
-  creator match `Moxie Boosted` | shell `1.00` | core `1.00` | archetype `0.00` | final `0.746`
-- [archive] score `0.706` confidence `0.48`
-  `Pelipper, Gengar, Incineroar, Whimsicott, Starmie, Garchomp`
-  meta `0.829` | pikalytics `0.952` | high_level `0.693` | reddit `0.670` | youtube `0.559` | archive `0.591` | random `0.270` | selfplay `0.293`
-  creator match `PokeaimMD` | shell `1.00` | core `1.00` | archetype `0.00` | final `0.693`
-- [archive] score `0.712` confidence `0.44`
-  `Pelipper, Basculegion, Incineroar, Whimsicott, Starmie, Charizard`
-  meta `0.841` | pikalytics `0.964` | high_level `0.699` | reddit `0.667` | youtube `0.573` | archive `0.591` | random `0.270` | selfplay `0.293`
-  creator match `Moxie Boosted` | shell `1.00` | core `1.00` | archetype `0.00` | final `0.699`
-- [archive] score `0.701` confidence `0.47`
-  `Incineroar, Whimsicott, Pelipper, Basculegion, Dragonite, Tyranitar`
-  meta `0.840` | pikalytics `0.963` | high_level `0.633` | reddit `0.673` | youtube `0.580` | archive `0.592` | random `0.269` | selfplay `0.292`
-  creator match `Moxie Boosted` | shell `1.00` | core `1.00` | archetype `0.00` | final `0.633`
-- [archive] score `0.688` confidence `0.47`
-  `Charizard, Starmie, Tyranitar, Whimsicott, Kingambit, Pelipper`
-  meta `0.864` | pikalytics `0.983` | high_level `0.498` | reddit `0.686` | youtube `0.586` | archive `0.595` | random `0.267` | selfplay `0.297`
-  creator match `Moxie Boosted` | shell `0.50` | core `0.67` | archetype `0.00` | final `0.498`
-- [archive] score `0.669` confidence `0.47`
-  `Basculegion, Gengar, Garchomp, Sinistcha, Kingambit, Pelipper`
-  meta `0.837` | pikalytics `0.960` | high_level `0.431` | reddit `0.692` | youtube `0.599` | archive `0.600` | random `0.271` | selfplay `0.294`
-  creator match `Moxie Boosted` | shell `0.50` | core `0.67` | archetype `0.00` | final `0.431`
+- [archive] score `0.748` confidence `0.75`
+  `Pelipper, Basculegion, Incineroar, Whimsicott, Starmie, Archaludon`
+  meta `0.869` | pikalytics `0.993` | high_level `0.775` | reddit `0.696` | youtube `0.594` | archive `0.629` | random `0.280` | selfplay `0.301`
+  creator match `Moxie Boosted` | shell `1.00` | core `1.00` | archetype `0.00` | final `0.775`
+- [archive] score `0.747` confidence `0.75`
+  `Pelipper, Basculegion, Incineroar, Whimsicott, Garchomp, Starmie`
+  meta `0.858` | pikalytics `0.992` | high_level `0.792` | reddit `0.690` | youtube `0.581` | archive `0.626` | random `0.281` | selfplay `0.299`
+  creator match `Moxie Boosted` | shell `1.00` | core `1.00` | archetype `0.00` | final `0.792`
+- [archive] score `0.746` confidence `0.75`
+  `Pelipper, Basculegion, Incineroar, Whimsicott, Charizard, Garchomp`
+  meta `0.857` | pikalytics `0.992` | high_level `0.777` | reddit `0.697` | youtube `0.594` | archive `0.629` | random `0.280` | selfplay `0.301`
+  creator match `Curated Pikalytics import` | shell `0.83` | core `1.00` | archetype `0.00` | final `0.777`
+- [archive] score `0.747` confidence `0.74`
+  `Incineroar, Whimsicott, Garchomp, Kingambit, Basculegion, Pelipper`
+  meta `0.850` | pikalytics `0.985` | high_level `0.789` | reddit `0.693` | youtube `0.597` | archive `0.635` | random `0.282` | selfplay `0.300`
+  creator match `Moxie Boosted` | shell `1.00` | core `1.00` | archetype `0.00` | final `0.789`
+- [archive] score `0.746` confidence `0.74`
+  `Incineroar, Whimsicott, Garchomp, Kingambit, Starmie, Pelipper`
+  meta `0.863` | pikalytics `0.989` | high_level `0.776` | reddit `0.696` | youtube `0.583` | archive `0.632` | random `0.279` | selfplay `0.300`
+  creator match `PokeaimMD` | shell `1.00` | core `1.00` | archetype `0.00` | final `0.776`
+- [archive] score `0.744` confidence `0.74`
+  `Incineroar, Whimsicott, Garchomp, Basculegion, Sinistcha, Pelipper`
+  meta `0.850` | pikalytics `0.985` | high_level `0.772` | reddit `0.699` | youtube `0.597` | archive `0.633` | random `0.281` | selfplay `0.300`
+  creator match `Moxie Boosted` | shell `1.00` | core `1.00` | archetype `0.00` | final `0.772`
 
 ## Creator Matches
 
-- `archivehighlevelvariant2moxieboosted`: matched `Moxie Boosted` from `reddit` with similarity `0.850` (shell `1.00`, core `1.00`, archetype `0.00`)
-- `archivepelippergengar`: matched `PokeaimMD` from `youtube` with similarity `0.750` (shell `1.00`, core `1.00`, archetype `0.00`)
-- `archivepelipperbasculegion`: matched `Moxie Boosted` from `reddit` with similarity `0.750` (shell `1.00`, core `1.00`, archetype `0.00`)
-- `archiveteamarchive`: matched `Moxie Boosted` from `reddit` with similarity `0.750` (shell `1.00`, core `1.00`, archetype `0.00`)
-- `archivecharizardstarmie`: matched `Moxie Boosted` from `reddit` with similarity `0.408` (shell `0.50`, core `0.67`, archetype `0.00`)
-- `archiveselfgenerated`: matched `Moxie Boosted` from `reddit` with similarity `0.408` (shell `0.50`, core `0.67`, archetype `0.00`)
+- `archivepikalyticsvariant823curatedpikalyticsimport`: matched `Moxie Boosted` from `reddit` with similarity `0.800` (shell `1.00`, core `1.00`, archetype `0.00`)
+- `archivepikalyticsvariant417curatedpikalyticsimport`: matched `Moxie Boosted` from `reddit` with similarity `0.800` (shell `1.00`, core `1.00`, archetype `0.00`)
+- `archivepikalyticsvariant132curatedpikalyticsimport`: matched `Curated Pikalytics import` from `pikalytics` with similarity `0.739` (shell `0.83`, core `1.00`, archetype `0.00`)
+- `archivepikalyticsvariant2254pikalyticschampionssnapshot`: matched `Moxie Boosted` from `reddit` with similarity `0.783` (shell `1.00`, core `1.00`, archetype `0.00`)
+- `archivepikalyticsvariant795pikalyticschampionssnapshot`: matched `PokeaimMD` from `reddit` with similarity `0.802` (shell `1.00`, core `1.00`, archetype `0.00`)
+- `archivepikalyticsvariant2393pikalyticschampionssnapshot`: matched `Moxie Boosted` from `reddit` with similarity `0.783` (shell `1.00`, core `1.00`, archetype `0.00`)
