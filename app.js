@@ -163,6 +163,9 @@
     gcLegalRoster: "./data/gc_legal_roster.json",
     persistentArchetypeMemory: "./data/persistent/persistent_archetype_memory.json"
   };
+  const LEARNED_DATA_FILE_FALLBACKS = {
+    gcLegalRoster: ["data/gc_legal_roster.json", "./data/gc_legal_roster.json"]
+  };
   const DEFAULT_LEARNED_BUILDER_DATA = {
     learnedWeights: {
       version: 1,
@@ -313,11 +316,23 @@
       learnedBuilderState.promise = Promise.resolve(learnedBuilderState.data);
       return learnedBuilderState.promise;
     }
+    async function fetchLearnedDataFile(key, path) {
+      const candidates = [...new Set([path, ...(LEARNED_DATA_FILE_FALLBACKS[key] || [])].filter(Boolean))];
+      let lastError = null;
+      for (const candidate of candidates) {
+        try {
+          const response = await fetch(candidate, { cache: "no-store" });
+          if (response.ok) return { key, payload: await response.json() };
+          lastError = new Error(`${key}:${response.status}:${candidate}`);
+        } catch (error) {
+          lastError = error;
+        }
+      }
+      throw lastError || new Error(`${key}:unavailable`);
+    }
     learnedBuilderState.promise = Promise.allSettled(
       Object.entries(LEARNED_DATA_FILES).map(async ([key, path]) => {
-        const response = await fetch(path, { cache: "no-store" });
-        if (!response.ok) throw new Error(`${key}:${response.status}`);
-        return { key, payload: await response.json() };
+        return fetchLearnedDataFile(key, path);
       })
     ).then((results) => {
       const merged = cloneLearnedBuilderDefaults();
