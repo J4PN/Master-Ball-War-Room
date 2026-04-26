@@ -160,7 +160,8 @@
     youtubeImports: "./data/curated/youtube_imports.json",
     highLevelExpandedCandidates: "./data/curated/high_level_expanded_candidates.json",
     pikalyticsImports: "./data/curated/pikalytics_imports.json",
-    gcLegalRoster: "./data/gc_legal_roster.json"
+    gcLegalRoster: "./data/gc_legal_roster.json",
+    persistentArchetypeMemory: "./data/persistent/persistent_archetype_memory.json"
   };
   const DEFAULT_LEARNED_BUILDER_DATA = {
     learnedWeights: {
@@ -227,6 +228,9 @@
       displayName: "Grand Challenge (GC Legal)",
       sourceUrl: "",
       eligible: []
+    },
+    persistentArchetypeMemory: {
+      archetypes: {}
     }
   };
 
@@ -398,6 +402,64 @@
       ...(data.pikalyticsImports?.teams || []),
       ...(data.creatorSourceRegistry?.manual_teams || [])
     ];
+  }
+
+  function normalizeArchetypeMemoryKey(value = "") {
+    const key = normalizeNameKey(value).replace(/\s+/g, "_");
+    if (["hard_tr", "hard_trick_room", "full_tr", "full_trick_room"].includes(key)) return "hard_tr";
+    if (["soft_tr", "tr_balance", "tr_hybrid", "trick_room_hybrid"].includes(key)) return "tr_hybrid";
+    if (key.includes("tailwind")) return "tailwind";
+    if (["fast_offense", "hyper_offense", "ho"].includes(key)) return "hyper_offense";
+    if (key.includes("rain")) return "rain";
+    if (key.includes("sun")) return "sun";
+    if (["stall", "fat_balance", "bulky_balance", "bulky_offense"].includes(key)) return "stall_fat_balance";
+    if (key.includes("anti_meta") || key.startsWith("anti_")) return "anti_meta";
+    if (key.includes("double_mega")) return "double_mega";
+    if (key === "gc" || key.includes("gc_only") || key.includes("grand_challenge")) return "gc_only";
+    return key;
+  }
+
+  function getPromptArchetypeMemoryKeys(context = {}) {
+    const request = context.request || context;
+    const text = normalizeNameKey(`${context.focus || request.focus || ""} ${context.notes || request.normalizedText || ""}`);
+    const keys = new Set();
+    const intent = normalizeArchetypeMemoryKey(context.intentLock || request.intentLock || "");
+    if (intent && intent !== "unknown") keys.add(intent);
+    if (/\bhard trick room\b|\bhard tr\b|\bfull trick room\b|\bfull tr\b/.test(text)) keys.add("hard_tr");
+    else if (/\btrick room\b|\btr\b/.test(text)) keys.add("tr_hybrid");
+    if (/\btailwind\b/.test(text)) keys.add("tailwind");
+    if (/\bhyper offense\b|\bfast offense\b|\bho\b/.test(text)) keys.add("hyper_offense");
+    if (/\brain\b/.test(text)) keys.add("rain");
+    if (/\bsun\b/.test(text)) keys.add("sun");
+    if (/\bstall\b|\bfat balance\b|\bbulky balance\b|\bbulky offense\b/.test(text)) keys.add("stall_fat_balance");
+    if (/\banti meta\b|\banti-meta\b|\bcounter meta\b/.test(text) || request.requestedPressure?.counterMeta) keys.add("anti_meta");
+    if (/\bdouble mega\b/.test(text)) keys.add("double_mega");
+    if (isGcModeActive() || /\bgc\b|\bgrand challenge\b/.test(text)) keys.add("gc_only");
+    return [...keys];
+  }
+
+  function getArchetypeMemoryBuckets(context = {}) {
+    const archetypes = getLearnedBuilderData().persistentArchetypeMemory?.archetypes || {};
+    return getPromptArchetypeMemoryKeys(context).map((key) => archetypes[key]).filter(Boolean);
+  }
+
+  function memoryRowsIncludeSpecies(rows = [], entryName = "") {
+    const key = normalizeNameKey(entryName);
+    return (rows || []).some((row) => normalizeNameKey(row?.key || "").includes(key));
+  }
+
+  function scoreArchetypeMemoryFit(entry, context = {}) {
+    const buckets = getArchetypeMemoryBuckets(context);
+    if (!buckets.length || !entry?.name) return 0;
+    let score = 0;
+    for (const bucket of buckets) {
+      if (memoryRowsIncludeSpecies(bucket.best_support_shells, entry.name)) score += 12;
+      if (memoryRowsIncludeSpecies(bucket.best_speed_control, entry.name)) score += 10;
+      if (isMegaEntry(entry) && memoryRowsIncludeSpecies(bucket.best_megas, entry.name)) score += 14;
+      if (memoryRowsIncludeSpecies(bucket.best_breakers, entry.name)) score += 10;
+      if (memoryRowsIncludeSpecies(bucket.bad_patterns_to_avoid, entry.name)) score -= 18;
+    }
+    return Math.max(-24, Math.min(32, score));
   }
 
   function getLearnedArchiveTeams() {
@@ -1326,6 +1388,7 @@
   let parsedImportSets = [];
   let lastAiDraft = [];
   let lastAiBuildContext = null;
+  const aiPromptLineupHistory = [];
   let builderRuleset = localStorage.getItem("mbwr-builder-ruleset") === "gc" ? "gc" : "standard";
 
   const tabButtons = Array.from(document.querySelectorAll("[data-tab-trigger]"));
@@ -1660,6 +1723,80 @@
       .filter((set) => set?.name)
       .map((set) => `${normalizeNameKey(set.name)}:${(set.moves || []).map(normalizeNameKey).join("/")}:${normalizeNameKey(set.item || "")}`)
       .join("|");
+  }
+
+  function getLineupSignature(team = []) {
+    return (team || [])
+      .map((set) => normalizeNameKey(set?.name || ""))
+      .filter(Boolean)
+      .sort()
+      .join("|");
+  }
+
+  function getBuilderPromptSignature(request = {}, focus = "", notes = "") {
+    return normalizeNameKey(`${request.intentLock || ""} ${focus || request.focus || ""} ${notes || request.normalizedText || ""}`);
+  }
+
+  function promptAllowsExactRepeat(request = {}) {
+    return /\bsame team\b|\brepeat\b|\brun it back\b|\bexact same\b/.test(normalizeNameKey(request.normalizedText || request.notes || ""));
+  }
+
+  function getDuplicateLineupHistory(promptSignature) {
+    return aiPromptLineupHistory.filter((row) => row.promptSignature === promptSignature).map((row) => row.lineupSignature);
+  }
+
+  function rememberPromptLineup(context = {}, draft = []) {
+    const promptSignature = context.promptSignature || getBuilderPromptSignature(context.request || {}, context.focus, context.notes);
+    const lineupSignature = getLineupSignature(draft);
+    if (!promptSignature || !lineupSignature) return;
+    aiPromptLineupHistory.unshift({ promptSignature, lineupSignature, at: Date.now() });
+    if (aiPromptLineupHistory.length > 40) aiPromptLineupHistory.length = 40;
+  }
+
+  async function buildDuplicateAvoidanceVariant(draft = [], context = {}) {
+    if (!context.promptSignature || promptAllowsExactRepeat(context.request || {})) return null;
+    const duplicateHistory = new Set(context.duplicateLineupHistory || []);
+    if (!duplicateHistory.has(getLineupSignature(draft))) return null;
+    const lockedNames = new Set((context.promptLocks?.requiredPokemon || []).map(normalizeNameKey));
+    for (let replaceIndex = draft.length - 1; replaceIndex >= 0; replaceIndex -= 1) {
+      const currentName = normalizeNameKey(draft[replaceIndex]?.name || "");
+      if (!currentName || lockedNames.has(currentName) || getSetMoveKeys(draft[replaceIndex]).includes("trick room")) continue;
+      const currentEntries = draft.map((set) => getRosterEntry(set.name)).filter(Boolean);
+      const baseEntries = currentEntries.filter((_, index) => index !== replaceIndex);
+      context.currentDraftSnapshot = draft.filter((_, index) => index !== replaceIndex).map((set) => cloneDraftSet(set));
+      const rows = await getCandidatesForSlot(context, baseEntries, replaceIndex);
+      for (const row of rows.slice(0, GUIDED_LIVE_CANDIDATE_LIMIT)) {
+        if (baseEntries.some((entry) => normalizeNameKey(entry.name) === normalizeNameKey(row.entry.name))) continue;
+        const replacementEntries = currentEntries.slice();
+        replacementEntries[replaceIndex] = row.entry;
+        const nextDraft = [];
+        for (const entry of replacementEntries) {
+          nextDraft.push(await getOptimizedDraftSetCached(entry, {
+            mode: context.mode,
+            focus: context.focus,
+            notes: context.notes,
+            enemyNames: context.enemyNames,
+            chosen: replacementEntries,
+            currentDraft: nextDraft,
+            buildCounter: ++aiBuildCounter,
+            requestedModes: context.request.requestedModes,
+            requestedPressure: context.request.requestedPressure
+          }));
+        }
+        if (duplicateHistory.has(getLineupSignature(nextDraft))) continue;
+        const validation = buildCompetitiveDraftValidation(nextDraft, context);
+        if (!validation.isValid && context.intentLock === "hard_tr") continue;
+        applyItemClauseToDraft(nextDraft);
+        return {
+          draft: nextDraft,
+          evaluation: await evaluateTeamState(padTeamState(nextDraft)),
+          liveEval: await evaluateLiveTeamState(nextDraft, context, 5),
+          rejectedDuplicate: getLineupSignature(draft),
+          changedSlot: replaceIndex + 1
+        };
+      }
+    }
+    return null;
   }
 
   async function init() {
@@ -7897,6 +8034,8 @@
       .filter(Boolean)
       .map((entry) => [normalizeNameKey(entry.name), entry])).values()];
     const teamPlan = buildArchetypePlan(request, focus, notes);
+    const memoryKeys = getPromptArchetypeMemoryKeys({ request, focus, notes, intentLock: request.intentLock });
+    const promptSignature = getBuilderPromptSignature(request, focus, notes);
     return {
       request,
       mode: request.mode,
@@ -7912,6 +8051,9 @@
         enemyNames
       },
       teamPlan,
+      archetypeMemoryKeys: memoryKeys,
+      promptSignature,
+      duplicateLineupHistory: getDuplicateLineupHistory(promptSignature),
       requiredEntries,
       targetScore: GUIDED_BUILD_TARGET_SCORE,
       goalScore: GUIDED_BUILD_GOAL_SCORE
@@ -8135,6 +8277,7 @@
     const roleCounts = countDraftPlanRoles(context.currentDraftSnapshot || [], context);
     const candidateRoles = await inferEntryRoleTags(entry, legalMoves, context);
     const missingEarlyRole = (teamPlan.earlyPriority || []).find((role) => (roleCounts[role] || 0) <= 0);
+    score += scoreArchetypeMemoryFit(entry, context);
     if (isPromptRequiredEntry(entry, context)) score += 60;
     if (context.promptLocks?.specificMega && normalizeNameKey(entry.name) === normalizeNameKey(context.promptLocks.specificMega)) score += 45;
     if (context.promptLocks?.noMegas && isMegaEntry(entry)) return -999;
@@ -8527,6 +8670,19 @@
     if (!generationTimedOut(context) && (optimized.evaluation?.overallScore < context.targetScore || optimized.liveEval?.guidedScore < context.goalScore)) {
       optimized = await optimizeGuidedDraft(optimized.draft, context);
     }
+    const duplicateVariant = await buildDuplicateAvoidanceVariant(optimized.draft, context);
+    if (duplicateVariant?.draft?.length) {
+      if (typeof window !== "undefined") {
+        window.__MBWR_DUPLICATE_VARIATION_DEBUG = {
+          promptSignature: context.promptSignature,
+          rejectedDuplicate: duplicateVariant.rejectedDuplicate,
+          changedSlot: duplicateVariant.changedSlot,
+          finalLineup: getLineupSignature(duplicateVariant.draft),
+          archetypePreserved: context.intentLock || "unknown"
+        };
+      }
+      optimized = duplicateVariant;
+    }
     const result = {
       draft: optimized.draft,
       evaluation: optimized.evaluation,
@@ -8552,10 +8708,13 @@
     const requestedMega = context.promptLocks?.specificMega || "";
     const noMegas = !!context.promptLocks?.noMegas;
     const requestedMegaKey = normalizeNameKey(requestedMega);
+    const duplicateVariant = (context.duplicateLineupHistory || []).length > 0 && !promptAllowsExactRepeat(context.request || {});
     const templates = {
       tr: requestedMegaKey === "mega camerupt"
         ? ["Farigiraf", "Sinistcha", "Mega Camerupt", "Kingambit", "Torkoal", "Incineroar"]
-        : ["Farigiraf", "Sinistcha", "Torkoal", requestedMega || "Mega Ampharos", "Kingambit", "Incineroar"],
+        : (duplicateVariant
+          ? ["Farigiraf", "Sinistcha", "Torkoal", requestedMega || "Mega Ampharos", "Conkeldurr", "Incineroar"]
+          : ["Farigiraf", "Sinistcha", "Torkoal", requestedMega || "Mega Ampharos", "Kingambit", "Incineroar"]),
       rain: ["Pelipper", "Basculegion", "Archaludon", requestedMega || "Mega Sharpedo", "Dragonite", "Kingambit"],
       sun: [requestedMega || "Mega Charizard Y", "Torkoal", "Whimsicott", "Venusaur", "Dragonite", "Incineroar"],
       tailwind: ["Whimsicott", requestedMega || "Mega Kangaskhan", "Garchomp", "Sneasler", "Dragonite", "Incineroar"],
@@ -8980,6 +9139,13 @@
     const guidedContext = buildGuidedBuildContext(request, focus, notes, enemyNames, desiredTypes, pool, anchor);
     guidedContext.generationStartedAt = generationStartedAt;
     lastAiBuildContext = guidedContext;
+    if (typeof window !== "undefined") {
+      window.__MBWR_ARCHETYPE_MEMORY_DEBUG = {
+        promptSignature: guidedContext.promptSignature,
+        archetypeMemoryKeys: guidedContext.archetypeMemoryKeys,
+        loadedBuckets: getArchetypeMemoryBuckets(guidedContext).map((bucket) => bucket.label || "")
+      };
+    }
     logBuilderEvent("builder:start", {
       mode,
       focus,
@@ -8993,6 +9159,14 @@
     });
     resetFinalGenerationRejectionDebug(request);
     const fastPathIntent = detectFastPathIntent(request);
+    if (fastPathIntent && guidedContext.duplicateLineupHistory.length && !promptAllowsExactRepeat(request) && typeof window !== "undefined") {
+      window.__MBWR_DUPLICATE_VARIATION_DEBUG = {
+        promptSignature: guidedContext.promptSignature,
+        rejectedDuplicate: guidedContext.duplicateLineupHistory[0],
+        fastPathVariant: true,
+        archetypePreserved: guidedContext.intentLock || fastPathIntent
+      };
+    }
     if (fastPathIntent) {
       const fastBuild = fastPathIntent === "tr"
         ? await buildFastTrickRoomTeam(guidedContext)
@@ -9002,6 +9176,7 @@
         if (debug) debug.candidateAttemptCount += 1;
         recordFinalGenerationSelection(fastBuild.draft, fastBuild.coherence, true, `Fast-path ${fastPathIntent} builder used.`);
         lastAiDraft = fastBuild.draft;
+        rememberPromptLineup(guidedContext, lastAiDraft);
         const chosen = lastAiDraft.map((set) => getRosterEntry(set.name)).filter(Boolean);
         renderAiBuilderOutput("Draft Suggestion", buildAiDraftExplanation(mode, focus, notes, chosen, enemyNames, desiredTypes), fastBuild.evaluation, lastAiDraft);
         await applyAiBuilderDraft();
@@ -9019,6 +9194,7 @@
       const recovery = await buildTimeoutRecoveryDraft(guidedContext, request, fastPathIntent);
       if (recovery?.draft?.length && recovery.coherence?.isValid) {
         lastAiDraft = recovery.draft;
+        rememberPromptLineup(guidedContext, lastAiDraft);
         const chosen = lastAiDraft.map((set) => getRosterEntry(set.name)).filter(Boolean);
         renderAiBuilderOutput("Draft Suggestion", buildAiDraftExplanation(mode, focus, notes, chosen, enemyNames, desiredTypes), recovery.evaluation, lastAiDraft);
         await applyAiBuilderDraft();
@@ -9041,6 +9217,7 @@
       const recovery = await buildTimeoutRecoveryDraft(guidedContext, request, fastPathIntent);
       if (recovery?.draft?.length && recovery.coherence?.isValid) {
         lastAiDraft = recovery.draft;
+        rememberPromptLineup(guidedContext, lastAiDraft);
         const chosen = lastAiDraft.map((set) => getRosterEntry(set.name)).filter(Boolean);
         renderAiBuilderOutput("Draft Suggestion", buildAiDraftExplanation(mode, focus, notes, chosen, enemyNames, desiredTypes), recovery.evaluation, lastAiDraft);
         await applyAiBuilderDraft();
@@ -9062,6 +9239,7 @@
     let bestDraft = coherentSelection.draft;
     let bestEvaluation = coherentSelection.evaluation;
     lastAiDraft = bestDraft;
+    rememberPromptLineup(guidedContext, lastAiDraft);
     const chosen = lastAiDraft.map((set) => getRosterEntry(set.name)).filter(Boolean);
     const fallbackWarning = window.__MBWR_GENERATION_REJECTION_DEBUG?.fallbackWarning;
     const explanation = [
