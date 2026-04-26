@@ -1,0 +1,200 @@
+{
+  "repairDebug": {
+    "changesMade": [
+      {
+        "from": "Moonblast",
+        "species": "Whimsicott",
+        "to": "Tailwind",
+        "type": "move"
+      },
+      {
+        "from": "Muddy Water",
+        "species": "Pelipper",
+        "to": "Tailwind",
+        "type": "move"
+      }
+    ],
+    "detectedArchetype": "anti_rain_balance",
+    "finalValidationResult": {
+      "blockerCodes": [],
+      "isValid": true,
+      "issueCodes": [
+        "no_credible_lead"
+      ],
+      "penalty": 18
+    },
+    "issues": [],
+    "lockedCore": [],
+    "originalTeam": [
+      {
+        "ability": "Prankster",
+        "item": "Focus Sash",
+        "moves": [
+          "Moonblast",
+          "Giga Drain",
+          "Protect",
+          "Energy Ball"
+        ],
+        "name": "Whimsicott"
+      },
+      {
+        "ability": "Drizzle",
+        "item": "Damp Rock",
+        "moves": [
+          "Muddy Water",
+          "Protect",
+          "Roost",
+          "U-turn"
+        ],
+        "name": "Pelipper"
+      },
+      {
+        "ability": "",
+        "item": "",
+        "moves": [
+          "Kowtow Cleave",
+          "Sucker Punch",
+          "Iron Head",
+          "Protect"
+        ],
+        "name": "Kingambit"
+      },
+      {
+        "ability": "",
+        "item": "",
+        "moves": [
+          "Extreme Speed",
+          "Dragon Claw",
+          "Protect",
+          "Fire Punch"
+        ],
+        "name": "Dragonite"
+      },
+      {
+        "ability": "Intimidate",
+        "item": "Sitrus Berry",
+        "moves": [
+          "Fake Out",
+          "Flare Blitz",
+          "Parting Shot",
+          "Knock Off"
+        ],
+        "name": "Incineroar"
+      },
+      {
+        "ability": "",
+        "item": "",
+        "moves": [
+          "Earthquake",
+          "Dragon Claw",
+          "Rock Slide",
+          "Protect"
+        ],
+        "name": "Garchomp"
+      }
+    ],
+    "rejectedReplacementCandidates": []
+  },
+  "testA": {
+    "blockers": [
+      "mega_missing_tr_support",
+      "mega_weather_conflict",
+      "mega_pair_weather_conflict",
+      "mega_pair_speed_conflict",
+      "camerupt_without_tr",
+      "rain_camerupt_conflict",
+      "slowroom_without_tr",
+      "mode_split_missing"
+    ],
+    "issues": [
+      "mega_missing_tr_support",
+      "mega_weather_conflict",
+      "mega_pair_weather_conflict",
+      "mega_pair_speed_conflict",
+      "camerupt_without_tr",
+      "rain_camerupt_conflict",
+      "slowroom_without_tr",
+      "mode_split_missing",
+      "no_credible_lead"
+    ],
+    "valid": false
+  },
+  "testB": {
+    "blockers": [],
+    "detected": "mega_camerupt_tr",
+    "issues": [
+      "no_credible_lead"
+    ],
+    "moves": {
+      "Conkeldurr": [
+        "Drain Punch",
+        "Mach Punch",
+        "Knock Off",
+        "Protect"
+      ],
+      "Farigiraf": [
+        "Trick Room",
+        "Thunder Wave",
+        "Protect",
+        "Energy Ball"
+      ],
+      "Kingambit": [
+        "Kowtow Cleave",
+        "Sucker Punch",
+        "Iron Head",
+        "Protect"
+      ],
+      "Mega Camerupt": [
+        "Heat Wave",
+        "Earth Power",
+        "Protect",
+        "Flamethrower"
+      ],
+      "Mega Gardevoir": [
+        "Hyper Voice",
+        "Moonblast",
+        "Protect",
+        "Psychic"
+      ],
+      "Sinistcha": [
+        "Matcha Gotcha",
+        "Trick Room",
+        "Rage Powder",
+        "Protect"
+      ]
+    },
+    "names": [
+      "Sinistcha",
+      "Mega Camerupt",
+      "Kingambit",
+      "Farigiraf",
+      "Mega Gardevoir",
+      "Conkeldurr"
+    ],
+    "valid": true
+  },
+  "testC": {
+    "gastlyFiller": true,
+    "noDowngrade": true,
+    "sinisteaFiller": true
+  },
+  "testD": {
+    "pelipperMoves": [
+      "Tailwind",
+      "Protect",
+      "Roost",
+      "U-turn"
+    ],
+    "whimsicottMoves": [
+      "Tailwind",
+      "Giga Drain",
+      "Protect",
+      "Energy Ball"
+    ]
+  },
+  "exportImageGate": {
+    "status": "Export blocked: Mega Camerupt needs a real Trick Room mode before it can anchor the team. Use Fix/Update to fix while preserving archetype.",
+    "blocked": true,
+    "offersPreservingFix": true
+  }
+}

@@ -62,6 +62,8 @@
   const GUIDED_LIVE_CANDIDATE_LIMIT = 10;
   const GUIDED_OPTIMIZATION_PASSES = 6;
   const GUIDED_SLOT_REVIEW_COUNT = 3;
+  const FINAL_COHERENCE_RETRY_LIMIT = 25;
+  const EXPORT_BLOCKED_SCORE_PENALTY = 999;
   const LIVE_PRESSURE_TYPES = ["Water", "Fire", "Electric", "Fighting", "Poison"];
   const LIVE_WAR_ROOM_MEDIUM_DEBOUNCE_MS = 180;
   const LIVE_WAR_ROOM_SLOW_DEBOUNCE_MS = 420;
@@ -69,6 +71,15 @@
     patch: "MBWR_DEBUG_DISABLE_PATCH",
     engine2: "MBWR_DEBUG_DISABLE_ENGINE2",
     trFix: "MBWR_DEBUG_DISABLE_TR_FIX"
+  };
+  const AUTO_REPAIR_FILLER_POKEMON_KEYS = new Set([
+    "gastly", "sinistea", "pichu", "cleffa", "igglybuff", "togepi", "tyrogue", "smoochum", "elekid", "magby",
+    "azurill", "wynaut", "budew", "chingling", "bonsly", "mime jr", "happiny", "munchlax", "riolu", "mantyke",
+    "toxel", "snom", "rolycoly", "applin", "charcadet"
+  ]);
+  const SUPPORT_MOVE_REQUIREMENTS = {
+    whimsicott: ["Tailwind", "Encore", "Taunt", "Helping Hand"],
+    pelipper: ["Tailwind", "Wide Guard", "Hurricane", "Icy Wind"]
   };
   const pikalyticsMetaSeed = [
     { name: "Incineroar", weight: 54.4, tags: ["fakeout", "intimidate", "pivot"] },
@@ -5597,6 +5608,35 @@
     return (slot?.moves || []).map((move) => normalizeNameKey(move)).filter(Boolean);
   }
 
+  function isAutoRepairFillerPokemon(species) {
+    const entry = typeof species === "string" ? getRosterEntry(species) : species;
+    const name = typeof species === "string" ? species : species?.name;
+    const key = normalizeNameKey(name || "");
+    if (!key) return false;
+    if (AUTO_REPAIR_FILLER_POKEMON_KEYS.has(key)) return true;
+    if (!entry) return false;
+    const bst = (entry.baseStats || []).reduce((sum, stat) => sum + (Number(stat) || 0), 0);
+    if (bst >= 455 || isMegaEntry(entry)) return false;
+    const metaTagged = metaThreats.some((threat) => normalizeNameKey(threat.name) === key)
+      || pikalyticsMetaSeed.some((seed) => normalizeNameKey(seed.name) === key);
+    if (metaTagged) return false;
+    const evolvedAlternative = championsRoster.some((candidate) => {
+      if (!candidate || normalizeNameKey(candidate.name) === key || isMegaEntry(candidate)) return false;
+      const candidateBst = (candidate.baseStats || []).reduce((sum, stat) => sum + (Number(stat) || 0), 0);
+      return candidateBst >= bst + 90 && (candidate.types || []).some((type) => (entry.types || []).includes(type));
+    });
+    return evolvedAlternative && bst < 430;
+  }
+
+  function isExplicitlyRequestedSpecies(entry, context = {}) {
+    const key = normalizeNameKey(entry?.name || "");
+    if (!key) return false;
+    return (context.requiredEntries || []).some((required) => normalizeNameKey(required.name) === key)
+      || (context.request?.requestedPokemon || []).some((name) => normalizeNameKey(name) === key)
+      || normalizeNameKey(context.focus || "") === key
+      || normalizeNameKey(context.promptLocks?.specificMega || "") === key;
+  }
+
   function getCoherenceSlotProfile(slot) {
     const entry = resolveBattleEntry(slot) || getRosterEntry(slot?.name || "");
     const key = normalizeNameKey(entry?.name || slot?.name || "");
@@ -5802,7 +5842,7 @@
     const megaReport = getMegaCompatibilityReport(team, structureReport);
     const issues = [...megaReport.issues];
     let penalty = (Number.isFinite(structureReport.penalty) ? structureReport.penalty : 0) + megaReport.penalty;
-    const trSetterCount = structureReport.trSetterCount ?? 0;
+    const trSetterCount = structureReport.trSetterCount ?? structureReport.trickRoomCount ?? 0;
     const profiles = team.map((slot) => getCoherenceSlotProfile(slot)).filter((profile) => profile.entry);
     profiles.forEach((profile) => {
       const moveKeys = profile.moveKeys;
@@ -5905,6 +5945,88 @@
       };
     }
     return report;
+  }
+
+  function getGenerationIssueCodes(coherence) {
+    return (coherence?.issues || []).map((issue) => issue.code).filter(Boolean);
+  }
+
+  function getGenerationBlockerCodes(coherence) {
+    return (coherence?.blockers || []).map((issue) => issue.code).filter(Boolean);
+  }
+
+  function getFinalCandidateScore(payload) {
+    return payload?.liveEval?.guidedScore
+      ?? payload?.evaluation?.averagedScores?.overall
+      ?? payload?.evaluation?.overallScore
+      ?? null;
+  }
+
+  function summarizeGenerationDraft(draft) {
+    return (draft || []).filter((set) => set?.name).map((set) => ({
+      name: set.name,
+      item: set.item || "",
+      ability: set.ability || "",
+      moves: (set.moves || []).filter(Boolean)
+    }));
+  }
+
+  function resetFinalGenerationRejectionDebug(request) {
+    if (typeof window === "undefined") return;
+    window.__MBWR_GENERATION_REJECTION_DEBUG = {
+      request: {
+        mode: request?.mode || "",
+        focus: request?.focus || "",
+        intentLock: request?.intentLock || "",
+        promptLocks: request?.promptLocks || {}
+      },
+      rejections: [],
+      retryCount: 0,
+      selectedValidTeam: null,
+      finalSelectedTeam: null,
+      fallbackUsed: false,
+      fallbackWarning: "",
+      finalErrorBlockerCodes: [],
+      finalErrorIssueCodes: []
+    };
+  }
+
+  function recordFinalGenerationRejection(draft, coherence, scoreBeforeRejection, reasonRejected) {
+    if (typeof window === "undefined") return;
+    window.__MBWR_GENERATION_REJECTION_DEBUG = window.__MBWR_GENERATION_REJECTION_DEBUG || { rejections: [] };
+    window.__MBWR_GENERATION_REJECTION_DEBUG.rejections = window.__MBWR_GENERATION_REJECTION_DEBUG.rejections || [];
+    window.__MBWR_GENERATION_REJECTION_DEBUG.rejections.push({
+      candidateTeam: summarizeGenerationDraft(draft),
+      blockerCodes: getGenerationBlockerCodes(coherence),
+      issueCodes: getGenerationIssueCodes(coherence),
+      scoreBeforeRejection,
+      reasonRejected
+    });
+  }
+
+  function recordFinalGenerationSelection(draft, coherence, fallbackUsed = false, fallbackWarning = "") {
+    if (typeof window === "undefined") return;
+    window.__MBWR_GENERATION_REJECTION_DEBUG = window.__MBWR_GENERATION_REJECTION_DEBUG || { rejections: [] };
+    window.__MBWR_GENERATION_REJECTION_DEBUG.selectedValidTeam = summarizeGenerationDraft(draft);
+    window.__MBWR_GENERATION_REJECTION_DEBUG.finalSelectedTeam = summarizeGenerationDraft(draft);
+    window.__MBWR_GENERATION_REJECTION_DEBUG.selectedCoherence = {
+      isValid: !!coherence?.isValid,
+      blockerCodes: getGenerationBlockerCodes(coherence),
+      issueCodes: getGenerationIssueCodes(coherence),
+      penalty: coherence?.penalty ?? null
+    };
+    window.__MBWR_GENERATION_REJECTION_DEBUG.fallbackUsed = !!fallbackUsed;
+    window.__MBWR_GENERATION_REJECTION_DEBUG.fallbackWarning = fallbackWarning || "";
+  }
+
+  function recordFinalGenerationFailure(coherence, fallbackWarning = "") {
+    if (typeof window === "undefined") return;
+    window.__MBWR_GENERATION_REJECTION_DEBUG = window.__MBWR_GENERATION_REJECTION_DEBUG || { rejections: [] };
+    window.__MBWR_GENERATION_REJECTION_DEBUG.selectedValidTeam = null;
+    window.__MBWR_GENERATION_REJECTION_DEBUG.finalSelectedTeam = null;
+    window.__MBWR_GENERATION_REJECTION_DEBUG.fallbackWarning = fallbackWarning || "";
+    window.__MBWR_GENERATION_REJECTION_DEBUG.finalErrorBlockerCodes = getGenerationBlockerCodes(coherence);
+    window.__MBWR_GENERATION_REJECTION_DEBUG.finalErrorIssueCodes = getGenerationIssueCodes(coherence);
   }
 
   if (typeof window !== "undefined") {
@@ -6779,11 +6901,16 @@
           ? evaluation.defensiveTypeScore * 0.14 + evaluation.offenseReport.score * 0.14 + evaluation.metaMatchupScore * 0.14 + threatCoverage * 0.14 + calcBenchmarks.score * 0.16 + speedControl * 0.10 + promptAdherence * 0.12 + megaPlanScore * 0.06
           : evaluation.overallScore * 0.24 + evaluation.metaMatchupScore * 0.14 + threatCoverage * 0.14 + calcBenchmarks.score * 0.16 + metaAdaptability * 0.10 + speedControl * 0.08 + promptAdherence * 0.10 + megaPlanScore * 0.04
     );
-    const guidedScore = clampScore(rawGuidedScore - competitiveValidation.penalty);
+    const exportCoherence = evaluateFinalExportCoherence(paddedTeam);
+    const exportCoherencePenalty = slotIndex >= 5 && !exportCoherence.isValid
+      ? EXPORT_BLOCKED_SCORE_PENALTY
+      : 0;
+    const guidedScore = clampScore(rawGuidedScore - competitiveValidation.penalty - exportCoherencePenalty);
     const warnings = [
       ...calcBenchmarks.warnings,
       ...evaluation.weaknessRows.filter((row) => LIVE_PRESSURE_TYPES.includes(row.attackType) && row.weakCount >= 2).map((row) => `${row.attackType} pressure is still stacked.`),
-      ...competitiveValidation.violations.map((row) => row.text)
+      ...competitiveValidation.violations.map((row) => row.text),
+      ...(slotIndex >= 5 && !exportCoherence.isValid ? exportCoherence.issues.map((row) => row.text) : [])
     ];
     if (!context.promptLocks?.noMegas && slotIndex >= 4 && megaCount < (context.promptLocks?.megaTargetMin || 0)) warnings.push("Mega slot still missing.");
     if (!context.promptLocks?.trickRoom && hasMoveOnTeam(teamSets, "Trick Room")) warnings.push("Trick Room drift detected.");
@@ -6801,6 +6928,7 @@
       promptAdherence,
       megaPlanScore,
       competitiveValidation,
+      exportCoherence,
       guidedScore,
       warnings,
       evaluation
@@ -6946,6 +7074,7 @@
       : context.pool;
     const scoredRows = [];
     for (const entry of candidatePool) {
+      if (isAutoRepairFillerPokemon(entry) && !isExplicitlyRequestedSpecies(entry, context)) continue;
       if (!(await isCandidateAllowedForPrompt(entry, partialEntries, context, slotIndex))) continue;
       const legalMoves = await getLegalMovesForEntry(entry);
       const aiBase = await scoreAiDraftCandidate(entry, partialEntries, context.desiredTypes, context.enemyNames, context.mode, context.request.requestedModes, context.request.requestedPressure);
@@ -7202,6 +7331,7 @@
     const pool = championsRoster
       .filter((entry) => !entry.name.startsWith("Mega ") || canUseMega(entry))
       .filter((entry) => !avoidNames.has(normalizeNameKey(entry.name)))
+      .filter((entry) => !isAutoRepairFillerPokemon(entry) || requestedAnchorKeys.has(normalizeNameKey(entry.name)))
       .filter((entry) => !stapleBanKeys.has(normalizeNameKey(entry.name)) || requestedAnchorKeys.has(normalizeNameKey(entry.name)));
     aiBuildCounter += 1;
     optimizedSetCache.clear();
@@ -7220,24 +7350,25 @@
       }
     });
     const guidedBuild = await buildGuidedDraft(guidedContext);
-    let bestDraft = guidedBuild.draft;
-    let bestEvaluation = guidedBuild.evaluation;
     logBuilderEvent("builder:draft-generated", {
-      names: bestDraft.map((set) => set.name),
-      overallScore: bestEvaluation?.overallScore ?? null,
+      names: guidedBuild.draft.map((set) => set.name),
+      overallScore: guidedBuild.evaluation?.overallScore ?? null,
       guidedScore: guidedBuild.liveEval?.guidedScore ?? null
     });
-    const finalizedDraftPayload = await applyDraftPostProcessing({
-      title: "Draft Suggestion",
-      request,
-      evaluation: bestEvaluation,
-      draft: bestDraft
-    });
-    bestEvaluation = finalizedDraftPayload.evaluation;
-    bestDraft = finalizedDraftPayload.draft;
+    const coherentSelection = await selectCoherentGeneratedDraft(guidedBuild, guidedContext, request);
+    if (!coherentSelection?.draft?.length) {
+      aiBuilderOutput.innerHTML = `<div class="status-note">Could not build an export-safe draft from the current request.</div>`;
+      return;
+    }
+    let bestDraft = coherentSelection.draft;
+    let bestEvaluation = coherentSelection.evaluation;
     lastAiDraft = bestDraft;
     const chosen = lastAiDraft.map((set) => getRosterEntry(set.name)).filter(Boolean);
-    const explanation = buildAiDraftExplanation(mode, focus, notes, chosen, enemyNames, desiredTypes);
+    const fallbackWarning = window.__MBWR_GENERATION_REJECTION_DEBUG?.fallbackWarning;
+    const explanation = [
+      buildAiDraftExplanation(mode, focus, notes, chosen, enemyNames, desiredTypes),
+      fallbackWarning ? `Warning: ${fallbackWarning}` : ""
+    ].filter(Boolean).join(" ");
     renderAiBuilderOutput("Draft Suggestion", explanation, bestEvaluation, lastAiDraft);
     await applyAiBuilderDraft();
     logBuilderEvent("builder:complete", {
@@ -7365,6 +7496,187 @@
     }
   }
 
+  async function buildDraftFromEntries(entries, context) {
+    const draft = [];
+    for (const entry of entries.slice(0, 6)) {
+      draft.push(await getOptimizedDraftSetCached(entry, {
+        mode: context.mode,
+        focus: context.focus,
+        notes: context.notes,
+        enemyNames: context.enemyNames,
+        chosen: entries,
+        currentDraft: draft,
+        buildCounter: ++aiBuildCounter,
+        requestedModes: context.request.requestedModes,
+        requestedPressure: context.request.requestedPressure
+      }));
+    }
+    applyItemClauseToDraft(draft);
+    return draft;
+  }
+
+  function chooseSafeFallbackEntries(context) {
+    const picked = [];
+    const pickedKeys = new Set();
+    const addByName = (name) => {
+      const entry = getRosterEntry(name);
+      if (!entry) return false;
+      const key = normalizeNameKey(entry.name);
+      if (pickedKeys.has(key) || violatesSpeciesClause(picked, entry)) return false;
+      if (isAutoRepairFillerPokemon(entry) && !(context.request?.requestedPokemon || []).some((requested) => normalizeNameKey(requested) === key)) return false;
+      if (context.promptLocks?.noMegas && isMegaEntry(entry)) return false;
+      picked.push(entry);
+      pickedKeys.add(key);
+      return true;
+    };
+    (context.promptLocks?.requiredPokemon || []).forEach(addByName);
+    if (context.promptLocks?.specificMega) {
+      addByName(context.promptLocks.specificMega);
+      if (normalizeNameKey(context.promptLocks.specificMega) === "mega camerupt") {
+        addByName("Farigiraf");
+        addByName("Incineroar");
+        addByName("Rillaboom");
+        addByName("Amoonguss");
+        addByName("Primarina");
+      }
+    }
+    if (!context.promptLocks?.noMegas && !picked.some((entry) => isMegaEntry(entry))) {
+      addByName("Mega Kangaskhan");
+    }
+    [
+      "Incineroar",
+      "Rillaboom",
+      "Garchomp",
+      "Flutter Mane",
+      "Dragonite",
+      "Whimsicott",
+      "Farigiraf",
+      "Primarina",
+      "Kingambit"
+    ].forEach((name) => {
+      if (picked.length < 6) addByName(name);
+    });
+    for (const entry of context.pool || []) {
+      if (picked.length >= 6) break;
+      if (isAutoRepairFillerPokemon(entry) && !isExplicitlyRequestedSpecies(entry, context)) continue;
+      addByName(entry.name);
+    }
+    return picked.slice(0, 6);
+  }
+
+  function buildSafeFallbackContext(context, request) {
+    const fallbackRequest = {
+      ...request,
+      requestedModes: { ...(request.requestedModes || {}) },
+      promptLocks: { ...(request.promptLocks || {}) }
+    };
+    if (normalizeNameKey(fallbackRequest.promptLocks.specificMega || "") === "mega camerupt") {
+      fallbackRequest.requestedModes.trickRoom = true;
+      fallbackRequest.promptLocks.trickRoom = true;
+      fallbackRequest.promptLocks.weather = "";
+      fallbackRequest.intentLock = "soft_tr";
+    }
+    const fallbackContext = {
+      ...context,
+      request: fallbackRequest,
+      intentLock: fallbackRequest.intentLock || context.intentLock,
+      promptLocks: {
+        ...(context.promptLocks || {}),
+        ...(fallbackRequest.promptLocks || {}),
+        enemyNames: context.enemyNames || []
+      }
+    };
+    fallbackContext.teamPlan = buildArchetypePlan(fallbackRequest, fallbackContext.focus, fallbackContext.notes);
+    return { fallbackContext, fallbackRequest };
+  }
+
+  async function buildSafeFallbackDraft(context, request) {
+    const { fallbackContext, fallbackRequest } = buildSafeFallbackContext(context, request);
+    const entries = chooseSafeFallbackEntries(fallbackContext);
+    if (entries.length < 6) return null;
+    let draft = await buildDraftFromEntries(entries, fallbackContext);
+    draft = await repairDraftByCompetitiveRules(draft, fallbackRequest);
+    const evaluation = await evaluateTeamState(padTeamState(draft));
+    const liveEval = await evaluateLiveTeamState(draft, fallbackContext, 5);
+    return { draft, evaluation, liveEval, request: fallbackRequest };
+  }
+
+  async function prepareFinalDraftCandidate(candidate, request, reason) {
+    const postProcessRequest = candidate.request || request;
+    const finalized = await applyDraftPostProcessing({
+      title: "Draft Suggestion",
+      request: postProcessRequest,
+      evaluation: candidate.evaluation,
+      draft: candidate.draft
+    });
+    const coherence = evaluateFinalExportCoherence(finalized.draft);
+    return {
+      ...candidate,
+      ...finalized,
+      coherence,
+      scoreBeforeRejection: getFinalCandidateScore(candidate),
+      reason
+    };
+  }
+
+  function shouldUseImmediateSafeFallback(candidate, context) {
+    const blockerCodes = new Set(getGenerationBlockerCodes(candidate.coherence));
+    return normalizeNameKey(context.promptLocks?.specificMega || "") === "mega camerupt"
+      && context.promptLocks?.weather === "rain"
+      && (blockerCodes.has("rain_camerupt_conflict") || blockerCodes.has("camerupt_without_tr") || blockerCodes.has("mega_missing_tr_support"));
+  }
+
+  async function selectCoherentGeneratedDraft(initialBuild, context, request) {
+    resetFinalGenerationRejectionDebug(request);
+    const attempts = [{ build: initialBuild, reason: "initial_guided_candidate" }];
+    for (let attempt = 1; attempt < FINAL_COHERENCE_RETRY_LIMIT; attempt += 1) {
+      attempts.push({ build: null, reason: `guided_retry_${attempt}` });
+    }
+    let bestValid = null;
+    for (const attempt of attempts) {
+      const build = attempt.build || await buildGuidedDraft(context);
+      const candidate = await prepareFinalDraftCandidate(build, request, attempt.reason);
+      if (typeof window !== "undefined" && window.__MBWR_GENERATION_REJECTION_DEBUG) {
+        window.__MBWR_GENERATION_REJECTION_DEBUG.retryCount = (window.__MBWR_GENERATION_REJECTION_DEBUG.retryCount || 0) + 1;
+      }
+      if (candidate.coherence.isValid) {
+        const candidateScore = Number(candidate.scoreBeforeRejection ?? getFinalCandidateScore(candidate) ?? candidate.coherence.penalty * -1);
+        const bestScore = Number(bestValid?.scoreBeforeRejection ?? getFinalCandidateScore(bestValid) ?? bestValid?.coherence?.penalty * -1 ?? -Infinity);
+        if (!bestValid || candidateScore > bestScore) bestValid = candidate;
+        continue;
+      }
+      recordFinalGenerationRejection(
+        candidate.draft,
+        candidate.coherence,
+        candidate.scoreBeforeRejection,
+        `${attempt.reason}: export coherence blockers`
+      );
+      if (shouldUseImmediateSafeFallback(candidate, context)) break;
+    }
+    if (bestValid) {
+      recordFinalGenerationSelection(bestValid.draft, bestValid.coherence, false);
+      return bestValid;
+    }
+    const fallback = await buildSafeFallbackDraft(context, request);
+    if (fallback?.draft?.length) {
+      const candidate = await prepareFinalDraftCandidate(fallback, request, "safe_fallback_candidate");
+      if (candidate.coherence.isValid) {
+        recordFinalGenerationSelection(candidate.draft, candidate.coherence, true);
+        return candidate;
+      }
+      recordFinalGenerationRejection(
+        candidate.draft,
+        candidate.coherence,
+        candidate.scoreBeforeRejection,
+        "safe_fallback_candidate: export coherence blockers"
+      );
+      recordFinalGenerationFailure(candidate.coherence, "Safe fallback also failed final export coherence.");
+      return null;
+    }
+    recordFinalGenerationFailure(null, "No safe fallback draft could be built.");
+    return null;
+  }
+
   async function handleAiBuilderTweaks() {
     document.body.classList.add("is-building");
     setBusyState(aiBuilderOutput, true, "Updating");
@@ -7414,7 +7726,17 @@
     });
     evaluation = finalizedDraftPayload.evaluation;
     lastAiDraft = finalizedDraftPayload.draft;
-    renderAiBuilderOutput("Tweaked Draft", tweakText || "Adjusted the current six for cleaner synergy and stronger role fit.", evaluation, lastAiDraft);
+    const repairDebug = typeof window !== "undefined" ? window.__MBWR_REPAIR_DEBUG : null;
+    const finalCoherence = evaluateFinalExportCoherence(lastAiDraft);
+    const repairSummary = repairDebug ? [
+      `Detected archetype: ${repairDebug.detectedArchetype || detectTeamArchetype(lastAiDraft)}.`,
+      `Preserved core: ${(repairDebug.lockedCore || []).join(", ") || "none"}.`,
+      `Changed slots: ${(repairDebug.changesMade || []).filter((change) => change.type === "slot").map((change) => `${change.slot}: ${change.to}`).join(", ") || "none"}.`,
+      `Changed moves/items: ${(repairDebug.changesMade || []).filter((change) => change.type !== "slot").map((change) => `${change.species}: ${change.from || "empty"} -> ${change.to}`).join(", ") || "none"}.`,
+      `Remaining warnings: ${getGenerationIssueCodes(finalCoherence).join(", ") || "none"}.`,
+      `Valid for export: ${finalCoherence.isValid ? "yes" : "no"}.`
+    ].join(" ") : "";
+    renderAiBuilderOutput("Tweaked Draft", [tweakText || "Adjusted the current six for cleaner synergy and stronger role fit.", repairSummary].filter(Boolean).join(" "), evaluation, lastAiDraft);
     await applyAiBuilderDraft();
     } finally {
       setBusyState(aiBuilderOutput, false);
@@ -8440,6 +8762,194 @@
     return best;
   }
 
+  function detectTeamArchetype(team) {
+    const occupied = (team || []).filter((set) => set?.name);
+    const names = occupied.map((set) => normalizeNameKey(set.name));
+    const weather = inferTeamWeatherProfile(occupied);
+    const structure = evaluateTeamStructure(occupied);
+    const hasMegaCamerupt = names.includes("mega camerupt");
+    const trCount = structure.trickRoomCount || occupied.filter((set) => getSetMoveKeys(set).includes("trick room")).length;
+    const slowCount = occupied.filter((set) => {
+      const entry = getRosterEntry(set.name);
+      return entry && (entry.baseSpeed || 0) <= 70;
+    }).length;
+    const tailwindCount = occupied.filter((set) => getSetMoveKeys(set).includes("tailwind")).length;
+    if (hasMegaCamerupt && (trCount > 0 || slowCount >= 3)) return "mega_camerupt_tr";
+    if (trCount >= 2 && slowCount >= 3) return "hard_tr";
+    if (trCount >= 1 && slowCount >= 2) return "tr_balance";
+    if (weather.primary === "rain") return names.some((name) => name === "kingambit" || name === "rillaboom" || name === "rotom-wash") ? "anti_rain_balance" : "rain";
+    if (weather.primary === "sun") return "sun";
+    if (weather.primary === "sand") return "sand";
+    if (tailwindCount > 0) return "tailwind_balance";
+    const averageSpeed = occupied.length
+      ? occupied.reduce((sum, set) => sum + (getRosterEntry(set.name)?.baseSpeed || 0), 0) / occupied.length
+      : 0;
+    if (occupied.length >= 4 && averageSpeed >= 65) return "bulky_offense";
+    return "unknown";
+  }
+
+  function getLockedCoreIndexesForArchetype(draft, detectedArchetype) {
+    const trArchetype = ["hard_tr", "tr_balance", "mega_camerupt_tr"].includes(detectedArchetype);
+    const weatherArchetype = ["rain", "sun", "sand"].includes(detectedArchetype);
+    return new Set((draft || []).map((set, index) => {
+      const entry = getRosterEntry(set?.name || "");
+      const key = normalizeNameKey(set?.name || "");
+      if (!entry) return null;
+      if (detectedArchetype === "mega_camerupt_tr" && key === "mega camerupt") return index;
+      if (detectedArchetype === "mega_camerupt_tr" && isMegaEntry(entry)) return null;
+      if (isMegaEntry(entry)) return index;
+      if (trArchetype && (getSetMoveKeys(set).includes("trick room") || isRealTrAbuserSet(set) || isMeaningfulTrSupportSet(set))) return index;
+      if (detectedArchetype === "mega_camerupt_tr" && ["kingambit", "conkeldurr", "sinistcha", "farigiraf", "incineroar", "rillaboom", "amoonguss"].includes(key)) return index;
+      if (weatherArchetype && getSetWeatherMode(set)) return index;
+      if (detectedArchetype === "tailwind_balance" && getSetMoveKeys(set).includes("tailwind")) return index;
+      return null;
+    }).filter((index) => index !== null));
+  }
+
+  async function addPreferredLegalMove(set, preferredMoves, changesMade, preserveMoves = []) {
+    const entry = getRosterEntry(set?.name || "");
+    if (!entry) return false;
+    const legalMoves = await getLegalMovesForEntry(entry);
+    const legalByKey = new Map(legalMoves.map((move) => [normalizeNameKey(move), move]));
+    const moveKeys = getSetMoveKeys(set);
+    if (preferredMoves.some((move) => moveKeys.includes(normalizeNameKey(move)))) return false;
+    const selected = preferredMoves.map((move) => legalByKey.get(normalizeNameKey(move))).find(Boolean);
+    if (!selected) return false;
+    const preserveKeys = new Set(preserveMoves.map((move) => normalizeNameKey(move)));
+    const replaceIndex = (set.moves || []).findIndex((move) => !move || !preserveKeys.has(normalizeNameKey(move)));
+    const targetIndex = replaceIndex >= 0 ? replaceIndex : Math.max(0, Math.min(3, (set.moves || []).length - 1));
+    const before = set.moves?.[targetIndex] || "";
+    set.moves = Array.from({ length: 4 }, (_, index) => set.moves?.[index] || "");
+    set.moves[targetIndex] = selected;
+    changesMade.push({ type: "move", species: set.name, from: before, to: selected });
+    return true;
+  }
+
+  async function enforceRoleDefiningSupportMoves(draft, changesMade) {
+    for (const set of draft || []) {
+      const key = normalizeNameKey(set?.name || "");
+      if (SUPPORT_MOVE_REQUIREMENTS[key]) {
+        await addPreferredLegalMove(set, SUPPORT_MOVE_REQUIREMENTS[key], changesMade, ["Protect"]);
+      }
+    }
+  }
+
+  async function enforceMegaCameruptRepairRules(draft, context, changesMade, rejectedReplacementCandidates) {
+    const camerupt = (draft || []).find((set) => normalizeNameKey(set?.name || "") === "mega camerupt");
+    if (!camerupt) return draft;
+    camerupt.item = getMegaStoneForEntry(getRosterEntry("Mega Camerupt")) || camerupt.item || "Cameruptite";
+    camerupt.nature = ["Quiet", "Brave", "Relaxed", "Sassy"].includes(camerupt.nature) ? camerupt.nature : "Quiet";
+    camerupt.sps = { ...(camerupt.sps || {}), spe: 0 };
+    await addPreferredLegalMove(camerupt, ["Heat Wave", "Earth Power", "Protect"], changesMade, ["Heat Wave", "Earth Power", "Protect"]);
+    const trSetter = (draft || []).find((set) => getSetMoveKeys(set).includes("trick room"));
+    if (!trSetter) {
+      const existing = (draft || []).find((set) => ["farigiraf", "sinistcha"].includes(normalizeNameKey(set.name)));
+      if (existing) {
+        await addPreferredLegalMove(existing, ["Trick Room"], changesMade, ["Rage Powder", "Follow Me", "Protect", "Matcha Gotcha", "Hyper Voice"]);
+      }
+      if (!(draft || []).some((set) => getSetMoveKeys(set).includes("trick room"))) {
+        const replacementIndex = (draft || []).findIndex((set) => {
+          const key = normalizeNameKey(set?.name || "");
+          return !isMegaEntry(getRosterEntry(set.name)) && !["kingambit", "conkeldurr", "mega camerupt"].includes(key);
+        });
+        const farigiraf = getRosterEntry("Farigiraf");
+        if (replacementIndex >= 0 && farigiraf) {
+          draft[replacementIndex] = await getOptimizedDraftSetCached(farigiraf, {
+            ...context,
+            currentDraft: draft.slice(0, replacementIndex),
+            chosen: draft.map((set) => getRosterEntry(set.name)).filter(Boolean),
+            buildCounter: ++aiBuildCounter,
+            requestedModes: { ...(context.request?.requestedModes || {}), trickRoom: true }
+          });
+          await addPreferredLegalMove(draft[replacementIndex], ["Trick Room"], changesMade, ["Protect"]);
+          changesMade.push({ type: "slot", slot: replacementIndex + 1, to: "Farigiraf", reason: "mega_camerupt_tr_setter" });
+        }
+      }
+    }
+    for (let index = 0; index < draft.length; index += 1) {
+      if (normalizeNameKey(draft[index]?.name || "") === "pelipper") {
+        rejectedReplacementCandidates.push({ slot: index + 1, species: "Pelipper", reason: "rain_conflicts_with_mega_camerupt_tr" });
+      }
+    }
+    const postTrReport = evaluateFinalExportCoherence(draft);
+    const blockerCodes = new Set(getGenerationBlockerCodes(postTrReport));
+    if (blockerCodes.has("mega_pair_speed_conflict") || blockerCodes.has("mega_pair_weather_conflict")) {
+      const replacementNames = ["Farigiraf", "Incineroar", "Rillaboom", "Amoonguss", "Primarina"];
+      const replacementIndex = draft.findIndex((set) => {
+        const key = normalizeNameKey(set?.name || "");
+        if (key === "mega camerupt" || ["kingambit", "conkeldurr", "sinistcha", "farigiraf"].includes(key)) return false;
+        const entry = getRosterEntry(set.name);
+        return isMegaEntry(entry) || (entry?.baseSpeed || 0) >= 95 || getSetWeatherMode(set) === "rain";
+      });
+      if (replacementIndex >= 0) {
+        const currentNames = new Set(draft.map((set) => normalizeNameKey(set.name)));
+        const replacementEntry = replacementNames
+          .map((name) => getRosterEntry(name))
+          .find((entry) => entry && !currentNames.has(normalizeNameKey(entry.name)) && !violatesSpeciesClause(draft.map((set) => getRosterEntry(set.name)).filter((_, index) => index !== replacementIndex), entry));
+        if (replacementEntry) {
+          const before = draft[replacementIndex]?.name || "";
+          draft[replacementIndex] = await getOptimizedDraftSetCached(replacementEntry, {
+            ...context,
+            currentDraft: draft.slice(0, replacementIndex),
+            chosen: draft.map((set) => getRosterEntry(set.name)).filter(Boolean),
+            buildCounter: ++aiBuildCounter,
+            requestedModes: { ...(context.request?.requestedModes || {}), trickRoom: true }
+          });
+          if (normalizeNameKey(replacementEntry.name) === "farigiraf") {
+            await addPreferredLegalMove(draft[replacementIndex], ["Trick Room"], changesMade, ["Protect"]);
+          }
+          changesMade.push({ type: "slot", slot: replacementIndex + 1, from: before, to: replacementEntry.name, reason: "remove_mega_camerupt_speed_conflict" });
+        }
+      }
+    }
+    return draft;
+  }
+
+  async function repairTeamPreservingArchetype(team, issues = [], detectedArchetype = "", context = {}) {
+    const originalTeam = (team || []).map((set) => cloneDraftSet(set));
+    const working = (team || []).map((set) => cloneDraftSet(set));
+    const archetype = detectedArchetype || detectTeamArchetype(working);
+    const lockedCore = getLockedCoreIndexesForArchetype(working, archetype);
+    const changesMade = [];
+    const rejectedReplacementCandidates = [];
+    await enforceRoleDefiningSupportMoves(working, changesMade);
+    if (["hard_tr", "tr_balance", "mega_camerupt_tr"].includes(archetype)) {
+      const trSetter = working.find((set) => getSetMoveKeys(set).includes("trick room"));
+      if (!trSetter) {
+        const support = working.find((set) => ["farigiraf", "sinistcha"].includes(normalizeNameKey(set.name)));
+        if (support) await addPreferredLegalMove(support, ["Trick Room"], changesMade, ["Rage Powder", "Protect", "Matcha Gotcha", "Hyper Voice"]);
+      }
+    }
+    await enforceMegaCameruptRepairRules(working, context, changesMade, rejectedReplacementCandidates);
+    const finalValidation = evaluateFinalExportCoherence(working);
+    if (typeof window !== "undefined") {
+      window.__MBWR_REPAIR_DEBUG = {
+        originalTeam: summarizeGenerationDraft(originalTeam),
+        detectedArchetype: archetype,
+        lockedCore: [...lockedCore].map((index) => originalTeam[index]?.name).filter(Boolean),
+        changesMade,
+        rejectedReplacementCandidates,
+        issues: (issues || []).map((issue) => issue.code || issue.text || String(issue)),
+        finalValidationResult: {
+          isValid: finalValidation.isValid,
+          blockerCodes: getGenerationBlockerCodes(finalValidation),
+          issueCodes: getGenerationIssueCodes(finalValidation),
+          penalty: finalValidation.penalty
+        }
+      };
+    }
+    return working;
+  }
+
+  if (typeof window !== "undefined") {
+    window.__MBWR_STABILIZATION_DEBUG = {
+      ...(window.__MBWR_STABILIZATION_DEBUG || {}),
+      detectTeamArchetype,
+      repairTeamPreservingArchetype,
+      isAutoRepairFillerPokemon
+    };
+  }
+
   async function repairDraftByCompetitiveRules(draft, request) {
     const focus = request.focus || "";
     const notes = request.normalizedText || "";
@@ -8450,6 +8960,11 @@
     const pool = championsRoster.filter((entry) => !entry.name.startsWith("Mega ") || canUseMega(entry));
     const context = buildGuidedBuildContext(request, focus, notes, enemyNames, desiredTypes, pool, anchor);
     let working = await rebuildDraftSetsStrictly(draft, context);
+    const detectedArchetype = detectTeamArchetype(working);
+    const lockedCore = getLockedCoreIndexesForArchetype(working, detectedArchetype);
+    working = await repairTeamPreservingArchetype(working, [], detectedArchetype, context);
+    if (detectedArchetype === "unknown") return working;
+    let changedSlotCount = 0;
     for (let pass = 0; pass < 6; pass += 1) {
       const validation = buildCompetitiveDraftValidation(working, context);
       if (validation.isValid) break;
@@ -8570,11 +9085,16 @@
         replaceIndex = working.findIndex((set) => isPassiveSupportSet(set) || (getSetMoveKeys(set).includes("protect") && !isRealAttackerSet(set)));
         predicate = (nextValidation, replacementSet) => isRealAttackerSet(replacementSet) && nextValidation.penalty < validation.penalty;
       }
-      if (replaceIndex < 0) break;
+      if (replaceIndex < 0 || lockedCore.has(replaceIndex) || changedSlotCount >= 2) break;
       const replacement = await findValidationReplacement(working, replaceIndex, context, predicate);
       if (!replacement?.draft) break;
+      const replacementName = replacement.draft[replaceIndex]?.name || "";
+      if (isAutoRepairFillerPokemon(replacementName) && !(request.requestedPokemon || []).some((name) => normalizeNameKey(name) === normalizeNameKey(replacementName))) break;
+      if (detectedArchetype === "mega_camerupt_tr" && ["pelipper", "charizard", "gastly", "sinistea"].includes(normalizeNameKey(replacementName))) break;
       working = replacement.draft;
+      changedSlotCount += 1;
     }
+    working = await repairTeamPreservingArchetype(working, [], detectedArchetype, context);
     return working;
   }
 
@@ -10336,7 +10856,7 @@
     const report = getTeamExportGate(teamState);
     if (report.isValid) return null;
     const summary = report.blockers[0]?.text || report.issues[0]?.text || "The current team fails the export coherence gate.";
-    teamExportStatus.textContent = `Export blocked: ${summary}`;
+    teamExportStatus.textContent = `Export blocked: ${summary} Use Fix/Update to fix while preserving archetype.`;
     return report;
   }
 
