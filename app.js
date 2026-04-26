@@ -120,6 +120,16 @@
     "regional winners",
     "GC ladder leaders"
   ];
+  const MEGA_TIER_PREFERENCE = {
+    S: ["Mega Floette", "Mega Charizard Y", "Mega Froslass"],
+    A: ["Mega Gengar", "Mega Meganium", "Mega Dragonite", "Mega Gardevoir"],
+    B: ["Mega Blastoise", "Mega Charizard X", "Mega Scovillain", "Mega Greninja", "Mega Crabominable", "Mega Starmie", "Mega Tyranitar", "Mega Aerodactyl"],
+    C: ["Mega Venusaur", "Mega Feraligatr", "Mega Gyarados", "Mega Lopunny", "Mega Golurk", "Mega Medicham", "Mega Glimmora", "Mega Delphox", "Mega Lucario", "Mega Kangaskhan", "Mega Manectric"],
+    D: ["Mega Chandelure", "Mega Hawlucha", "Mega Sableye", "Mega Emboar", "Mega Banette", "Mega Drampa", "Mega Ampharos", "Mega Chimecho"],
+    F: ["Mega Sharpedo", "Mega Garchomp", "Mega Alakazam", "Mega Beedrill", "Mega Audino", "Mega Skarmory", "Mega Camerupt", "Mega Houndoom", "Mega Clefairy", "Mega Slowking", "Mega Meowstic"]
+  };
+  const MEGA_TIER_SCORE = { S: 18, A: 12, B: 6, C: 0, D: -10, F: -18 };
+  const BULKY_SUPPORT_NO_DEFAULT_SASH = new Set(["incineroar", "farigiraf", "sinistcha"]);
   const pikalyticsMetaSeed = [
     { name: "Incineroar", weight: 54.4, tags: ["fakeout", "intimidate", "pivot"] },
     { name: "Sneasler", weight: 45.1, tags: ["fakeout", "speed"] },
@@ -6898,10 +6908,30 @@
         reasons.push(`Can coexist with ${existing.name} in a legal double-Mega shell.`);
       }
     });
+    const tier = getMegaPreferenceTier(entry);
+    const tierScore = getMegaPreferenceScore(entry);
+    score += tierScore;
+    if (["S", "A", "B"].includes(tier)) {
+      reasons.push(`${entry.name} is a ${tier}-tier Mega preference after legality, archetype, and matchup fit.`);
+    } else if (["D", "F"].includes(tier)) {
+      reasons.push(`${entry.name} is ${tier}-tier, so it needs a specific archetype or matchup reason to justify the Mega slot.`);
+    }
     return {
       score,
       reasons: [...new Set(reasons)].slice(0, 3)
     };
+  }
+
+  function getMegaPreferenceTier(entryOrName) {
+    const key = normalizeNameKey(typeof entryOrName === "string" ? entryOrName : entryOrName?.name || "");
+    for (const [tier, names] of Object.entries(MEGA_TIER_PREFERENCE)) {
+      if (names.some((name) => normalizeNameKey(name) === key)) return tier;
+    }
+    return "C";
+  }
+
+  function getMegaPreferenceScore(entryOrName) {
+    return MEGA_TIER_SCORE[getMegaPreferenceTier(entryOrName)] || 0;
   }
 
   function scoreLeadPair(slotA, slotB) {
@@ -9514,6 +9544,7 @@
     }
     if ((entry.baseStats?.[0] || 0) + (entry.baseStats?.[2] || 0) + (entry.baseStats?.[4] || 0) >= 260) score += 10;
     score += Math.max(entry.baseStats?.[1] || 0, entry.baseStats?.[3] || 0) / 10;
+    score += getMegaPreferenceScore(entry);
     return score;
   }
 
@@ -11171,6 +11202,7 @@
       const megaCount = chosen.filter((picked) => isMegaEntry(picked)).length;
       if (megaCount >= 2) return -999;
       score -= megaCount * 10;
+      score += getMegaPreferenceScore(entry);
     }
     if (desiredTypes.some((type) => entry.types.includes(type))) score += 10;
     if (chosen.length && !chosen.some((picked) => picked.types.some((type) => entry.types.includes(type)))) score += 14;
@@ -11361,6 +11393,9 @@
     if (moveKeys.includes("protect")) notes.push("has a safe positioning button");
     if (set.item) notes.push(`uses ${set.item} to support its role`);
     if (set.ability) notes.push(`${set.ability} is the preferred ability here`);
+    const entry = getRosterEntry(set.name);
+    const megaTier = entry && isMegaEntry(entry) ? getMegaPreferenceTier(entry) : "";
+    if (["D", "F"].includes(megaTier)) notes.unshift(`${set.name} is ${megaTier}-tier, so it is only justified here by specific speed-mode, role, or matchup fit`);
     return notes.length ? notes.slice(0, 3).join(". ") + "." : "Fills a general role slot in the current draft.";
   }
 
@@ -11405,7 +11440,8 @@
     const legalMoves = await getLegalMovesForEntry(entry);
     const abilities = await getPokemonAbilities(entry);
     const rawMoves = await chooseOptimizedMoves(entry, legalMoves, context, abilities);
-    const item = getSuggestedItem(entry, context, rawMoves);
+    const rawItem = getSuggestedItem(entry, context, rawMoves);
+    const item = sanitizeSuggestedItem(entry, context, rawMoves, rawItem);
     const itemSafeMoves = await sanitizeMovesForItem(entry, rawMoves, item, context, legalMoves);
     const damagingMoves = await rankDamagingMoves(entry, legalMoves, getEntryOffenseProfile(entry), inferCoverageTargetsFromContext(context), context.requestedPressure || {}, context);
     const moves = await sanitizeFinalMoveSet(entry, itemSafeMoves, damagingMoves.map((move) => move.name), context);
@@ -11448,7 +11484,9 @@
       const preferred = set.item || "";
       const normalizedMoves = (set.moves || []).map((move) => normalizeNameKey(move));
       const utilityHeavy = normalizedMoves.filter((move) => ["protect", "fake out", "tailwind", "trick room", "taunt", "helping hand", "icy wind", "electroweb", "parting shot", "will-o-wisp", "thunder wave", "coaching"].includes(move)).length >= 2;
-      if (normalizeNameKey(preferred) === "choice scarf" && utilityHeavy) {
+      const entry = getRosterEntry(set.name);
+      const badFocusSash = normalizeNameKey(preferred) === "focus sash" && entry && isBadDefaultFocusSashHolder(entry, { mode: "archetype" }, set.moves || []);
+      if (!isLegalItem(preferred) || badFocusSash || (normalizeNameKey(preferred) === "choice scarf" && utilityHeavy)) {
         set.item = findUniqueItemForSet({ ...set, item: "" }, used);
         if (set.item) used.add(normalizeNameKey(set.item));
         return;
@@ -11476,12 +11514,16 @@
   }
 
   function findUniqueItemForSet(set, used) {
+    const typeEntry = getRosterEntry(set.name);
     const normalizedMoves = (set.moves || []).map((move) => normalizeNameKey(move));
     const hardTrAbuser = isRealTrAbuserSet(set) && !normalizedMoves.some((move) => ["tailwind", "icy wind", "electroweb", "thunder wave"].includes(move));
     const utilityHeavy = normalizedMoves.filter((move) => ["protect", "fake out", "tailwind", "trick room", "taunt", "helping hand", "icy wind", "electroweb", "parting shot", "will-o-wisp", "thunder wave", "coaching"].includes(move)).length >= 2;
+    const badFocusSash = typeEntry && isBadDefaultFocusSashHolder(typeEntry, { mode: "archetype" }, set.moves || []);
+    const bulkSupportItems = badFocusSash ? ["Sitrus Berry", "Shuca Berry", "Covert Cloak", "Leftovers", "Mental Herb"] : [];
     const preferredOrder = [
       getMegaStoneForEntry(getRosterEntry(set.name)),
-      "Focus Sash",
+      ...bulkSupportItems,
+      ...(badFocusSash ? [] : ["Focus Sash"]),
       "Leftovers",
       ...(utilityHeavy || hardTrAbuser ? [] : ["Choice Scarf"]),
       "Covert Cloak",
@@ -11503,7 +11545,6 @@
     for (const item of preferredOrder) {
       if (legalItems.includes(item) && !used.has(normalizeNameKey(item))) return item;
     }
-    const typeEntry = getRosterEntry(set.name);
     const typeOptions = typeEntry ? typeEntry.types.map((type) => ({
       Fire: "Charcoal",
       Water: "Mystic Water",
@@ -11543,6 +11584,7 @@
     const roleProfile = inferSetRoleProfile(entry, context, moves, moves);
     const utilityHeavy = normalizedMoves.filter((move) => ["protect", "fake out", "tailwind", "trick room", "taunt", "helping hand", "icy wind", "electroweb", "parting shot", "will-o-wisp", "thunder wave", "coaching"].includes(move)).length >= 2;
     const hardTrAbuser = buildRules.intent === "hard_tr" && isRealTrAbuserEntry(entry);
+    if (isBadDefaultFocusSashHolder(entry, context, moves)) return firstLegalItem(["Sitrus Berry", "Shuca Berry", "Covert Cloak", "Leftovers", "Mental Herb"]);
     if (entryKey === "dragonite") return legalItems.includes("Clear Amulet") ? "Clear Amulet" : (legalItems.includes("Dragon Fang") ? "Dragon Fang" : "Leftovers");
     if (shouldPrioritizeFocusSash(entry, context, moves)) return "Focus Sash";
     if (entryKey === "charizard" && legalItems.includes("Charizardite Y")) return "Charizardite Y";
@@ -11604,10 +11646,38 @@
     return legalItems.includes("Leftovers") ? "Leftovers" : (legalItems[0] || "");
   }
 
+  function isLegalItem(item) {
+    return !item || legalItems.includes(item);
+  }
+
+  function firstLegalItem(items = []) {
+    return items.find((item) => legalItems.includes(item)) || "";
+  }
+
+  function isBadDefaultFocusSashHolder(entry, context = {}, moves = []) {
+    if (!entry || isMegaEntry(entry)) return false;
+    const key = normalizeNameKey(entry.name);
+    const moveKeys = (moves || []).map((move) => normalizeNameKey(move));
+    const bulk = (entry.baseStats?.[0] || 0) + (entry.baseStats?.[2] || 0) + (entry.baseStats?.[4] || 0);
+    const bulkyLockedSupport = BULKY_SUPPORT_NO_DEFAULT_SASH.has(key);
+    const supportPivotMoves = moveKeys.some((move) => ["fake out", "parting shot", "trick room", "rage powder", "strength sap", "will-o-wisp", "snarl", "taunt"].includes(move));
+    const clearFrailLeadReason = shouldPrioritizeFocusSash(entry, context, moves) && bulk <= 220 && !bulkyLockedSupport;
+    return !clearFrailLeadReason && (bulkyLockedSupport || (bulk >= 245 && supportPivotMoves));
+  }
+
+  function sanitizeSuggestedItem(entry, context, moves = [], item = "") {
+    if (!isLegalItem(item)) return getSuggestedItem(entry, context, moves) || firstLegalItem(["Sitrus Berry", "Leftovers", "Covert Cloak"]);
+    if (normalizeNameKey(item) === "focus sash" && isBadDefaultFocusSashHolder(entry, context, moves)) {
+      return firstLegalItem(["Sitrus Berry", "Shuca Berry", "Covert Cloak", "Leftovers", "Mental Herb"]);
+    }
+    return item;
+  }
+
   function shouldPrioritizeFocusSash(entry, context, moves) {
     if (!legalItems.includes("Focus Sash")) return false;
     if (isMegaEntry(entry)) return false;
     const key = normalizeNameKey(entry.name);
+    if (BULKY_SUPPORT_NO_DEFAULT_SASH.has(key)) return false;
     const bulk = (entry.baseStats[0] || 0) + (entry.baseStats[2] || 0) + (entry.baseStats[4] || 0);
     const speed = entry.baseSpeed || 0;
     const moveKeys = moves.map((move) => normalizeNameKey(move));
