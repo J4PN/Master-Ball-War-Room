@@ -132,6 +132,27 @@ def main() -> None:
         if not name or any(ch for ch in name if not ch.isalnum() or ch.lower() != ch):
             raise SystemExit(f"source_meta_snapshot.threats[{index}] invalid normalized key `{name}`")
 
+    archetype_memory = read_json(DATA_DIR / "persistent" / "persistent_archetype_memory.json", {"archetypes": {}})
+    required_archetypes = {
+        "hard_tr",
+        "tr_hybrid",
+        "tailwind",
+        "hyper_offense",
+        "rain",
+        "sun",
+        "stall_fat_balance",
+        "anti_meta",
+        "double_mega",
+        "gc_only",
+    }
+    missing = required_archetypes.difference(archetype_memory.get("archetypes", {}).keys())
+    if missing:
+        raise SystemExit(f"persistent_archetype_memory missing buckets: {sorted(missing)}")
+    for key, row in archetype_memory.get("archetypes", {}).items():
+        for field in ["best_support_shells", "best_speed_control", "best_megas", "best_breakers", "bad_matchup_plans", "bad_patterns_to_avoid"]:
+            if field not in row or not isinstance(row[field], list):
+                raise SystemExit(f"persistent_archetype_memory.{key} missing list field {field}")
+
     print("validated learned and normalized data successfully")
 
 

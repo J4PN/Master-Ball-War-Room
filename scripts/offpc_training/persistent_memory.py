@@ -66,8 +66,50 @@ SOURCE_QUALITY_WEIGHTS = {
     "archive": 1.12,
     "meta": 1.05,
     "random": 0.55,
-    "selfplay": 0.62,
+    "selfplay": 0.35,
 }
+
+ARCHETYPE_BUCKETS = {
+    "hard_tr": "Hard TR",
+    "tr_hybrid": "TR Hybrid",
+    "tailwind": "Tailwind",
+    "hyper_offense": "Hyper Offense",
+    "rain": "Rain",
+    "sun": "Sun",
+    "stall_fat_balance": "Stall / Fat Balance",
+    "anti_meta": "Anti-meta",
+    "double_mega": "Double Mega",
+    "gc_only": "GC-only",
+}
+
+SOURCE_BACKED_TYPES = {
+    "meta",
+    "pikalytics",
+    "pikalytics_variant",
+    "high_level",
+    "high_level_variant",
+    "archive",
+    "archive_variant",
+    "reddit",
+    "reddit_variant",
+    "youtube",
+    "youtube_variant",
+}
+
+SUPPORT_SPECIES = {
+    "Incineroar",
+    "Farigiraf",
+    "Sinistcha",
+    "Whimsicott",
+    "Amoonguss",
+    "Pelipper",
+    "Raichu",
+    "Rotom-Wash",
+    "Rillaboom",
+}
+
+SPEED_CONTROL_MOVES = {"Trick Room", "Tailwind", "Icy Wind", "Electroweb", "Thunder Wave", "Bulldoze"}
+SUPPORT_MOVES = {"Fake Out", "Parting Shot", "Rage Powder", "Follow Me", "Helping Hand", "Encore", "Taunt", "Will-O-Wisp", "Wide Guard"}
 
 VARIANT_SOURCE_TYPE_MAP = {
     "archive_variant": "archive",
@@ -675,6 +717,11 @@ def get_shell_signature(team_entry):
 
 def compute_team_quality(team_entry):
     quality = SOURCE_QUALITY_WEIGHTS.get(team_entry.get("quality_class"), 0.9)
+    source_type = canonical_source_type(team_entry.get("source_type") or team_entry.get("sourceType") or team_entry.get("source"))
+    if source_type == "selfplay":
+        quality = min(quality, 0.35)
+    elif source_type in SOURCE_BACKED_TYPES:
+        quality = max(quality, 1.0)
     confidence = float(team_entry.get("confidence", 1.0) or 1.0)
     score = float(team_entry.get("score", 0.0) or 0.0)
     mega_bonus = 0.12 if any(slot.get("mega_identity") for slot in team_entry.get("team", [])) else 0.0
@@ -735,6 +782,90 @@ def merge_persistent_shell_memory(current_entries, history):
     return {"shells": shells[:220]}
 
 
+def normalize_archetype_key(value):
+    text = slugify(value).replace("_", "-")
+    if text in {"hard-tr", "full-tr", "tr", "trick-room", "hard-trick-room"}:
+        return "hard_tr"
+    if text in {"tr-hybrid", "soft-tr", "tr-balance", "trick-room-hybrid"}:
+        return "tr_hybrid"
+    if "tailwind" in text:
+        return "tailwind"
+    if text in {"hyper-offense", "fast-offense", "ho"}:
+        return "hyper_offense"
+    if "rain" in text:
+        return "rain"
+    if "sun" in text:
+        return "sun"
+    if text in {"stall", "fat-balance", "bulky-balance", "balance-fat", "bulky-offense"}:
+        return "stall_fat_balance"
+    if "anti-meta" in text or "antimeta" in text or text.startswith("anti-"):
+        return "anti_meta"
+    if "double-mega" in text:
+        return "double_mega"
+    if text in {"gc", "gc-only", "grand-challenge"}:
+        return "gc_only"
+    return ""
+
+
+def infer_archetype_keys(entry):
+    text = " ".join([
+        normalize_text(entry.get("archetype")),
+        " ".join(entry.get("tags", [])),
+        normalize_text(entry.get("source_name")),
+        normalize_text(entry.get("source_type")),
+    ]).lower()
+    team = entry.get("team", [])
+    moves = {move for slot in team for move in slot.get("moves", [])}
+    species = {slot.get("display_species") or slot.get("base_species") for slot in team}
+    mega_count = sum(1 for slot in team if slot.get("mega_identity") or normalize_text(slot.get("display_species")).startswith("Mega "))
+    keys = set()
+    explicit = normalize_archetype_key(entry.get("archetype"))
+    if explicit:
+        keys.add(explicit)
+    if "Trick Room" in moves:
+        slowish = sum(1 for slot in team if (slot.get("display_species") or slot.get("base_species")) in {"Farigiraf", "Sinistcha", "Torkoal", "Kingambit", "Conkeldurr", "Mega Camerupt", "Mega Ampharos", "Amoonguss"})
+        keys.add("hard_tr" if slowish >= 3 or "hard tr" in text or "full tr" in text else "tr_hybrid")
+    if "Tailwind" in moves or "tailwind" in text:
+        keys.add("tailwind")
+    if "rain" in text or {"Pelipper", "Basculegion"} <= species:
+        keys.add("rain")
+    if "sun" in text or "Torkoal" in species or "Mega Charizard Y" in species:
+        keys.add("sun")
+    if "hyper offense" in text or "fast offense" in text:
+        keys.add("hyper_offense")
+    if "anti meta" in text or "anti-meta" in text or any(str(tag).startswith("anti_") for tag in entry.get("tags", [])):
+        keys.add("anti_meta")
+    if mega_count >= 2:
+        keys.add("double_mega")
+    if "gc" in text or "grand challenge" in text:
+        keys.add("gc_only")
+    if not keys and get_clean_team_archetype(entry) in {"unknown", "balance", "bulky-offense"}:
+        keys.add("stall_fat_balance")
+    return sorted(keys or {"stall_fat_balance"})
+
+
+def bump_counter_list(rows, key, amount, sample=None, limit=18):
+    if not key:
+        return rows
+    found = None
+    for row in rows:
+        if row.get("key") == key:
+            found = row
+            break
+    if not found:
+        found = {"key": key, "score": 0.0, "samples": []}
+        rows.append(found)
+    found["score"] = round(float(found.get("score", 0.0)) * 0.9 + amount, 4)
+    if sample:
+        found["samples"] = list(dict.fromkeys([sample] + found.get("samples", [])))[:5]
+    rows.sort(key=lambda row: row.get("score", 0), reverse=True)
+    return rows[:limit]
+
+
+def archetype_slot_name(slot):
+    return normalize_text(slot.get("mega_identity") or slot.get("display_species") or slot.get("base_species"))
+
+
 def merge_archetype_memory(current_entries, history):
     prior = {
         name: payload
@@ -743,21 +874,69 @@ def merge_archetype_memory(current_entries, history):
         and not is_serialized_slot_blob(name)
         and "base_species" not in normalize_text(name).lower()
     }
+    for key, label in ARCHETYPE_BUCKETS.items():
+        bucket = prior.setdefault(key, {})
+        bucket.setdefault("label", label)
+        bucket.setdefault("count", 0)
+        bucket.setdefault("quality_score", 0.0)
+        bucket.setdefault("best_support_shells", [])
+        bucket.setdefault("best_speed_control", [])
+        bucket.setdefault("best_megas", [])
+        bucket.setdefault("best_breakers", [])
+        bucket.setdefault("bad_matchup_plans", [])
+        bucket.setdefault("bad_patterns_to_avoid", [])
     for entry in current_entries:
-        archetype = get_clean_team_archetype(entry)
-        bucket = prior.setdefault(archetype, {
-            "count": 0,
-            "quality_score": 0.0,
-            "mega_count": 0,
-            "anti_rain_count": 0,
-            "weather_count": 0,
-        })
         quality = compute_team_quality(entry)
-        bucket["count"] += 1
-        bucket["quality_score"] = round((bucket["quality_score"] * 0.86) + quality, 4)
-        bucket["mega_count"] += 1 if any(slot.get("mega_identity") for slot in entry.get("team", [])) else 0
-        bucket["anti_rain_count"] += 1 if "anti_rain" in entry.get("tags", []) else 0
-        bucket["weather_count"] += 1 if archetype in {"rain", "sun", "sand", "snow"} else 0
+        source_type = canonical_source_type(entry.get("source_type") or entry.get("sourceType") or entry.get("source"))
+        authority = 0.45 if source_type == "selfplay" else 1.0
+        sample = entry.get("source_name") or entry.get("source_type") or "training"
+        team = entry.get("team", [])
+        support_names = [archetype_slot_name(slot) for slot in team if archetype_slot_name(slot) in SUPPORT_SPECIES or SUPPORT_MOVES.intersection(slot.get("moves", []))]
+        support_shell = " + ".join(support_names[:3])
+        for archetype in infer_archetype_keys(entry):
+            bucket = prior.setdefault(archetype, {
+                "label": ARCHETYPE_BUCKETS.get(archetype, archetype),
+                "count": 0,
+                "quality_score": 0.0,
+                "best_support_shells": [],
+                "best_speed_control": [],
+                "best_megas": [],
+                "best_breakers": [],
+                "bad_matchup_plans": [],
+                "bad_patterns_to_avoid": [],
+            })
+            bucket["label"] = ARCHETYPE_BUCKETS.get(archetype, bucket.get("label", archetype))
+            bucket["count"] = int(bucket.get("count", 0)) + 1
+            bucket["quality_score"] = round(float(bucket.get("quality_score", 0.0)) * 0.9 + quality * authority, 4)
+            if support_shell:
+                bucket["best_support_shells"] = bump_counter_list(bucket.get("best_support_shells", []), support_shell, quality * authority, sample)
+            for slot in team:
+                name = archetype_slot_name(slot)
+                moves = set(slot.get("moves", []))
+                for move in sorted(moves.intersection(SPEED_CONTROL_MOVES)):
+                    bucket["best_speed_control"] = bump_counter_list(bucket.get("best_speed_control", []), f"{name}: {move}", quality * authority, sample)
+                if slot.get("mega_identity") or name.startswith("Mega "):
+                    bucket["best_megas"] = bump_counter_list(bucket.get("best_megas", []), name, quality * authority, sample)
+                damaging = [move for move in slot.get("moves", []) if move not in SUPPORT_MOVES and move not in SPEED_CONTROL_MOVES and move != "Protect"]
+                if damaging and name not in SUPPORT_SPECIES:
+                    bucket["best_breakers"] = bump_counter_list(bucket.get("best_breakers", []), name, quality * authority, sample)
+            for tag in entry.get("tags", []):
+                if str(tag).startswith("anti_") or "counter" in str(tag):
+                    bucket["bad_matchup_plans"] = bump_counter_list(bucket.get("bad_matchup_plans", []), str(tag), quality * authority, sample, limit=12)
+            if source_type in {"selfplay", "random"}:
+                bucket["bad_patterns_to_avoid"] = bump_counter_list(bucket.get("bad_patterns_to_avoid", []), f"do not treat {source_type} as authority", 0.2, sample, limit=12)
+            if archetype == "hard_tr" and any("Tailwind" in slot.get("moves", []) for slot in team):
+                bucket["bad_patterns_to_avoid"] = bump_counter_list(bucket.get("bad_patterns_to_avoid", []), "mixing Tailwind into Hard TR without hybrid intent", quality, sample, limit=12)
+    for key, bucket in prior.items():
+        bucket.setdefault("label", ARCHETYPE_BUCKETS.get(key, key))
+        bucket.setdefault("count", 0)
+        bucket.setdefault("quality_score", 0.0)
+        bucket.setdefault("best_support_shells", [])
+        bucket.setdefault("best_speed_control", [])
+        bucket.setdefault("best_megas", [])
+        bucket.setdefault("best_breakers", [])
+        bucket.setdefault("bad_matchup_plans", [])
+        bucket.setdefault("bad_patterns_to_avoid", [])
     return {"archetypes": prior}
 
 
