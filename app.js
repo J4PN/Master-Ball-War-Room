@@ -9658,10 +9658,32 @@
     }
     const request = parseBuilderRequest(tweakText, document.getElementById("ai-builder-focus").value.trim(), document.getElementById("ai-builder-mode").value);
     const parsedRequests = parseExplicitTweakRequests(tweakText);
+    const currentArchetype = detectImproveTeamIdentity(currentTeamState);
+    const improveIntent = getImproveIntentForArchetype(currentArchetype);
+    const improveLockedCore = getLockedCoreIndexesForArchetype(currentTeamState, currentArchetype);
+    if (!tweakText && improveIntent && request.intentLock === "unknown") {
+      request.intentLock = improveIntent;
+      request.promptLocks = {
+        ...(request.promptLocks || {}),
+        trickRoom: improveIntent === "hard_tr" || improveIntent === "soft_tr",
+        tailwind: improveIntent === "tailwind",
+        weather: ["rain", "sun", "sand"].includes(improveIntent) ? improveIntent : (request.promptLocks?.weather || "")
+      };
+    }
+    request.improvePreserveArchetype = true;
+    request.improveDetectedArchetype = currentArchetype;
     window.__MBWR_SMART_IMPROVE_SNAPSHOT = {
       team: cloneTeamSnapshot(getTeamBuilderState()),
       exportText: buildTeamExportText(),
       validation: getTeamExportGate(getTeamBuilderState().filter((slot) => slot.name))
+    };
+    window.__MBWR_IMPROVE_DEBUG = {
+      detectedArchetype: currentArchetype,
+      preservedCore: [...improveLockedCore].map((index) => currentTeamState[index]?.name).filter(Boolean),
+      rejectedAutoAdds: [],
+      whyPelipperWasChosen: "",
+      whyPelipperWasRejected: "",
+      finalImprovementReason: `Preserving ${getTeamArchetypeLabel(currentTeamState)} first: ask what this team is trying to do before replacing core structure.`
     };
     window.__MBWR_TWEAK_DEBUG = {
       parsedRequests,
@@ -9703,7 +9725,12 @@
         notes,
         enemyNames: [],
         requestedModes: request.requestedModes,
-        requestedPressure: request.requestedPressure
+        requestedPressure: request.requestedPressure,
+        request,
+        intentLock: request.intentLock,
+        promptLocks: request.promptLocks,
+        improvePreserveArchetype: request.improvePreserveArchetype,
+        improveDetectedArchetype: request.improveDetectedArchetype
       });
     }
     applyItemClauseToDraft(tweakedDraft);
@@ -9722,6 +9749,7 @@
     }
     evaluation = await evaluateTeamState(padTeamState(lastAiDraft));
     const repairDebug = typeof window !== "undefined" ? window.__MBWR_REPAIR_DEBUG : null;
+    const improveDebug = typeof window !== "undefined" ? window.__MBWR_IMPROVE_DEBUG : null;
     const finalCoherence = evaluateFinalExportCoherence(lastAiDraft);
     if (window.__MBWR_TWEAK_DEBUG) {
       window.__MBWR_TWEAK_DEBUG.finalValidationResult = {
@@ -9731,14 +9759,21 @@
         issues: finalCoherence.issues.map((issue) => issue.code)
       };
     }
+    const pelipperInDraft = lastAiDraft.some((set) => normalizeNameKey(set.name) === "pelipper");
+    if (improveDebug && pelipperInDraft && !improveDebug.whyPelipperWasChosen) {
+      improveDebug.whyPelipperWasChosen = "Pelipper was already part of the current team identity; Improve preserved it instead of auto-adding it.";
+    }
     const repairSummary = repairDebug ? [
       `Detected archetype: ${repairDebug.detectedArchetype || detectTeamArchetype(lastAiDraft)}.`,
       `Preserved core: ${(repairDebug.lockedCore || []).join(", ") || "none"}.`,
       `Changed slots: ${(repairDebug.changesMade || []).filter((change) => change.type === "slot").map((change) => `${change.slot}: ${change.to}`).join(", ") || "none"}.`,
       `Changed moves/items: ${(repairDebug.changesMade || []).filter((change) => change.type !== "slot").map((change) => `${change.species}: ${change.from || "empty"} -> ${change.to}`).join(", ") || "none"}.`,
+      improveDebug?.whyPelipperWasChosen ? `Pelipper reason: ${improveDebug.whyPelipperWasChosen}` : "",
+      improveDebug?.whyPelipperWasRejected ? `Pelipper not added: ${improveDebug.whyPelipperWasRejected}` : "",
+      improveDebug?.finalImprovementReason || "",
       `Remaining warnings: ${getGenerationIssueCodes(finalCoherence).join(", ") || "none"}.`,
       `Valid for export: ${finalCoherence.isValid ? "yes" : "no"}.`
-    ].join(" ") : "";
+    ].filter(Boolean).join(" ") : "";
     renderAiBuilderOutput("Tweaked Draft", [tweakText || "Adjusted the current six for cleaner synergy and stronger role fit.", repairSummary].filter(Boolean).join(" "), evaluation, lastAiDraft);
     await applyAiBuilderDraft();
     } finally {
@@ -10799,6 +10834,69 @@
     return "unknown";
   }
 
+  function getImproveIntentForArchetype(archetype) {
+    if (["hard_tr", "mega_camerupt_tr"].includes(archetype)) return "hard_tr";
+    if (archetype === "tr_balance") return "soft_tr";
+    if (archetype === "tailwind_balance") return "tailwind";
+    if (["rain", "sun", "sand"].includes(archetype)) return archetype;
+    if (archetype === "bulky_offense") return "bulky_offense";
+    return "";
+  }
+
+  function detectImproveTeamIdentity(team) {
+    const detected = detectTeamArchetype(team);
+    if (detected !== "unknown") return detected;
+    const occupied = (team || []).filter((set) => set?.name);
+    const names = new Set(occupied.map((set) => normalizeNameKey(set.name)));
+    const moveKeys = occupied.flatMap((set) => getSetMoveKeys(set));
+    const rainAbuserCount = occupied.filter((set) => isWeatherAbuserEntry(getRosterEntry(set.name), "rain")).length;
+    const sunAbuserCount = occupied.filter((set) => isWeatherAbuserEntry(getRosterEntry(set.name), "sun")).length;
+    if ((names.has("basculegion") || names.has("basculegion-f") || names.has("basculegion-m")) && rainAbuserCount >= 2) return "rain";
+    if (moveKeys.includes("sunny day") && sunAbuserCount >= 1) return "sun";
+    if (moveKeys.includes("tailwind")) return "tailwind_balance";
+    if (moveKeys.includes("trick room")) return "tr_balance";
+    return detected;
+  }
+
+  function getImproveDebug() {
+    if (typeof window === "undefined") return null;
+    window.__MBWR_IMPROVE_DEBUG = window.__MBWR_IMPROVE_DEBUG || {
+      detectedArchetype: "",
+      preservedCore: [],
+      rejectedAutoAdds: [],
+      whyPelipperWasChosen: "",
+      whyPelipperWasRejected: "",
+      finalImprovementReason: ""
+    };
+    return window.__MBWR_IMPROVE_DEBUG;
+  }
+
+  function getPelipperImproveDecision(team, detectedArchetype = "", context = {}, reason = "") {
+    const occupied = (team || []).filter((set) => set?.name);
+    const names = new Set(occupied.map((set) => normalizeNameKey(set.name)));
+    const weather = inferTeamWeatherProfile(occupied);
+    const weatherModes = weather.modes || [];
+    const hasRainAbuser = occupied.some((set) => isWeatherAbuserEntry(getRosterEntry(set.name), "rain"));
+    const hasBasculegionShell = names.has("basculegion") || names.has("basculegion-f") || names.has("basculegion-m");
+    const rainIntent = detectedArchetype === "rain"
+      || context.intentLock === "rain"
+      || context.request?.intentLock === "rain"
+      || context.promptLocks?.weather === "rain";
+    const matchupSupportsRain = (context.enemyNames || []).length > 0 || !!context.request?.requestedPressure?.counterMeta;
+    const sourceDebug = typeof window !== "undefined" ? window.__MBWR_SOURCE_DEBUG : null;
+    const sourceBacked = getLearnedSpeciesPoolWeight("Pelipper", { archetypeHint: "rain" }) > 0
+      || (sourceDebug && ((sourceDebug.highLevelCount || 0) + (sourceDebug.youtubeCount || 0) + (sourceDebug.selfplayCount || 0)) > 0);
+    const conflicts = ["hard_tr", "tr_balance", "mega_camerupt_tr", "sun", "tailwind_balance", "bulky_offense"].includes(detectedArchetype)
+      || weatherModes.some((mode) => mode && mode !== "rain");
+    if (conflicts) {
+      return { allowed: false, reason: `Rejected Pelipper: ${detectedArchetype || "current"} identity should be preserved before adding rain.` };
+    }
+    if (!(rainIntent && (weather.primary === "rain" || hasRainAbuser || hasBasculegionShell) && (hasBasculegionShell || matchupSupportsRain) && sourceBacked)) {
+      return { allowed: false, reason: "Rejected Pelipper: rain was not the clearest current-team fit with rain shell, matchup, and source support." };
+    }
+    return { allowed: true, reason: `Pelipper was chosen because this is a rain-preserving repair: ${reason || "rain setter support"} with Basculegion/rain-shell synergy and source-backed rain evidence.` };
+  }
+
   function getLockedCoreIndexesForArchetype(draft, detectedArchetype) {
     const trArchetype = ["hard_tr", "tr_balance", "mega_camerupt_tr"].includes(detectedArchetype);
     const weatherArchetype = ["rain", "sun", "sand"].includes(detectedArchetype);
@@ -10880,6 +10978,12 @@
     for (let index = 0; index < draft.length; index += 1) {
       if (normalizeNameKey(draft[index]?.name || "") === "pelipper") {
         rejectedReplacementCandidates.push({ slot: index + 1, species: "Pelipper", reason: "rain_conflicts_with_mega_camerupt_tr" });
+        const improveDebug = context.improvePreserveArchetype ? getImproveDebug() : null;
+        if (improveDebug) {
+          const reason = "Rejected Pelipper: rain conflicts with the current Mega Camerupt Trick Room identity.";
+          improveDebug.whyPelipperWasRejected = reason;
+          improveDebug.rejectedAutoAdds = [...(improveDebug.rejectedAutoAdds || []), { species: "Pelipper", slot: index + 1, reason }];
+        }
       }
     }
     const postTrReport = evaluateFinalExportCoherence(draft);
@@ -10986,10 +11090,17 @@
     const anchor = request.mode === "pokemon" ? (requestedAnchors[0] || getRosterEntry(focus)) : null;
     const pool = getActiveRosterPool();
     const context = buildGuidedBuildContext(request, focus, notes, enemyNames, desiredTypes, pool, anchor);
+    context.improvePreserveArchetype = !!request.improvePreserveArchetype;
     context.repairVisitedSignatures = context.repairVisitedSignatures || new Set();
     let working = await rebuildDraftSetsStrictly(draft, context);
-    const detectedArchetype = detectTeamArchetype(working);
+    const detectedArchetype = request.improveDetectedArchetype || detectTeamArchetype(working);
     const lockedCore = getLockedCoreIndexesForArchetype(working, detectedArchetype);
+    const improveDebug = request.improvePreserveArchetype ? getImproveDebug() : null;
+    if (improveDebug) {
+      improveDebug.detectedArchetype = detectedArchetype;
+      improveDebug.preservedCore = [...lockedCore].map((index) => working[index]?.name).filter(Boolean);
+      improveDebug.finalImprovementReason = `Preserving ${getTeamArchetypeLabel(working)} first; repairs are constrained to the current identity.`;
+    }
     working = await repairTeamPreservingArchetype(working, [], detectedArchetype, context);
     if (detectedArchetype === "unknown") return working;
     let changedSlotCount = 0;
@@ -11132,6 +11243,19 @@
       const replacement = await findValidationReplacement(working, replaceIndex, context, predicate);
       if (!replacement?.draft) break;
       const replacementName = replacement.draft[replaceIndex]?.name || "";
+      if (request.improvePreserveArchetype && normalizeNameKey(replacementName) === "pelipper") {
+        const pelipperDecision = getPelipperImproveDecision(working, detectedArchetype, context, primary.code);
+        if (!pelipperDecision.allowed) {
+          const debug = getImproveDebug();
+          if (debug) {
+            debug.whyPelipperWasRejected = pelipperDecision.reason;
+            debug.rejectedAutoAdds = [...(debug.rejectedAutoAdds || []), { species: "Pelipper", slot: replaceIndex + 1, reason: pelipperDecision.reason }];
+          }
+          break;
+        }
+        const debug = getImproveDebug();
+        if (debug) debug.whyPelipperWasChosen = pelipperDecision.reason;
+      }
       if (isAutoRepairFillerPokemon(replacementName) && !(request.requestedPokemon || []).some((name) => normalizeNameKey(name) === normalizeNameKey(replacementName))) break;
       if (detectedArchetype === "mega_camerupt_tr" && ["pelipper", "charizard", "gastly", "sinistea"].includes(normalizeNameKey(replacementName))) break;
       working = replacement.draft;
@@ -11161,6 +11285,17 @@
           .filter((entry) => entry.name !== set.name)
           .filter((entry) => !draft.some((row, rowIndex) => rowIndex !== index && getSpeciesClauseKey(row.name) === getSpeciesClauseKey(entry)))
           .filter((entry) => !violatesSpeciesClause(chosenEntries, entry))
+          .filter((entry) => {
+            if (!context.improvePreserveArchetype || normalizeNameKey(entry.name) !== "pelipper") return true;
+            const decision = getPelipperImproveDecision(chosenEntries.map((candidate) => ({ name: candidate.name })), context.improveDetectedArchetype || detectTeamArchetype(draft), context, "species_clause_repair");
+            if (decision.allowed) return true;
+            const debug = getImproveDebug();
+            if (debug) {
+              debug.whyPelipperWasRejected = decision.reason;
+              debug.rejectedAutoAdds = [...(debug.rejectedAutoAdds || []), { species: "Pelipper", slot: index + 1, reason: decision.reason }];
+            }
+            return false;
+          })
           .map(async (entry) => ({
             entry,
             score: await scoreAiDraftCandidate(
