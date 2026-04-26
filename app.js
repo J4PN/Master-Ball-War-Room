@@ -8076,6 +8076,7 @@
             : 10
     );
     const promptAdherence = computePromptAdherenceScore(teamSets, context, slotIndex);
+    const typeStackPenalty = estimateWeaknessPenalty(teamSets.map((set) => resolveBattleEntry(set) || getRosterEntry(set.name)).filter(Boolean)) * 2;
     const threatCoverage = clampScore(100 - (evaluation.threatRows.slice(0, 4).reduce((sum, row) => sum + (100 - row.matchupScore), 0) / Math.max(1, evaluation.threatRows.slice(0, 4).length)));
     const metaAdaptability = clampScore((evaluation.metaPressure.fakeOut.score + evaluation.metaPressure.intimidate.score + speedControl) / 3);
     const phase = slotIndex <= 1 ? "early" : slotIndex <= 3 ? "mid" : "late";
@@ -8090,7 +8091,7 @@
     const exportCoherencePenalty = slotIndex >= 5 && !exportCoherence.isValid
       ? EXPORT_BLOCKED_SCORE_PENALTY
       : 0;
-    const guidedScore = clampScore(rawGuidedScore - competitiveValidation.penalty - exportCoherencePenalty);
+    const guidedScore = clampScore(rawGuidedScore - competitiveValidation.penalty - exportCoherencePenalty - typeStackPenalty);
     const warnings = [
       ...calcBenchmarks.warnings,
       ...evaluation.weaknessRows.filter((row) => LIVE_PRESSURE_TYPES.includes(row.attackType) && row.weakCount >= 2).map((row) => `${row.attackType} pressure is still stacked.`),
@@ -10158,6 +10159,8 @@
     const bulkStat = getEntryBulkStat(entry);
     const speed = entry?.baseSpeed || 0;
     const supportLock = SUPPORT_ROLE_LOCKS.has(key);
+    const mega = isMegaEntry(entry);
+    const protectOptOut = /\b(no protect|without protect|drop protect|skip protect)\b/.test(buildRules.normalizedText || "");
     const { roleScores, metadata } = scoreEntryRoleClasses(entry, context, moves, legalMoves);
     const resolved = resolveRoleClasses(roleScores);
     const trAbuser = ["tr_abuser_physical", "tr_abuser_special"].includes(resolved.primary) || ["tr_abuser_physical", "tr_abuser_special"].includes(resolved.secondary);
@@ -10166,7 +10169,8 @@
     const attacker = ["attacker"].includes(resolved.primaryFamily) || ["attacker"].includes(resolved.secondaryFamily) || isRealAttackerEntry(entry) || offenseStat >= 115;
     const pureOffense = attacker && !supportOrPivot && !pivot && !trAbuser && ["fast_physical_attacker", "fast_special_attacker", "mixed_breaker", "cleaner"].includes(resolved.primary);
     const supportivePrimarina = key === "primarina" && (["bulky_special_attacker", "bulky_support", "disruption_support"].includes(resolved.primary) || moveKeys.some((move) => ["encore", "icy wind", "protect"].includes(move)));
-    const wantsProtect = supportivePrimarina
+    const wantsProtect = mega
+      || supportivePrimarina
       || supportOrPivot
       || pivot
       || metadata.bulky
@@ -10174,7 +10178,9 @@
       || metadata.hasSetup
       || speed <= 100
       || (!buildRules.hyperOffense && attacker);
-    const canDropProtect = pureOffense && !supportOrPivot && !pivot && !trAbuser && !supportivePrimarina && resolved.confidence !== "low";
+    const canDropProtect = protectOptOut
+      || (!mega && pureOffense && !supportOrPivot && !pivot && !trAbuser && !supportivePrimarina && resolved.confidence !== "low")
+      || (mega && pureOffense && buildRules.hyperOffense && speed >= 120 && resolved.confidence === "high");
     const wantsFakeOut = sourceKeys.has("fake out") && (["fakeout_support", "pivot_support"].includes(resolved.primary) || ["fakeout_support", "pivot_support"].includes(resolved.secondary) || buildRules.isTrickRoom || metadata.bulky);
     const wantsPivotMove = [...PIVOT_MOVE_KEYS].some((move) => sourceKeys.has(move)) && (["pivot_support", "bulky_support"].includes(resolved.primary) || ["pivot_support", "bulky_support"].includes(resolved.secondary) || key === "incineroar");
     const wantsSpreadDamage = metadata.hasSpreadOption && attacker && !supportOrPivot;
@@ -10196,6 +10202,8 @@
       primaryFamily: resolved.primaryFamily,
       secondaryFamily: resolved.secondaryFamily,
       attacker,
+      mega,
+      protectOptOut,
       supportOrPivot,
       pivot,
       trAbuser,
@@ -10233,6 +10241,7 @@
       return ["Fake Out", "Flare Blitz", "Parting Shot", "Throat Chop", "Protect", "Snarl", "Will-O-Wisp", "Taunt"];
     }
     if (key === "mega camerupt") return ["Eruption", "Earth Power", "Protect", "Heat Wave", "Ancient Power"];
+    if (key === "mega ampharos") return ["Thunderbolt", "Dragon Pulse", "Dazzling Gleam", "Protect"];
     return [...new Set(ordered)];
   }
 
@@ -10269,6 +10278,16 @@
     if (roleProfile.key === "primarina") {
       if (key === "protect" && roleProfile.bulkyDisruption) score += 28;
       if (["sparkling aria", "hyper voice"].includes(key) && roleProfile.dislikesRedundantVoiceWater && currentKeys.some((move) => ["sparkling aria", "hyper voice"].includes(move))) score -= 18;
+    }
+    if (roleProfile.mega && roleProfile.attacker && ["fast_special_attacker", "bulky_special_attacker", "mixed_breaker"].includes(roleProfile.primaryRole)) {
+      if (key === "charge beam" && currentKeys.some((move) => ["thunderbolt", "thunder", "volt switch"].includes(move))) score -= 34;
+      if (key === "charge beam" && !currentKeys.some((move) => ["thunderbolt", "thunder"].includes(move))) score -= 18;
+      if (key === "eerie impulse") score -= 32;
+      if (["thunderbolt", "dragon pulse", "dazzling gleam", "protect"].includes(key)) score += 18;
+    }
+    if (roleProfile.key === "mega ampharos") {
+      if (["thunderbolt", "dragon pulse", "dazzling gleam", "protect"].includes(key)) score += 26;
+      if (["charge beam", "eerie impulse"].includes(key)) score -= 46;
     }
     const bannedForRole = [
       ...(override?.bannedMovesByRole?.[roleProfile.primaryRole] || []),
@@ -11429,8 +11448,16 @@
   function estimateWeaknessPenalty(entries) {
     return Object.keys(TYPE_CHART).reduce((penalty, attackType) => {
       const weakCount = entries.filter((candidate) => getTypeEffectiveness(attackType, candidate.types) > 1).length;
-      const answerCount = entries.filter((candidate) => getTypeEffectiveness(attackType, candidate.types) < 1).length;
-      if (weakCount >= 3) return penalty + (weakCount - 2) * 7;
+      const resistCount = entries.filter((candidate) => {
+        const effectiveness = getTypeEffectiveness(attackType, candidate.types);
+        return effectiveness > 0 && effectiveness < 1;
+      }).length;
+      const immunityCount = entries.filter((candidate) => getTypeEffectiveness(attackType, candidate.types) === 0).length;
+      const answerCount = resistCount + immunityCount;
+      if (weakCount >= 4 && immunityCount <= 0) return penalty + 42 + Math.max(0, 2 - resistCount) * 10;
+      if (weakCount >= 4) return penalty + 24 + Math.max(0, 2 - answerCount) * 8;
+      if (weakCount >= 3 && immunityCount <= 0) return penalty + 28 + Math.max(0, 1 - resistCount) * 8;
+      if (weakCount >= 3) return penalty + 12;
       if (weakCount === 2) return penalty + (answerCount ? 0 : 2);
       return penalty;
     }, 0);
@@ -11529,6 +11556,15 @@
     if (set.item) notes.push(`uses ${set.item} to support its role`);
     if (set.ability) notes.push(`${set.ability} is the preferred ability here`);
     const entry = getRosterEntry(set.name);
+    if (entry && isMegaEntry(entry) && !moveKeys.includes("protect")) {
+      const roleProfile = inferSetRoleProfile(entry, lastAiBuildContext || {}, set.moves || [], set.moves || []);
+      const protectReason = roleProfile.protectOptOut
+        ? "the request explicitly opted out of Protect"
+        : roleProfile.canDropProtect
+          ? "its role is a very fast pure-offense exception"
+          : "Protect was not available after legal move cleanup";
+      notes.unshift(`${set.name} skips Protect because ${protectReason}`);
+    }
     const megaTier = entry && isMegaEntry(entry) ? getMegaPreferenceTier(entry) : "";
     if (["D", "F"].includes(megaTier)) notes.unshift(`${set.name} is ${megaTier}-tier, so it is only justified here by specific speed-mode, role, or matchup fit`);
     return notes.length ? notes.slice(0, 3).join(". ") + "." : "Fills a general role slot in the current draft.";
@@ -12165,6 +12201,18 @@
         }
       }
     }
+    if (roleProfile.mega && roleProfile.attacker && ["fast_special_attacker", "bulky_special_attacker", "mixed_breaker"].includes(roleProfile.primaryRole)) {
+      while (result.some((move) => ["charge beam", "eerie impulse"].includes(normalizeNameKey(move)))) {
+        if (!replaceFirst((key) => ["charge beam", "eerie impulse"].includes(key))) break;
+      }
+      const realDamageCount = result.filter((move) => damagingMovePool.includes(move) && !["Charge Beam"].includes(move)).length;
+      if (realDamageCount < 2) {
+        const realDamage = damagingMovePool.find((move) => !result.includes(move) && !["charge beam", "eerie impulse"].includes(normalizeNameKey(move)));
+        const replaceIndex = result.findIndex((move) => normalizeNameKey(move) !== "protect" && !damagingMovePool.includes(move));
+        if (realDamage && replaceIndex >= 0) result.splice(replaceIndex, 1, realDamage);
+        else if (realDamage && result.length < 4) result.push(realDamage);
+      }
+    }
     return result.slice(0, 4);
   }
 
@@ -12259,6 +12307,15 @@
       ["Protect", "Earth Power", "Heat Wave"].forEach((move) => {
         if (result.length < 4 && !result.includes(move) && (damagingMovePool.includes(move) || move === "Protect")) result.push(move);
       });
+    }
+    if (key === "mega ampharos") {
+      const preferred = ["Thunderbolt", "Dragon Pulse", "Dazzling Gleam", "Protect"];
+      const legalPreferred = preferred.filter((move) => move === "Protect" || damagingMovePool.includes(move));
+      result = result.filter((move) => !["charge beam", "eerie impulse"].includes(normalizeNameKey(move)));
+      legalPreferred.forEach((move) => {
+        if (!result.includes(move)) result.push(move);
+      });
+      result = preferred.filter((move) => result.includes(move)).concat(result.filter((move) => !preferred.includes(move)));
     }
     return result.slice(0, 4);
   }
@@ -13981,6 +14038,14 @@ const MOVESET_QUALITY_PROFILES = {
       preferredItems: ["Choice Band", "Loaded Dice", "Lum Berry", "Assault Vest"],
     },
   },
+  "mega ampharos": {
+    attacker: {
+      coreMoves: ["Thunderbolt", "Dragon Pulse"],
+      preferredMoves: ["Dazzling Gleam", "Protect"],
+      discouragedMoves: { default: ["Charge Beam", "Eerie Impulse"] },
+      preferredItems: ["Ampharosite"],
+    },
+  },
 };
 
 function getTeamBuilderSpLabelText(input) {
@@ -14236,6 +14301,7 @@ function getBadMovePenalty(species, move, context = {}) {
   }
   const speciesKey = normalizeMovesetSpeciesKey(species);
   if (speciesKey === "basculegion" && archetype === "rain" && ["Head Smash", "Psychic Fangs"].includes(move)) penalty += 40;
+  if (speciesKey === "mega ampharos" && ["charge beam", "eerie impulse"].includes(normalizeNameKey(move))) penalty += 42;
   if (speciesKey === "incineroar" && role === "support" && move === "Close Combat") penalty += 28;
   if (role === "support" && ["Head Smash", "Outrage", "Giga Impact"].includes(move)) penalty += 24;
   return penalty;
