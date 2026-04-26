@@ -1376,6 +1376,37 @@
     await new Promise((resolve) => requestAnimationFrame(resolve));
   }
 
+  function ensurePerfDebug() {
+    if (typeof window === "undefined") return null;
+    window.__MBWR_PERF_DEBUG = window.__MBWR_PERF_DEBUG || {
+      filterTimings: [],
+      modalTimings: [],
+      damageUxTimings: [],
+      lastFilterKey: "",
+      rosterCacheHit: false
+    };
+    return window.__MBWR_PERF_DEBUG;
+  }
+
+  function recordPerfTiming(kind, name, startedAt, extra = {}) {
+    const debug = ensurePerfDebug();
+    if (!debug || !startedAt) return;
+    const bucket = kind === "modal" ? "modalTimings" : kind === "damage" ? "damageUxTimings" : "filterTimings";
+    debug[bucket] = debug[bucket] || [];
+    debug[bucket].push({ name, ms: Math.round(performance.now() - startedAt), ...extra });
+    debug[bucket] = debug[bucket].slice(-40);
+  }
+
+  function debounce(fn, delay = 120) {
+    let timer = 0;
+    return (...args) => {
+      window.clearTimeout(timer);
+      timer = window.setTimeout(() => fn(...args), delay);
+    };
+  }
+
+  const scheduleTeamBuilderAnalyze = debounce(() => analyzeTeamBuilder(), 180);
+
   function getTeamSignature(team = []) {
     return (team || [])
       .filter((set) => set?.name)
@@ -1401,11 +1432,15 @@
       bindSpeciesHelpers();
       setupMovePicker();
       setupTeamBuilderControls();
+      setupTeamSlotModalEditor();
+      setupDamageCalcUx();
+      setupDatabaseFilters();
       setupLiveWarRoomIntel();
       setupSpeedTools();
       await loadMoveDiscouragePolicy();
       await loadCustomMovepool();
       await loadLegalItems();
+      renderDatabasePanels();
       await populateMovesForAttacker();
       await populateAbilitiesForSide("attacker");
       await populateAbilitiesForSide("defender");
@@ -1438,6 +1473,7 @@
         const target = button.dataset.tabTrigger;
         activateTab(target);
         if (target === "meta") renderMetaTab();
+        if (target === "database") renderDatabasePanels();
       });
     });
   }
@@ -1485,6 +1521,7 @@
           <button class="sp-stepper-button" type="button" data-sp-side="${side}" data-sp-stat="${stat}" data-sp-delta="-1" aria-label="Decrease ${statLabels[stat]} SP">-</button>
           <input class="stat-number sp-stepper-value" id="${side}-ev-${stat}" type="number" min="0" max="${SP_MAX_PER_STAT}" step="1" inputmode="numeric" value="${defaults[stat] || 0}" aria-label="${statLabels[stat]} SP value" />
           <button class="sp-stepper-button" type="button" data-sp-side="${side}" data-sp-stat="${stat}" data-sp-delta="1" aria-label="Increase ${statLabels[stat]} SP">+</button>
+          <button class="sp-stepper-button sp-stepper-button--max" type="button" data-sp-side="${side}" data-sp-stat="${stat}" data-sp-max="true" aria-label="Max ${statLabels[stat]} SP">MAX</button>
         </div>
       `;
       grid.appendChild(wrapper);
@@ -1525,6 +1562,7 @@
           <button class="sp-stepper-button" type="button" data-sp-slot="${slotIndex}" data-sp-stat="${stat}" data-sp-delta="-1" aria-label="Decrease slot ${slotIndex + 1} ${statLabels[stat]} SP">-</button>
           <input class="stat-number team-stat-number sp-stepper-value" id="team-${slotIndex}-ev-${stat}" type="number" min="0" max="${SP_MAX_PER_STAT}" step="1" inputmode="numeric" value="${defaults[stat] || 0}" aria-label="Slot ${slotIndex + 1} ${statLabels[stat]} SP value" />
           <button class="sp-stepper-button" type="button" data-sp-slot="${slotIndex}" data-sp-stat="${stat}" data-sp-delta="1" aria-label="Increase slot ${slotIndex + 1} ${statLabels[stat]} SP">+</button>
+          <button class="sp-stepper-button sp-stepper-button--max" type="button" data-sp-slot="${slotIndex}" data-sp-stat="${stat}" data-sp-max="true" aria-label="Max slot ${slotIndex + 1} ${statLabels[stat]} SP">MAX</button>
         </div>
       `;
       grid.appendChild(wrapper);
@@ -1587,7 +1625,11 @@
       ? document.getElementById(`team-${button.dataset.spSlot}-ev-${stat}`)
       : document.getElementById(`${button.dataset.spSide}-ev-${stat}`);
     if (!input || !Number.isFinite(delta)) return;
-    input.value = clampSpInputValue(Number(input.value || 0) + delta);
+    if (button?.dataset?.spMax === "true") {
+      input.value = SP_MAX_PER_STAT;
+    } else {
+      input.value = clampSpInputValue(Number(input.value || 0) + delta);
+    }
     input.dispatchEvent(new Event("input", { bubbles: true }));
     input.dispatchEvent(new Event("change", { bubbles: true }));
   }
@@ -1651,7 +1693,7 @@
     }
     updateTeamSpDisplay(slotIndex);
     notifyTeamBuilderStateChange("team-spread", slotIndex);
-    analyzeTeamBuilder();
+    scheduleTeamBuilderAnalyze();
   }
 
   function updateTeamSpDisplay(slotIndex) {
@@ -1951,13 +1993,32 @@
     if (previous && controlHasOption(select, previous)) select.value = previous;
   }
 
+  const rosterFilterMemo = new Map();
+
+  function getRosterFilterRoleTags() {
+    return [...new Set([
+      ...pikalyticsMetaSeed.flatMap((row) => row.tags || []),
+      ...championsRoster.map((entry) => entry.metaRole || "").filter(Boolean)
+    ].map((tag) => normalizeNameKey(tag)).filter(Boolean))].sort();
+  }
+
+  function hasMegaVariant(entry) {
+    const baseKey = normalizeNameKey(entry?.baseName || entry?.name || "");
+    const nameKey = normalizeNameKey(entry?.name || "");
+    return isMegaEntry(entry) || championsRoster.some((candidate) => isMegaEntry(candidate) && (normalizeNameKey(candidate.baseName || "") === baseKey || normalizeNameKey(candidate.baseName || "") === nameKey));
+  }
+
   function setupRosterFilters() {
     setTypeFilterOptions(document.getElementById("roster-type-filter"), "Any Type");
     setTypeFilterOptions(document.getElementById("roster-type1-filter"), "Type 1");
     setTypeFilterOptions(document.getElementById("roster-type2-filter"), "Type 2");
     const sortSelect = document.getElementById("roster-stat-sort");
     if (sortSelect) {
-      sortSelect.innerHTML = `<option value="name">Sort: Name</option>${POKEMON_FILTER_STATS.map(([key, label]) => `<option value="${key}">Sort: ${label}</option>`).join("")}`;
+      sortSelect.innerHTML = `<option value="name">Sort: Name</option><option value="speed-tier">Sort: Speed Tier</option>${POKEMON_FILTER_STATS.map(([key, label]) => `<option value="${key}">Sort: ${label}</option>`).join("")}`;
+    }
+    const roleSelect = document.getElementById("roster-role-filter");
+    if (roleSelect) {
+      roleSelect.innerHTML = `<option value="">Any Role Tag</option>${getRosterFilterRoleTags().map((tag) => `<option value="${escapeAttribute(tag)}">${escapeHtml(tag)}</option>`).join("")}`;
     }
     const statGrid = document.getElementById("roster-stat-filter-grid");
     if (statGrid) {
@@ -1971,19 +2032,25 @@
     }
     [
       "roster-search", "roster-type-filter", "roster-type1-filter", "roster-type2-filter",
-      "roster-stat-sort", "roster-sort-direction",
+      "roster-stat-sort", "roster-sort-direction", "roster-ability-filter", "roster-move-filter", "roster-mega-filter", "roster-role-filter",
       ...POKEMON_FILTER_STATS.flatMap(([key]) => [`roster-${key}-min`, `roster-${key}-max`])
     ].forEach((id) => {
-      document.getElementById(id)?.addEventListener("input", renderConfirmedRoster);
-      document.getElementById(id)?.addEventListener("change", renderConfirmedRoster);
+      const renderDebounced = debounce(renderConfirmedRoster, 140);
+      document.getElementById(id)?.addEventListener("input", renderDebounced);
+      document.getElementById(id)?.addEventListener("change", renderDebounced);
     });
   }
 
   function getFilteredRosterEntries() {
+    const startedAt = performance.now();
     const query = normalizeNameKey(document.getElementById("roster-search")?.value || "");
     const anyType = document.getElementById("roster-type-filter")?.value || "";
     const type1 = document.getElementById("roster-type1-filter")?.value || "";
     const type2 = document.getElementById("roster-type2-filter")?.value || "";
+    const abilityQuery = normalizeNameKey(document.getElementById("roster-ability-filter")?.value || "");
+    const moveQuery = normalizeNameKey(document.getElementById("roster-move-filter")?.value || "");
+    const megaFilter = document.getElementById("roster-mega-filter")?.value || "";
+    const roleFilter = normalizeNameKey(document.getElementById("roster-role-filter")?.value || "");
     const sortKey = document.getElementById("roster-stat-sort")?.value || "name";
     const direction = document.getElementById("roster-sort-direction")?.value === "asc" ? 1 : -1;
     const minMax = Object.fromEntries(POKEMON_FILTER_STATS.map(([key]) => [
@@ -1993,12 +2060,37 @@
         max: Number(document.getElementById(`roster-${key}-max`)?.value || NaN)
       }
     ]));
+    const cacheKey = JSON.stringify({ query, anyType, type1, type2, abilityQuery, moveQuery, megaFilter, roleFilter, sortKey, direction, minMax });
+    const debug = ensurePerfDebug();
+    if (rosterFilterMemo.has(cacheKey)) {
+      if (debug) {
+        debug.lastFilterKey = cacheKey;
+        debug.rosterCacheHit = true;
+      }
+      recordPerfTiming("filter", "pokemon-roster-filter", startedAt, { cacheHit: true });
+      return rosterFilterMemo.get(cacheKey).slice();
+    }
+    if (debug) {
+      debug.lastFilterKey = cacheKey;
+      debug.rosterCacheHit = false;
+    }
     const rows = championsRoster.filter((entry) => {
       const types = entry.types || [];
+      const abilityText = (entry.abilities || []).map(normalizeNameKey).join(" ");
+      const roleTags = [
+        entry.metaRole || "",
+        ...(pikalyticsMetaSeed.find((row) => normalizeNameKey(row.name) === normalizeNameKey(entry.name))?.tags || [])
+      ].map(normalizeNameKey);
+      const legalMoves = legalPokemonData[entry.baseName || entry.name]?.legalMoves || legalPokemonData[entry.name]?.legalMoves || [];
       if (query && !normalizeNameKey(entry.name).includes(query)) return false;
       if (anyType && !types.includes(anyType)) return false;
       if (type1 && types[0] !== type1) return false;
       if (type2 && types[1] !== type2) return false;
+      if (abilityQuery && !abilityText.includes(abilityQuery)) return false;
+      if (moveQuery && !legalMoves.some((move) => normalizeNameKey(move).includes(moveQuery))) return false;
+      if (megaFilter === "yes" && !hasMegaVariant(entry)) return false;
+      if (megaFilter === "no" && hasMegaVariant(entry)) return false;
+      if (roleFilter && !roleTags.some((tag) => tag.includes(roleFilter))) return false;
       return POKEMON_FILTER_STATS.every(([key]) => {
         const value = getPokemonStatValue(entry, key);
         const { min, max } = minMax[key];
@@ -2009,9 +2101,13 @@
     });
     rows.sort((a, b) => {
       if (sortKey === "name") return a.name.localeCompare(b.name);
+      if (sortKey === "speed-tier") return ((Math.floor(getPokemonStatValue(a, "spe") / 10) * 10) - (Math.floor(getPokemonStatValue(b, "spe") / 10) * 10)) * direction || a.name.localeCompare(b.name);
       const diff = getPokemonStatValue(a, sortKey) - getPokemonStatValue(b, sortKey);
       return diff ? diff * direction : a.name.localeCompare(b.name);
     });
+    rosterFilterMemo.clear();
+    rosterFilterMemo.set(cacheKey, rows.slice());
+    recordPerfTiming("filter", "pokemon-roster-filter", startedAt, { cacheHit: false, count: rows.length });
     return rows;
   }
 
@@ -2179,7 +2275,7 @@
     document.querySelectorAll(".move-picker-input, .team-slot, .team-item, .team-ability, #attacker-name, #defender-name, #speed-pokemon, #attacker-item, #defender-item, #attacker-ability, #defender-ability").forEach((control) => {
       bindPickerControl(control);
     });
-    movePickerSearch?.addEventListener("input", renderMovePickerResults);
+    movePickerSearch?.addEventListener("input", debounce(renderMovePickerResults, 120));
     movePickerClose?.addEventListener("click", closeMovePicker);
     movePicker?.addEventListener("click", (event) => {
       if (event.target === movePicker) closeMovePicker();
@@ -2238,11 +2334,24 @@
         <input id="move-filter-accuracy-max" class="move-filter-control" type="number" min="0" max="100" inputmode="numeric" placeholder="Accuracy max" aria-label="Accuracy maximum" />
         <input id="move-filter-priority" class="move-filter-control" type="number" min="-7" max="7" inputmode="numeric" placeholder="Priority" aria-label="Priority" />
         <input id="move-filter-target" class="move-filter-control" type="text" placeholder="Target" aria-label="Target" />
+        <select id="move-filter-tag" class="move-filter-control" aria-label="Move tag">
+          <option value="">Any Tag</option>
+          <option value="contact">Contact</option>
+          <option value="support">Support/Status</option>
+        </select>
+        <select id="move-filter-sort" class="move-filter-control" aria-label="Move sort">
+          <option value="fit">Sort: Fit</option>
+          <option value="power">Sort: Power</option>
+          <option value="accuracy">Sort: Accuracy</option>
+          <option value="type">Sort: Type</option>
+          <option value="name">Sort: Name</option>
+        </select>
       `;
       setTypeFilterOptions(document.getElementById("move-filter-type"), "Any Type");
+      const renderDebounced = debounce(renderMovePickerResults, 120);
       movePickerFilters.querySelectorAll("input, select").forEach((control) => {
-        control.addEventListener("input", renderMovePickerResults);
-        control.addEventListener("change", renderMovePickerResults);
+        control.addEventListener("input", renderDebounced);
+        control.addEventListener("change", renderDebounced);
       });
       return;
     }
@@ -2258,9 +2367,10 @@
       setTypeFilterOptions(document.getElementById("picker-pokemon-type"), "Any Type");
       setTypeFilterOptions(document.getElementById("picker-pokemon-type1"), "Type 1");
       setTypeFilterOptions(document.getElementById("picker-pokemon-type2"), "Type 2");
+      const renderDebounced = debounce(renderMovePickerResults, 120);
       movePickerFilters.querySelectorAll("input, select").forEach((control) => {
-        control.addEventListener("input", renderMovePickerResults);
-        control.addEventListener("change", renderMovePickerResults);
+        control.addEventListener("input", renderDebounced);
+        control.addEventListener("change", renderDebounced);
       });
       return;
     }
@@ -2277,7 +2387,9 @@
       accuracyMin: Number(document.getElementById("move-filter-accuracy-min")?.value || NaN),
       accuracyMax: Number(document.getElementById("move-filter-accuracy-max")?.value || NaN),
       priority: Number(document.getElementById("move-filter-priority")?.value || NaN),
-      target: normalizeNameKey(document.getElementById("move-filter-target")?.value || "")
+      target: normalizeNameKey(document.getElementById("move-filter-target")?.value || ""),
+      tag: document.getElementById("move-filter-tag")?.value || "",
+      sort: document.getElementById("move-filter-sort")?.value || "fit"
     };
   }
 
@@ -2376,6 +2488,7 @@
   }
 
   async function renderMovePickerResults() {
+    const startedAt = performance.now();
     const query = normalizeNameKey(movePickerSearch.value || "");
     if (movePickerState.kind === "move") {
       const filters = getMoveFilterValues();
@@ -2387,12 +2500,19 @@
         const accuracyValue = detail?.accuracy == null ? 100 : Number(detail.accuracy);
         const priorityValue = Number(detail?.priority || 0);
         const targetValue = normalizeNameKey(detail?.target?.name || "");
+        const tagValues = [
+          detail?.meta?.ailment?.name,
+          detail?.meta?.category?.name,
+          detail?.damage_class?.name === "status" ? "support" : "",
+          SUPPORT_STYLE_MOVE_KEYS.has(normalizeNameKey(move)) ? "support" : "",
+          detail?.meta?.category?.name === "damage" && /punch|kick|claw|fang|slam|tackle|edge|blade|combat/i.test(move) ? "contact" : ""
+        ].map(normalizeNameKey).filter(Boolean);
         const desc = formatMoveDescription(detail, move);
         const power = formatMovePowerForDisplay(move, detail);
         const accuracy = detail?.accuracy ? `${detail.accuracy}%` : "-";
         const pp = detail?.pp ?? "-";
         const fit = await scorePickerMove(movePickerState.entry, movePickerState.slotState, move, detail, movePickerState.ranked);
-        return { move, typeName, category, powerValue, accuracyValue, priorityValue, targetValue, desc, power, accuracy, pp, fit };
+        return { move, typeName, category, powerValue, accuracyValue, priorityValue, targetValue, tagValues, desc, power, accuracy, pp, fit };
       }));
       const rows = allRows.filter((row) => {
         if (query && !normalizeNameKey(row.move).includes(query)) return false;
@@ -2404,7 +2524,14 @@
         if (Number.isFinite(filters.accuracyMax) && row.accuracyValue > filters.accuracyMax) return false;
         if (Number.isFinite(filters.priority) && row.priorityValue !== filters.priority) return false;
         if (filters.target && !row.targetValue.includes(filters.target)) return false;
+        if (filters.tag && !row.tagValues.includes(filters.tag)) return false;
         return true;
+      }).sort((a, b) => {
+        if (filters.sort === "power") return (b.powerValue - a.powerValue) || a.move.localeCompare(b.move);
+        if (filters.sort === "accuracy") return (b.accuracyValue - a.accuracyValue) || a.move.localeCompare(b.move);
+        if (filters.sort === "type") return a.typeName.localeCompare(b.typeName) || a.move.localeCompare(b.move);
+        if (filters.sort === "name") return a.move.localeCompare(b.move);
+        return (b.fit - a.fit) || a.move.localeCompare(b.move);
       }).slice(0, 80);
       movePickerHead.className = "move-picker__head move-picker__head--move";
       movePickerHead.innerHTML = buildPickerHead("move");
@@ -2422,6 +2549,7 @@
           <span class="move-picker__stat">${row.pp}</span>
         </button>
       `).join("");
+      recordPerfTiming("filter", "move-picker-filter", startedAt, { count: rows.length });
     } else {
       const pokemonType = document.getElementById("picker-pokemon-type")?.value || "";
       const pokemonType1 = document.getElementById("picker-pokemon-type1")?.value || "";
@@ -2446,6 +2574,7 @@
         return;
       }
       movePickerResults.innerHTML = filtered.slice(0, 80).map((option) => option.row).join("");
+      recordPerfTiming("filter", `${movePickerState.kind}-picker-filter`, startedAt, { count: filtered.length });
     }
     movePickerResults.querySelectorAll("[data-pick-value]").forEach((button) => {
       button.addEventListener("click", () => {
@@ -2606,6 +2735,161 @@
     });
   }
 
+  function setupTeamSlotModalEditor() {
+    if (document.getElementById("team-slot-editor")) return;
+    const modal = document.createElement("div");
+    modal.id = "team-slot-editor";
+    modal.className = "team-slot-modal";
+    modal.setAttribute("aria-hidden", "true");
+    modal.innerHTML = `
+      <div class="team-slot-modal__scrim" data-close-team-modal></div>
+      <aside class="team-slot-modal__panel" role="dialog" aria-modal="true" aria-labelledby="team-slot-modal-title">
+        <button class="team-slot-modal__close" type="button" data-close-team-modal aria-label="Close Pokemon editor">×</button>
+        <div id="team-slot-modal-content"></div>
+      </aside>
+    `;
+    document.body.appendChild(modal);
+    modal.addEventListener("click", (event) => {
+      if (event.target.closest("[data-close-team-modal]")) closeTeamSlotModal();
+    });
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && modal.classList.contains("is-open")) closeTeamSlotModal();
+    });
+    document.querySelectorAll(".team-card").forEach((card) => {
+      card.addEventListener("click", (event) => {
+        if (event.target.closest("input, select, button, textarea, .sp-stepper-row")) return;
+        openTeamSlotModal(Number(card.dataset.teamCard));
+      });
+    });
+  }
+
+  function closeTeamSlotModal() {
+    const modal = document.getElementById("team-slot-editor");
+    if (!modal) return;
+    modal.classList.remove("is-open");
+    modal.setAttribute("aria-hidden", "true");
+  }
+
+  function cloneSelectOptionsFromControl(selector, selectedValue = "") {
+    const source = document.querySelector(selector);
+    return Array.from(source?.options || []).map((option) => `<option value="${escapeAttribute(option.value)}" ${option.value === selectedValue ? "selected" : ""}>${escapeHtml(option.textContent || option.value)}</option>`).join("");
+  }
+
+  function buildSlotStatsPreview(slot) {
+    const entry = getChartEntryForSlot(slot) || getRosterEntry(slot.name);
+    if (!entry) return `<p class="placeholder">Choose a Pokemon to show stats.</p>`;
+    const stats = calculateBattleStatsWithSpread(entry, slot.sps || {}, slot.nature || "Serious");
+    return `<div class="modal-stat-grid">
+      ${statOrder.map((stat, index) => `<div><span>${statLabels[stat]}</span><strong>${entry.baseStats?.[index] ?? "-"}</strong><em>${stats[stat] ?? "-"}</em></div>`).join("")}
+    </div>`;
+  }
+
+  function buildSlotValidationWarnings(slot) {
+    const coherence = evaluateFinalExportCoherence(padTeamState([slot]));
+    const issues = [...(coherence.blockers || []), ...(coherence.issues || [])].slice(0, 5);
+    if (!issues.length) return `<p class="status-note">No slot-level warnings.</p>`;
+    return `<div class="modal-warning-list">${issues.map((issue) => `<span class="analysis-warning severity-medium">${escapeHtml(issue.text || issue.code || "Warning")}</span>`).join("")}</div>`;
+  }
+
+  function openTeamSlotModal(slotIndex) {
+    const startedAt = performance.now();
+    const modal = document.getElementById("team-slot-editor");
+    const content = document.getElementById("team-slot-modal-content");
+    if (!modal || !content || slotIndex < 0) return;
+    const slot = getTeamBuilderState()[slotIndex] || {};
+    content.innerHTML = `
+      <div class="team-slot-modal__heading">
+        <p class="section-kicker">Slot ${slotIndex + 1} Editor</p>
+        <h2 id="team-slot-modal-title">${escapeHtml(slot.name || "Empty Slot")}</h2>
+      </div>
+      <div class="modal-editor-grid">
+        <label>Species / Form / Mega<input id="modal-slot-name" class="combo-input" value="${escapeAttribute(slot.name || "")}" placeholder="Search Pokemon" /></label>
+        <label>Item<input id="modal-slot-item" class="combo-input" value="${escapeAttribute(slot.item || "")}" placeholder="Search item" /></label>
+        <label>Ability<input id="modal-slot-ability" class="combo-input" value="${escapeAttribute(slot.ability || "")}" placeholder="Search ability" /></label>
+        <label>Nature<select id="modal-slot-nature">${cloneSelectOptionsFromControl(`.team-nature[data-slot="${slotIndex}"]`, slot.nature || "")}</select></label>
+        ${[0, 1, 2, 3].map((moveIndex) => `<label>Move ${moveIndex + 1}<input id="modal-slot-move-${moveIndex}" class="combo-input" value="${escapeAttribute(slot.moves?.[moveIndex] || "")}" /></label>`).join("")}
+      </div>
+      <div class="team-sp-block">
+        <div class="sp-total" id="modal-team-sp-total">${Object.values(slot.sps || {}).reduce((sum, value) => sum + (Number(value) || 0), 0)} / ${SP_MAX_TOTAL} SP</div>
+        <div class="team-stats-grid modal-sp-grid">
+          ${statOrder.map((stat) => `<div class="stat-slider"><label><span class="slider-header"><span>${statLabels[stat]} SP</span><span class="slider-value" id="modal-${stat}-value">${slot.sps?.[stat] || 0}</span></span></label><div class="slider-input-row sp-stepper-row"><button class="sp-stepper-button" type="button" data-modal-sp="${stat}" data-delta="-1">-</button><input class="stat-number sp-stepper-value" id="modal-sp-${stat}" type="number" min="0" max="${SP_MAX_PER_STAT}" value="${slot.sps?.[stat] || 0}" /><button class="sp-stepper-button" type="button" data-modal-sp="${stat}" data-delta="1">+</button><button class="sp-stepper-button sp-stepper-button--max" type="button" data-modal-sp="${stat}" data-max="true">MAX</button></div></div>`).join("")}
+        </div>
+      </div>
+      <section class="modal-stats-preview"><h3>Raw / Level 50 Stats</h3>${buildSlotStatsPreview(slot)}</section>
+      <section class="modal-validation-preview"><h3>Validation Warnings</h3>${buildSlotValidationWarnings(slot)}</section>
+    `;
+    bindModalSlotControls(slotIndex);
+    modal.classList.add("is-open");
+    modal.setAttribute("aria-hidden", "false");
+    recordPerfTiming("modal", "open-team-slot-modal", startedAt, { slotIndex });
+  }
+
+  function syncModalControlToSlot(slotIndex, modalSelector, slotSelector) {
+    const modalControl = document.querySelector(modalSelector);
+    const slotControl = document.querySelector(slotSelector);
+    if (!modalControl || !slotControl) return;
+    const commit = async () => {
+      slotControl.value = modalControl.value;
+      if (slotControl.classList.contains("team-slot") || slotControl.tagName === "SELECT") {
+        slotControl.dispatchEvent(new Event("input", { bubbles: true }));
+      }
+      slotControl.dispatchEvent(new Event("change", { bubbles: true }));
+      window.setTimeout(() => openTeamSlotModal(slotIndex), 80);
+    };
+    modalControl.addEventListener("change", commit);
+    modalControl.addEventListener("blur", commit);
+  }
+
+  function updateModalSpSummary(slotIndex, changedStat = "") {
+    const current = {};
+    statOrder.forEach((stat) => {
+      current[stat] = clampSpInputValue(document.getElementById(`modal-sp-${stat}`)?.value || 0);
+    });
+    let total = Object.values(current).reduce((sum, value) => sum + value, 0);
+    if (total > SP_MAX_TOTAL && changedStat) {
+      const overflow = total - SP_MAX_TOTAL;
+      current[changedStat] = Math.max(0, current[changedStat] - overflow);
+      total -= overflow;
+    }
+    statOrder.forEach((stat) => {
+      const modalInput = document.getElementById(`modal-sp-${stat}`);
+      const slotInput = document.getElementById(`team-${slotIndex}-ev-${stat}`);
+      if (modalInput) modalInput.value = current[stat];
+      document.getElementById(`modal-${stat}-value`)?.replaceChildren(document.createTextNode(String(current[stat])));
+      if (slotInput && stat === changedStat) {
+        slotInput.value = current[stat];
+        slotInput.dispatchEvent(new Event("input", { bubbles: true }));
+        slotInput.dispatchEvent(new Event("change", { bubbles: true }));
+      } else if (slotInput) {
+        slotInput.value = current[stat];
+      }
+    });
+    document.getElementById("modal-team-sp-total")?.replaceChildren(document.createTextNode(`${total} / ${SP_MAX_TOTAL} SP`));
+  }
+
+  function bindModalSlotControls(slotIndex) {
+    syncModalControlToSlot(slotIndex, "#modal-slot-name", `.team-slot[data-slot="${slotIndex}"]`);
+    syncModalControlToSlot(slotIndex, "#modal-slot-item", `.team-item[data-slot="${slotIndex}"]`);
+    syncModalControlToSlot(slotIndex, "#modal-slot-ability", `.team-ability[data-slot="${slotIndex}"]`);
+    syncModalControlToSlot(slotIndex, "#modal-slot-nature", `.team-nature[data-slot="${slotIndex}"]`);
+    [0, 1, 2, 3].forEach((moveIndex) => {
+      syncModalControlToSlot(slotIndex, `#modal-slot-move-${moveIndex}`, `.team-move[data-slot="${slotIndex}"][data-move-slot="${moveIndex}"]`);
+    });
+    document.querySelectorAll("[data-modal-sp]").forEach((control) => {
+      control.addEventListener("click", () => {
+        const stat = control.dataset.modalSp;
+        const input = document.getElementById(`modal-sp-${stat}`);
+        if (!input) return;
+        input.value = control.dataset.max === "true" ? SP_MAX_PER_STAT : clampSpInputValue(Number(input.value || 0) + Number(control.dataset.delta || 0));
+        updateModalSpSummary(slotIndex, stat);
+      });
+    });
+    statOrder.forEach((stat) => {
+      document.getElementById(`modal-sp-${stat}`)?.addEventListener("input", () => updateModalSpSummary(slotIndex, stat));
+      document.getElementById(`modal-sp-${stat}`)?.addEventListener("change", () => updateModalSpSummary(slotIndex, stat));
+    });
+  }
+
   function resetTeamBuilderSlotData(slotIndex) {
     const itemControl = document.querySelector(`.team-item[data-slot="${slotIndex}"]`);
     const abilityControl = document.querySelector(`.team-ability[data-slot="${slotIndex}"]`);
@@ -2619,6 +2903,138 @@
       control.dataset.lastMoveValue = "";
     });
     applyImportedTeamSlotSpSpread(slotIndex, {});
+  }
+
+  function setupDamageCalcUx() {
+    document.querySelectorAll("[data-calc-mode]").forEach((button) => {
+      button.addEventListener("click", () => {
+        document.querySelectorAll("[data-calc-mode]").forEach((item) => item.classList.toggle("is-active", item === button));
+        document.body.dataset.calcMode = button.dataset.calcMode || "single";
+        recordPerfTiming("damage", "switch-damage-mode", performance.now(), { mode: document.body.dataset.calcMode });
+      });
+    });
+    document.getElementById("calc-load-team-picks")?.addEventListener("click", loadDamageCalcTeamPicks);
+    document.addEventListener("mbwr:team-state-changed", debounce(renderDamageTeamSelectors, 120));
+    renderDamageTeamSelectors();
+  }
+
+  function renderDamageTeamSelectors() {
+    const startedAt = performance.now();
+    const team = getTeamBuilderState();
+    ["attacker", "defender"].forEach((side) => {
+      const select = document.getElementById(`calc-team-${side}`);
+      if (!select) return;
+      const previous = select.value || "";
+      select.innerHTML = `<option value="">Choose team slot</option>${team.map((slot, index) => slot.name ? `<option value="${index}">${index + 1}. ${escapeHtml(slot.name)}</option>` : "").join("")}`;
+      if (previous && controlHasOption(select, previous)) select.value = previous;
+    });
+    recordPerfTiming("damage", "render-team-selectors", startedAt, { filled: team.filter((slot) => slot.name).length });
+  }
+
+  async function loadDamageSideFromTeamSlot(side, slot) {
+    if (!slot?.name) return;
+    document.getElementById(`${side}-name`).value = slot.name || "";
+    document.getElementById(`${side}-item`).value = slot.item || "";
+    document.getElementById(`${side}-ability`).value = slot.ability || "";
+    document.getElementById(`${side}-nature`).value = slot.nature || "";
+    applySpSpreadToSide(side, slot.sps || {});
+    if (side === "attacker" && slot.moves?.[0]) document.getElementById("attacker-move").value = slot.moves.find(Boolean) || "";
+    await populateAbilitiesForSide(side);
+    if (side === "attacker") await populateMovesForAttacker();
+    await updateSideSprite(side);
+  }
+
+  async function loadDamageCalcTeamPicks() {
+    const startedAt = performance.now();
+    const team = getTeamBuilderState();
+    const attackerIndex = Number(document.getElementById("calc-team-attacker")?.value);
+    const defenderIndex = Number(document.getElementById("calc-team-defender")?.value);
+    if (Number.isInteger(attackerIndex)) await loadDamageSideFromTeamSlot("attacker", team[attackerIndex]);
+    if (Number.isInteger(defenderIndex)) await loadDamageSideFromTeamSlot("defender", team[defenderIndex]);
+    recordPerfTiming("damage", "load-team-picks", startedAt, { attackerIndex, defenderIndex });
+  }
+
+  function applySpSpreadToSide(side, spread) {
+    statOrder.forEach((stat) => {
+      const input = document.getElementById(`${side}-ev-${stat}`);
+      if (input) input.value = clampSp(spread?.[stat] || 0);
+    });
+    updateSpDisplay(side);
+  }
+
+  function setupDatabaseFilters() {
+    const controls = ["ability-db-search", "ability-db-mega-filter", "item-db-search", "item-db-category"];
+    const render = debounce(renderDatabasePanels, 140);
+    controls.forEach((id) => {
+      document.getElementById(id)?.addEventListener("input", render);
+      document.getElementById(id)?.addEventListener("change", render);
+    });
+    renderDatabasePanels();
+  }
+
+  function getItemCategory(item) {
+    const key = normalizeNameKey(item);
+    if (key.endsWith("ite") || key.includes("charizardite") || key.includes("sharpedonite") || key.includes("kangaskhanite")) return "mega";
+    if (key.endsWith("berry")) return "berry";
+    if (key.startsWith("choice ")) return "choice";
+    if (["leftovers", "sitrus berry", "assault vest", "clear amulet", "covert cloak", "eviolite", "safety goggles"].includes(key)) return "defensive";
+    if (["life orb", "expert belt", "black glasses", "mystic water", "charcoal", "magnet", "fairy feather", "dragon fang", "spell tag", "metal coat"].includes(key)) return "offensive";
+    if (["mental herb", "white herb", "power herb", "room service", "quick claw"].includes(key)) return "utility";
+    if (["leftovers", "shell bell", "sitrus berry"].includes(key)) return "recovery";
+    if (["focus sash", "focus band"].includes(key)) return "focus";
+    return "utility";
+  }
+
+  function getCompatiblePokemonForItem(item) {
+    const key = normalizeNameKey(item);
+    if (getItemCategory(item) === "mega") {
+      return championsRoster.filter((entry) => normalizeNameKey(getMegaStoneForEntry(entry)) === key).map((entry) => entry.baseName || entry.name);
+    }
+    return Object.entries(META_MOVESET_SEED)
+      .filter(([, seed]) => normalizeNameKey(seed.item || "") === key)
+      .map(([name]) => name)
+      .slice(0, 8);
+  }
+
+  function renderDatabasePanels() {
+    const startedAt = performance.now();
+    const abilityQuery = normalizeNameKey(document.getElementById("ability-db-search")?.value || "");
+    const megaFilter = document.getElementById("ability-db-mega-filter")?.value || "";
+    const itemQuery = normalizeNameKey(document.getElementById("item-db-search")?.value || "");
+    const itemCategory = document.getElementById("item-db-category")?.value || "";
+    const abilityRows = new Map();
+    championsRoster.forEach((entry) => {
+      (entry.abilities || []).forEach((ability) => {
+        const key = normalizeNameKey(ability);
+        if (!abilityRows.has(key)) abilityRows.set(key, { ability, pokemon: [], mega: false });
+        const row = abilityRows.get(key);
+        row.pokemon.push(entry.name);
+        if (isMegaEntry(entry)) row.mega = true;
+      });
+    });
+    const abilities = [...abilityRows.values()].filter((row) => {
+      if (abilityQuery && !normalizeNameKey(row.ability).includes(abilityQuery)) return false;
+      if (megaFilter === "yes" && !row.mega) return false;
+      if (megaFilter === "no" && row.mega) return false;
+      return true;
+    }).sort((a, b) => a.ability.localeCompare(b.ability)).slice(0, 80);
+    const items = legalItems.filter((item) => {
+      if (itemQuery && !normalizeNameKey(item).includes(itemQuery)) return false;
+      if (itemCategory && getItemCategory(item) !== itemCategory) return false;
+      return true;
+    }).sort((a, b) => a.localeCompare(b)).slice(0, 80);
+    const abilityTarget = document.getElementById("ability-db-results");
+    const itemTarget = document.getElementById("item-db-results");
+    if (abilityTarget) {
+      abilityTarget.innerHTML = abilities.map((row) => `<article class="database-list__row"><strong>${escapeHtml(row.ability)}</strong><span>${row.mega ? "Mega ability" : "Standard ability"}</span><small>${escapeHtml(row.pokemon.slice(0, 10).join(", "))}</small></article>`).join("") || `<p class="placeholder">No abilities matched.</p>`;
+    }
+    if (itemTarget) {
+      itemTarget.innerHTML = items.map((item) => {
+        const compatible = getCompatiblePokemonForItem(item);
+        return `<article class="database-list__row"><strong>${escapeHtml(item)}</strong><span>${escapeHtml(getItemCategory(item))}</span><small>${escapeHtml(compatible.join(", ") || "Compatibility varies by set")}</small></article>`;
+      }).join("") || `<p class="placeholder">No items matched.</p>`;
+    }
+    recordPerfTiming("filter", "database-filter", startedAt, { abilityCount: abilities.length, itemCount: items.length });
   }
 
   function setupSpeedTools() {
@@ -3520,6 +3936,7 @@
 
   function detectBuilderIntentLock(request) {
     const normalized = normalizeNameKey(`${request.focus || ""} ${request.normalizedText || ""}`);
+    if (/\banti rain\b|\banti-rain\b|\bcounter rain\b|\brain counter\b/.test(normalized)) return "anti_rain";
     if (request.requestedModes?.trickRoom) {
       if (/\bhard trick room\b|\bfull trick room\b|\bhard tr\b|\bfullroom\b/.test(normalized)) return "hard_tr";
       return "soft_tr";
@@ -3962,10 +4379,19 @@
       const min = Math.min(...rolls);
       const max = Math.max(...rolls);
       const hp = defenderPokemon.rawStats.hp;
+      const minPercent = (min / hp) * 100;
+      const maxPercent = (max / hp) * 100;
+      const koMin = Math.max(1, Math.ceil(100 / Math.max(maxPercent, 0.1)));
+      const koMax = Math.max(1, Math.ceil(100 / Math.max(minPercent, 0.1)));
       damageResult.innerHTML = `
         <p class="result-title">${attacker.name} used ${prettyMoveName(moveName)} into ${defender.name}</p>
         <p class="result-copy">${result.desc()}</p>
-        <p class="result-copy"><strong>${min} - ${max}</strong> damage (${((min / hp) * 100).toFixed(1)}% - ${((max / hp) * 100).toFixed(1)}%)</p>
+        <div class="damage-result-grid">
+          <div><span>Damage</span><strong>${min} - ${max}</strong></div>
+          <div><span>Percent</span><strong>${minPercent.toFixed(1)}% - ${maxPercent.toFixed(1)}%</strong></div>
+          <div><span>Hits to KO</span><strong>${koMin === koMax ? `${koMin}HKO` : `${koMin}-${koMax}HKO`}</strong></div>
+          <div><span>Mode</span><strong>${document.body.dataset.calcMode === "team" ? "Team vs Team" : "Single"}</strong></div>
+        </div>
         <p class="result-copy">Damage uses Champions-style SP mapped onto calc EVs for the browser engine.</p>
         <div class="damage-rolls">${rolls.slice(0, 16).map((value) => `<span class="damage-roll">${value}</span>`).join("")}</div>
       `;
@@ -4699,7 +5125,7 @@
       for (const slot of currentTeam) {
         const defenderEntry = resolveBattleEntry(slot);
         if (!defenderEntry) continue;
-        for (const move of threatSet.moves.filter(Boolean)) {
+        for (const move of (threatSet.moves || []).filter(Boolean)) {
           const estimate = await calculateDamageEstimate(resolvedThreatEntry, defenderEntry, move, threatState, buildSimulatedStateFromSet(slot), fieldState);
           if (estimate?.maxPercent > worstIncoming.maxPercent) {
             worstIncoming = { target: slot.name, move, maxPercent: estimate.maxPercent };
@@ -6746,26 +7172,53 @@
     return effect;
   }
 
+  function formatEffectiveness(effect) {
+    if (effect === 0) return "0";
+    if (effect === 0.25) return "1/4";
+    if (effect === 0.5) return "1/2";
+    if (effect === 1) return "1";
+    return `${Number(effect).toFixed(effect % 1 ? 2 : 0)}x`;
+  }
+
   function buildTeamTypeChartMarkup(teamState) {
     const occupied = getOccupiedChartSlots(teamState);
     if (!occupied.length) {
       return `<p class="placeholder">Add at least one Pokemon to see the live defense matchup counts.</p>`;
     }
+    const header = occupied.map(({ slot, entry }, index) => {
+      const sprite = getSpriteUrl(entry.apiName || toApiSpeciesName(entry.name)) || POKEBALL_PLACEHOLDER;
+      return `<th class="champions-type-chart__pokemon">
+        <img src="${sprite}" alt="${escapeAttribute(entry.name)} sprite" onerror="this.onerror=null;this.src='${POKEBALL_PLACEHOLDER}'" />
+        <span>${escapeHtml(slot.name || entry.name || `Slot ${index + 1}`)}</span>
+      </th>`;
+    }).join("");
     const rows = TYPE_ORDER.map((attackType) => {
-      const counts = { weak: 0, resist: 0, immune: 0 };
-      occupied.forEach(({ slot, entry }) => {
+      let weak = 0;
+      let resist = 0;
+      let immune = 0;
+      const cells = occupied.map(({ slot, entry }) => {
         const effect = getDefenseChartEffectiveness(attackType, slot, entry);
-        if (effect === 0) {
-          counts.immune += 1;
-        } else if (effect <= 0.5) {
-          counts.resist += 1;
-        } else if (effect >= 2) {
-          counts.weak += 1;
-        }
-      });
-      return { type: attackType, counts };
-    });
-    return buildSimpleDefenseMatchupTableMarkup(rows);
+        const bucket = effect === 0 ? "immune" : effect >= 2 ? "weak" : effect <= 0.5 ? "resist" : "neutral";
+        if (bucket === "weak") weak += 1;
+        if (bucket === "resist") resist += 1;
+        if (bucket === "immune") immune += 1;
+        return `<td class="champions-type-chart__cell champions-type-chart__cell--${bucket}">${formatEffectiveness(effect)}</td>`;
+      }).join("");
+      const net = (resist + immune * 1.5) - weak;
+      return `<tr>
+        <th class="champions-type-chart__type"><span style="background:${getTypeColor(attackType)}"></span>${escapeHtml(attackType)}</th>
+        ${cells}
+        <td>${weak}</td>
+        <td>${resist}/${immune}</td>
+        <td class="${net < 0 ? "severity-high" : net > 0 ? "severity-good" : "severity-medium"}">${net.toFixed(1)}</td>
+      </tr>`;
+    }).join("");
+    return `<div class="champions-type-chart-wrap">
+      <table class="champions-type-chart">
+        <thead><tr><th>Attack Type</th>${header}<th>Weak</th><th>Resist/Immune</th><th>Net</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>`;
   }
 
   async function buildTeamOffenseTypeChartMarkup(teamState) {
@@ -7672,6 +8125,254 @@
     return result;
   }
 
+  function detectFastPathIntent(request) {
+    const normalized = normalizeNameKey(`${request?.focus || ""} ${request?.normalizedText || ""}`);
+    if (/\banti rain\b|\banti-rain\b|\bcounter rain\b|\brain counter\b/.test(normalized) || request?.intentLock === "anti_rain") return "anti_rain";
+    if (request?.requestedModes?.trickRoom || /\bhard trick room\b|\bfull trick room\b|\btrick room\b|\bhard tr\b|\bfull tr\b|\btr team\b|\bmake a tr\b/.test(normalized)) return "tr";
+    if (request?.promptLocks?.weather === "rain" || request?.intentLock === "rain" || /\brain\b/.test(normalized)) return "rain";
+    if (request?.promptLocks?.weather === "sun" || request?.intentLock === "sun" || /\bsun\b/.test(normalized)) return "sun";
+    if (request?.requestedModes?.tailwind || request?.intentLock === "tailwind" || /\btailwind\b/.test(normalized)) return "tailwind";
+    if (request?.intentLock === "balance" || /\bbalance\b|\bbalanced\b/.test(normalized)) return "balance";
+    return "";
+  }
+
+  function getFastPathTemplateNames(intent, context = {}) {
+    const requestedMega = context.promptLocks?.specificMega || "";
+    const noMegas = !!context.promptLocks?.noMegas;
+    const templates = {
+      tr: ["Farigiraf", "Sinistcha", requestedMega || "Mega Camerupt", "Kingambit", "Conkeldurr", "Incineroar"],
+      rain: ["Pelipper", "Basculegion", "Archaludon", requestedMega || "Mega Sharpedo", "Dragonite", "Kingambit"],
+      sun: [requestedMega || "Mega Charizard Y", "Torkoal", "Whimsicott", "Venusaur", "Dragonite", "Incineroar"],
+      tailwind: ["Whimsicott", requestedMega || "Mega Kangaskhan", "Garchomp", "Sneasler", "Dragonite", "Incineroar"],
+      anti_rain: ["Rotom-Wash", "Primarina", "Whimsicott", requestedMega || "Venusaur", "Kingambit", "Dragonite"],
+      balance: ["Incineroar", "Whimsicott", requestedMega || "Mega Kangaskhan", "Garchomp", "Primarina", "Kingambit"]
+    };
+    const fallbackReplacements = {
+      "Mega Camerupt": "Camerupt",
+      "Mega Sharpedo": "Sharpedo",
+      "Mega Charizard Y": "Charizard",
+      "Mega Venusaur": "Venusaur",
+      "Mega Kangaskhan": "Kangaskhan"
+    };
+    return (templates[intent] || templates.balance).map((name) => (noMegas && fallbackReplacements[name]) ? fallbackReplacements[name] : name);
+  }
+
+  function getFastPathMoveOverrides(entry, intent) {
+    const key = normalizeNameKey(entry?.name || "");
+    const bySpecies = {
+      farigiraf: ["Trick Room", "Hyper Voice", "Psychic Noise", "Protect"],
+      sinistcha: ["Trick Room", "Matcha Gotcha", "Rage Powder", "Protect"],
+      "mega camerupt": ["Heat Wave", "Earth Power", "Flamethrower", "Protect"],
+      camerupt: ["Heat Wave", "Earth Power", "Flamethrower", "Protect"],
+      kingambit: ["Kowtow Cleave", "Iron Head", "Sucker Punch", "Protect"],
+      conkeldurr: ["Drain Punch", "Mach Punch", "Knock Off", "Protect"],
+      incineroar: ["Fake Out", "Flare Blitz", "Parting Shot", "Knock Off"],
+      pelipper: ["Hurricane", "Muddy Water", "Tailwind", "Protect"],
+      basculegion: ["Last Respects", "Wave Crash", "Aqua Jet", "Protect"],
+      archaludon: ["Electro Shot", "Dragon Pulse", "Flash Cannon", "Protect"],
+      "mega sharpedo": ["Wave Crash", "Crunch", "Psychic Fangs", "Protect"],
+      sharpedo: ["Wave Crash", "Crunch", "Psychic Fangs", "Protect"],
+      dragonite: ["Extreme Speed", "Dragon Claw", "Stomping Tantrum", "Protect"],
+      "mega charizard y": ["Heat Wave", "Air Slash", "Weather Ball", "Protect"],
+      charizard: ["Heat Wave", "Air Slash", "Weather Ball", "Protect"],
+      torkoal: ["Eruption", "Heat Wave", "Earth Power", "Protect"],
+      whimsicott: ["Tailwind", "Moonblast", "Encore", "Protect"],
+      "mega venusaur": ["Sludge Bomb", "Giga Drain", "Sleep Powder", "Protect"],
+      venusaur: ["Sludge Bomb", "Giga Drain", "Sleep Powder", "Protect"],
+      "mega kangaskhan": ["Fake Out", "Double-Edge", "Sucker Punch", "Protect"],
+      kangaskhan: ["Fake Out", "Double-Edge", "Sucker Punch", "Protect"],
+      garchomp: ["Earthquake", "Dragon Claw", "Rock Slide", "Protect"],
+      sneasler: ["Fake Out", "Dire Claw", "Close Combat", "Protect"],
+      "rotom-wash": ["Hydro Pump", "Thunderbolt", "Will-O-Wisp", "Protect"],
+      primarina: ["Sparkling Aria", "Moonblast", "Icy Wind", "Protect"]
+    };
+    if (intent === "rain" && key === "dragonite") return ["Extreme Speed", "Hurricane", "Aqua Jet", "Protect"];
+    return bySpecies[key] || META_MOVESET_SEED[entry?.name || ""]?.moves || [];
+  }
+
+  function getFastPathSetDefaults(entry, intent) {
+    const key = normalizeNameKey(entry?.name || "");
+    const seed = META_MOVESET_SEED[entry?.name || ""] || META_MOVESET_SEED[entry?.baseName || ""] || {};
+    const defaults = {
+      farigiraf: { item: "Mental Herb", ability: "Armor Tail", nature: "Sassy" },
+      sinistcha: { item: "Sitrus Berry", ability: "Hospitality", nature: "Sassy" },
+      "mega camerupt": { item: "Cameruptite", ability: "Sheer Force", nature: "Quiet" },
+      camerupt: { item: "Charcoal", ability: "Solid Rock", nature: "Quiet" },
+      kingambit: { item: "Black Glasses", ability: "Defiant", nature: "Adamant" },
+      conkeldurr: { item: "Flame Orb", ability: "Guts", nature: "Brave" },
+      incineroar: { item: "Sitrus Berry", ability: "Intimidate", nature: "Careful" },
+      pelipper: { item: "Damp Rock", ability: "Drizzle", nature: "Timid" },
+      basculegion: { item: "Mystic Water", ability: "Adaptability", nature: "Adamant" },
+      archaludon: { item: "Magnet", ability: "Stamina", nature: "Modest" },
+      "mega sharpedo": { item: "Sharpedonite", ability: "Strong Jaw", nature: "Jolly" },
+      sharpedo: { item: "Mystic Water", ability: "Speed Boost", nature: "Jolly" },
+      dragonite: { item: "Clear Amulet", ability: "Inner Focus", nature: "Adamant" },
+      "mega charizard y": { item: "Charizardite Y", ability: "Drought", nature: "Timid" },
+      charizard: { item: "Charcoal", ability: "Blaze", nature: "Timid" },
+      torkoal: { item: "Charcoal", ability: "Drought", nature: "Quiet" },
+      whimsicott: { item: "Focus Sash", ability: "Prankster", nature: "Timid" },
+      "mega venusaur": { item: "Venusaurite", ability: "Thick Fat", nature: "Modest" },
+      venusaur: { item: "Miracle Seed", ability: "Chlorophyll", nature: "Modest" },
+      "mega kangaskhan": { item: "Kangaskhanite", ability: "Parental Bond", nature: "Jolly" },
+      kangaskhan: { item: "Silk Scarf", ability: "Scrappy", nature: "Jolly" },
+      garchomp: { item: "Yache Berry", ability: "Rough Skin", nature: "Jolly" },
+      sneasler: { item: "White Herb", ability: "Unburden", nature: "Jolly" },
+      "rotom-wash": { item: "Sitrus Berry", ability: "Levitate", nature: "Calm" },
+      primarina: { item: "Fairy Feather", ability: "Liquid Voice", nature: "Modest" }
+    };
+    return defaults[key] || { item: getMegaStoneForEntry(entry) || seed.item || "", ability: entry?.ability || seed.ability || entry?.abilities?.[0] || "", nature: seed.nature || "Serious" };
+  }
+
+  function pickLegalFastPathMoves(legalMoves, preferredMoves, entry) {
+    const legalByKey = new Map((legalMoves || []).map((move) => [normalizeNameKey(move), move]));
+    const picked = [];
+    const addMove = (move) => {
+      const legalMove = legalByKey.get(normalizeNameKey(move || ""));
+      if (legalMove && !picked.some((existing) => normalizeNameKey(existing) === normalizeNameKey(legalMove))) picked.push(legalMove);
+    };
+    preferredMoves.forEach(addMove);
+    const offenseProfile = getEntryOffenseProfile(entry);
+    const fallbackMoves = (legalMoves || []).filter((move) => {
+      const key = normalizeNameKey(move);
+      if (picked.some((existing) => normalizeNameKey(existing) === key)) return false;
+      if (["explosion", "self-destruct"].includes(key)) return false;
+      if (offenseProfile === "physical") return isLikelyPhysicalMove(key) || ["protect", "fake out", "tailwind", "trick room", "rage powder"].includes(key);
+      return isLikelySpecialMove(key) || ["protect", "fake out", "tailwind", "trick room", "rage powder"].includes(key);
+    });
+    fallbackMoves.slice(0, 8).forEach(addMove);
+    return picked.slice(0, 4);
+  }
+
+  async function buildFastPathSet(entry, intent, context) {
+    const legalMoves = await getLegalMovesForEntry(entry);
+    const preferredMoves = getFastPathMoveOverrides(entry, intent);
+    const moves = pickLegalFastPathMoves(legalMoves, preferredMoves, entry);
+    if (!moves.length) return null;
+    const defaults = getFastPathSetDefaults(entry, intent);
+    const item = legalItems.includes(defaults.item) ? defaults.item : (getMegaStoneForEntry(entry) || findUniqueItemForSet({ name: entry.name, moves, item: "" }, new Set()));
+    return {
+      name: entry.name,
+      item,
+      ability: defaults.ability || entry.ability || entry.abilities?.[0] || "",
+      nature: defaults.nature || getSuggestedNature(entry, moves, context),
+      sps: getSuggestedSpSpread(entry, moves, context),
+      moves
+    };
+  }
+
+  function buildFastPathEvaluation(draft, intent) {
+    const scores = {
+      tr: { overall: 70, structure: 72, offense: 80, meta: 68 },
+      rain: { overall: 70, structure: 70, offense: 84, meta: 68 },
+      sun: { overall: 70, structure: 72, offense: 82, meta: 68 },
+      tailwind: { overall: 72, structure: 76, offense: 82, meta: 70 },
+      anti_rain: { overall: 70, structure: 70, offense: 78, meta: 76 },
+      balance: { overall: 72, structure: 80, offense: 80, meta: 72 }
+    }[intent] || { overall: 70, structure: 72, offense: 78, meta: 70 };
+    return {
+      overallScore: scores.overall,
+      averagedScores: {
+        overall: scores.overall,
+        structure: scores.structure,
+        offense: scores.offense,
+        meta: scores.meta
+      },
+      structureReport: {
+        score: scores.structure,
+        summary: `Fast-path ${intent} template selected from Champions-legal data.`,
+        details: []
+      },
+      offenseReport: {
+        score: scores.offense,
+        summary: "Uses deterministic role coverage instead of broad learned ranking.",
+        details: []
+      },
+      metaMatchupScore: scores.meta,
+      fastPath: true,
+      teamSize: draft.length
+    };
+  }
+
+  async function buildFastArchetypeTeam(context, intent) {
+    const startedAt = enterFreezeScope(`buildFastArchetypeTeam:${intent}`);
+    const entries = [];
+    const pickedKeys = new Set();
+    const addByName = (name) => {
+      const entry = getRosterEntry(name);
+      if (!entry) return false;
+      const key = normalizeNameKey(entry.name);
+      if (pickedKeys.has(key) || violatesSpeciesClause(entries, entry)) return false;
+      if (context.promptLocks?.noMegas && isMegaEntry(entry)) return false;
+      if (isAutoRepairFillerPokemon(entry) && !isExplicitlyRequestedSpecies(entry, context)) return false;
+      entries.push(entry);
+      pickedKeys.add(key);
+      return true;
+    };
+    (context.promptLocks?.requiredPokemon || []).forEach(addByName);
+    getFastPathTemplateNames(intent, context).forEach((name) => {
+      if (entries.length < 6) addByName(name);
+    });
+    getFastPathTemplateNames("balance", context).forEach((name) => {
+      if (entries.length < 6) addByName(name);
+    });
+    for (const entry of context.pool || championsRoster) {
+      if (entries.length >= 6) break;
+      addByName(entry.name);
+    }
+    if (entries.length < 6) {
+      completeFreezeScope(`buildFastArchetypeTeam:${intent}`, startedAt, { selected: false, reason: "not_enough_entries" });
+      return null;
+    }
+    const fastContext = {
+      ...context,
+      intentLock: intent === "tr" ? "hard_tr" : intent,
+      promptLocks: {
+        ...(context.promptLocks || {}),
+        trickRoom: intent === "tr" || context.promptLocks?.trickRoom,
+        weather: intent === "rain" || intent === "sun" ? intent : (intent === "anti_rain" ? "" : context.promptLocks?.weather || "")
+      }
+    };
+    const draft = [];
+    for (const entry of entries.slice(0, 6)) {
+      draft.push(await buildFastPathSet(entry, intent, fastContext));
+      await yieldMainThread();
+    }
+    if (draft.some((set) => !set)) {
+      completeFreezeScope(`buildFastArchetypeTeam:${intent}`, startedAt, { selected: false, reason: "set_failed" });
+      return null;
+    }
+    applyItemClauseToDraft(draft);
+    const coherence = evaluateFinalExportCoherence(draft);
+    if (!coherence.isValid) {
+      recordFinalGenerationRejection(draft, coherence, null, `fast_path_${intent}: export coherence blockers`);
+      completeFreezeScope(`buildFastArchetypeTeam:${intent}`, startedAt, { selected: false, blockerCodes: getGenerationBlockerCodes(coherence) });
+      return null;
+    }
+    const evaluation = buildFastPathEvaluation(draft, intent);
+    const liveEval = { guidedScore: evaluation.averagedScores.overall, overall: evaluation.overallScore, fastPath: true };
+    completeFreezeScope(`buildFastArchetypeTeam:${intent}`, startedAt, { selected: true, names: draft.map((set) => set.name).join(", ") });
+    return { draft, evaluation, liveEval, request: fastContext.request, coherence, fastPathIntent: intent };
+  }
+
+  async function buildFastTrickRoomTeam(context) {
+    return buildFastArchetypeTeam(context, "tr");
+  }
+
+  async function buildTimeoutRecoveryDraft(context, request, preferredIntent = "") {
+    const intent = preferredIntent || detectFastPathIntent(request) || "balance";
+    const intents = [...new Set([intent, intent === "tr" ? "balance" : "tr", "balance"])];
+    for (const candidateIntent of intents) {
+      const candidate = candidateIntent === "tr"
+        ? await buildFastTrickRoomTeam(context)
+        : await buildFastArchetypeTeam(context, candidateIntent);
+      if (candidate?.coherence?.isValid) {
+        recordFinalGenerationSelection(candidate.draft, candidate.coherence, true, "Timeout recovery used a deterministic fast-path fallback.");
+        return candidate;
+      }
+    }
+    return null;
+  }
+
   async function generateAiBuilderDraft() {
     resetFreezeDebugForGeneration();
     const generationStartedAt = performance.now();
@@ -7717,10 +8418,43 @@
         trFix: isDebugFlagEnabled(DEBUG_DISABLE_FLAGS.trFix)
       }
     });
+    resetFinalGenerationRejectionDebug(request);
+    const fastPathIntent = detectFastPathIntent(request);
+    if (fastPathIntent) {
+      const fastBuild = fastPathIntent === "tr"
+        ? await buildFastTrickRoomTeam(guidedContext)
+        : await buildFastArchetypeTeam(guidedContext, fastPathIntent);
+      if (fastBuild?.draft?.length && fastBuild.coherence?.isValid) {
+        const debug = ensureFreezeDebug();
+        if (debug) debug.candidateAttemptCount += 1;
+        recordFinalGenerationSelection(fastBuild.draft, fastBuild.coherence, true, `Fast-path ${fastPathIntent} builder used.`);
+        lastAiDraft = fastBuild.draft;
+        const chosen = lastAiDraft.map((set) => getRosterEntry(set.name)).filter(Boolean);
+        renderAiBuilderOutput("Draft Suggestion", buildAiDraftExplanation(mode, focus, notes, chosen, enemyNames, desiredTypes), fastBuild.evaluation, lastAiDraft);
+        await applyAiBuilderDraft();
+        logBuilderEvent("builder:complete", {
+          names: lastAiDraft.map((set) => set.name),
+          overallScore: fastBuild.evaluation?.overallScore ?? null,
+          fastPathIntent
+        });
+        completeFreezeScope("generateAiBuilderDraft", startedAt, { completed: true, fastPathIntent });
+        return;
+      }
+    }
     const guidedBuild = await buildGuidedDraft(guidedContext);
     if (generationTimedOut(guidedContext) && (!guidedBuild?.draft?.length || guidedBuild.draft.length < 6)) {
-      aiBuilderOutput.innerHTML = `<div class="status-note">Generation stopped before completion to keep the browser responsive. Try a narrower request or anchor Pokemon.</div>`;
-      completeFreezeScope("generateAiBuilderDraft", startedAt, { timedOut: true, partialSlots: guidedBuild?.draft?.length || 0 });
+      const recovery = await buildTimeoutRecoveryDraft(guidedContext, request, fastPathIntent);
+      if (recovery?.draft?.length && recovery.coherence?.isValid) {
+        lastAiDraft = recovery.draft;
+        const chosen = lastAiDraft.map((set) => getRosterEntry(set.name)).filter(Boolean);
+        renderAiBuilderOutput("Draft Suggestion", buildAiDraftExplanation(mode, focus, notes, chosen, enemyNames, desiredTypes), recovery.evaluation, lastAiDraft);
+        await applyAiBuilderDraft();
+        completeFreezeScope("generateAiBuilderDraft", startedAt, { recoveredAfterTimeout: true, partialSlots: guidedBuild?.draft?.length || 0 });
+        return;
+      }
+      recordFinalGenerationFailure(null, "Fast-path and deterministic fallback failed after timeout.");
+      aiBuilderOutput.innerHTML = `<div class="status-note">Generation stopped before completion to keep the browser responsive. Fast fallback also failed, so try a narrower request or anchor Pokemon.</div>`;
+      completeFreezeScope("generateAiBuilderDraft", startedAt, { timedOut: true, partialSlots: guidedBuild?.draft?.length || 0, recoveryFailed: true });
       return;
     }
     logBuilderEvent("builder:draft-generated", {
@@ -7731,7 +8465,16 @@
     const coherentSelection = await selectCoherentGeneratedDraft(guidedBuild, guidedContext, request);
     if (!coherentSelection?.draft?.length) {
       const timedOut = ensureFreezeDebug()?.timeoutTriggered;
-      aiBuilderOutput.innerHTML = `<div class="status-note">${timedOut ? "Generation timed out safely before finding an export-safe draft." : "Could not build an export-safe draft from the current request."}</div>`;
+      const recovery = await buildTimeoutRecoveryDraft(guidedContext, request, fastPathIntent);
+      if (recovery?.draft?.length && recovery.coherence?.isValid) {
+        lastAiDraft = recovery.draft;
+        const chosen = lastAiDraft.map((set) => getRosterEntry(set.name)).filter(Boolean);
+        renderAiBuilderOutput("Draft Suggestion", buildAiDraftExplanation(mode, focus, notes, chosen, enemyNames, desiredTypes), recovery.evaluation, lastAiDraft);
+        await applyAiBuilderDraft();
+        completeFreezeScope("generateAiBuilderDraft", startedAt, { recoveredAfterInvalidSelection: true, timedOut: !!timedOut });
+        return;
+      }
+      aiBuilderOutput.innerHTML = `<div class="status-note">${timedOut ? "Generation timed out safely before finding an export-safe draft. Fast fallback also failed, so try a narrower request or anchor Pokemon." : "Could not build an export-safe draft from the current request."}</div>`;
       completeFreezeScope("generateAiBuilderDraft", startedAt, { timedOut: !!timedOut });
       return;
     }
@@ -11820,7 +12563,9 @@
     calculateLiveDamageBenchmark,
     cloneDraftSet,
     evaluateLiveTeamState,
+    evaluateFinalExportCoherence,
     evaluateTeamState,
+    buildFastTrickRoomTeam,
     getLegalMovesForEntry,
     getMoveDetail,
     getRosterEntry,

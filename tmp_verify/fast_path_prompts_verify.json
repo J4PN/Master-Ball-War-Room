@@ -1,0 +1,1147 @@
+[
+  {
+    "prompt": "make a tr team",
+    "completed": true,
+    "elapsedMs": 2284,
+    "team": [
+      "Farigiraf",
+      "Sinistcha",
+      "Mega Camerupt",
+      "Kingambit",
+      "Conkeldurr",
+      "Incineroar"
+    ],
+    "validForExport": true,
+    "blockerCodes": [],
+    "statusText": "Draft Suggestion\nThis draft uses a hybrid slow mode, keeping Trick Room available without giving up flexible game plans outside it. It keeps your prompt notes in scope. Mega options: Mega Camerupt; only one can Mega Evolve in a game.\nProjected grade: 70/100 | Structure 72/100 | Offense 80/100 | Vs Meta 68/100\nFarigiraf\nMental Herb | Armor Tail | Sassy\n28 HP / 4 Def / 32 SpA / 2 SpD\nTrick Room / Hyper Voice / Psychic Noise / Protect\noffers alternate speed control. has a safe positioning button. uses Mental Herb to support its role.\nSinistcha\nSitrus Berry | Hospitality | Sassy\n20 HP / 6 Def / 32 SpA / 8 SpD\nTrick Room / Matcha Gotcha / Rage Powder / Protect\noffers alternate speed control. has a safe positioning button. uses Sitrus Berry to support its role.\nMega Camerupt\nCameruptite | Sheer Force | Quiet\n28 HP / 4 Def / 32 SpA / 2 SpD\nHeat Wave / Earth Power / Flamethrower / Protect\nhas a safe positioning button. uses Cameruptite to support its role. Sheer Force is the preferred ability here.\nKingambit\nBlack Glasses | Defiant | Adamant\n20 HP / 32 Atk / 6 Def / 8 SpD\nKowtow Cleave / Iron Head / Sucker Punch / Protect\nhas a safe positioning button. uses Black Glasses to support its role. Defiant is the preferred ability here.\nConkeldurr\nFocus Sash | Guts | Brave\n28 HP / 32 Atk / 4 Def / 2 SpD\nDrain Punch / Mach Punch / Knock Off / Protect\nhas a safe positioning button. uses Focus Sash to support its role. Guts is the preferred ability here.\nIncineroar\nLeftovers | Intimidate | Careful\n28 HP / 32 Atk / 4 Def / 2 SpD\nFake Out / Flare Blitz / Parting Shot / Blaze Kick\ngives the team turn-one tempo. keeps momentum moving. uses Leftovers to support its role.",
+    "browserResponsivePing": 42,
+    "browserResponsivePingMs": 107,
+    "timeoutTriggered": false,
+    "freezeDebug": {
+      "candidateAttemptCount": 1,
+      "emergencyCutoffTriggered": false,
+      "exportValidationPassCount": 2,
+      "generationElapsedMs": 0,
+      "generationStartedAt": 3420.0999999996275,
+      "lastCompletedFunction": "evaluateFinalExportCoherence",
+      "lastFunctionEntered": "evaluateFinalExportCoherence",
+      "loopIterationCount": 0,
+      "recursionBlocked": false,
+      "repairPassCount": 0,
+      "repeatedTeamSignatures": [],
+      "timeoutTriggered": false,
+      "timings": [
+        {
+          "isValid": true,
+          "ms": 7,
+          "name": "evaluateFinalExportCoherence",
+          "teamSize": 6
+        },
+        {
+          "ms": 87,
+          "name": "buildFastArchetypeTeam:tr",
+          "names": "Farigiraf, Sinistcha, Mega Camerupt, Kingambit, Conkeldurr, Incineroar",
+          "selected": true
+        },
+        {
+          "completed": true,
+          "fastPathIntent": "tr",
+          "ms": 320,
+          "name": "generateAiBuilderDraft"
+        },
+        {
+          "isValid": true,
+          "ms": 4,
+          "name": "evaluateFinalExportCoherence",
+          "teamSize": 6
+        }
+      ]
+    },
+    "generationDebug": {
+      "fallbackUsed": true,
+      "fallbackWarning": "Fast-path tr builder used.",
+      "finalErrorBlockerCodes": [],
+      "finalErrorIssueCodes": [],
+      "finalSelectedTeam": [
+        {
+          "ability": "Armor Tail",
+          "item": "Mental Herb",
+          "moves": [
+            "Trick Room",
+            "Hyper Voice",
+            "Psychic Noise",
+            "Protect"
+          ],
+          "name": "Farigiraf"
+        },
+        {
+          "ability": "Hospitality",
+          "item": "Sitrus Berry",
+          "moves": [
+            "Trick Room",
+            "Matcha Gotcha",
+            "Rage Powder",
+            "Protect"
+          ],
+          "name": "Sinistcha"
+        },
+        {
+          "ability": "Sheer Force",
+          "item": "Cameruptite",
+          "moves": [
+            "Heat Wave",
+            "Earth Power",
+            "Flamethrower",
+            "Protect"
+          ],
+          "name": "Mega Camerupt"
+        },
+        {
+          "ability": "Defiant",
+          "item": "Black Glasses",
+          "moves": [
+            "Kowtow Cleave",
+            "Iron Head",
+            "Sucker Punch",
+            "Protect"
+          ],
+          "name": "Kingambit"
+        },
+        {
+          "ability": "Guts",
+          "item": "Focus Sash",
+          "moves": [
+            "Drain Punch",
+            "Mach Punch",
+            "Knock Off",
+            "Protect"
+          ],
+          "name": "Conkeldurr"
+        },
+        {
+          "ability": "Intimidate",
+          "item": "Leftovers",
+          "moves": [
+            "Fake Out",
+            "Flare Blitz",
+            "Parting Shot",
+            "Blaze Kick"
+          ],
+          "name": "Incineroar"
+        }
+      ],
+      "rejections": [],
+      "request": {
+        "focus": "",
+        "intentLock": "soft_tr",
+        "mode": "archetype",
+        "promptLocks": {
+          "allowSlowMode": true,
+          "enemyNames": [],
+          "forbidTrickRoomDrift": false,
+          "megaTargetMax": 2,
+          "megaTargetMin": 1,
+          "noMegas": false,
+          "requiredPokemon": [],
+          "specificMega": null,
+          "tailwind": false,
+          "trickRoom": true,
+          "weather": ""
+        }
+      },
+      "retryCount": 0,
+      "selectedCoherence": {
+        "blockerCodes": [],
+        "isValid": true,
+        "issueCodes": [
+          "no_credible_lead"
+        ],
+        "penalty": 18
+      },
+      "selectedValidTeam": [
+        {
+          "ability": "Armor Tail",
+          "item": "Mental Herb",
+          "moves": [
+            "Trick Room",
+            "Hyper Voice",
+            "Psychic Noise",
+            "Protect"
+          ],
+          "name": "Farigiraf"
+        },
+        {
+          "ability": "Hospitality",
+          "item": "Sitrus Berry",
+          "moves": [
+            "Trick Room",
+            "Matcha Gotcha",
+            "Rage Powder",
+            "Protect"
+          ],
+          "name": "Sinistcha"
+        },
+        {
+          "ability": "Sheer Force",
+          "item": "Cameruptite",
+          "moves": [
+            "Heat Wave",
+            "Earth Power",
+            "Flamethrower",
+            "Protect"
+          ],
+          "name": "Mega Camerupt"
+        },
+        {
+          "ability": "Defiant",
+          "item": "Black Glasses",
+          "moves": [
+            "Kowtow Cleave",
+            "Iron Head",
+            "Sucker Punch",
+            "Protect"
+          ],
+          "name": "Kingambit"
+        },
+        {
+          "ability": "Guts",
+          "item": "Focus Sash",
+          "moves": [
+            "Drain Punch",
+            "Mach Punch",
+            "Knock Off",
+            "Protect"
+          ],
+          "name": "Conkeldurr"
+        },
+        {
+          "ability": "Intimidate",
+          "item": "Leftovers",
+          "moves": [
+            "Fake Out",
+            "Flare Blitz",
+            "Parting Shot",
+            "Blaze Kick"
+          ],
+          "name": "Incineroar"
+        }
+      ]
+    }
+  },
+  {
+    "prompt": "make a rain team",
+    "completed": true,
+    "elapsedMs": 822,
+    "team": [
+      "Pelipper",
+      "Basculegion",
+      "Archaludon",
+      "Mega Sharpedo",
+      "Dragonite",
+      "Kingambit"
+    ],
+    "validForExport": true,
+    "blockerCodes": [],
+    "statusText": "Draft Suggestion\nThis draft is built to establish rain quickly and convert that weather into immediate offensive pressure and positioning value. It keeps your prompt notes in scope. Mega options: Mega Sharpedo; only one can Mega Evolve in a game.\nProjected grade: 70/100 | Structure 70/100 | Offense 84/100 | Vs Meta 68/100\nPelipper\nFocus Sash | Drizzle | Timid\n32 SpA / 2 SpD / 32 Spe\nHurricane / Muddy Water / Tailwind / Protect\nadds fast mode speed control. has a safe positioning button. uses Focus Sash to support its role.\nBasculegion\nMystic Water | Adaptability | Adamant\n28 HP / 32 Atk / 4 Def / 2 SpD\nLast Respects / Wave Crash / Aqua Jet / Protect\nhas a safe positioning button. uses Mystic Water to support its role. Adaptability is the preferred ability here.\nArchaludon\nMagnet | Stamina | Modest\n20 HP / 6 Def / 32 SpA / 8 SpD\nElectro Shot / Dragon Pulse / Flash Cannon / Protect\nhas a safe positioning button. uses Magnet to support its role. Stamina is the preferred ability here.\nMega Sharpedo\nSharpedonite | Strong Jaw | Jolly\n32 Atk / 2 SpD / 32 Spe\nCrunch / Psychic Fangs / Protect / Close Combat\nhas a safe positioning button. uses Sharpedonite to support its role. Strong Jaw is the preferred ability here.\nDragonite\nLeftovers | Inner Focus | Adamant\n20 HP / 32 Atk / 6 Def / 8 SpD\nExtreme Speed / Hurricane / Aqua Jet / Protect\nhas a safe positioning button. uses Leftovers to support its role. Inner Focus is the preferred ability here.\nKingambit\nBlack Glasses | Defiant | Adamant\n20 HP / 32 Atk / 6 Def / 8 SpD\nKowtow Cleave / Iron Head / Sucker Punch / Protect\nhas a safe positioning button. uses Black Glasses to support its role. Defiant is the preferred ability here.",
+    "browserResponsivePing": 42,
+    "browserResponsivePingMs": 6,
+    "timeoutTriggered": false,
+    "freezeDebug": {
+      "candidateAttemptCount": 1,
+      "emergencyCutoffTriggered": false,
+      "exportValidationPassCount": 2,
+      "generationElapsedMs": 0,
+      "generationStartedAt": 6781.5999999996275,
+      "lastCompletedFunction": "evaluateFinalExportCoherence",
+      "lastFunctionEntered": "evaluateFinalExportCoherence",
+      "loopIterationCount": 0,
+      "recursionBlocked": false,
+      "repairPassCount": 0,
+      "repeatedTeamSignatures": [],
+      "timeoutTriggered": false,
+      "timings": [
+        {
+          "isValid": true,
+          "ms": 5,
+          "name": "evaluateFinalExportCoherence",
+          "teamSize": 6
+        },
+        {
+          "ms": 137,
+          "name": "buildFastArchetypeTeam:rain",
+          "names": "Pelipper, Basculegion, Archaludon, Mega Sharpedo, Dragonite, Kingambit",
+          "selected": true
+        },
+        {
+          "completed": true,
+          "fastPathIntent": "rain",
+          "ms": 351,
+          "name": "generateAiBuilderDraft"
+        },
+        {
+          "isValid": true,
+          "ms": 3,
+          "name": "evaluateFinalExportCoherence",
+          "teamSize": 6
+        }
+      ]
+    },
+    "generationDebug": {
+      "fallbackUsed": true,
+      "fallbackWarning": "Fast-path rain builder used.",
+      "finalErrorBlockerCodes": [],
+      "finalErrorIssueCodes": [],
+      "finalSelectedTeam": [
+        {
+          "ability": "Drizzle",
+          "item": "Focus Sash",
+          "moves": [
+            "Hurricane",
+            "Muddy Water",
+            "Tailwind",
+            "Protect"
+          ],
+          "name": "Pelipper"
+        },
+        {
+          "ability": "Adaptability",
+          "item": "Mystic Water",
+          "moves": [
+            "Last Respects",
+            "Wave Crash",
+            "Aqua Jet",
+            "Protect"
+          ],
+          "name": "Basculegion"
+        },
+        {
+          "ability": "Stamina",
+          "item": "Magnet",
+          "moves": [
+            "Electro Shot",
+            "Dragon Pulse",
+            "Flash Cannon",
+            "Protect"
+          ],
+          "name": "Archaludon"
+        },
+        {
+          "ability": "Strong Jaw",
+          "item": "Sharpedonite",
+          "moves": [
+            "Crunch",
+            "Psychic Fangs",
+            "Protect",
+            "Close Combat"
+          ],
+          "name": "Mega Sharpedo"
+        },
+        {
+          "ability": "Inner Focus",
+          "item": "Leftovers",
+          "moves": [
+            "Extreme Speed",
+            "Hurricane",
+            "Aqua Jet",
+            "Protect"
+          ],
+          "name": "Dragonite"
+        },
+        {
+          "ability": "Defiant",
+          "item": "Black Glasses",
+          "moves": [
+            "Kowtow Cleave",
+            "Iron Head",
+            "Sucker Punch",
+            "Protect"
+          ],
+          "name": "Kingambit"
+        }
+      ],
+      "rejections": [],
+      "request": {
+        "focus": "",
+        "intentLock": "rain",
+        "mode": "archetype",
+        "promptLocks": {
+          "allowSlowMode": false,
+          "enemyNames": [],
+          "forbidTrickRoomDrift": true,
+          "megaTargetMax": 2,
+          "megaTargetMin": 1,
+          "noMegas": false,
+          "requiredPokemon": [],
+          "specificMega": null,
+          "tailwind": false,
+          "trickRoom": false,
+          "weather": "rain"
+        }
+      },
+      "retryCount": 0,
+      "selectedCoherence": {
+        "blockerCodes": [],
+        "isValid": true,
+        "issueCodes": [
+          "no_credible_lead"
+        ],
+        "penalty": 18
+      },
+      "selectedValidTeam": [
+        {
+          "ability": "Drizzle",
+          "item": "Focus Sash",
+          "moves": [
+            "Hurricane",
+            "Muddy Water",
+            "Tailwind",
+            "Protect"
+          ],
+          "name": "Pelipper"
+        },
+        {
+          "ability": "Adaptability",
+          "item": "Mystic Water",
+          "moves": [
+            "Last Respects",
+            "Wave Crash",
+            "Aqua Jet",
+            "Protect"
+          ],
+          "name": "Basculegion"
+        },
+        {
+          "ability": "Stamina",
+          "item": "Magnet",
+          "moves": [
+            "Electro Shot",
+            "Dragon Pulse",
+            "Flash Cannon",
+            "Protect"
+          ],
+          "name": "Archaludon"
+        },
+        {
+          "ability": "Strong Jaw",
+          "item": "Sharpedonite",
+          "moves": [
+            "Crunch",
+            "Psychic Fangs",
+            "Protect",
+            "Close Combat"
+          ],
+          "name": "Mega Sharpedo"
+        },
+        {
+          "ability": "Inner Focus",
+          "item": "Leftovers",
+          "moves": [
+            "Extreme Speed",
+            "Hurricane",
+            "Aqua Jet",
+            "Protect"
+          ],
+          "name": "Dragonite"
+        },
+        {
+          "ability": "Defiant",
+          "item": "Black Glasses",
+          "moves": [
+            "Kowtow Cleave",
+            "Iron Head",
+            "Sucker Punch",
+            "Protect"
+          ],
+          "name": "Kingambit"
+        }
+      ]
+    }
+  },
+  {
+    "prompt": "make a sun team",
+    "completed": true,
+    "elapsedMs": 1272,
+    "team": [
+      "Mega Charizard Y",
+      "Torkoal",
+      "Whimsicott",
+      "Venusaur",
+      "Dragonite",
+      "Incineroar"
+    ],
+    "validForExport": true,
+    "blockerCodes": [],
+    "statusText": "Draft Suggestion\nThis draft is built to establish sun, pressure the board immediately, and convert weather turns into strong attacks and support. It keeps your prompt notes in scope. Mega options: Mega Charizard Y; only one can Mega Evolve in a game.\nProjected grade: 70/100 | Structure 72/100 | Offense 82/100 | Vs Meta 68/100\nMega Charizard Y\nCharizardite Y | Drought | Timid\n32 SpA / 2 SpD / 32 Spe\nHeat Wave / Air Slash / Weather Ball / Protect\nhas a safe positioning button. uses Charizardite Y to support its role. Drought is the preferred ability here.\nTorkoal\nCharcoal | Drought | Quiet\n20 HP / 32 Atk / 6 Def / 8 SpD\nEruption / Heat Wave / Earth Power / Protect\nhas a safe positioning button. uses Charcoal to support its role. Drought is the preferred ability here.\nWhimsicott\nFocus Sash | Prankster | Timid\n32 SpA / 2 SpD / 32 Spe\nTailwind / Moonblast / Encore / Protect\nadds fast mode speed control. has a safe positioning button. uses Focus Sash to support its role.\nVenusaur\nMiracle Seed | Chlorophyll | Modest\n20 HP / 6 Def / 32 SpA / 8 SpD\nSludge Bomb / Giga Drain / Sleep Powder / Protect\nhas a safe positioning button. uses Miracle Seed to support its role. Chlorophyll is the preferred ability here.\nDragonite\nLeftovers | Inner Focus | Adamant\n20 HP / 32 Atk / 6 Def / 8 SpD\nExtreme Speed / Dragon Claw / Stomping Tantrum / Protect\nhas a safe positioning button. uses Leftovers to support its role. Inner Focus is the preferred ability here.\nIncineroar\nSitrus Berry | Intimidate | Careful\n28 HP / 32 Atk / 4 Def / 2 SpD\nFake Out / Flare Blitz / Parting Shot / Blaze Kick\ngives the team turn-one tempo. keeps momentum moving. uses Sitrus Berry to support its role.",
+    "browserResponsivePing": 42,
+    "browserResponsivePingMs": 7,
+    "timeoutTriggered": false,
+    "freezeDebug": {
+      "candidateAttemptCount": 1,
+      "emergencyCutoffTriggered": false,
+      "exportValidationPassCount": 2,
+      "generationElapsedMs": 0,
+      "generationStartedAt": 8044.5,
+      "lastCompletedFunction": "evaluateFinalExportCoherence",
+      "lastFunctionEntered": "evaluateFinalExportCoherence",
+      "loopIterationCount": 0,
+      "recursionBlocked": false,
+      "repairPassCount": 0,
+      "repeatedTeamSignatures": [],
+      "timeoutTriggered": false,
+      "timings": [
+        {
+          "isValid": true,
+          "ms": 3,
+          "name": "evaluateFinalExportCoherence",
+          "teamSize": 6
+        },
+        {
+          "ms": 184,
+          "name": "buildFastArchetypeTeam:sun",
+          "names": "Mega Charizard Y, Torkoal, Whimsicott, Venusaur, Dragonite, Incineroar",
+          "selected": true
+        },
+        {
+          "completed": true,
+          "fastPathIntent": "sun",
+          "ms": 489,
+          "name": "generateAiBuilderDraft"
+        },
+        {
+          "isValid": true,
+          "ms": 2,
+          "name": "evaluateFinalExportCoherence",
+          "teamSize": 6
+        }
+      ]
+    },
+    "generationDebug": {
+      "fallbackUsed": true,
+      "fallbackWarning": "Fast-path sun builder used.",
+      "finalErrorBlockerCodes": [],
+      "finalErrorIssueCodes": [],
+      "finalSelectedTeam": [
+        {
+          "ability": "Drought",
+          "item": "Charizardite Y",
+          "moves": [
+            "Heat Wave",
+            "Air Slash",
+            "Weather Ball",
+            "Protect"
+          ],
+          "name": "Mega Charizard Y"
+        },
+        {
+          "ability": "Drought",
+          "item": "Charcoal",
+          "moves": [
+            "Eruption",
+            "Heat Wave",
+            "Earth Power",
+            "Protect"
+          ],
+          "name": "Torkoal"
+        },
+        {
+          "ability": "Prankster",
+          "item": "Focus Sash",
+          "moves": [
+            "Tailwind",
+            "Moonblast",
+            "Encore",
+            "Protect"
+          ],
+          "name": "Whimsicott"
+        },
+        {
+          "ability": "Chlorophyll",
+          "item": "Miracle Seed",
+          "moves": [
+            "Sludge Bomb",
+            "Giga Drain",
+            "Sleep Powder",
+            "Protect"
+          ],
+          "name": "Venusaur"
+        },
+        {
+          "ability": "Inner Focus",
+          "item": "Leftovers",
+          "moves": [
+            "Extreme Speed",
+            "Dragon Claw",
+            "Stomping Tantrum",
+            "Protect"
+          ],
+          "name": "Dragonite"
+        },
+        {
+          "ability": "Intimidate",
+          "item": "Sitrus Berry",
+          "moves": [
+            "Fake Out",
+            "Flare Blitz",
+            "Parting Shot",
+            "Blaze Kick"
+          ],
+          "name": "Incineroar"
+        }
+      ],
+      "rejections": [],
+      "request": {
+        "focus": "",
+        "intentLock": "sun",
+        "mode": "archetype",
+        "promptLocks": {
+          "allowSlowMode": false,
+          "enemyNames": [],
+          "forbidTrickRoomDrift": true,
+          "megaTargetMax": 2,
+          "megaTargetMin": 1,
+          "noMegas": false,
+          "requiredPokemon": [],
+          "specificMega": null,
+          "tailwind": false,
+          "trickRoom": false,
+          "weather": "sun"
+        }
+      },
+      "retryCount": 0,
+      "selectedCoherence": {
+        "blockerCodes": [],
+        "isValid": true,
+        "issueCodes": [
+          "no_credible_lead"
+        ],
+        "penalty": 18
+      },
+      "selectedValidTeam": [
+        {
+          "ability": "Drought",
+          "item": "Charizardite Y",
+          "moves": [
+            "Heat Wave",
+            "Air Slash",
+            "Weather Ball",
+            "Protect"
+          ],
+          "name": "Mega Charizard Y"
+        },
+        {
+          "ability": "Drought",
+          "item": "Charcoal",
+          "moves": [
+            "Eruption",
+            "Heat Wave",
+            "Earth Power",
+            "Protect"
+          ],
+          "name": "Torkoal"
+        },
+        {
+          "ability": "Prankster",
+          "item": "Focus Sash",
+          "moves": [
+            "Tailwind",
+            "Moonblast",
+            "Encore",
+            "Protect"
+          ],
+          "name": "Whimsicott"
+        },
+        {
+          "ability": "Chlorophyll",
+          "item": "Miracle Seed",
+          "moves": [
+            "Sludge Bomb",
+            "Giga Drain",
+            "Sleep Powder",
+            "Protect"
+          ],
+          "name": "Venusaur"
+        },
+        {
+          "ability": "Inner Focus",
+          "item": "Leftovers",
+          "moves": [
+            "Extreme Speed",
+            "Dragon Claw",
+            "Stomping Tantrum",
+            "Protect"
+          ],
+          "name": "Dragonite"
+        },
+        {
+          "ability": "Intimidate",
+          "item": "Sitrus Berry",
+          "moves": [
+            "Fake Out",
+            "Flare Blitz",
+            "Parting Shot",
+            "Blaze Kick"
+          ],
+          "name": "Incineroar"
+        }
+      ]
+    }
+  },
+  {
+    "prompt": "make an anti-rain team",
+    "completed": true,
+    "elapsedMs": 1676,
+    "team": [
+      "Rotom-Wash",
+      "Primarina",
+      "Whimsicott",
+      "Venusaur",
+      "Kingambit",
+      "Dragonite"
+    ],
+    "validForExport": true,
+    "blockerCodes": [],
+    "statusText": "Draft Suggestion\nThis draft is built to establish rain quickly and convert that weather into immediate offensive pressure and positioning value. It keeps your prompt notes in scope.\nProjected grade: 70/100 | Structure 70/100 | Offense 78/100 | Vs Meta 76/100\nRotom-Wash\nSitrus Berry | Levitate | Calm\n20 HP / 6 Def / 32 SpA / 8 SpD\nThunderbolt / Will-O-Wisp / Protect / Charge Beam\nhas a safe positioning button. uses Sitrus Berry to support its role. Levitate is the preferred ability here.\nPrimarina\nFairy Feather | Liquid Voice | Modest\n24 HP / 6 Def / 32 SpA / 4 SpD\nSparkling Aria / Moonblast / Icy Wind / Protect\nhas a safe positioning button. uses Fairy Feather to support its role. Liquid Voice is the preferred ability here.\nWhimsicott\nFocus Sash | Prankster | Timid\n32 SpA / 2 SpD / 32 Spe\nTailwind / Moonblast / Encore / Protect\nadds fast mode speed control. has a safe positioning button. uses Focus Sash to support its role.\nVenusaur\nMiracle Seed | Chlorophyll | Modest\n20 HP / 6 Def / 32 SpA / 8 SpD\nSludge Bomb / Giga Drain / Sleep Powder / Protect\nhas a safe positioning button. uses Miracle Seed to support its role. Chlorophyll is the preferred ability here.\nKingambit\nBlack Glasses | Defiant | Adamant\n20 HP / 32 Atk / 6 Def / 8 SpD\nKowtow Cleave / Iron Head / Sucker Punch / Protect\nhas a safe positioning button. uses Black Glasses to support its role. Defiant is the preferred ability here.\nDragonite\nLeftovers | Inner Focus | Adamant\n20 HP / 32 Atk / 6 Def / 8 SpD\nExtreme Speed / Dragon Claw / Stomping Tantrum / Protect\nhas a safe positioning button. uses Leftovers to support its role. Inner Focus is the preferred ability here.",
+    "browserResponsivePing": 42,
+    "browserResponsivePingMs": 733,
+    "timeoutTriggered": false,
+    "freezeDebug": {
+      "candidateAttemptCount": 1,
+      "emergencyCutoffTriggered": false,
+      "exportValidationPassCount": 2,
+      "generationElapsedMs": 0,
+      "generationStartedAt": 9823.200000000186,
+      "lastCompletedFunction": "evaluateFinalExportCoherence",
+      "lastFunctionEntered": "evaluateFinalExportCoherence",
+      "loopIterationCount": 0,
+      "recursionBlocked": false,
+      "repairPassCount": 0,
+      "repeatedTeamSignatures": [],
+      "timeoutTriggered": false,
+      "timings": [
+        {
+          "isValid": true,
+          "ms": 2,
+          "name": "evaluateFinalExportCoherence",
+          "teamSize": 6
+        },
+        {
+          "ms": 86,
+          "name": "buildFastArchetypeTeam:anti_rain",
+          "names": "Rotom-Wash, Primarina, Whimsicott, Venusaur, Kingambit, Dragonite",
+          "selected": true
+        },
+        {
+          "completed": true,
+          "fastPathIntent": "anti_rain",
+          "ms": 371,
+          "name": "generateAiBuilderDraft"
+        },
+        {
+          "isValid": true,
+          "ms": 16,
+          "name": "evaluateFinalExportCoherence",
+          "teamSize": 6
+        }
+      ]
+    },
+    "generationDebug": {
+      "fallbackUsed": true,
+      "fallbackWarning": "Fast-path anti_rain builder used.",
+      "finalErrorBlockerCodes": [],
+      "finalErrorIssueCodes": [],
+      "finalSelectedTeam": [
+        {
+          "ability": "Levitate",
+          "item": "Sitrus Berry",
+          "moves": [
+            "Thunderbolt",
+            "Will-O-Wisp",
+            "Protect",
+            "Charge Beam"
+          ],
+          "name": "Rotom-Wash"
+        },
+        {
+          "ability": "Liquid Voice",
+          "item": "Fairy Feather",
+          "moves": [
+            "Sparkling Aria",
+            "Moonblast",
+            "Icy Wind",
+            "Protect"
+          ],
+          "name": "Primarina"
+        },
+        {
+          "ability": "Prankster",
+          "item": "Focus Sash",
+          "moves": [
+            "Tailwind",
+            "Moonblast",
+            "Encore",
+            "Protect"
+          ],
+          "name": "Whimsicott"
+        },
+        {
+          "ability": "Chlorophyll",
+          "item": "Miracle Seed",
+          "moves": [
+            "Sludge Bomb",
+            "Giga Drain",
+            "Sleep Powder",
+            "Protect"
+          ],
+          "name": "Venusaur"
+        },
+        {
+          "ability": "Defiant",
+          "item": "Black Glasses",
+          "moves": [
+            "Kowtow Cleave",
+            "Iron Head",
+            "Sucker Punch",
+            "Protect"
+          ],
+          "name": "Kingambit"
+        },
+        {
+          "ability": "Inner Focus",
+          "item": "Leftovers",
+          "moves": [
+            "Extreme Speed",
+            "Dragon Claw",
+            "Stomping Tantrum",
+            "Protect"
+          ],
+          "name": "Dragonite"
+        }
+      ],
+      "rejections": [],
+      "request": {
+        "focus": "",
+        "intentLock": "anti_rain",
+        "mode": "archetype",
+        "promptLocks": {
+          "allowSlowMode": false,
+          "enemyNames": [],
+          "forbidTrickRoomDrift": true,
+          "megaTargetMax": 2,
+          "megaTargetMin": 1,
+          "noMegas": false,
+          "requiredPokemon": [],
+          "specificMega": null,
+          "tailwind": false,
+          "trickRoom": false,
+          "weather": "rain"
+        }
+      },
+      "retryCount": 0,
+      "selectedCoherence": {
+        "blockerCodes": [],
+        "isValid": true,
+        "issueCodes": [
+          "no_credible_lead"
+        ],
+        "penalty": 18
+      },
+      "selectedValidTeam": [
+        {
+          "ability": "Levitate",
+          "item": "Sitrus Berry",
+          "moves": [
+            "Thunderbolt",
+            "Will-O-Wisp",
+            "Protect",
+            "Charge Beam"
+          ],
+          "name": "Rotom-Wash"
+        },
+        {
+          "ability": "Liquid Voice",
+          "item": "Fairy Feather",
+          "moves": [
+            "Sparkling Aria",
+            "Moonblast",
+            "Icy Wind",
+            "Protect"
+          ],
+          "name": "Primarina"
+        },
+        {
+          "ability": "Prankster",
+          "item": "Focus Sash",
+          "moves": [
+            "Tailwind",
+            "Moonblast",
+            "Encore",
+            "Protect"
+          ],
+          "name": "Whimsicott"
+        },
+        {
+          "ability": "Chlorophyll",
+          "item": "Miracle Seed",
+          "moves": [
+            "Sludge Bomb",
+            "Giga Drain",
+            "Sleep Powder",
+            "Protect"
+          ],
+          "name": "Venusaur"
+        },
+        {
+          "ability": "Defiant",
+          "item": "Black Glasses",
+          "moves": [
+            "Kowtow Cleave",
+            "Iron Head",
+            "Sucker Punch",
+            "Protect"
+          ],
+          "name": "Kingambit"
+        },
+        {
+          "ability": "Inner Focus",
+          "item": "Leftovers",
+          "moves": [
+            "Extreme Speed",
+            "Dragon Claw",
+            "Stomping Tantrum",
+            "Protect"
+          ],
+          "name": "Dragonite"
+        }
+      ]
+    }
+  },
+  {
+    "prompt": "make a balance team",
+    "completed": true,
+    "elapsedMs": 2234,
+    "team": [
+      "Incineroar",
+      "Whimsicott",
+      "Mega Kangaskhan",
+      "Garchomp",
+      "Primarina",
+      "Kingambit"
+    ],
+    "validForExport": true,
+    "blockerCodes": [],
+    "statusText": "Draft Suggestion\nThis draft aims for broad matchup coverage, cleaner pivoting, and enough defensive backbone to stay adaptable. It keeps your prompt notes in scope. Mega options: Mega Kangaskhan; only one can Mega Evolve in a game.\nProjected grade: 72/100 | Structure 80/100 | Offense 80/100 | Vs Meta 72/100\nIncineroar\nSitrus Berry | Intimidate | Careful\n28 HP / 32 Atk / 4 Def / 2 SpD\nFake Out / Flare Blitz / Parting Shot / Blaze Kick\ngives the team turn-one tempo. keeps momentum moving. uses Sitrus Berry to support its role.\nWhimsicott\nFocus Sash | Prankster | Timid\n32 SpA / 2 SpD / 32 Spe\nTailwind / Moonblast / Encore / Protect\nadds fast mode speed control. has a safe positioning button. uses Focus Sash to support its role.\nMega Kangaskhan\nKangaskhanite | Parental Bond | Jolly\n24 HP / 32 Atk / 6 Def / 4 SpD\nFake Out / Double-Edge / Sucker Punch / Protect\ngives the team turn-one tempo. has a safe positioning button. uses Kangaskhanite to support its role.\nGarchomp\nYache Berry | Rough Skin | Jolly\n32 Atk / 2 SpD / 32 Spe\nEarthquake / Dragon Claw / Rock Slide / Protect\nhas a safe positioning button. uses Yache Berry to support its role. Rough Skin is the preferred ability here.\nPrimarina\nFairy Feather | Liquid Voice | Modest\n24 HP / 6 Def / 32 SpA / 4 SpD\nSparkling Aria / Moonblast / Icy Wind / Protect\nhas a safe positioning button. uses Fairy Feather to support its role. Liquid Voice is the preferred ability here.\nKingambit\nBlack Glasses | Defiant | Adamant\n20 HP / 32 Atk / 6 Def / 8 SpD\nKowtow Cleave / Iron Head / Sucker Punch / Protect\nhas a safe positioning button. uses Black Glasses to support its role. Defiant is the preferred ability here.",
+    "browserResponsivePing": 42,
+    "browserResponsivePingMs": 337,
+    "timeoutTriggered": false,
+    "freezeDebug": {
+      "candidateAttemptCount": 1,
+      "emergencyCutoffTriggered": false,
+      "exportValidationPassCount": 2,
+      "generationElapsedMs": 0,
+      "generationStartedAt": 13433.200000000186,
+      "lastCompletedFunction": "evaluateFinalExportCoherence",
+      "lastFunctionEntered": "evaluateFinalExportCoherence",
+      "loopIterationCount": 0,
+      "recursionBlocked": false,
+      "repairPassCount": 0,
+      "repeatedTeamSignatures": [],
+      "timeoutTriggered": false,
+      "timings": [
+        {
+          "isValid": true,
+          "ms": 2,
+          "name": "evaluateFinalExportCoherence",
+          "teamSize": 6
+        },
+        {
+          "ms": 159,
+          "name": "buildFastArchetypeTeam:balance",
+          "names": "Incineroar, Whimsicott, Mega Kangaskhan, Garchomp, Primarina, Kingambit",
+          "selected": true
+        },
+        {
+          "completed": true,
+          "fastPathIntent": "balance",
+          "ms": 514,
+          "name": "generateAiBuilderDraft"
+        },
+        {
+          "isValid": true,
+          "ms": 7,
+          "name": "evaluateFinalExportCoherence",
+          "teamSize": 6
+        }
+      ]
+    },
+    "generationDebug": {
+      "fallbackUsed": true,
+      "fallbackWarning": "Fast-path balance builder used.",
+      "finalErrorBlockerCodes": [],
+      "finalErrorIssueCodes": [],
+      "finalSelectedTeam": [
+        {
+          "ability": "Intimidate",
+          "item": "Sitrus Berry",
+          "moves": [
+            "Fake Out",
+            "Flare Blitz",
+            "Parting Shot",
+            "Blaze Kick"
+          ],
+          "name": "Incineroar"
+        },
+        {
+          "ability": "Prankster",
+          "item": "Focus Sash",
+          "moves": [
+            "Tailwind",
+            "Moonblast",
+            "Encore",
+            "Protect"
+          ],
+          "name": "Whimsicott"
+        },
+        {
+          "ability": "Parental Bond",
+          "item": "Kangaskhanite",
+          "moves": [
+            "Fake Out",
+            "Double-Edge",
+            "Sucker Punch",
+            "Protect"
+          ],
+          "name": "Mega Kangaskhan"
+        },
+        {
+          "ability": "Rough Skin",
+          "item": "Yache Berry",
+          "moves": [
+            "Earthquake",
+            "Dragon Claw",
+            "Rock Slide",
+            "Protect"
+          ],
+          "name": "Garchomp"
+        },
+        {
+          "ability": "Liquid Voice",
+          "item": "Fairy Feather",
+          "moves": [
+            "Sparkling Aria",
+            "Moonblast",
+            "Icy Wind",
+            "Protect"
+          ],
+          "name": "Primarina"
+        },
+        {
+          "ability": "Defiant",
+          "item": "Black Glasses",
+          "moves": [
+            "Kowtow Cleave",
+            "Iron Head",
+            "Sucker Punch",
+            "Protect"
+          ],
+          "name": "Kingambit"
+        }
+      ],
+      "rejections": [],
+      "request": {
+        "focus": "",
+        "intentLock": "balance",
+        "mode": "archetype",
+        "promptLocks": {
+          "allowSlowMode": false,
+          "enemyNames": [],
+          "forbidTrickRoomDrift": true,
+          "megaTargetMax": 2,
+          "megaTargetMin": 1,
+          "noMegas": false,
+          "requiredPokemon": [],
+          "specificMega": null,
+          "tailwind": false,
+          "trickRoom": false,
+          "weather": ""
+        }
+      },
+      "retryCount": 0,
+      "selectedCoherence": {
+        "blockerCodes": [],
+        "isValid": true,
+        "issueCodes": [
+          "no_credible_lead"
+        ],
+        "penalty": 18
+      },
+      "selectedValidTeam": [
+        {
+          "ability": "Intimidate",
+          "item": "Sitrus Berry",
+          "moves": [
+            "Fake Out",
+            "Flare Blitz",
+            "Parting Shot",
+            "Blaze Kick"
+          ],
+          "name": "Incineroar"
+        },
+        {
+          "ability": "Prankster",
+          "item": "Focus Sash",
+          "moves": [
+            "Tailwind",
+            "Moonblast",
+            "Encore",
+            "Protect"
+          ],
+          "name": "Whimsicott"
+        },
+        {
+          "ability": "Parental Bond",
+          "item": "Kangaskhanite",
+          "moves": [
+            "Fake Out",
+            "Double-Edge",
+            "Sucker Punch",
+            "Protect"
+          ],
+          "name": "Mega Kangaskhan"
+        },
+        {
+          "ability": "Rough Skin",
+          "item": "Yache Berry",
+          "moves": [
+            "Earthquake",
+            "Dragon Claw",
+            "Rock Slide",
+            "Protect"
+          ],
+          "name": "Garchomp"
+        },
+        {
+          "ability": "Liquid Voice",
+          "item": "Fairy Feather",
+          "moves": [
+            "Sparkling Aria",
+            "Moonblast",
+            "Icy Wind",
+            "Protect"
+          ],
+          "name": "Primarina"
+        },
+        {
+          "ability": "Defiant",
+          "item": "Black Glasses",
+          "moves": [
+            "Kowtow Cleave",
+            "Iron Head",
+            "Sucker Punch",
+            "Protect"
+          ],
+          "name": "Kingambit"
+        }
+      ]
+    }
+  }
+]

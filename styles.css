@@ -480,7 +480,7 @@ h3 { font-size: 1.2rem; }
   align-items: center;
 }
 .sp-stepper-row {
-  grid-template-columns: 42px minmax(54px, 1fr) 42px;
+  grid-template-columns: 42px minmax(54px, 1fr) 42px minmax(48px, auto);
   gap: 8px;
 }
 .slider-value,
@@ -522,6 +522,12 @@ h3 { font-size: 1.2rem; }
 .sp-stepper-button:focus-visible {
   border-color: rgba(255, 93, 143, 0.5);
   background: rgba(47, 28, 72, 0.98);
+}
+.sp-stepper-button--max {
+  min-width: 48px;
+  padding-inline: 8px;
+  font-size: 0.72rem;
+  letter-spacing: 0;
 }
 .sp-stepper-value {
   min-width: 54px;
@@ -800,6 +806,28 @@ input:focus, select:focus, textarea:focus {
   color: var(--text);
   font-size: 0.9rem;
 }
+.damage-result-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin: 12px 0;
+}
+.damage-result-grid div {
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: rgba(255,255,255,0.045);
+}
+.damage-result-grid span {
+  display: block;
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+.damage-result-grid strong {
+  display: block;
+  margin-top: 4px;
+  color: var(--text);
+}
 
 .import-results { display: grid; gap: 12px; margin-top: 16px; }
 .confirmed-roster { display: grid; gap: 10px; margin-top: 18px; }
@@ -893,7 +921,7 @@ input:focus, select:focus, textarea:focus {
   transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
 }
 .team-stats-grid .slider-input-row { grid-template-columns: minmax(0, 1fr) 80px; }
-.team-stats-grid .sp-stepper-row { grid-template-columns: 40px minmax(52px, 1fr) 40px; }
+.team-stats-grid .sp-stepper-row { grid-template-columns: 40px minmax(52px, 1fr) 40px minmax(48px, auto); }
 .team-stats-grid .stat-number {
   font-size: 0.92rem;
 }
@@ -1610,6 +1638,204 @@ body.is-applying-team .team-builder-grid {
 .site-footer__link:hover { text-decoration: underline; }
 .footer-link-btn { background: none; border: none; color: var(--accent-vivid); cursor: pointer; font-size: 0.83rem; font-family: inherit; padding: 0; text-decoration-line: underline; text-decoration-color: transparent; transition: text-decoration-color 150ms; }
 .footer-link-btn:hover { text-decoration-color: var(--accent-vivid); }
+
+.calc-mode-panel,
+.database-filter-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.segmented-control {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 4px;
+  width: fit-content;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: rgba(13, 14, 34, 0.82);
+}
+.segmented-control__button {
+  min-height: 36px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 7px;
+  color: var(--muted);
+  background: transparent;
+  cursor: pointer;
+}
+.segmented-control__button.is-active {
+  color: var(--text);
+  background: rgba(93, 169, 255, 0.18);
+}
+.calc-team-selectors,
+.database-results-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) auto;
+  gap: 12px;
+  align-items: end;
+}
+.database-results-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  margin-top: 16px;
+}
+.database-filter-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.database-list {
+  display: grid;
+  gap: 8px;
+  max-height: 520px;
+  overflow: auto;
+}
+.database-list__row {
+  display: grid;
+  gap: 4px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: rgba(13, 14, 34, 0.72);
+}
+.database-list__row span { color: var(--accent-vivid); font-size: 0.82rem; text-transform: capitalize; }
+.database-list__row small { color: var(--muted); line-height: 1.35; }
+
+.champions-type-chart-wrap {
+  overflow: auto;
+  max-width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+.champions-type-chart {
+  width: 100%;
+  min-width: 820px;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+}
+.champions-type-chart th,
+.champions-type-chart td {
+  padding: 8px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  text-align: center;
+}
+.champions-type-chart thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: rgba(14, 15, 36, 0.98);
+}
+.champions-type-chart__pokemon img {
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto 2px;
+}
+.champions-type-chart__pokemon span {
+  display: block;
+  max-width: 86px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.champions-type-chart__type {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  background: rgba(14, 15, 36, 0.98);
+  text-align: left !important;
+  white-space: nowrap;
+}
+.champions-type-chart__type span {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  margin-right: 8px;
+}
+.champions-type-chart__cell {
+  font-weight: 800;
+  border-radius: 7px;
+}
+.champions-type-chart__cell--weak { color: #ffd2d2; background: rgba(255, 80, 80, 0.22); }
+.champions-type-chart__cell--resist { color: #c9f8da; background: rgba(66, 212, 160, 0.18); }
+.champions-type-chart__cell--immune { color: #cfd3e8; background: rgba(70, 76, 102, 0.42); }
+.champions-type-chart__cell--neutral { color: var(--muted); background: rgba(255,255,255,0.04); }
+
+.team-slot-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: none;
+}
+.team-slot-modal.is-open { display: block; }
+.team-slot-modal__scrim {
+  position: absolute;
+  inset: 0;
+  background: rgba(4, 5, 14, 0.68);
+}
+.team-slot-modal__panel {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: min(720px, 100vw);
+  height: 100%;
+  overflow: auto;
+  padding: 22px;
+  border-left: 1px solid var(--line);
+  background: rgba(13, 14, 34, 0.98);
+  box-shadow: -18px 0 50px rgba(0,0,0,0.45);
+}
+.team-slot-modal__close {
+  position: sticky;
+  top: 0;
+  float: right;
+  width: 40px;
+  height: 40px;
+  border-radius: 9px;
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,0.06);
+  color: var(--text);
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+.modal-editor-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.modal-sp-grid { margin-top: 10px; }
+.modal-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 8px;
+}
+.modal-stat-grid div {
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: rgba(255,255,255,0.04);
+}
+.modal-stat-grid span,
+.modal-stat-grid em { display: block; color: var(--muted); font-style: normal; font-size: 0.78rem; }
+.modal-stat-grid strong { display: block; color: var(--text); font-size: 1rem; }
+.modal-warning-list { display: flex; flex-wrap: wrap; gap: 6px; }
+
+.roster-search-input--small { max-width: 170px; }
+
+@media (max-width: 760px) {
+  .calc-team-selectors,
+  .database-filter-grid,
+  .database-results-grid,
+  .modal-editor-grid,
+  .modal-stat-grid,
+  .damage-result-grid {
+    grid-template-columns: 1fr;
+  }
+  .team-slot-modal__panel {
+    width: 100vw;
+    padding: 16px;
+  }
+}
 
 /* ── Filled slot highlight ── */
 .team-slot:not(:placeholder-shown) { border-color: rgba(176,110,255,0.48) !important; }

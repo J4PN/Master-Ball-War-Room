@@ -40,6 +40,7 @@
       <button class="tab-button is-active" data-tab-trigger="teambuilder">⚔ Teambuilder</button>
       <button class="tab-button" data-tab-trigger="damage">💥 Damage Calc</button>
       <button class="tab-button" data-tab-trigger="speed">⚡ Speed Calc</button>
+      <button class="tab-button" data-tab-trigger="database">Champions DB</button>
       <button class="tab-button" data-tab-trigger="meta">📊 Meta</button>
     </nav>
 
@@ -73,6 +74,23 @@
             <div class="section-heading">
               <p class="section-kicker">Battle Setup</p>
               <h2>Attacker vs Defender</h2>
+            </div>
+            <div class="calc-mode-panel">
+              <div class="segmented-control" aria-label="Damage calculator mode">
+                <button class="segmented-control__button is-active" type="button" data-calc-mode="single">Single Pokemon</button>
+                <button class="segmented-control__button" type="button" data-calc-mode="team">Team vs Team</button>
+              </div>
+              <div class="calc-team-selectors">
+                <label>
+                  Saved team attacker
+                  <select id="calc-team-attacker"></select>
+                </label>
+                <label>
+                  Saved team defender
+                  <select id="calc-team-defender"></select>
+                </label>
+                <button id="calc-load-team-picks" class="action-button ghost" type="button">Load Team Picks</button>
+              </div>
             </div>
 
             <div class="combatants">
@@ -526,6 +544,16 @@
                   <option value="desc">High to low</option>
                   <option value="asc">Low to high</option>
                 </select>
+                <input id="roster-ability-filter" class="roster-search-input roster-search-input--small" placeholder="Ability" />
+                <input id="roster-move-filter" class="roster-search-input roster-search-input--small" placeholder="Move learned" />
+                <select id="roster-mega-filter" class="roster-type-select" aria-label="Mega capable filter">
+                  <option value="">Mega: Any</option>
+                  <option value="yes">Mega capable</option>
+                  <option value="no">No Mega</option>
+                </select>
+                <select id="roster-role-filter" class="roster-type-select" aria-label="Role tag filter">
+                  <option value="">Any Role Tag</option>
+                </select>
                 <span id="roster-count" class="roster-count"></span>
               </div>
               <div class="roster-stat-filter-grid" id="roster-stat-filter-grid"></div>
@@ -582,6 +610,27 @@
         </div>
       </section>
 
+      <section class="tab-panel" data-tab-panel="database">
+        <div class="panel-grid speed-layout">
+          <section class="card">
+            <div class="section-heading">
+              <p class="section-kicker">Champions Database</p>
+              <h2>Abilities And Items</h2>
+            </div>
+            <div class="database-filter-grid">
+              <label>Ability search<input id="ability-db-search" class="combo-input" placeholder="Search abilities" /></label>
+              <label>Mega ability<select id="ability-db-mega-filter"><option value="">Any</option><option value="yes">Used by Mega</option><option value="no">Not Mega-only</option></select></label>
+              <label>Item search<input id="item-db-search" class="combo-input" placeholder="Search items" /></label>
+              <label>Item category<select id="item-db-category"><option value="">Any Category</option><option value="mega">Mega Stone</option><option value="berry">Berry</option><option value="choice">Choice</option><option value="defensive">Defensive</option><option value="offensive">Offensive</option><option value="utility">Utility</option><option value="recovery">Recovery</option><option value="focus">Focus/Sash-style</option></select></label>
+            </div>
+            <div class="database-results-grid">
+              <section><h3>Abilities</h3><div id="ability-db-results" class="database-list"></div></section>
+              <section><h3>Items</h3><div id="item-db-results" class="database-list"></div></section>
+            </div>
+          </section>
+        </div>
+      </section>
+
       <section class="tab-panel" data-tab-panel="meta">
         <div class="panel-grid speed-layout">
           <section class="card">
@@ -617,6 +666,7 @@
                 <p class="result-copy">Credit to the owner of PokeCounter for inspiration on matchup presentation and team-analysis clarity.</p>
                 <p class="result-copy"><strong>pkmn.help inspiration:</strong> <a href="https://www.pkmn.help/about/" target="_blank" rel="noreferrer">pkmn.help/about</a></p>
                 <p class="result-copy">Credit to wavebeem's pkmn.help for type-chart and matchup-calculator inspiration.</p>
+                <p class="result-copy"><strong>Inspired by PokéBase tools and layout patterns.</strong><br>PokéBase: <a href="https://pokebase.app/" target="_blank" rel="noreferrer">https://pokebase.app/</a></p>
               </div>
               <div class="analysis-stack">
                 <p class="result-title">Sources</p>
@@ -704,6 +754,8 @@
         <span class="site-footer__by">by J4PN</span>
         <span class="site-footer__sep">·</span>
         <button class="footer-link-btn" data-tab-trigger="credits">Credits</button>
+        <span class="site-footer__sep">·</span>
+        <a class="site-footer__link" href="https://pokebase.app/" target="_blank" rel="noreferrer">Inspired by PokéBase</a>
         <span class="site-footer__sep">·</span>
         <button class="footer-link-btn" data-tab-trigger="bugs">🐛 Report a Bug</button>
         <span class="site-footer__sep">·</span>

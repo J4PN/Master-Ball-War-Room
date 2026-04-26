@@ -1,0 +1,143 @@
+{
+  "typeChart": {
+    "displayed": 18,
+    "icons": 6,
+    "hasNet": true
+  },
+  "modal": {
+    "opened": true,
+    "slot1Spd": "1",
+    "slot2HpPreserved": true
+  },
+  "pokemonFilters": {
+    "count": "1 / 269",
+    "containsCharizardOrTorkoal": true
+  },
+  "moveFilters": {
+    "containsHeatWave": true,
+    "rows": 5
+  },
+  "abilityItemFilters": {
+    "abilityHasDrought": true,
+    "itemHasStone": true
+  },
+  "damageUx": {
+    "attackerLoaded": "Mega Charizard Y",
+    "defenderLoaded": "Dragonite",
+    "hasModeButtons": 2
+  },
+  "exportImport": {
+    "exportHasTeam": true
+  },
+  "freeze": {
+    "ping": 42,
+    "pingMs": 12,
+    "perfDebug": {
+      "damageUxTimings": [
+        {
+          "filled": 0,
+          "ms": 1,
+          "name": "render-team-selectors"
+        },
+        {
+          "filled": 6,
+          "ms": 0,
+          "name": "render-team-selectors"
+        },
+        {
+          "filled": 6,
+          "ms": 1,
+          "name": "render-team-selectors"
+        },
+        {
+          "attackerIndex": 0,
+          "defenderIndex": 4,
+          "ms": 4,
+          "name": "load-team-picks"
+        }
+      ],
+      "filterTimings": [
+        {
+          "cacheHit": false,
+          "count": 269,
+          "ms": 9,
+          "name": "pokemon-roster-filter"
+        },
+        {
+          "abilityCount": 80,
+          "itemCount": 0,
+          "ms": 2,
+          "name": "database-filter"
+        },
+        {
+          "abilityCount": 80,
+          "itemCount": 80,
+          "ms": 26,
+          "name": "database-filter"
+        },
+        {
+          "cacheHit": false,
+          "count": 3,
+          "ms": 3,
+          "name": "pokemon-roster-filter"
+        },
+        {
+          "cacheHit": true,
+          "ms": 0,
+          "name": "pokemon-roster-filter"
+        },
+        {
+          "cacheHit": true,
+          "ms": 0,
+          "name": "pokemon-roster-filter"
+        },
+        {
+          "cacheHit": true,
+          "ms": 0,
+          "name": "pokemon-roster-filter"
+        },
+        {
+          "cacheHit": false,
+          "count": 1,
+          "ms": 3,
+          "name": "pokemon-roster-filter"
+        },
+        {
+          "count": 72,
+          "ms": 383,
+          "name": "move-picker-filter"
+        },
+        {
+          "count": 5,
+          "ms": 9,
+          "name": "move-picker-filter"
+        },
+        {
+          "abilityCount": 80,
+          "itemCount": 80,
+          "ms": 31,
+          "name": "database-filter"
+        },
+        {
+          "abilityCount": 1,
+          "itemCount": 59,
+          "ms": 33,
+          "name": "database-filter"
+        }
+      ],
+      "lastFilterKey": "{\"query\":\"\",\"anyType\":\"Fire\",\"type1\":\"\",\"type2\":\"\",\"abilityQuery\":\"drought\",\"moveQuery\":\"heat wave\",\"megaFilter\":\"\",\"roleFilter\":\"\",\"sortKey\":\"name\",\"direction\":-1,\"minMax\":{\"hp\":{\"min\":null,\"max\":null},\"atk\":{\"min\":null,\"max\":null},\"def\":{\"min\":null,\"max\":null},\"spa\":{\"min\":100,\"max\":null},\"spd\":{\"min\":null,\"max\":null},\"spe\":{\"min\":null,\"max\":null},\"total\":{\"min\":null,\"max\":null}}}",
+      "modalTimings": [
+        {
+          "ms": 3,
+          "name": "open-team-slot-modal",
+          "slotIndex": 0
+        }
+      ],
+      "rosterCacheHit": false
+    }
+  },
+  "credits": {
+    "mentionsPokebase": true,
+    "hasLink": true
+  }
+}
