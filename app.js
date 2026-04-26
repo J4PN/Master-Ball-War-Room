@@ -8541,6 +8541,64 @@
     return (templates[intent] || templates.balance).map((name) => (noMegas && fallbackReplacements[name]) ? fallbackReplacements[name] : name);
   }
 
+  function getGcHardTrReplacementNames(role, context = {}) {
+    const requestedMega = context.promptLocks?.specificMega || "";
+    const byRole = {
+      tr_setter: ["Farigiraf", "Oranguru", "Hatterene", "Slowbro", "Mega Slowbro"],
+      redirector: ["Sinistcha", "Clefable", "Maushold", "Alcremie"],
+      fire_breaker: ["Torkoal", "Camerupt", "Mega Camerupt", "Skeledirge", "Armarouge"],
+      mega_breaker: [requestedMega, "Mega Ampharos", "Mega Abomasnow", "Mega Camerupt", "Mega Slowbro", "Mega Kingambit"],
+      slow_breaker: ["Kingambit", "Tyranitar", "Conkeldurr", "Ursaluna", "Garganacl"],
+      support_pivot: ["Incineroar", "Arcanine", "Scrafty", "Hitmontop"]
+    };
+    return (byRole[role] || []).filter(Boolean);
+  }
+
+  function getFastPathTemplateRole(intent, index, name) {
+    if (intent !== "tr") return "flex";
+    const key = normalizeNameKey(name);
+    if (index === 0 || key === "farigiraf") return "tr_setter";
+    if (index === 1 || key === "sinistcha") return "redirector";
+    if (key === "torkoal" || key === "mega camerupt" || key === "camerupt") return "fire_breaker";
+    if (isMegaEntry(getRosterEntry(name))) return "mega_breaker";
+    if (key === "incineroar") return "support_pivot";
+    return "slow_breaker";
+  }
+
+  function explainFastPathCandidateRejection(name, entries, context = {}) {
+    const entry = getRosterEntry(name);
+    if (!entry) return "not in the Champions roster";
+    if (context.promptLocks?.noMegas && isMegaEntry(entry)) return "Megas are disabled by the request";
+    if (!isEntryAllowedInActiveRuleset(entry)) return isGcModeActive()
+      ? "not on the official GC eligible roster for this active mode"
+      : "not allowed by the active legality ruleset";
+    if (entries.some((picked) => normalizeNameKey(picked.name) === normalizeNameKey(entry.name))) return "duplicate template pick";
+    if (violatesSpeciesClause(entries, entry)) return "would violate species clause";
+    if (isAutoRepairFillerPokemon(entry) && !isExplicitlyRequestedSpecies(entry, context)) return "auto-repair filler filter rejected it";
+    return "";
+  }
+
+  function resolveFastPathTemplateEntry(name, role, entries, context, debugRows) {
+    const tryNames = [name, ...getGcHardTrReplacementNames(role, context)];
+    for (const candidateName of [...new Set(tryNames.filter(Boolean))]) {
+      const rejection = explainFastPathCandidateRejection(candidateName, entries, context);
+      if (rejection) {
+        debugRows.push({ requested: name, candidate: candidateName, role, accepted: false, reason: rejection });
+        continue;
+      }
+      const entry = getRosterEntry(candidateName);
+      debugRows.push({
+        requested: name,
+        candidate: candidateName,
+        role,
+        accepted: true,
+        reason: candidateName === name ? "template accepted" : `GC-legal ${role} replacement`
+      });
+      return entry;
+    }
+    return null;
+  }
+
   function getFastPathMoveOverrides(entry, intent) {
     const key = normalizeNameKey(entry?.name || "");
     const bySpecies = {
@@ -8683,21 +8741,50 @@
     const startedAt = enterFreezeScope(`buildFastArchetypeTeam:${intent}`);
     const entries = [];
     const pickedKeys = new Set();
+    const gcFailDebug = {
+      active: isGcModeActive(),
+      intent,
+      requestedTemplates: [],
+      rejectedPokemon: [],
+      replacements: [],
+      finalEntries: [],
+      finalBlockers: [],
+      reason: ""
+    };
+    if (typeof window !== "undefined" && isGcModeActive() && intent === "tr") {
+      window.__MBWR_GC_BUILD_FAIL_DEBUG = gcFailDebug;
+    }
     const addByName = (name) => {
       const entry = getRosterEntry(name);
-      if (!entry) return false;
+      if (!entry) {
+        if (isGcModeActive() && intent === "tr") gcFailDebug.rejectedPokemon.push({ pokemon: name, reason: "not in the Champions roster" });
+        return false;
+      }
       const key = normalizeNameKey(entry.name);
-      if (pickedKeys.has(key) || violatesSpeciesClause(entries, entry)) return false;
-      if (context.promptLocks?.noMegas && isMegaEntry(entry)) return false;
-      if (!isEntryAllowedInActiveRuleset(entry)) return false;
-      if (isAutoRepairFillerPokemon(entry) && !isExplicitlyRequestedSpecies(entry, context)) return false;
+      const rejection = explainFastPathCandidateRejection(name, entries, context);
+      if (rejection) {
+        if (isGcModeActive() && intent === "tr") gcFailDebug.rejectedPokemon.push({ pokemon: name, reason: rejection });
+        return false;
+      }
       entries.push(entry);
       pickedKeys.add(key);
       return true;
     };
     (context.promptLocks?.requiredPokemon || []).forEach(addByName);
-    getFastPathTemplateNames(intent, context).forEach((name) => {
-      if (entries.length < 6) addByName(name);
+    const templateNames = getFastPathTemplateNames(intent, context);
+    gcFailDebug.requestedTemplates = templateNames.slice();
+    templateNames.forEach((name, index) => {
+      if (entries.length >= 6) return;
+      if (isGcModeActive() && intent === "tr") {
+        const role = getFastPathTemplateRole(intent, index, name);
+        const resolved = resolveFastPathTemplateEntry(name, role, entries, context, gcFailDebug.replacements);
+        if (resolved) {
+          entries.push(resolved);
+          pickedKeys.add(normalizeNameKey(resolved.name));
+        }
+        return;
+      }
+      addByName(name);
     });
     getFastPathTemplateNames("balance", context).forEach((name) => {
       if (entries.length < 6) addByName(name);
@@ -8707,6 +8794,8 @@
       addByName(entry.name);
     }
     if (entries.length < 6) {
+      gcFailDebug.finalEntries = entries.map((entry) => entry.name);
+      gcFailDebug.reason = `Only ${entries.length}/6 legal Hard TR entries could be resolved.`;
       completeFreezeScope(`buildFastArchetypeTeam:${intent}`, startedAt, { selected: false, reason: "not_enough_entries" });
       return null;
     }
@@ -8725,18 +8814,26 @@
       await yieldMainThread();
     }
     if (draft.some((set) => !set)) {
+      gcFailDebug.finalEntries = entries.slice(0, 6).map((entry) => entry.name);
+      gcFailDebug.reason = "At least one GC Hard TR template entry could not produce a legal complete set.";
+      gcFailDebug.finalBlockers = draft.map((set, index) => set ? null : { pokemon: entries[index]?.name || "(unknown)", reason: "legal set generation failed" }).filter(Boolean);
       completeFreezeScope(`buildFastArchetypeTeam:${intent}`, startedAt, { selected: false, reason: "set_failed" });
       return null;
     }
     applyItemClauseToDraft(draft);
     const coherence = evaluateFinalExportCoherence(draft);
     if (!coherence.isValid) {
+      gcFailDebug.finalEntries = draft.map((set) => set.name);
+      gcFailDebug.reason = "GC Hard TR draft failed final export coherence.";
+      gcFailDebug.finalBlockers = [...(coherence.blockers || []), ...(coherence.issues || [])].map((issue) => ({ code: issue.code, reason: issue.text || issue.code }));
       recordFinalGenerationRejection(draft, coherence, null, `fast_path_${intent}: export coherence blockers`);
       completeFreezeScope(`buildFastArchetypeTeam:${intent}`, startedAt, { selected: false, blockerCodes: getGenerationBlockerCodes(coherence) });
       return null;
     }
     const evaluation = buildFastPathEvaluation(draft, intent);
     const liveEval = { guidedScore: evaluation.averagedScores.overall, overall: evaluation.overallScore, fastPath: true };
+    gcFailDebug.finalEntries = draft.map((set) => set.name);
+    gcFailDebug.reason = "GC Hard TR fast path built successfully.";
     completeFreezeScope(`buildFastArchetypeTeam:${intent}`, startedAt, { selected: true, names: draft.map((set) => set.name).join(", ") });
     return { draft, evaluation, liveEval, request: fastContext.request, coherence, fastPathIntent: intent };
   }
@@ -8919,7 +9016,15 @@
         completeFreezeScope("generateAiBuilderDraft", startedAt, { recoveredAfterInvalidSelection: true, timedOut: !!timedOut });
         return;
       }
-      aiBuilderOutput.innerHTML = `<div class="status-note">${timedOut ? "Generation timed out safely before finding an export-safe draft. Fast fallback also failed, so try a narrower request or anchor Pokemon." : "Could not build an export-safe draft from the current request."}</div>`;
+      const gcDebug = typeof window !== "undefined" ? window.__MBWR_GC_BUILD_FAIL_DEBUG : null;
+      const gcBlockerText = gcDebug?.active && fastPathIntent === "tr"
+        ? [
+          gcDebug.reason,
+          ...(gcDebug.rejectedPokemon || []).slice(0, 6).map((row) => `${row.pokemon}: ${row.reason}`),
+          ...(gcDebug.finalBlockers || []).slice(0, 4).map((row) => `${row.pokemon || row.code || "blocker"}: ${row.reason}`)
+        ].filter(Boolean).join(" | ")
+        : "";
+      aiBuilderOutput.innerHTML = `<div class="status-note">${timedOut ? "Generation timed out safely before finding an export-safe draft. Fast fallback also failed, so try a narrower request or anchor Pokemon." : `Could not build an export-safe draft from the current request.${gcBlockerText ? ` ${escapeHtml(gcBlockerText)}` : ""}`}</div>`;
       completeFreezeScope("generateAiBuilderDraft", startedAt, { timedOut: !!timedOut });
       return;
     }
