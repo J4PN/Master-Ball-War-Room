@@ -1,0 +1,1074 @@
+{
+  "ruleset": "grand_challenge_2026_gc",
+  "displayName": "Grand Challenge (GC Legal)",
+  "sourceUrl": "https://web-view.app.pokemonchampions.jp/battle/pages/events/ic177676739583whusds/en/pokemon.html",
+  "capturedAt": "2026-04-26",
+  "sourceNote": "Official Pokemon Champions Grand Challenge eligible Pokemon page embedded roster.",
+  "eligible": [
+    {
+      "championsId": "0003-000",
+      "dex": 1,
+      "name": "Venusaur"
+    },
+    {
+      "championsId": "0006-000",
+      "dex": 1,
+      "name": "Charizard"
+    },
+    {
+      "championsId": "0009-000",
+      "dex": 1,
+      "name": "Blastoise"
+    },
+    {
+      "championsId": "0015-000",
+      "dex": 1,
+      "name": "Beedrill"
+    },
+    {
+      "championsId": "0018-000",
+      "dex": 1,
+      "name": "Pidgeot"
+    },
+    {
+      "championsId": "0024-000",
+      "dex": 1,
+      "name": "Arbok"
+    },
+    {
+      "championsId": "0025-000",
+      "dex": 1,
+      "name": "Pikachu"
+    },
+    {
+      "championsId": "0026-000",
+      "dex": 1,
+      "name": "Raichu"
+    },
+    {
+      "championsId": "0026-001",
+      "dex": 1,
+      "name": "Raichu (Alolan Form)"
+    },
+    {
+      "championsId": "0036-000",
+      "dex": 1,
+      "name": "Clefable"
+    },
+    {
+      "championsId": "0038-000",
+      "dex": 1,
+      "name": "Ninetales"
+    },
+    {
+      "championsId": "0038-001",
+      "dex": 1,
+      "name": "Ninetales (Alolan Form)"
+    },
+    {
+      "championsId": "0059-000",
+      "dex": 1,
+      "name": "Arcanine"
+    },
+    {
+      "championsId": "0059-001",
+      "dex": 1,
+      "name": "Arcanine (Hisuian Form)"
+    },
+    {
+      "championsId": "0065-000",
+      "dex": 1,
+      "name": "Alakazam"
+    },
+    {
+      "championsId": "0068-000",
+      "dex": 1,
+      "name": "Machamp"
+    },
+    {
+      "championsId": "0071-000",
+      "dex": 1,
+      "name": "Victreebel"
+    },
+    {
+      "championsId": "0080-000",
+      "dex": 1,
+      "name": "Slowbro"
+    },
+    {
+      "championsId": "0080-002",
+      "dex": 1,
+      "name": "Slowbro (Galarian Form)"
+    },
+    {
+      "championsId": "0094-000",
+      "dex": 1,
+      "name": "Gengar"
+    },
+    {
+      "championsId": "0115-000",
+      "dex": 1,
+      "name": "Kangaskhan"
+    },
+    {
+      "championsId": "0121-000",
+      "dex": 1,
+      "name": "Starmie"
+    },
+    {
+      "championsId": "0127-000",
+      "dex": 1,
+      "name": "Pinsir"
+    },
+    {
+      "championsId": "0128-000",
+      "dex": 1,
+      "name": "Tauros"
+    },
+    {
+      "championsId": "0128-001",
+      "dex": 1,
+      "name": "Tauros (Paldean Form (Combat Breed))"
+    },
+    {
+      "championsId": "0128-002",
+      "dex": 1,
+      "name": "Tauros (Paldean Form (Blaze Breed))"
+    },
+    {
+      "championsId": "0128-003",
+      "dex": 1,
+      "name": "Tauros (Paldean Form (Aqua Breed))"
+    },
+    {
+      "championsId": "0130-000",
+      "dex": 1,
+      "name": "Gyarados"
+    },
+    {
+      "championsId": "0132-000",
+      "dex": 1,
+      "name": "Ditto"
+    },
+    {
+      "championsId": "0134-000",
+      "dex": 1,
+      "name": "Vaporeon"
+    },
+    {
+      "championsId": "0135-000",
+      "dex": 1,
+      "name": "Jolteon"
+    },
+    {
+      "championsId": "0136-000",
+      "dex": 1,
+      "name": "Flareon"
+    },
+    {
+      "championsId": "0142-000",
+      "dex": 1,
+      "name": "Aerodactyl"
+    },
+    {
+      "championsId": "0143-000",
+      "dex": 1,
+      "name": "Snorlax"
+    },
+    {
+      "championsId": "0149-000",
+      "dex": 1,
+      "name": "Dragonite"
+    },
+    {
+      "championsId": "0154-000",
+      "dex": 1,
+      "name": "Meganium"
+    },
+    {
+      "championsId": "0157-000",
+      "dex": 1,
+      "name": "Typhlosion"
+    },
+    {
+      "championsId": "0157-001",
+      "dex": 1,
+      "name": "Typhlosion (Hisuian Form)"
+    },
+    {
+      "championsId": "0160-000",
+      "dex": 1,
+      "name": "Feraligatr"
+    },
+    {
+      "championsId": "0168-000",
+      "dex": 1,
+      "name": "Ariados"
+    },
+    {
+      "championsId": "0181-000",
+      "dex": 1,
+      "name": "Ampharos"
+    },
+    {
+      "championsId": "0184-000",
+      "dex": 1,
+      "name": "Azumarill"
+    },
+    {
+      "championsId": "0186-000",
+      "dex": 1,
+      "name": "Politoed"
+    },
+    {
+      "championsId": "0196-000",
+      "dex": 1,
+      "name": "Espeon"
+    },
+    {
+      "championsId": "0197-000",
+      "dex": 1,
+      "name": "Umbreon"
+    },
+    {
+      "championsId": "0199-000",
+      "dex": 1,
+      "name": "Slowking"
+    },
+    {
+      "championsId": "0199-001",
+      "dex": 1,
+      "name": "Slowking (Galarian Form)"
+    },
+    {
+      "championsId": "0205-000",
+      "dex": 1,
+      "name": "Forretress"
+    },
+    {
+      "championsId": "0208-000",
+      "dex": 1,
+      "name": "Steelix"
+    },
+    {
+      "championsId": "0212-000",
+      "dex": 1,
+      "name": "Scizor"
+    },
+    {
+      "championsId": "0214-000",
+      "dex": 1,
+      "name": "Heracross"
+    },
+    {
+      "championsId": "0227-000",
+      "dex": 1,
+      "name": "Skarmory"
+    },
+    {
+      "championsId": "0229-000",
+      "dex": 1,
+      "name": "Houndoom"
+    },
+    {
+      "championsId": "0248-000",
+      "dex": 1,
+      "name": "Tyranitar"
+    },
+    {
+      "championsId": "0279-000",
+      "dex": 1,
+      "name": "Pelipper"
+    },
+    {
+      "championsId": "0282-000",
+      "dex": 1,
+      "name": "Gardevoir"
+    },
+    {
+      "championsId": "0302-000",
+      "dex": 1,
+      "name": "Sableye"
+    },
+    {
+      "championsId": "0306-000",
+      "dex": 1,
+      "name": "Aggron"
+    },
+    {
+      "championsId": "0308-000",
+      "dex": 1,
+      "name": "Medicham"
+    },
+    {
+      "championsId": "0310-000",
+      "dex": 1,
+      "name": "Manectric"
+    },
+    {
+      "championsId": "0319-000",
+      "dex": 1,
+      "name": "Sharpedo"
+    },
+    {
+      "championsId": "0323-000",
+      "dex": 1,
+      "name": "Camerupt"
+    },
+    {
+      "championsId": "0324-000",
+      "dex": 1,
+      "name": "Torkoal"
+    },
+    {
+      "championsId": "0334-000",
+      "dex": 1,
+      "name": "Altaria"
+    },
+    {
+      "championsId": "0350-000",
+      "dex": 1,
+      "name": "Milotic"
+    },
+    {
+      "championsId": "0351-000",
+      "dex": 1,
+      "name": "Castform"
+    },
+    {
+      "championsId": "0354-000",
+      "dex": 1,
+      "name": "Banette"
+    },
+    {
+      "championsId": "0358-000",
+      "dex": 1,
+      "name": "Chimecho"
+    },
+    {
+      "championsId": "0359-000",
+      "dex": 1,
+      "name": "Absol"
+    },
+    {
+      "championsId": "0362-000",
+      "dex": 1,
+      "name": "Glalie"
+    },
+    {
+      "championsId": "0389-000",
+      "dex": 1,
+      "name": "Torterra"
+    },
+    {
+      "championsId": "0392-000",
+      "dex": 1,
+      "name": "Infernape"
+    },
+    {
+      "championsId": "0395-000",
+      "dex": 1,
+      "name": "Empoleon"
+    },
+    {
+      "championsId": "0405-000",
+      "dex": 1,
+      "name": "Luxray"
+    },
+    {
+      "championsId": "0407-000",
+      "dex": 1,
+      "name": "Roserade"
+    },
+    {
+      "championsId": "0409-000",
+      "dex": 1,
+      "name": "Rampardos"
+    },
+    {
+      "championsId": "0411-000",
+      "dex": 1,
+      "name": "Bastiodon"
+    },
+    {
+      "championsId": "0428-000",
+      "dex": 1,
+      "name": "Lopunny"
+    },
+    {
+      "championsId": "0442-000",
+      "dex": 1,
+      "name": "Spiritomb"
+    },
+    {
+      "championsId": "0445-000",
+      "dex": 1,
+      "name": "Garchomp"
+    },
+    {
+      "championsId": "0448-000",
+      "dex": 1,
+      "name": "Lucario"
+    },
+    {
+      "championsId": "0450-000",
+      "dex": 1,
+      "name": "Hippowdon"
+    },
+    {
+      "championsId": "0454-000",
+      "dex": 1,
+      "name": "Toxicroak"
+    },
+    {
+      "championsId": "0460-000",
+      "dex": 1,
+      "name": "Abomasnow"
+    },
+    {
+      "championsId": "0461-000",
+      "dex": 1,
+      "name": "Weavile"
+    },
+    {
+      "championsId": "0464-000",
+      "dex": 1,
+      "name": "Rhyperior"
+    },
+    {
+      "championsId": "0470-000",
+      "dex": 1,
+      "name": "Leafeon"
+    },
+    {
+      "championsId": "0471-000",
+      "dex": 1,
+      "name": "Glaceon"
+    },
+    {
+      "championsId": "0472-000",
+      "dex": 1,
+      "name": "Gliscor"
+    },
+    {
+      "championsId": "0473-000",
+      "dex": 1,
+      "name": "Mamoswine"
+    },
+    {
+      "championsId": "0475-000",
+      "dex": 1,
+      "name": "Gallade"
+    },
+    {
+      "championsId": "0478-000",
+      "dex": 1,
+      "name": "Froslass"
+    },
+    {
+      "championsId": "0479-000",
+      "dex": 1,
+      "name": "Rotom (Rotom)"
+    },
+    {
+      "championsId": "0479-001",
+      "dex": 1,
+      "name": "Rotom (Heat Rotom)"
+    },
+    {
+      "championsId": "0479-002",
+      "dex": 1,
+      "name": "Rotom (Wash Rotom)"
+    },
+    {
+      "championsId": "0479-003",
+      "dex": 1,
+      "name": "Rotom (Frost Rotom)"
+    },
+    {
+      "championsId": "0479-004",
+      "dex": 1,
+      "name": "Rotom (Fan Rotom)"
+    },
+    {
+      "championsId": "0479-005",
+      "dex": 1,
+      "name": "Rotom (Mow Rotom)"
+    },
+    {
+      "championsId": "0497-000",
+      "dex": 1,
+      "name": "Serperior"
+    },
+    {
+      "championsId": "0500-000",
+      "dex": 1,
+      "name": "Emboar"
+    },
+    {
+      "championsId": "0503-000",
+      "dex": 1,
+      "name": "Samurott"
+    },
+    {
+      "championsId": "0503-001",
+      "dex": 1,
+      "name": "Samurott (Hisuian Form)"
+    },
+    {
+      "championsId": "0505-000",
+      "dex": 1,
+      "name": "Watchog"
+    },
+    {
+      "championsId": "0510-000",
+      "dex": 1,
+      "name": "Liepard"
+    },
+    {
+      "championsId": "0512-000",
+      "dex": 1,
+      "name": "Simisage"
+    },
+    {
+      "championsId": "0514-000",
+      "dex": 1,
+      "name": "Simisear"
+    },
+    {
+      "championsId": "0516-000",
+      "dex": 1,
+      "name": "Simipour"
+    },
+    {
+      "championsId": "0530-000",
+      "dex": 1,
+      "name": "Excadrill"
+    },
+    {
+      "championsId": "0531-000",
+      "dex": 1,
+      "name": "Audino"
+    },
+    {
+      "championsId": "0534-000",
+      "dex": 1,
+      "name": "Conkeldurr"
+    },
+    {
+      "championsId": "0547-000",
+      "dex": 1,
+      "name": "Whimsicott"
+    },
+    {
+      "championsId": "0553-000",
+      "dex": 1,
+      "name": "Krookodile"
+    },
+    {
+      "championsId": "0563-000",
+      "dex": 1,
+      "name": "Cofagrigus"
+    },
+    {
+      "championsId": "0569-000",
+      "dex": 1,
+      "name": "Garbodor"
+    },
+    {
+      "championsId": "0571-000",
+      "dex": 1,
+      "name": "Zoroark"
+    },
+    {
+      "championsId": "0571-001",
+      "dex": 1,
+      "name": "Zoroark (Hisuian Form)"
+    },
+    {
+      "championsId": "0579-000",
+      "dex": 1,
+      "name": "Reuniclus"
+    },
+    {
+      "championsId": "0584-000",
+      "dex": 1,
+      "name": "Vanilluxe"
+    },
+    {
+      "championsId": "0587-000",
+      "dex": 1,
+      "name": "Emolga"
+    },
+    {
+      "championsId": "0609-000",
+      "dex": 1,
+      "name": "Chandelure"
+    },
+    {
+      "championsId": "0614-000",
+      "dex": 1,
+      "name": "Beartic"
+    },
+    {
+      "championsId": "0618-000",
+      "dex": 1,
+      "name": "Stunfisk"
+    },
+    {
+      "championsId": "0618-001",
+      "dex": 1,
+      "name": "Stunfisk (Galarian Form)"
+    },
+    {
+      "championsId": "0623-000",
+      "dex": 1,
+      "name": "Golurk"
+    },
+    {
+      "championsId": "0635-000",
+      "dex": 1,
+      "name": "Hydreigon"
+    },
+    {
+      "championsId": "0637-000",
+      "dex": 1,
+      "name": "Volcarona"
+    },
+    {
+      "championsId": "0652-000",
+      "dex": 1,
+      "name": "Chesnaught"
+    },
+    {
+      "championsId": "0655-000",
+      "dex": 1,
+      "name": "Delphox"
+    },
+    {
+      "championsId": "0658-000",
+      "dex": 1,
+      "name": "Greninja"
+    },
+    {
+      "championsId": "0660-000",
+      "dex": 1,
+      "name": "Diggersby"
+    },
+    {
+      "championsId": "0663-000",
+      "dex": 1,
+      "name": "Talonflame"
+    },
+    {
+      "championsId": "0666-018",
+      "dex": 1,
+      "name": "Vivillon"
+    },
+    {
+      "championsId": "0670-005",
+      "dex": 1,
+      "name": "Floette"
+    },
+    {
+      "championsId": "0671-000",
+      "dex": 1,
+      "name": "Florges"
+    },
+    {
+      "championsId": "0675-000",
+      "dex": 1,
+      "name": "Pangoro"
+    },
+    {
+      "championsId": "0676-000",
+      "dex": 1,
+      "name": "Furfrou"
+    },
+    {
+      "championsId": "0678-000",
+      "dex": 1,
+      "name": "Meowstic (Male)"
+    },
+    {
+      "championsId": "0678-001",
+      "dex": 1,
+      "name": "Meowstic (Female)"
+    },
+    {
+      "championsId": "0681-000",
+      "dex": 1,
+      "name": "Aegislash"
+    },
+    {
+      "championsId": "0683-000",
+      "dex": 1,
+      "name": "Aromatisse"
+    },
+    {
+      "championsId": "0685-000",
+      "dex": 1,
+      "name": "Slurpuff"
+    },
+    {
+      "championsId": "0693-000",
+      "dex": 1,
+      "name": "Clawitzer"
+    },
+    {
+      "championsId": "0695-000",
+      "dex": 1,
+      "name": "Heliolisk"
+    },
+    {
+      "championsId": "0697-000",
+      "dex": 1,
+      "name": "Tyrantrum"
+    },
+    {
+      "championsId": "0699-000",
+      "dex": 1,
+      "name": "Aurorus"
+    },
+    {
+      "championsId": "0700-000",
+      "dex": 1,
+      "name": "Sylveon"
+    },
+    {
+      "championsId": "0701-000",
+      "dex": 1,
+      "name": "Hawlucha"
+    },
+    {
+      "championsId": "0702-000",
+      "dex": 1,
+      "name": "Dedenne"
+    },
+    {
+      "championsId": "0706-000",
+      "dex": 1,
+      "name": "Goodra"
+    },
+    {
+      "championsId": "0706-001",
+      "dex": 1,
+      "name": "Goodra (Hisuian Form)"
+    },
+    {
+      "championsId": "0707-000",
+      "dex": 1,
+      "name": "Klefki"
+    },
+    {
+      "championsId": "0709-000",
+      "dex": 1,
+      "name": "Trevenant"
+    },
+    {
+      "championsId": "0711-000",
+      "dex": 1,
+      "name": "Gourgeist (Medium Variety)"
+    },
+    {
+      "championsId": "0711-001",
+      "dex": 1,
+      "name": "Gourgeist (Small Variety)"
+    },
+    {
+      "championsId": "0711-002",
+      "dex": 1,
+      "name": "Gourgeist (Large Variety)"
+    },
+    {
+      "championsId": "0711-003",
+      "dex": 1,
+      "name": "Gourgeist (Jumbo Variety)"
+    },
+    {
+      "championsId": "0713-000",
+      "dex": 1,
+      "name": "Avalugg"
+    },
+    {
+      "championsId": "0713-001",
+      "dex": 1,
+      "name": "Avalugg (Hisuian Form)"
+    },
+    {
+      "championsId": "0715-000",
+      "dex": 1,
+      "name": "Noivern"
+    },
+    {
+      "championsId": "0724-000",
+      "dex": 1,
+      "name": "Decidueye"
+    },
+    {
+      "championsId": "0724-001",
+      "dex": 1,
+      "name": "Decidueye (Hisuian Form)"
+    },
+    {
+      "championsId": "0727-000",
+      "dex": 1,
+      "name": "Incineroar"
+    },
+    {
+      "championsId": "0730-000",
+      "dex": 1,
+      "name": "Primarina"
+    },
+    {
+      "championsId": "0733-000",
+      "dex": 1,
+      "name": "Toucannon"
+    },
+    {
+      "championsId": "0740-000",
+      "dex": 1,
+      "name": "Crabominable"
+    },
+    {
+      "championsId": "0745-000",
+      "dex": 1,
+      "name": "Lycanroc (Midday Form)"
+    },
+    {
+      "championsId": "0745-001",
+      "dex": 1,
+      "name": "Lycanroc (Midnight Form)"
+    },
+    {
+      "championsId": "0745-002",
+      "dex": 1,
+      "name": "Lycanroc (Dusk Form)"
+    },
+    {
+      "championsId": "0748-000",
+      "dex": 1,
+      "name": "Toxapex"
+    },
+    {
+      "championsId": "0750-000",
+      "dex": 1,
+      "name": "Mudsdale"
+    },
+    {
+      "championsId": "0752-000",
+      "dex": 1,
+      "name": "Araquanid"
+    },
+    {
+      "championsId": "0758-000",
+      "dex": 1,
+      "name": "Salazzle"
+    },
+    {
+      "championsId": "0763-000",
+      "dex": 1,
+      "name": "Tsareena"
+    },
+    {
+      "championsId": "0765-000",
+      "dex": 1,
+      "name": "Oranguru"
+    },
+    {
+      "championsId": "0766-000",
+      "dex": 1,
+      "name": "Passimian"
+    },
+    {
+      "championsId": "0778-000",
+      "dex": 1,
+      "name": "Mimikyu"
+    },
+    {
+      "championsId": "0780-000",
+      "dex": 1,
+      "name": "Drampa"
+    },
+    {
+      "championsId": "0784-000",
+      "dex": 1,
+      "name": "Kommo-o"
+    },
+    {
+      "championsId": "0823-000",
+      "dex": 1,
+      "name": "Corviknight"
+    },
+    {
+      "championsId": "0841-000",
+      "dex": 1,
+      "name": "Flapple"
+    },
+    {
+      "championsId": "0842-000",
+      "dex": 1,
+      "name": "Appletun"
+    },
+    {
+      "championsId": "0844-000",
+      "dex": 1,
+      "name": "Sandaconda"
+    },
+    {
+      "championsId": "0855-000",
+      "dex": 1,
+      "name": "Polteageist"
+    },
+    {
+      "championsId": "0858-000",
+      "dex": 1,
+      "name": "Hatterene"
+    },
+    {
+      "championsId": "0866-000",
+      "dex": 1,
+      "name": "Mr. Rime"
+    },
+    {
+      "championsId": "0867-000",
+      "dex": 1,
+      "name": "Runerigus"
+    },
+    {
+      "championsId": "0869-000",
+      "dex": 1,
+      "name": "Alcremie"
+    },
+    {
+      "championsId": "0877-000",
+      "dex": 1,
+      "name": "Morpeko"
+    },
+    {
+      "championsId": "0887-000",
+      "dex": 1,
+      "name": "Dragapult"
+    },
+    {
+      "championsId": "0899-000",
+      "dex": 1,
+      "name": "Wyrdeer"
+    },
+    {
+      "championsId": "0900-000",
+      "dex": 1,
+      "name": "Kleavor"
+    },
+    {
+      "championsId": "0902-000",
+      "dex": 1,
+      "name": "Basculegion (Male)"
+    },
+    {
+      "championsId": "0902-001",
+      "dex": 1,
+      "name": "Basculegion (Female)"
+    },
+    {
+      "championsId": "0903-000",
+      "dex": 1,
+      "name": "Sneasler"
+    },
+    {
+      "championsId": "0908-000",
+      "dex": 1,
+      "name": "Meowscarada"
+    },
+    {
+      "championsId": "0911-000",
+      "dex": 1,
+      "name": "Skeledirge"
+    },
+    {
+      "championsId": "0914-000",
+      "dex": 1,
+      "name": "Quaquaval"
+    },
+    {
+      "championsId": "0925-000",
+      "dex": 1,
+      "name": "Maushold"
+    },
+    {
+      "championsId": "0934-000",
+      "dex": 1,
+      "name": "Garganacl"
+    },
+    {
+      "championsId": "0936-000",
+      "dex": 1,
+      "name": "Armarouge"
+    },
+    {
+      "championsId": "0937-000",
+      "dex": 1,
+      "name": "Ceruledge"
+    },
+    {
+      "championsId": "0939-000",
+      "dex": 1,
+      "name": "Bellibolt"
+    },
+    {
+      "championsId": "0952-000",
+      "dex": 1,
+      "name": "Scovillain"
+    },
+    {
+      "championsId": "0956-000",
+      "dex": 1,
+      "name": "Espathra"
+    },
+    {
+      "championsId": "0959-000",
+      "dex": 1,
+      "name": "Tinkaton"
+    },
+    {
+      "championsId": "0964-000",
+      "dex": 1,
+      "name": "Palafin"
+    },
+    {
+      "championsId": "0968-000",
+      "dex": 1,
+      "name": "Orthworm"
+    },
+    {
+      "championsId": "0970-000",
+      "dex": 1,
+      "name": "Glimmora"
+    },
+    {
+      "championsId": "0981-000",
+      "dex": 1,
+      "name": "Farigiraf"
+    },
+    {
+      "championsId": "0983-000",
+      "dex": 1,
+      "name": "Kingambit"
+    },
+    {
+      "championsId": "1013-000",
+      "dex": 1,
+      "name": "Sinistcha"
+    },
+    {
+      "championsId": "1018-000",
+      "dex": 1,
+      "name": "Archaludon"
+    },
+    {
+      "championsId": "1019-000",
+      "dex": 1,
+      "name": "Hydrapple"
+    }
+  ]
+}
