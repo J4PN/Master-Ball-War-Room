@@ -110,6 +110,18 @@ SUPPORT_SPECIES = {
 
 SPEED_CONTROL_MOVES = {"Trick Room", "Tailwind", "Icy Wind", "Electroweb", "Thunder Wave", "Bulldoze"}
 SUPPORT_MOVES = {"Fake Out", "Parting Shot", "Rage Powder", "Follow Me", "Helping Hand", "Encore", "Taunt", "Will-O-Wisp", "Wide Guard"}
+TR_SETTERS = {"Farigiraf", "Sinistcha", "Oranguru", "Cresselia", "Hatterene", "Porygon2", "Indeedee-F", "Indeedee"}
+SLOW_ATTACKERS = {"Torkoal", "Kingambit", "Conkeldurr", "Ursaluna", "Mega Camerupt", "Mega Ampharos", "Amoonguss", "Tyranitar", "Rhyperior"}
+TAILWIND_SETTERS = {"Whimsicott", "Pelipper", "Talonflame", "Murkrow", "Tornadus", "Dragonite"}
+RAIN_ABUSERS = {"Basculegion", "Archaludon", "Barraskewda", "Kingdra", "Ludicolo", "Floatzel", "Mega Swampert"}
+SUN_SETTERS = {"Torkoal", "Mega Charizard Y", "Charizard", "Ninetales"}
+SUN_ABUSERS = {"Venusaur", "Lilligant", "Walking Wake", "Scovillain"}
+BULKY_SUPPORTS = SUPPORT_SPECIES | {"Primarina", "Porygon2", "Cresselia", "Indeedee-F", "Indeedee", "Dusclops"}
+FAST_PRESSURE_SPECIES = {"Sneasler", "Garchomp", "Starmie", "Dragonite", "Basculegion", "Gengar", "Mega Gengar", "Mega Aerodactyl", "Mega Lopunny", "Weavile", "Dragapult"}
+COMMON_THREAT_ANSWERS = {"Incineroar", "Rillaboom", "Rotom-Wash", "Primarina", "Kingambit", "Dragonite", "Whimsicott", "Farigiraf", "Amoonguss", "Sinistcha"}
+PRIORITY_MOVES = {"Fake Out", "Sucker Punch", "Extreme Speed", "Aqua Jet", "Mach Punch", "Bullet Punch", "Grassy Glide", "First Impression"}
+SETUP_MOVES = {"Swords Dance", "Nasty Plot", "Dragon Dance", "Bulk Up", "Calm Mind", "Shell Smash", "Quiver Dance"}
+RECOVERY_REDIRECT_PIVOT_MOVES = SUPPORT_MOVES | {"Recover", "Roost", "Strength Sap", "Life Dew", "Slack Off", "Moonlight", "Synthesis", "U-turn", "Volt Switch", "Flip Turn"}
 
 VARIANT_SOURCE_TYPE_MAP = {
     "archive_variant": "archive",
@@ -784,64 +796,162 @@ def merge_persistent_shell_memory(current_entries, history):
 
 def normalize_archetype_key(value):
     text = slugify(value).replace("_", "-")
-    if text in {"hard-tr", "full-tr", "tr", "trick-room", "hard-trick-room"}:
+    compact = text.replace("-", "")
+    if text in {"hard-tr", "full-tr", "tr", "trick-room", "hard-trick-room"} or compact in {"hardtr", "fulltr", "trickroom"}:
         return "hard_tr"
-    if text in {"tr-hybrid", "soft-tr", "tr-balance", "trick-room-hybrid"}:
+    if text in {"tr-hybrid", "soft-tr", "tr-balance", "trick-room-hybrid"} or "tr-hybrid" in text:
         return "tr_hybrid"
     if "tailwind" in text:
         return "tailwind"
-    if text in {"hyper-offense", "fast-offense", "ho"}:
+    if text in {"hyper-offense", "fast-offense", "ho"} or "hyper-offense" in text or "fast-offense" in text:
         return "hyper_offense"
+    if "anti-meta" in text or "antimeta" in compact or text.startswith("anti-"):
+        return "anti_meta"
     if "rain" in text:
         return "rain"
-    if "sun" in text:
+    if "sun" in text or "mega-sun" in text:
         return "sun"
     if text in {"stall", "fat-balance", "bulky-balance", "balance-fat", "bulky-offense"}:
         return "stall_fat_balance"
-    if "anti-meta" in text or "antimeta" in text or text.startswith("anti-"):
-        return "anti_meta"
     if "double-mega" in text:
         return "double_mega"
-    if text in {"gc", "gc-only", "grand-challenge"}:
+    if text in {"gc", "gc-only", "grand-challenge"} or "gc-only" in text:
         return "gc_only"
     return ""
 
 
+def archetype_entry_text(entry):
+    fields = [
+        entry.get("archetype"),
+        " ".join(str(tag) for tag in entry.get("tags", []) if str(tag).strip()),
+        entry.get("source_name"),
+        entry.get("sourceName"),
+        entry.get("source_type"),
+        entry.get("sourceType"),
+        entry.get("source_url"),
+        entry.get("sourceUrl"),
+        entry.get("quality_class"),
+        entry.get("qualityClass"),
+        entry.get("ruleset"),
+        entry.get("format"),
+        entry.get("notes"),
+        entry.get("title"),
+    ]
+    return " ".join(normalize_text(field) for field in fields if normalize_text(field)).lower()
+
+
+def archetype_move_key(move):
+    return slugify(move).replace("-", "")
+
+
+def archetype_slot_species(slot):
+    return normalize_text(
+        slot.get("mega_identity")
+        or slot.get("display_species")
+        or slot.get("form_identity")
+        or slot.get("base_species")
+        or slot.get("species")
+        or slot.get("name")
+    )
+
+
+def archetype_species_key(species):
+    return slugify(species).replace("-", "").replace(" ", "")
+
+
+def archetype_has_species(species_keys, names):
+    wanted = {archetype_species_key(name) for name in names}
+    return bool(species_keys.intersection(wanted))
+
+
+def archetype_mega_count(team):
+    count = 0
+    for slot in team:
+        name = archetype_slot_species(slot)
+        item = normalize_text(slot.get("mega_stone") or slot.get("megaStone") or slot.get("item"))
+        if slot.get("mega_identity") or name.startswith("Mega ") or slugify(item) in MEGA_STONE_MAP:
+            count += 1
+    return count
+
+
 def infer_archetype_keys(entry):
-    text = " ".join([
-        normalize_text(entry.get("archetype")),
-        " ".join(entry.get("tags", [])),
-        normalize_text(entry.get("source_name")),
-        normalize_text(entry.get("source_type")),
-    ]).lower()
+    text = archetype_entry_text(entry)
+    text_key = slugify(text)
+    compact_text = text_key.replace("-", "")
     team = entry.get("team", [])
-    moves = {move for slot in team for move in slot.get("moves", [])}
-    species = {slot.get("display_species") or slot.get("base_species") for slot in team}
-    mega_count = sum(1 for slot in team if slot.get("mega_identity") or normalize_text(slot.get("display_species")).startswith("Mega "))
+    move_keys = {archetype_move_key(move) for slot in team for move in slot.get("moves", [])}
+    species = {archetype_slot_species(slot) for slot in team if archetype_slot_species(slot)}
+    species_keys = {archetype_species_key(name) for name in species}
+    mega_count = archetype_mega_count(team)
     keys = set()
     explicit = normalize_archetype_key(entry.get("archetype"))
     if explicit:
         keys.add(explicit)
-    if "Trick Room" in moves:
-        slowish = sum(1 for slot in team if (slot.get("display_species") or slot.get("base_species")) in {"Farigiraf", "Sinistcha", "Torkoal", "Kingambit", "Conkeldurr", "Mega Camerupt", "Mega Ampharos", "Amoonguss"})
-        keys.add("hard_tr" if slowish >= 3 or "hard tr" in text or "full tr" in text else "tr_hybrid")
-    if "Tailwind" in moves or "tailwind" in text:
+    for tag in entry.get("tags", []):
+        tag_key = normalize_archetype_key(tag)
+        if tag_key:
+            keys.add(tag_key)
+
+    trick_room_count = sum(1 for slot in team if "trickroom" in {archetype_move_key(move) for move in slot.get("moves", [])})
+    trick_room_count += sum(1 for name in species if name in TR_SETTERS)
+    tailwind_count = sum(1 for slot in team if "tailwind" in {archetype_move_key(move) for move in slot.get("moves", [])})
+    tailwind_count += sum(1 for name in species if name in TAILWIND_SETTERS)
+    slow_count = sum(1 for name in species if name in SLOW_ATTACKERS)
+    support_count = sum(1 for name in species if name in BULKY_SUPPORTS)
+    support_count += sum(1 for slot in team if {archetype_move_key(move) for move in slot.get("moves", [])}.intersection({archetype_move_key(move) for move in RECOVERY_REDIRECT_PIVOT_MOVES}))
+    fast_pressure_count = sum(1 for name in species if name in FAST_PRESSURE_SPECIES)
+    priority_count = len(move_keys.intersection({archetype_move_key(move) for move in PRIORITY_MOVES}))
+    setup_count = len(move_keys.intersection({archetype_move_key(move) for move in SETUP_MOVES}))
+    breaker_count = max(0, len(team) - min(support_count, len(team)))
+
+    tr_text = any(token in text for token in ("trick room", "hard tr", "hard-tr", "full tr", "full-tr")) or "trickroom" in compact_text
+    if trick_room_count or tr_text:
+        hard_tr_shell = slow_count >= 2 or archetype_has_species(species_keys, {"Farigiraf", "Sinistcha", "Torkoal"})
+        if hard_tr_shell and ("hard tr" in text or "hard-tr" in text_key or "full tr" in text or slow_count >= 2):
+            keys.add("hard_tr")
+        else:
+            keys.add("tr_hybrid")
+        if tailwind_count or priority_count >= 2 or fast_pressure_count >= 2:
+            keys.add("tr_hybrid")
+
+    if tailwind_count or "tailwind" in text:
         keys.add("tailwind")
-    if "rain" in text or {"Pelipper", "Basculegion"} <= species:
+
+    rain_score = 0
+    rain_score += 2 if "rain" in text and "anti-rain" not in text_key else 0
+    rain_score += 2 if archetype_has_species(species_keys, {"Pelipper"}) else 0
+    rain_score += 1 if archetype_has_species(species_keys, RAIN_ABUSERS) else 0
+    rain_score += 1 if "drizzle" in compact_text else 0
+    if rain_score >= 2:
         keys.add("rain")
-    if "sun" in text or "Torkoal" in species or "Mega Charizard Y" in species:
+
+    sun_score = 0
+    sun_score += 2 if "sun" in text or "mega-sun" in text_key else 0
+    sun_score += 2 if archetype_has_species(species_keys, SUN_SETTERS) else 0
+    sun_score += 1 if archetype_has_species(species_keys, SUN_ABUSERS) else 0
+    sun_score += 1 if "drought" in compact_text else 0
+    if sun_score >= 2:
         keys.add("sun")
-    if "hyper offense" in text or "fast offense" in text:
+
+    if "hyper offense" in text or "hyper-offense" in text_key or "fast offense" in text or (breaker_count >= 4 and support_count <= 1 and fast_pressure_count + priority_count + setup_count >= 2):
         keys.add("hyper_offense")
-    if "anti meta" in text or "anti-meta" in text or any(str(tag).startswith("anti_") for tag in entry.get("tags", [])):
+
+    anti_terms = ("anti meta", "anti-meta", "antimeta", "anti rain", "anti-rain", "anti tailwind", "anti-tailwind", "anti tr", "anti-tr", "counter", "matchup", "meta call", "standard meta")
+    if any(term in text for term in anti_terms) or any(str(tag).lower().startswith("anti_") for tag in entry.get("tags", [])):
         keys.add("anti_meta")
+    elif canonical_source_type(entry.get("source_type") or entry.get("sourceType")) in SOURCE_BACKED_TYPES and archetype_has_species(species_keys, COMMON_THREAT_ANSWERS) and len(team) >= 4:
+        keys.add("anti_meta")
+
     if mega_count >= 2:
         keys.add("double_mega")
-    if "gc" in text or "grand challenge" in text:
+    if "gc" in text_key.split("-") or "gc-only" in text_key or "grand challenge" in text or "grand-challenge" in text_key:
         keys.add("gc_only")
-    if not keys and get_clean_team_archetype(entry) in {"unknown", "balance", "bulky-offense"}:
+
+    if not keys and support_count >= 2:
         keys.add("stall_fat_balance")
-    return sorted(keys or {"stall_fat_balance"})
+    if not keys and breaker_count >= 4:
+        keys.add("hyper_offense")
+    return sorted(keys or {"unknown"})
 
 
 def bump_counter_list(rows, key, amount, sample=None, limit=18):
@@ -885,6 +995,13 @@ def merge_archetype_memory(current_entries, history):
         bucket.setdefault("best_breakers", [])
         bucket.setdefault("bad_matchup_plans", [])
         bucket.setdefault("bad_patterns_to_avoid", [])
+    legacy_unknown = prior.get("unknown", {})
+    if int(legacy_unknown.get("count", 0) or 0) > 0:
+        fallback = prior["stall_fat_balance"]
+        fallback["count"] = int(fallback.get("count", 0) or 0) + int(legacy_unknown.get("count", 0) or 0)
+        fallback["quality_score"] = round(max(float(fallback.get("quality_score", 0.0) or 0.0), float(legacy_unknown.get("quality_score", 0.0) or 0.0)), 4)
+        legacy_unknown["count"] = 0
+        legacy_unknown["quality_score"] = 0.0
     for entry in current_entries:
         quality = compute_team_quality(entry)
         source_type = canonical_source_type(entry.get("source_type") or entry.get("sourceType") or entry.get("source"))
