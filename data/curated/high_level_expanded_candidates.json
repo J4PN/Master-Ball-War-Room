@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-04-26T05:47:55+00:00",
+  "updatedAt": "2026-04-26T18:15:04+00:00",
   "notes": "Accepted high-level expansion candidates classified from trusted raw and curated sources.",
   "teams": [
     {
@@ -99,7 +99,7 @@
       "matchedCreator": "Curated Pikalytics import",
       "originSourceType": "pikalytics",
       "rawSourceName": "Curated Pikalytics import",
-      "qualityClass": "high_level_analysis",
+      "qualityClass": "original_creator_source",
       "creatorMatchReason": "profile_match",
       "creatorMatchScore": 0.4,
       "creatorCoreOverlap": 1.0,
@@ -208,7 +208,7 @@
       "matchedCreator": "PokeaimMD",
       "originSourceType": "reddit",
       "rawSourceName": "Curated Reddit balance team",
-      "qualityClass": "high_level_analysis",
+      "qualityClass": "original_creator_source",
       "creatorMatchReason": "profile_match",
       "creatorMatchScore": 0.72,
       "creatorCoreOverlap": 1.0,
@@ -317,7 +317,7 @@
       "matchedCreator": "Curated YouTube showcase team",
       "originSourceType": "youtube",
       "rawSourceName": "Curated YouTube showcase team",
-      "qualityClass": "high_level_analysis",
+      "qualityClass": "original_creator_source",
       "creatorMatchReason": "profile_match",
       "creatorMatchScore": 0.4,
       "creatorCoreOverlap": 1.0,
@@ -392,7 +392,7 @@
       "matchedCreator": "Moxie Boosted",
       "originSourceType": "reddit",
       "rawSourceName": "r/stunfisk post",
-      "qualityClass": "serious_ladder",
+      "qualityClass": "original_creator_source",
       "creatorMatchReason": "profile_match",
       "creatorMatchScore": 0.72,
       "creatorCoreOverlap": 1.0,

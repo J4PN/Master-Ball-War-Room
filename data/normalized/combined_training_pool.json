@@ -2,7 +2,7 @@
   "teams": [
     {
       "source_type": "archive",
-      "source_name": "archivepikalyticsvariant21curatedpikalyticsimport",
+      "source_name": "archivehighlevelvariant14moxieboosted",
       "source_url": "",
       "quality_class": "",
       "archetype": "unknown",
@@ -15,19 +15,17 @@
           "species": "Pelipper",
           "base_species": "Pelipper",
           "display_species": "Pelipper",
-          "item": "Choice Scarf",
+          "item": "Focus Sash",
           "mega_stone": "",
           "mega_identity": "",
           "form_identity": "Pelipper",
           "role": "",
           "archetype": "",
           "moves": [
-            "Hurricane",
             "Tailwind",
-            "Protect",
-            "Muddy Water"
+            "Hurricane"
           ],
-          "identity_key": "pelipper::pelipper::choice scarf::"
+          "identity_key": "pelipper::pelipper::focus sash::"
         },
         {
           "name": "Basculegion",
@@ -42,9 +40,7 @@
           "archetype": "",
           "moves": [
             "Last Respects",
-            "Wave Crash",
-            "Flip Turn",
-            "Aqua Jet"
+            "Wave Crash"
           ],
           "identity_key": "basculegion::basculegion::choice scarf::"
         },
@@ -53,7 +49,7 @@
           "species": "Incineroar",
           "base_species": "Incineroar",
           "display_species": "Incineroar",
-          "item": "Sitrus Berry",
+          "item": "Safety Goggles",
           "mega_stone": "",
           "mega_identity": "",
           "form_identity": "Incineroar",
@@ -61,18 +57,16 @@
           "archetype": "",
           "moves": [
             "Fake Out",
-            "Parting Shot",
-            "Flare Blitz",
-            "Knock Off"
+            "Parting Shot"
           ],
-          "identity_key": "incineroar::incineroar::sitrus berry::"
+          "identity_key": "incineroar::incineroar::safety goggles::"
         },
         {
           "name": "Whimsicott",
           "species": "Whimsicott",
           "base_species": "Whimsicott",
           "display_species": "Whimsicott",
-          "item": "Focus Sash",
+          "item": "",
           "mega_stone": "",
           "mega_identity": "",
           "form_identity": "Whimsicott",
@@ -80,353 +74,56 @@
           "archetype": "",
           "moves": [
             "Tailwind",
-            "Encore",
-            "Moonblast",
-            "Protect"
+            "Encore"
           ],
-          "identity_key": "whimsicott::whimsicott::focus sash::"
+          "identity_key": "whimsicott::whimsicott::::"
         },
         {
-          "name": "Gengar",
-          "species": "Gengar",
-          "base_species": "Gengar",
-          "display_species": "Gengar",
+          "name": "Farigiraf",
+          "species": "Farigiraf",
+          "base_species": "Farigiraf",
+          "display_species": "Farigiraf",
           "item": "",
           "mega_stone": "",
           "mega_identity": "",
-          "form_identity": "Gengar",
+          "form_identity": "Farigiraf",
           "role": "",
           "archetype": "",
           "moves": [],
-          "identity_key": "gengar::gengar::::"
-        },
-        {
-          "name": "Archaludon",
-          "species": "Archaludon",
-          "base_species": "Archaludon",
-          "display_species": "Archaludon",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Archaludon",
-          "role": "",
-          "archetype": "",
-          "moves": [],
-          "identity_key": "archaludon::archaludon::::"
+          "identity_key": "farigiraf::farigiraf::::"
         }
       ],
-      "confidence": 0.753,
-      "score": 0.7498,
-      "sourceType": "archive",
-      "sourceName": "archivepikalyticsvariant21curatedpikalyticsimport",
-      "sourceUrl": "",
-      "originSourceType": "",
-      "parentSourceName": "archivepikalyticsvariant21curatedpikalyticsimport",
-      "generated": false,
-      "variantReason": ""
-    },
-    {
-      "source_type": "archive",
-      "source_name": "archivepikalyticsvariant12curatedpikalyticsimport",
-      "source_url": "",
-      "quality_class": "",
-      "archetype": "unknown",
-      "tags": [
-        "archive"
-      ],
-      "team": [
-        {
-          "name": "Pelipper",
-          "species": "Pelipper",
-          "base_species": "Pelipper",
-          "display_species": "Pelipper",
-          "item": "Choice Scarf",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Pelipper",
-          "role": "",
-          "archetype": "",
-          "moves": [
-            "Hurricane",
-            "Tailwind",
-            "Protect",
-            "Muddy Water"
-          ],
-          "identity_key": "pelipper::pelipper::choice scarf::"
-        },
-        {
-          "name": "Basculegion",
-          "species": "Basculegion",
-          "base_species": "Basculegion",
-          "display_species": "Basculegion",
-          "item": "Choice Scarf",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Basculegion",
-          "role": "",
-          "archetype": "",
-          "moves": [
-            "Last Respects",
-            "Wave Crash",
-            "Flip Turn",
-            "Aqua Jet"
-          ],
-          "identity_key": "basculegion::basculegion::choice scarf::"
-        },
-        {
-          "name": "Incineroar",
-          "species": "Incineroar",
-          "base_species": "Incineroar",
-          "display_species": "Incineroar",
-          "item": "Sitrus Berry",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Incineroar",
-          "role": "",
-          "archetype": "",
-          "moves": [
-            "Fake Out",
-            "Parting Shot",
-            "Flare Blitz",
-            "Knock Off"
-          ],
-          "identity_key": "incineroar::incineroar::sitrus berry::"
-        },
-        {
-          "name": "Whimsicott",
-          "species": "Whimsicott",
-          "base_species": "Whimsicott",
-          "display_species": "Whimsicott",
-          "item": "Focus Sash",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Whimsicott",
-          "role": "",
-          "archetype": "",
-          "moves": [
-            "Tailwind",
-            "Encore",
-            "Moonblast",
-            "Protect"
-          ],
-          "identity_key": "whimsicott::whimsicott::focus sash::"
-        },
-        {
-          "name": "Archaludon",
-          "species": "Archaludon",
-          "base_species": "Archaludon",
-          "display_species": "Archaludon",
-          "item": "Assault Vest",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Archaludon",
-          "role": "",
-          "archetype": "",
-          "moves": [
-            "Flash Cannon",
-            "Electro Shot",
-            "Draco Meteor",
-            "Snarl"
-          ],
-          "identity_key": "archaludon::archaludon::assault vest::"
-        },
-        {
-          "name": "Tyranitar",
-          "species": "Tyranitar",
-          "base_species": "Tyranitar",
-          "display_species": "Tyranitar",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Tyranitar",
-          "role": "",
-          "archetype": "",
-          "moves": [],
-          "identity_key": "tyranitar::tyranitar::::"
-        }
-      ],
-      "confidence": 0.753,
+      "confidence": 0.561,
       "score": 0.7458,
       "sourceType": "archive",
-      "sourceName": "archivepikalyticsvariant12curatedpikalyticsimport",
+      "sourceName": "archivehighlevelvariant14moxieboosted",
       "sourceUrl": "",
       "originSourceType": "",
-      "parentSourceName": "archivepikalyticsvariant12curatedpikalyticsimport",
+      "parentSourceName": "archivehighlevelvariant14moxieboosted",
       "generated": false,
       "variantReason": ""
     },
     {
       "source_type": "archive",
-      "source_name": "archivehighlevelvariant24curatedpikalyticsimport",
+      "source_name": "",
       "source_url": "",
-      "quality_class": "",
+      "quality_class": "archive",
       "archetype": "unknown",
-      "tags": [
-        "archive"
-      ],
+      "tags": [],
       "team": [
         {
           "name": "Pelipper",
           "species": "Pelipper",
           "base_species": "Pelipper",
           "display_species": "Pelipper",
-          "item": "Choice Scarf",
+          "item": "",
           "mega_stone": "",
           "mega_identity": "",
           "form_identity": "Pelipper",
           "role": "",
           "archetype": "",
-          "moves": [
-            "Hurricane",
-            "Tailwind",
-            "Protect",
-            "Muddy Water"
-          ],
-          "identity_key": "pelipper::pelipper::choice scarf::"
-        },
-        {
-          "name": "Basculegion",
-          "species": "Basculegion",
-          "base_species": "Basculegion",
-          "display_species": "Basculegion",
-          "item": "Choice Scarf",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Basculegion",
-          "role": "",
-          "archetype": "",
-          "moves": [
-            "Last Respects",
-            "Wave Crash",
-            "Flip Turn",
-            "Aqua Jet"
-          ],
-          "identity_key": "basculegion::basculegion::choice scarf::"
-        },
-        {
-          "name": "Incineroar",
-          "species": "Incineroar",
-          "base_species": "Incineroar",
-          "display_species": "Incineroar",
-          "item": "Sitrus Berry",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Incineroar",
-          "role": "",
-          "archetype": "",
-          "moves": [
-            "Fake Out",
-            "Parting Shot",
-            "Flare Blitz",
-            "Knock Off"
-          ],
-          "identity_key": "incineroar::incineroar::sitrus berry::"
-        },
-        {
-          "name": "Whimsicott",
-          "species": "Whimsicott",
-          "base_species": "Whimsicott",
-          "display_species": "Whimsicott",
-          "item": "Focus Sash",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Whimsicott",
-          "role": "",
-          "archetype": "",
-          "moves": [
-            "Tailwind",
-            "Encore",
-            "Moonblast",
-            "Protect"
-          ],
-          "identity_key": "whimsicott::whimsicott::focus sash::"
-        },
-        {
-          "name": "Kingambit",
-          "species": "Kingambit",
-          "base_species": "Kingambit",
-          "display_species": "Kingambit",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Kingambit",
-          "role": "",
-          "archetype": "",
           "moves": [],
-          "identity_key": "kingambit::kingambit::::"
-        },
-        {
-          "name": "Archaludon",
-          "species": "Archaludon",
-          "base_species": "Archaludon",
-          "display_species": "Archaludon",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Archaludon",
-          "role": "",
-          "archetype": "",
-          "moves": [],
-          "identity_key": "archaludon::archaludon::::"
-        }
-      ],
-      "confidence": 0.739,
-      "score": 0.749,
-      "sourceType": "archive",
-      "sourceName": "archivehighlevelvariant24curatedpikalyticsimport",
-      "sourceUrl": "",
-      "originSourceType": "",
-      "parentSourceName": "archivehighlevelvariant24curatedpikalyticsimport",
-      "generated": false,
-      "variantReason": ""
-    },
-    {
-      "source_type": "archive",
-      "source_name": "archivepikalyticsvariant25pikalyticschampionssnapshot",
-      "source_url": "",
-      "quality_class": "",
-      "archetype": "unknown",
-      "tags": [
-        "archive"
-      ],
-      "team": [
-        {
-          "name": "Incineroar",
-          "species": "Incineroar",
-          "base_species": "Incineroar",
-          "display_species": "Incineroar",
-          "item": "Sitrus Berry",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Incineroar",
-          "role": "",
-          "archetype": "",
-          "moves": [
-            "Fake Out",
-            "Flare Blitz",
-            "Parting Shot",
-            "Knock Off"
-          ],
-          "identity_key": "incineroar::incineroar::sitrus berry::"
-        },
-        {
-          "name": "Whimsicott",
-          "species": "Whimsicott",
-          "base_species": "Whimsicott",
-          "display_species": "Whimsicott",
-          "item": "Focus Sash",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Whimsicott",
-          "role": "",
-          "archetype": "",
-          "moves": [
-            "Tailwind",
-            "Moonblast",
-            "Encore",
-            "Protect"
-          ],
-          "identity_key": "whimsicott::whimsicott::focus sash::"
+          "identity_key": "pelipper::pelipper::::"
         },
         {
           "name": "Basculegion",
@@ -443,240 +140,93 @@
           "identity_key": "basculegion::basculegion::::"
         },
         {
-          "name": "Sinistcha",
-          "species": "Sinistcha",
-          "base_species": "Sinistcha",
-          "display_species": "Sinistcha",
-          "item": "Leftovers",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Sinistcha",
-          "role": "",
-          "archetype": "",
-          "moves": [
-            "Matcha Gotcha",
-            "Shadow Ball",
-            "Rage Powder",
-            "Protect"
-          ],
-          "identity_key": "sinistcha::sinistcha::leftovers::"
-        },
-        {
-          "name": "Garchomp",
-          "species": "Garchomp",
-          "base_species": "Garchomp",
-          "display_species": "Garchomp",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Garchomp",
-          "role": "",
-          "archetype": "",
-          "moves": [],
-          "identity_key": "garchomp::garchomp::::"
-        },
-        {
-          "name": "Pelipper",
-          "species": "Pelipper",
-          "base_species": "Pelipper",
-          "display_species": "Pelipper",
-          "item": "Choice Scarf",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Pelipper",
-          "role": "",
-          "archetype": "",
-          "moves": [
-            "Hurricane",
-            "Muddy Water",
-            "Tailwind",
-            "Protect"
-          ],
-          "identity_key": "pelipper::pelipper::choice scarf::"
-        }
-      ],
-      "confidence": 0.744,
-      "score": 0.7432,
-      "sourceType": "archive",
-      "sourceName": "archivepikalyticsvariant25pikalyticschampionssnapshot",
-      "sourceUrl": "",
-      "originSourceType": "",
-      "parentSourceName": "archivepikalyticsvariant25pikalyticschampionssnapshot",
-      "generated": false,
-      "variantReason": ""
-    },
-    {
-      "source_type": "archive",
-      "source_name": "archivepikalyticsvariant7pikalyticschampionssnapshot",
-      "source_url": "",
-      "quality_class": "",
-      "archetype": "unknown",
-      "tags": [
-        "archive"
-      ],
-      "team": [
-        {
           "name": "Incineroar",
           "species": "Incineroar",
           "base_species": "Incineroar",
           "display_species": "Incineroar",
-          "item": "Sitrus Berry",
+          "item": "",
           "mega_stone": "",
           "mega_identity": "",
           "form_identity": "Incineroar",
           "role": "",
           "archetype": "",
-          "moves": [
-            "Fake Out",
-            "Flare Blitz",
-            "Parting Shot",
-            "Knock Off"
-          ],
-          "identity_key": "incineroar::incineroar::sitrus berry::"
+          "moves": [],
+          "identity_key": "incineroar::incineroar::::"
         },
         {
           "name": "Whimsicott",
           "species": "Whimsicott",
           "base_species": "Whimsicott",
           "display_species": "Whimsicott",
-          "item": "Focus Sash",
+          "item": "",
           "mega_stone": "",
           "mega_identity": "",
           "form_identity": "Whimsicott",
           "role": "",
           "archetype": "",
-          "moves": [
-            "Tailwind",
-            "Moonblast",
-            "Encore",
-            "Protect"
-          ],
-          "identity_key": "whimsicott::whimsicott::focus sash::"
-        },
-        {
-          "name": "Dragonite",
-          "species": "Dragonite",
-          "base_species": "Dragonite",
-          "display_species": "Dragonite",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Dragonite",
-          "role": "",
-          "archetype": "",
           "moves": [],
-          "identity_key": "dragonite::dragonite::::"
-        },
-        {
-          "name": "Garchomp",
-          "species": "Garchomp",
-          "base_species": "Garchomp",
-          "display_species": "Garchomp",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Garchomp",
-          "role": "",
-          "archetype": "",
-          "moves": [],
-          "identity_key": "garchomp::garchomp::::"
+          "identity_key": "whimsicott::whimsicott::::"
         },
         {
           "name": "Kingambit",
           "species": "Kingambit",
           "base_species": "Kingambit",
           "display_species": "Kingambit",
-          "item": "Black Glasses",
+          "item": "",
           "mega_stone": "",
           "mega_identity": "",
           "form_identity": "Kingambit",
           "role": "",
           "archetype": "",
-          "moves": [
-            "Sucker Punch",
-            "Kowtow Cleave",
-            "Low Kick",
-            "Protect"
-          ],
-          "identity_key": "kingambit::kingambit::black glasses::"
-        },
-        {
-          "name": "Pelipper",
-          "species": "Pelipper",
-          "base_species": "Pelipper",
-          "display_species": "Pelipper",
-          "item": "Choice Scarf",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Pelipper",
-          "role": "",
-          "archetype": "",
-          "moves": [
-            "Hurricane",
-            "Muddy Water",
-            "Tailwind",
-            "Protect"
-          ],
-          "identity_key": "pelipper::pelipper::choice scarf::"
+          "moves": [],
+          "identity_key": "kingambit::kingambit::::"
         }
       ],
-      "confidence": 0.744,
-      "score": 0.7412,
+      "confidence": 0.546,
+      "score": 0.712,
       "sourceType": "archive",
-      "sourceName": "archivepikalyticsvariant7pikalyticschampionssnapshot",
+      "sourceName": "archive",
       "sourceUrl": "",
       "originSourceType": "",
-      "parentSourceName": "archivepikalyticsvariant7pikalyticschampionssnapshot",
+      "parentSourceName": "",
       "generated": false,
       "variantReason": ""
     },
     {
       "source_type": "archive",
-      "source_name": "archivehighlevelvariant6pokeaimmd",
+      "source_name": "",
       "source_url": "",
-      "quality_class": "",
+      "quality_class": "archive",
       "archetype": "unknown",
-      "tags": [
-        "archive"
-      ],
+      "tags": [],
       "team": [
         {
-          "name": "Incineroar",
-          "species": "Incineroar",
-          "base_species": "Incineroar",
-          "display_species": "Incineroar",
-          "item": "Safety Goggles",
+          "name": "Charizard",
+          "species": "Charizard",
+          "base_species": "Charizard",
+          "display_species": "Charizard",
+          "item": "",
           "mega_stone": "",
           "mega_identity": "",
-          "form_identity": "Incineroar",
+          "form_identity": "Charizard",
           "role": "",
           "archetype": "",
-          "moves": [
-            "Fake Out",
-            "Parting Shot",
-            "Will-O-Wisp",
-            "Knock Off"
-          ],
-          "identity_key": "incineroar::incineroar::safety goggles::"
+          "moves": [],
+          "identity_key": "charizard::charizard::::"
         },
         {
           "name": "Starmie",
           "species": "Starmie",
           "base_species": "Starmie",
           "display_species": "Starmie",
-          "item": "Life Orb",
+          "item": "",
           "mega_stone": "",
           "mega_identity": "",
           "form_identity": "Starmie",
           "role": "",
           "archetype": "",
-          "moves": [
-            "Hydro Pump",
-            "Ice Beam",
-            "Psychic",
-            "Protect"
-          ],
-          "identity_key": "starmie::starmie::life orb::"
+          "moves": [],
+          "identity_key": "starmie::starmie::::"
         },
         {
           "name": "Tyranitar",
@@ -697,75 +247,388 @@
           "species": "Whimsicott",
           "base_species": "Whimsicott",
           "display_species": "Whimsicott",
-          "item": "Focus Sash",
+          "item": "",
           "mega_stone": "",
           "mega_identity": "",
           "form_identity": "Whimsicott",
           "role": "",
           "archetype": "",
-          "moves": [
-            "Tailwind",
-            "Encore",
-            "Moonblast",
-            "Protect"
-          ],
-          "identity_key": "whimsicott::whimsicott::focus sash::"
+          "moves": [],
+          "identity_key": "whimsicott::whimsicott::::"
         },
         {
           "name": "Kingambit",
           "species": "Kingambit",
           "base_species": "Kingambit",
           "display_species": "Kingambit",
-          "item": "Black Glasses",
+          "item": "",
           "mega_stone": "",
           "mega_identity": "",
           "form_identity": "Kingambit",
           "role": "",
           "archetype": "",
-          "moves": [
-            "Sucker Punch",
-            "Kowtow Cleave",
-            "Protect",
-            "Low Kick"
-          ],
-          "identity_key": "kingambit::kingambit::black glasses::"
+          "moves": [],
+          "identity_key": "kingambit::kingambit::::"
         },
         {
           "name": "Pelipper",
           "species": "Pelipper",
           "base_species": "Pelipper",
           "display_species": "Pelipper",
-          "item": "Covert Cloak",
+          "item": "",
           "mega_stone": "",
           "mega_identity": "",
           "form_identity": "Pelipper",
           "role": "",
           "archetype": "",
-          "moves": [
-            "Tailwind",
-            "Hurricane",
-            "Muddy Water",
-            "Protect"
-          ],
-          "identity_key": "pelipper::pelipper::covert cloak::"
+          "moves": [],
+          "identity_key": "pelipper::pelipper::::"
         }
       ],
-      "confidence": 0.732,
-      "score": 0.7435,
+      "confidence": 0.477,
+      "score": 0.699,
       "sourceType": "archive",
-      "sourceName": "archivehighlevelvariant6pokeaimmd",
+      "sourceName": "archive",
       "sourceUrl": "",
       "originSourceType": "",
-      "parentSourceName": "archivehighlevelvariant6pokeaimmd",
+      "parentSourceName": "",
+      "generated": false,
+      "variantReason": ""
+    },
+    {
+      "source_type": "archive",
+      "source_name": "",
+      "source_url": "",
+      "quality_class": "archive",
+      "archetype": "unknown",
+      "tags": [],
+      "team": [
+        {
+          "name": "Basculegion",
+          "species": "Basculegion",
+          "base_species": "Basculegion",
+          "display_species": "Basculegion",
+          "item": "",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Basculegion",
+          "role": "",
+          "archetype": "",
+          "moves": [],
+          "identity_key": "basculegion::basculegion::::"
+        },
+        {
+          "name": "Gengar",
+          "species": "Gengar",
+          "base_species": "Gengar",
+          "display_species": "Gengar",
+          "item": "",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Gengar",
+          "role": "",
+          "archetype": "",
+          "moves": [],
+          "identity_key": "gengar::gengar::::"
+        },
+        {
+          "name": "Garchomp",
+          "species": "Garchomp",
+          "base_species": "Garchomp",
+          "display_species": "Garchomp",
+          "item": "",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Garchomp",
+          "role": "",
+          "archetype": "",
+          "moves": [],
+          "identity_key": "garchomp::garchomp::::"
+        },
+        {
+          "name": "Sinistcha",
+          "species": "Sinistcha",
+          "base_species": "Sinistcha",
+          "display_species": "Sinistcha",
+          "item": "",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Sinistcha",
+          "role": "",
+          "archetype": "",
+          "moves": [],
+          "identity_key": "sinistcha::sinistcha::::"
+        },
+        {
+          "name": "Kingambit",
+          "species": "Kingambit",
+          "base_species": "Kingambit",
+          "display_species": "Kingambit",
+          "item": "",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Kingambit",
+          "role": "",
+          "archetype": "",
+          "moves": [],
+          "identity_key": "kingambit::kingambit::::"
+        },
+        {
+          "name": "Pelipper",
+          "species": "Pelipper",
+          "base_species": "Pelipper",
+          "display_species": "Pelipper",
+          "item": "",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Pelipper",
+          "role": "",
+          "archetype": "",
+          "moves": [],
+          "identity_key": "pelipper::pelipper::::"
+        }
+      ],
+      "confidence": 0.477,
+      "score": 0.694,
+      "sourceType": "archive",
+      "sourceName": "archive",
+      "sourceUrl": "",
+      "originSourceType": "",
+      "parentSourceName": "",
+      "generated": false,
+      "variantReason": ""
+    },
+    {
+      "source_type": "archive",
+      "source_name": "",
+      "source_url": "",
+      "quality_class": "archive",
+      "archetype": "unknown",
+      "tags": [],
+      "team": [
+        {
+          "name": "Pelipper",
+          "species": "Pelipper",
+          "base_species": "Pelipper",
+          "display_species": "Pelipper",
+          "item": "",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Pelipper",
+          "role": "",
+          "archetype": "",
+          "moves": [],
+          "identity_key": "pelipper::pelipper::::"
+        },
+        {
+          "name": "Gengar",
+          "species": "Gengar",
+          "base_species": "Gengar",
+          "display_species": "Gengar",
+          "item": "",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Gengar",
+          "role": "",
+          "archetype": "",
+          "moves": [],
+          "identity_key": "gengar::gengar::::"
+        },
+        {
+          "name": "Incineroar",
+          "species": "Incineroar",
+          "base_species": "Incineroar",
+          "display_species": "Incineroar",
+          "item": "",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Incineroar",
+          "role": "",
+          "archetype": "",
+          "moves": [],
+          "identity_key": "incineroar::incineroar::::"
+        },
+        {
+          "name": "Whimsicott",
+          "species": "Whimsicott",
+          "base_species": "Whimsicott",
+          "display_species": "Whimsicott",
+          "item": "",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Whimsicott",
+          "role": "",
+          "archetype": "",
+          "moves": [],
+          "identity_key": "whimsicott::whimsicott::::"
+        },
+        {
+          "name": "Archaludon",
+          "species": "Archaludon",
+          "base_species": "Archaludon",
+          "display_species": "Archaludon",
+          "item": "",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Archaludon",
+          "role": "",
+          "archetype": "",
+          "moves": [],
+          "identity_key": "archaludon::archaludon::::"
+        },
+        {
+          "name": "Garchomp",
+          "species": "Garchomp",
+          "base_species": "Garchomp",
+          "display_species": "Garchomp",
+          "item": "",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Garchomp",
+          "role": "",
+          "archetype": "",
+          "moves": [],
+          "identity_key": "garchomp::garchomp::::"
+        }
+      ],
+      "confidence": 0.425,
+      "score": 0.702,
+      "sourceType": "archive",
+      "sourceName": "archive",
+      "sourceUrl": "",
+      "originSourceType": "",
+      "parentSourceName": "",
+      "generated": false,
+      "variantReason": ""
+    },
+    {
+      "source_type": "archive",
+      "source_name": "generated708",
+      "source_url": "",
+      "quality_class": "archive",
+      "archetype": "unknown",
+      "tags": [
+        "selfplay",
+        "generated",
+        "exploratory"
+      ],
+      "team": [
+        {
+          "name": "Tyranitar",
+          "species": "Tyranitar",
+          "base_species": "Tyranitar",
+          "display_species": "Tyranitar",
+          "item": "",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Tyranitar",
+          "role": "",
+          "archetype": "unknown",
+          "moves": [],
+          "identity_key": "tyranitar::tyranitar::::"
+        },
+        {
+          "name": "Garchomp",
+          "species": "Garchomp",
+          "base_species": "Garchomp",
+          "display_species": "Garchomp",
+          "item": "Choice Scarf",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Garchomp",
+          "role": "",
+          "archetype": "unknown",
+          "moves": [
+            "Earthquake",
+            "Rock Slide",
+            "Dragon Claw",
+            "Protect"
+          ],
+          "identity_key": "garchomp::garchomp::choice scarf::"
+        },
+        {
+          "name": "Farigiraf",
+          "species": "Farigiraf",
+          "base_species": "Farigiraf",
+          "display_species": "Farigiraf",
+          "item": "",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Farigiraf",
+          "role": "",
+          "archetype": "unknown",
+          "moves": [],
+          "identity_key": "farigiraf::farigiraf::::"
+        },
+        {
+          "name": "Starmie",
+          "species": "Starmie",
+          "base_species": "Starmie",
+          "display_species": "Starmie",
+          "item": "Life Orb",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Starmie",
+          "role": "",
+          "archetype": "unknown",
+          "moves": [
+            "Hydro Pump",
+            "Ice Beam",
+            "Thunderbolt",
+            "Protect"
+          ],
+          "identity_key": "starmie::starmie::life orb::"
+        },
+        {
+          "name": "Dragonite",
+          "species": "Dragonite",
+          "base_species": "Dragonite",
+          "display_species": "Dragonite",
+          "item": "Dragoninite",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Dragonite",
+          "role": "",
+          "archetype": "unknown",
+          "moves": [
+            "Extreme Speed",
+            "Dragon Claw",
+            "Fire Punch",
+            "Protect"
+          ],
+          "identity_key": "dragonite::dragonite::dragoninite::"
+        },
+        {
+          "name": "Kingambit",
+          "species": "Kingambit",
+          "base_species": "Kingambit",
+          "display_species": "Kingambit",
+          "item": "",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Kingambit",
+          "role": "",
+          "archetype": "unknown",
+          "moves": [],
+          "identity_key": "kingambit::kingambit::::"
+        }
+      ],
+      "confidence": 0.4,
+      "score": 0.0,
+      "sourceType": "archive",
+      "sourceName": "generated708",
+      "sourceUrl": "",
+      "originSourceType": "",
+      "parentSourceName": "",
       "generated": false,
       "variantReason": ""
     },
     {
       "source_type": "high_level",
-      "source_name": "pokeaimmd",
-      "source_url": "https://www.reddit.com/r/stunfisk/example-balance-team",
-      "quality_class": "high_level_analysis",
-      "archetype": "balance",
+      "source_name": "highlevelpokeaimmdincineroarstarmiegarchompwhimsicottkingambitpelipper",
+      "source_url": "",
+      "quality_class": "",
+      "archetype": "unknown",
       "tags": [
         "high_level",
         "reddit",
@@ -784,7 +647,7 @@
           "mega_identity": "",
           "form_identity": "Incineroar",
           "role": "",
-          "archetype": "balance",
+          "archetype": "",
           "moves": [
             "Fake Out",
             "Parting Shot",
@@ -803,7 +666,7 @@
           "mega_identity": "",
           "form_identity": "Starmie",
           "role": "",
-          "archetype": "balance",
+          "archetype": "",
           "moves": [
             "Hydro Pump",
             "Ice Beam",
@@ -822,7 +685,7 @@
           "mega_identity": "",
           "form_identity": "Garchomp",
           "role": "",
-          "archetype": "balance",
+          "archetype": "",
           "moves": [
             "Earthquake",
             "Rock Slide",
@@ -841,7 +704,7 @@
           "mega_identity": "",
           "form_identity": "Whimsicott",
           "role": "",
-          "archetype": "balance",
+          "archetype": "",
           "moves": [
             "Tailwind",
             "Encore",
@@ -860,7 +723,7 @@
           "mega_identity": "",
           "form_identity": "Kingambit",
           "role": "",
-          "archetype": "balance",
+          "archetype": "",
           "moves": [
             "Sucker Punch",
             "Kowtow Cleave",
@@ -879,7 +742,7 @@
           "mega_identity": "",
           "form_identity": "Pelipper",
           "role": "",
-          "archetype": "balance",
+          "archetype": "",
           "moves": [
             "Tailwind",
             "Hurricane",
@@ -889,22 +752,22 @@
           "identity_key": "pelipper::pelipper::covert cloak::"
         }
       ],
-      "confidence": 0.925,
-      "score": 0.0,
+      "confidence": 0.944,
+      "score": 0.748,
       "sourceType": "high_level",
-      "sourceName": "pokeaimmd",
-      "sourceUrl": "https://www.reddit.com/r/stunfisk/example-balance-team",
+      "sourceName": "highlevelpokeaimmdincineroarstarmiegarchompwhimsicottkingambitpelipper",
+      "sourceUrl": "",
       "originSourceType": "reddit",
-      "parentSourceName": "",
+      "parentSourceName": "highlevelpokeaimmdincineroarstarmiegarchompwhimsicottkingambitpelipper",
       "generated": false,
       "variantReason": ""
     },
     {
       "source_type": "high_level",
-      "source_name": "moxie boosted",
-      "source_url": "https://www.reddit.com/r/stunfisk/example-rain-shell",
-      "quality_class": "serious_ladder",
-      "archetype": "rain",
+      "source_name": "highlevelmoxieboostedpelipperbasculegionincineroarwhimsicott",
+      "source_url": "",
+      "quality_class": "",
+      "archetype": "unknown",
       "tags": [
         "high_level",
         "niche_competitive",
@@ -925,7 +788,7 @@
           "mega_identity": "",
           "form_identity": "Pelipper",
           "role": "",
-          "archetype": "rain",
+          "archetype": "",
           "moves": [
             "Tailwind",
             "Hurricane"
@@ -942,7 +805,7 @@
           "mega_identity": "",
           "form_identity": "Basculegion",
           "role": "",
-          "archetype": "rain",
+          "archetype": "",
           "moves": [
             "Last Respects",
             "Wave Crash"
@@ -959,7 +822,7 @@
           "mega_identity": "",
           "form_identity": "Incineroar",
           "role": "",
-          "archetype": "rain",
+          "archetype": "",
           "moves": [
             "Fake Out",
             "Parting Shot"
@@ -976,7 +839,7 @@
           "mega_identity": "",
           "form_identity": "Whimsicott",
           "role": "",
-          "archetype": "rain",
+          "archetype": "",
           "moves": [
             "Tailwind",
             "Encore"
@@ -984,13 +847,13 @@
           "identity_key": "whimsicott::whimsicott::::"
         }
       ],
-      "confidence": 0.68,
-      "score": 0.0,
+      "confidence": 0.685,
+      "score": 0.7603,
       "sourceType": "high_level",
-      "sourceName": "moxie boosted",
-      "sourceUrl": "https://www.reddit.com/r/stunfisk/example-rain-shell",
+      "sourceName": "highlevelmoxieboostedpelipperbasculegionincineroarwhimsicott",
+      "sourceUrl": "",
       "originSourceType": "reddit",
-      "parentSourceName": "",
+      "parentSourceName": "highlevelmoxieboostedpelipperbasculegionincineroarwhimsicott",
       "generated": false,
       "variantReason": ""
     },
@@ -998,7 +861,7 @@
       "source_type": "high_level",
       "source_name": "pokeaimmd",
       "source_url": "https://www.youtube.com/watch?v=example",
-      "quality_class": "high_level_analysis",
+      "quality_class": "original_creator_source",
       "archetype": "bulky-offense",
       "tags": [
         "high_level",
@@ -1086,10 +949,10 @@
     },
     {
       "source_type": "high_level",
-      "source_name": "curated youtube showcase team",
-      "source_url": "https://www.youtube.com/watch?v=example-curated",
-      "quality_class": "high_level_analysis",
-      "archetype": "fast-offense",
+      "source_name": "highlevelcuratedyoutubeshowcaseteamincineroargarchompwhimsicottstarmiedragoniterotomwash",
+      "source_url": "",
+      "quality_class": "",
+      "archetype": "unknown",
       "tags": [
         "high_level",
         "youtube",
@@ -1108,7 +971,7 @@
           "mega_identity": "",
           "form_identity": "Incineroar",
           "role": "",
-          "archetype": "fast-offense",
+          "archetype": "",
           "moves": [
             "Fake Out",
             "Parting Shot",
@@ -1127,7 +990,7 @@
           "mega_identity": "",
           "form_identity": "Garchomp",
           "role": "",
-          "archetype": "fast-offense",
+          "archetype": "",
           "moves": [
             "Earthquake",
             "Rock Slide",
@@ -1146,7 +1009,7 @@
           "mega_identity": "",
           "form_identity": "Whimsicott",
           "role": "",
-          "archetype": "fast-offense",
+          "archetype": "",
           "moves": [
             "Tailwind",
             "Encore",
@@ -1165,7 +1028,7 @@
           "mega_identity": "",
           "form_identity": "Starmie",
           "role": "",
-          "archetype": "fast-offense",
+          "archetype": "",
           "moves": [
             "Hydro Pump",
             "Ice Beam",
@@ -1184,7 +1047,7 @@
           "mega_identity": "",
           "form_identity": "Dragonite",
           "role": "",
-          "archetype": "fast-offense",
+          "archetype": "",
           "moves": [
             "Extreme Speed",
             "Dragon Claw",
@@ -1203,7 +1066,7 @@
           "mega_identity": "",
           "form_identity": "Rotom-Wash",
           "role": "",
-          "archetype": "fast-offense",
+          "archetype": "",
           "moves": [
             "Thunderbolt",
             "Hydro Pump",
@@ -1213,26 +1076,26 @@
           "identity_key": "rotom-wash::rotom-wash::sitrus berry::"
         }
       ],
-      "confidence": 0.899,
-      "score": 0.0,
+      "confidence": 0.924,
+      "score": 0.7494,
       "sourceType": "high_level",
-      "sourceName": "curated youtube showcase team",
-      "sourceUrl": "https://www.youtube.com/watch?v=example-curated",
+      "sourceName": "highlevelcuratedyoutubeshowcaseteamincineroargarchompwhimsicottstarmiedragoniterotomwash",
+      "sourceUrl": "",
       "originSourceType": "youtube",
-      "parentSourceName": "",
+      "parentSourceName": "highlevelcuratedyoutubeshowcaseteamincineroargarchompwhimsicottstarmiedragoniterotomwash",
       "generated": false,
       "variantReason": ""
     },
     {
-      "source_type": "high_level",
-      "source_name": "curated pikalytics import",
-      "source_url": "https://www.pikalytics.com/pokedex/championspreview",
-      "quality_class": "high_level_analysis",
-      "archetype": "rain-balance",
+      "source_type": "pikalytics",
+      "source_name": "pikalyticscuratedpikalyticsimportpelipperbasculegionincineroarwhimsicottarchaludongarchomp",
+      "source_url": "",
+      "quality_class": "",
+      "archetype": "unknown",
       "tags": [
-        "high_level",
-        "curated_pikalytics",
-        "expanded"
+        "pikalytics",
+        "meta",
+        "curated"
       ],
       "team": [
         {
@@ -1245,7 +1108,7 @@
           "mega_identity": "",
           "form_identity": "Pelipper",
           "role": "",
-          "archetype": "rain-balance",
+          "archetype": "",
           "moves": [
             "Hurricane",
             "Tailwind",
@@ -1264,7 +1127,7 @@
           "mega_identity": "",
           "form_identity": "Basculegion",
           "role": "",
-          "archetype": "rain-balance",
+          "archetype": "",
           "moves": [
             "Last Respects",
             "Wave Crash",
@@ -1283,7 +1146,7 @@
           "mega_identity": "",
           "form_identity": "Incineroar",
           "role": "",
-          "archetype": "rain-balance",
+          "archetype": "",
           "moves": [
             "Fake Out",
             "Parting Shot",
@@ -1302,7 +1165,7 @@
           "mega_identity": "",
           "form_identity": "Whimsicott",
           "role": "",
-          "archetype": "rain-balance",
+          "archetype": "",
           "moves": [
             "Tailwind",
             "Encore",
@@ -1321,7 +1184,7 @@
           "mega_identity": "",
           "form_identity": "Archaludon",
           "role": "",
-          "archetype": "rain-balance",
+          "archetype": "",
           "moves": [
             "Flash Cannon",
             "Electro Shot",
@@ -1340,7 +1203,7 @@
           "mega_identity": "",
           "form_identity": "Garchomp",
           "role": "",
-          "archetype": "rain-balance",
+          "archetype": "",
           "moves": [
             "Earthquake",
             "Rock Slide",
@@ -1350,13 +1213,13 @@
           "identity_key": "garchomp::garchomp::clear amulet::"
         }
       ],
-      "confidence": 0.947,
-      "score": 0.0,
-      "sourceType": "high_level",
-      "sourceName": "curated pikalytics import",
-      "sourceUrl": "https://www.pikalytics.com/pokedex/championspreview",
-      "originSourceType": "pikalytics",
-      "parentSourceName": "",
+      "confidence": 0.992,
+      "score": 0.746,
+      "sourceType": "pikalytics",
+      "sourceName": "pikalyticscuratedpikalyticsimportpelipperbasculegionincineroarwhimsicottarchaludongarchomp",
+      "sourceUrl": "",
+      "originSourceType": "",
+      "parentSourceName": "pikalyticscuratedpikalyticsimportpelipperbasculegionincineroarwhimsicottarchaludongarchomp",
       "generated": false,
       "variantReason": ""
     },
@@ -1487,7 +1350,7 @@
         }
       ],
       "confidence": 0.97,
-      "score": 0.7357,
+      "score": 0.7287,
       "sourceType": "pikalytics",
       "sourceName": "pikalyticschampionssnapshotincineroarwhimsicottgarchompsinistchakingambitpelipper",
       "sourceUrl": "",
@@ -1498,338 +1361,344 @@
     },
     {
       "source_type": "archive",
-      "source_name": "archivepikalyticsvariant795pikalyticschampionssnapshot",
+      "source_name": "",
       "source_url": "",
-      "quality_class": "",
+      "quality_class": "archive",
       "archetype": "unknown",
-      "tags": [
-        "archive"
-      ],
+      "tags": [],
       "team": [
-        {
-          "name": "Incineroar",
-          "species": "Incineroar",
-          "base_species": "Incineroar",
-          "display_species": "Incineroar",
-          "item": "Sitrus Berry",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Incineroar",
-          "role": "",
-          "archetype": "",
-          "moves": [
-            "Fake Out",
-            "Flare Blitz",
-            "Parting Shot",
-            "Knock Off"
-          ],
-          "identity_key": "incineroar::incineroar::sitrus berry::"
-        },
-        {
-          "name": "Whimsicott",
-          "species": "Whimsicott",
-          "base_species": "Whimsicott",
-          "display_species": "Whimsicott",
-          "item": "Focus Sash",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Whimsicott",
-          "role": "",
-          "archetype": "",
-          "moves": [
-            "Tailwind",
-            "Moonblast",
-            "Encore",
-            "Protect"
-          ],
-          "identity_key": "whimsicott::whimsicott::focus sash::"
-        },
         {
           "name": "Garchomp",
           "species": "Garchomp",
           "base_species": "Garchomp",
           "display_species": "Garchomp",
-          "item": "Choice Scarf",
+          "item": "",
           "mega_stone": "",
           "mega_identity": "",
           "form_identity": "Garchomp",
           "role": "",
           "archetype": "",
+          "moves": [],
+          "identity_key": "garchomp::garchomp::::"
+        },
+        {
+          "name": "Sinistcha",
+          "species": "Sinistcha",
+          "base_species": "Sinistcha",
+          "display_species": "Sinistcha",
+          "item": "",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Sinistcha",
+          "role": "",
+          "archetype": "",
+          "moves": [],
+          "identity_key": "sinistcha::sinistcha::::"
+        },
+        {
+          "name": "Starmie",
+          "species": "Starmie",
+          "base_species": "Starmie",
+          "display_species": "Starmie",
+          "item": "",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Starmie",
+          "role": "",
+          "archetype": "",
+          "moves": [],
+          "identity_key": "starmie::starmie::::"
+        },
+        {
+          "name": "Incineroar",
+          "species": "Incineroar",
+          "base_species": "Incineroar",
+          "display_species": "Incineroar",
+          "item": "",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Incineroar",
+          "role": "",
+          "archetype": "",
+          "moves": [],
+          "identity_key": "incineroar::incineroar::::"
+        },
+        {
+          "name": "Tyranitar",
+          "species": "Tyranitar",
+          "base_species": "Tyranitar",
+          "display_species": "Tyranitar",
+          "item": "",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Tyranitar",
+          "role": "",
+          "archetype": "",
+          "moves": [],
+          "identity_key": "tyranitar::tyranitar::::"
+        },
+        {
+          "name": "Gengar",
+          "species": "Gengar",
+          "base_species": "Gengar",
+          "display_species": "Gengar",
+          "item": "",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Gengar",
+          "role": "",
+          "archetype": "",
+          "moves": [],
+          "identity_key": "gengar::gengar::::"
+        }
+      ],
+      "confidence": 0.47,
+      "score": 0.695,
+      "sourceType": "archive",
+      "sourceName": "archive",
+      "sourceUrl": "",
+      "originSourceType": "",
+      "parentSourceName": "",
+      "generated": false,
+      "variantReason": ""
+    },
+    {
+      "source_type": "archive",
+      "source_name": "generated594",
+      "source_url": "",
+      "quality_class": "archive",
+      "archetype": "unknown",
+      "tags": [
+        "selfplay",
+        "generated",
+        "exploratory"
+      ],
+      "team": [
+        {
+          "name": "Rotom-Wash",
+          "species": "Rotom-Wash",
+          "base_species": "Rotom-Wash",
+          "display_species": "Rotom-Wash",
+          "item": "",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Rotom-Wash",
+          "role": "",
+          "archetype": "unknown",
+          "moves": [],
+          "identity_key": "rotom-wash::rotom-wash::::"
+        },
+        {
+          "name": "Archaludon",
+          "species": "Archaludon",
+          "base_species": "Archaludon",
+          "display_species": "Archaludon",
+          "item": "",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Archaludon",
+          "role": "",
+          "archetype": "unknown",
+          "moves": [],
+          "identity_key": "archaludon::archaludon::::"
+        },
+        {
+          "name": "Farigiraf",
+          "species": "Farigiraf",
+          "base_species": "Farigiraf",
+          "display_species": "Farigiraf",
+          "item": "",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Farigiraf",
+          "role": "",
+          "archetype": "unknown",
+          "moves": [],
+          "identity_key": "farigiraf::farigiraf::::"
+        },
+        {
+          "name": "Starmie",
+          "species": "Starmie",
+          "base_species": "Starmie",
+          "display_species": "Starmie",
+          "item": "Life Orb",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Starmie",
+          "role": "",
+          "archetype": "unknown",
           "moves": [
-            "Earthquake",
-            "Rock Slide",
+            "Hydro Pump",
+            "Ice Beam",
+            "Thunderbolt",
+            "Protect"
+          ],
+          "identity_key": "starmie::starmie::life orb::"
+        },
+        {
+          "name": "Dragonite",
+          "species": "Dragonite",
+          "base_species": "Dragonite",
+          "display_species": "Dragonite",
+          "item": "Dragoninite",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Dragonite",
+          "role": "",
+          "archetype": "unknown",
+          "moves": [
+            "Extreme Speed",
             "Dragon Claw",
+            "Fire Punch",
             "Protect"
           ],
-          "identity_key": "garchomp::garchomp::choice scarf::"
+          "identity_key": "dragonite::dragonite::dragoninite::"
         },
         {
-          "name": "Kingambit",
-          "species": "Kingambit",
-          "base_species": "Kingambit",
-          "display_species": "Kingambit",
+          "name": "Gengar",
+          "species": "Gengar",
+          "base_species": "Gengar",
+          "display_species": "Gengar",
           "item": "",
           "mega_stone": "",
           "mega_identity": "",
-          "form_identity": "Kingambit",
+          "form_identity": "Gengar",
           "role": "",
-          "archetype": "",
+          "archetype": "unknown",
           "moves": [],
-          "identity_key": "kingambit::kingambit::::"
+          "identity_key": "gengar::gengar::::"
+        }
+      ],
+      "confidence": 0.4,
+      "score": 0.0,
+      "sourceType": "archive",
+      "sourceName": "generated594",
+      "sourceUrl": "",
+      "originSourceType": "",
+      "parentSourceName": "",
+      "generated": false,
+      "variantReason": ""
+    },
+    {
+      "source_type": "archive",
+      "source_name": "generated218",
+      "source_url": "",
+      "quality_class": "archive",
+      "archetype": "unknown",
+      "tags": [
+        "selfplay",
+        "generated",
+        "exploratory"
+      ],
+      "team": [
+        {
+          "name": "Farigiraf",
+          "species": "Farigiraf",
+          "base_species": "Farigiraf",
+          "display_species": "Farigiraf",
+          "item": "",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Farigiraf",
+          "role": "",
+          "archetype": "unknown",
+          "moves": [],
+          "identity_key": "farigiraf::farigiraf::::"
+        },
+        {
+          "name": "Archaludon",
+          "species": "Archaludon",
+          "base_species": "Archaludon",
+          "display_species": "Archaludon",
+          "item": "",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Archaludon",
+          "role": "",
+          "archetype": "unknown",
+          "moves": [],
+          "identity_key": "archaludon::archaludon::::"
+        },
+        {
+          "name": "Tyranitar",
+          "species": "Tyranitar",
+          "base_species": "Tyranitar",
+          "display_species": "Tyranitar",
+          "item": "",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Tyranitar",
+          "role": "",
+          "archetype": "unknown",
+          "moves": [],
+          "identity_key": "tyranitar::tyranitar::::"
         },
         {
           "name": "Starmie",
           "species": "Starmie",
           "base_species": "Starmie",
           "display_species": "Starmie",
-          "item": "",
+          "item": "Life Orb",
           "mega_stone": "",
           "mega_identity": "",
           "form_identity": "Starmie",
           "role": "",
-          "archetype": "",
-          "moves": [],
-          "identity_key": "starmie::starmie::::"
-        },
-        {
-          "name": "Pelipper",
-          "species": "Pelipper",
-          "base_species": "Pelipper",
-          "display_species": "Pelipper",
-          "item": "Choice Scarf",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Pelipper",
-          "role": "",
-          "archetype": "",
+          "archetype": "unknown",
           "moves": [
-            "Hurricane",
-            "Muddy Water",
-            "Tailwind",
+            "Hydro Pump",
+            "Ice Beam",
+            "Thunderbolt",
             "Protect"
           ],
-          "identity_key": "pelipper::pelipper::choice scarf::"
-        }
-      ],
-      "confidence": 0.683,
-      "score": 0.749,
-      "sourceType": "archive",
-      "sourceName": "archivepikalyticsvariant795pikalyticschampionssnapshot",
-      "sourceUrl": "",
-      "originSourceType": "",
-      "parentSourceName": "archivepikalyticsvariant795pikalyticschampionssnapshot",
-      "generated": false,
-      "variantReason": ""
-    },
-    {
-      "source_type": "archive",
-      "source_name": "archivehighlevelvariant15moxieboosted",
-      "source_url": "",
-      "quality_class": "",
-      "archetype": "unknown",
-      "tags": [
-        "archive"
-      ],
-      "team": [
-        {
-          "name": "Pelipper",
-          "species": "Pelipper",
-          "base_species": "Pelipper",
-          "display_species": "Pelipper",
-          "item": "Focus Sash",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Pelipper",
-          "role": "",
-          "archetype": "",
-          "moves": [
-            "Tailwind",
-            "Hurricane"
-          ],
-          "identity_key": "pelipper::pelipper::focus sash::"
+          "identity_key": "starmie::starmie::life orb::"
         },
         {
-          "name": "Basculegion",
-          "species": "Basculegion",
-          "base_species": "Basculegion",
-          "display_species": "Basculegion",
-          "item": "Choice Scarf",
+          "name": "Dragonite",
+          "species": "Dragonite",
+          "base_species": "Dragonite",
+          "display_species": "Dragonite",
+          "item": "Dragoninite",
           "mega_stone": "",
           "mega_identity": "",
-          "form_identity": "Basculegion",
+          "form_identity": "Dragonite",
           "role": "",
-          "archetype": "",
+          "archetype": "unknown",
           "moves": [
-            "Last Respects",
-            "Wave Crash"
+            "Extreme Speed",
+            "Dragon Claw",
+            "Fire Punch",
+            "Protect"
           ],
-          "identity_key": "basculegion::basculegion::choice scarf::"
+          "identity_key": "dragonite::dragonite::dragoninite::"
         },
         {
-          "name": "Incineroar",
-          "species": "Incineroar",
-          "base_species": "Incineroar",
-          "display_species": "Incineroar",
-          "item": "Safety Goggles",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Incineroar",
-          "role": "",
-          "archetype": "",
-          "moves": [
-            "Fake Out",
-            "Parting Shot"
-          ],
-          "identity_key": "incineroar::incineroar::safety goggles::"
-        },
-        {
-          "name": "Whimsicott",
-          "species": "Whimsicott",
-          "base_species": "Whimsicott",
-          "display_species": "Whimsicott",
+          "name": "Rotom-Wash",
+          "species": "Rotom-Wash",
+          "base_species": "Rotom-Wash",
+          "display_species": "Rotom-Wash",
           "item": "",
           "mega_stone": "",
           "mega_identity": "",
-          "form_identity": "Whimsicott",
+          "form_identity": "Rotom-Wash",
           "role": "",
-          "archetype": "",
-          "moves": [
-            "Tailwind",
-            "Encore"
-          ],
-          "identity_key": "whimsicott::whimsicott::::"
-        },
-        {
-          "name": "Kingambit",
-          "species": "Kingambit",
-          "base_species": "Kingambit",
-          "display_species": "Kingambit",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Kingambit",
-          "role": "",
-          "archetype": "",
+          "archetype": "unknown",
           "moves": [],
-          "identity_key": "kingambit::kingambit::::"
+          "identity_key": "rotom-wash::rotom-wash::::"
         }
       ],
-      "confidence": 0.561,
-      "score": 0.7531,
+      "confidence": 0.4,
+      "score": 0.0,
       "sourceType": "archive",
-      "sourceName": "archivehighlevelvariant15moxieboosted",
+      "sourceName": "generated218",
       "sourceUrl": "",
       "originSourceType": "",
-      "parentSourceName": "archivehighlevelvariant15moxieboosted",
-      "generated": false,
-      "variantReason": ""
-    },
-    {
-      "source_type": "archive",
-      "source_name": "archivehighlevelvariant2moxieboosted",
-      "source_url": "",
-      "quality_class": "",
-      "archetype": "unknown",
-      "tags": [
-        "archive"
-      ],
-      "team": [
-        {
-          "name": "Pelipper",
-          "species": "Pelipper",
-          "base_species": "Pelipper",
-          "display_species": "Pelipper",
-          "item": "Focus Sash",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Pelipper",
-          "role": "",
-          "archetype": "",
-          "moves": [
-            "Tailwind",
-            "Hurricane"
-          ],
-          "identity_key": "pelipper::pelipper::focus sash::"
-        },
-        {
-          "name": "Basculegion",
-          "species": "Basculegion",
-          "base_species": "Basculegion",
-          "display_species": "Basculegion",
-          "item": "Choice Scarf",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Basculegion",
-          "role": "",
-          "archetype": "",
-          "moves": [
-            "Last Respects",
-            "Wave Crash"
-          ],
-          "identity_key": "basculegion::basculegion::choice scarf::"
-        },
-        {
-          "name": "Incineroar",
-          "species": "Incineroar",
-          "base_species": "Incineroar",
-          "display_species": "Incineroar",
-          "item": "Safety Goggles",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Incineroar",
-          "role": "",
-          "archetype": "",
-          "moves": [
-            "Fake Out",
-            "Parting Shot"
-          ],
-          "identity_key": "incineroar::incineroar::safety goggles::"
-        },
-        {
-          "name": "Whimsicott",
-          "species": "Whimsicott",
-          "base_species": "Whimsicott",
-          "display_species": "Whimsicott",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Whimsicott",
-          "role": "",
-          "archetype": "",
-          "moves": [
-            "Tailwind",
-            "Encore"
-          ],
-          "identity_key": "whimsicott::whimsicott::::"
-        },
-        {
-          "name": "Starmie",
-          "species": "Starmie",
-          "base_species": "Starmie",
-          "display_species": "Starmie",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Starmie",
-          "role": "",
-          "archetype": "",
-          "moves": [],
-          "identity_key": "starmie::starmie::::"
-        }
-      ],
-      "confidence": 0.546,
-      "score": 0.755,
-      "sourceType": "archive",
-      "sourceName": "archivehighlevelvariant2moxieboosted",
-      "sourceUrl": "",
-      "originSourceType": "",
-      "parentSourceName": "archivehighlevelvariant2moxieboosted",
+      "parentSourceName": "",
       "generated": false,
       "variantReason": ""
     },
     {
       "source_type": "pikalytics_variant",
-      "source_name": "pikalyticsvariant3curatedpikalyticsimport",
+      "source_name": "pikalyticsvariant275curatedpikalyticsimport",
       "source_url": "",
       "quality_class": "",
       "archetype": "unknown",
@@ -1933,29 +1802,24 @@
           "identity_key": "starmie::starmie::::"
         },
         {
-          "name": "Garchomp",
-          "species": "Garchomp",
-          "base_species": "Garchomp",
-          "display_species": "Garchomp",
-          "item": "Clear Amulet",
+          "name": "Archaludon",
+          "species": "Archaludon",
+          "base_species": "Archaludon",
+          "display_species": "Archaludon",
+          "item": "",
           "mega_stone": "",
           "mega_identity": "",
-          "form_identity": "Garchomp",
+          "form_identity": "Archaludon",
           "role": "",
           "archetype": "",
-          "moves": [
-            "Earthquake",
-            "Rock Slide",
-            "Protect",
-            "Dragon Claw"
-          ],
-          "identity_key": "garchomp::garchomp::clear amulet::"
+          "moves": [],
+          "identity_key": "archaludon::archaludon::::"
         }
       ],
       "confidence": 0.838,
-      "score": 0.7578,
+      "score": 0.7509,
       "sourceType": "pikalytics_variant",
-      "sourceName": "pikalyticsvariant3curatedpikalyticsimport",
+      "sourceName": "pikalyticsvariant275curatedpikalyticsimport",
       "sourceUrl": "",
       "originSourceType": "pikalytics",
       "parentSourceName": "curatedpikalyticsimport",
@@ -1967,7 +1831,7 @@
     },
     {
       "source_type": "high_level_variant",
-      "source_name": "highlevelvariant2curatedpikalyticsimport",
+      "source_name": "highlevelvariant954curatedpikalyticsimport",
       "source_url": "",
       "quality_class": "",
       "archetype": "unknown",
@@ -2057,408 +1921,6 @@
           "identity_key": "whimsicott::whimsicott::focus sash::"
         },
         {
-          "name": "Gengar",
-          "species": "Gengar",
-          "base_species": "Gengar",
-          "display_species": "Gengar",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Gengar",
-          "role": "",
-          "archetype": "",
-          "moves": [],
-          "identity_key": "gengar::gengar::::"
-        },
-        {
-          "name": "Garchomp",
-          "species": "Garchomp",
-          "base_species": "Garchomp",
-          "display_species": "Garchomp",
-          "item": "Clear Amulet",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Garchomp",
-          "role": "",
-          "archetype": "",
-          "moves": [
-            "Earthquake",
-            "Rock Slide",
-            "Protect",
-            "Dragon Claw"
-          ],
-          "identity_key": "garchomp::garchomp::clear amulet::"
-        }
-      ],
-      "confidence": 0.819,
-      "score": 0.7571,
-      "sourceType": "high_level_variant",
-      "sourceName": "highlevelvariant2curatedpikalyticsimport",
-      "sourceUrl": "",
-      "originSourceType": "high_level",
-      "parentSourceName": "curatedpikalyticsimport",
-      "generated": true,
-      "variantReason": "controlled-source-variant",
-      "origin_source_type": "high_level",
-      "parent_source_name": "curatedpikalyticsimport",
-      "variant_reason": "controlled-source-variant"
-    },
-    {
-      "source_type": "pikalytics_variant",
-      "source_name": "pikalyticsvariant25pikalyticschampionssnapshot",
-      "source_url": "",
-      "quality_class": "",
-      "archetype": "unknown",
-      "tags": [
-        "pikalytics_variant",
-        "pikalytics",
-        "meta",
-        "generated",
-        "controlled-source-variant"
-      ],
-      "team": [
-        {
-          "name": "Incineroar",
-          "species": "Incineroar",
-          "base_species": "Incineroar",
-          "display_species": "Incineroar",
-          "item": "Sitrus Berry",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Incineroar",
-          "role": "",
-          "archetype": "",
-          "moves": [
-            "Fake Out",
-            "Flare Blitz",
-            "Parting Shot",
-            "Knock Off"
-          ],
-          "identity_key": "incineroar::incineroar::sitrus berry::"
-        },
-        {
-          "name": "Whimsicott",
-          "species": "Whimsicott",
-          "base_species": "Whimsicott",
-          "display_species": "Whimsicott",
-          "item": "Focus Sash",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Whimsicott",
-          "role": "",
-          "archetype": "",
-          "moves": [
-            "Tailwind",
-            "Moonblast",
-            "Encore",
-            "Protect"
-          ],
-          "identity_key": "whimsicott::whimsicott::focus sash::"
-        },
-        {
-          "name": "Garchomp",
-          "species": "Garchomp",
-          "base_species": "Garchomp",
-          "display_species": "Garchomp",
-          "item": "Choice Scarf",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Garchomp",
-          "role": "",
-          "archetype": "",
-          "moves": [
-            "Earthquake",
-            "Rock Slide",
-            "Dragon Claw",
-            "Protect"
-          ],
-          "identity_key": "garchomp::garchomp::choice scarf::"
-        },
-        {
-          "name": "Basculegion",
-          "species": "Basculegion",
-          "base_species": "Basculegion",
-          "display_species": "Basculegion",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Basculegion",
-          "role": "",
-          "archetype": "",
-          "moves": [],
-          "identity_key": "basculegion::basculegion::::"
-        },
-        {
-          "name": "Kingambit",
-          "species": "Kingambit",
-          "base_species": "Kingambit",
-          "display_species": "Kingambit",
-          "item": "Black Glasses",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Kingambit",
-          "role": "",
-          "archetype": "",
-          "moves": [
-            "Sucker Punch",
-            "Kowtow Cleave",
-            "Low Kick",
-            "Protect"
-          ],
-          "identity_key": "kingambit::kingambit::black glasses::"
-        },
-        {
-          "name": "Pelipper",
-          "species": "Pelipper",
-          "base_species": "Pelipper",
-          "display_species": "Pelipper",
-          "item": "Choice Scarf",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Pelipper",
-          "role": "",
-          "archetype": "",
-          "moves": [
-            "Hurricane",
-            "Muddy Water",
-            "Tailwind",
-            "Protect"
-          ],
-          "identity_key": "pelipper::pelipper::choice scarf::"
-        }
-      ],
-      "confidence": 0.825,
-      "score": 0.7473,
-      "sourceType": "pikalytics_variant",
-      "sourceName": "pikalyticsvariant25pikalyticschampionssnapshot",
-      "sourceUrl": "",
-      "originSourceType": "pikalytics",
-      "parentSourceName": "pikalyticschampionssnapshot",
-      "generated": true,
-      "variantReason": "controlled-source-variant",
-      "origin_source_type": "pikalytics",
-      "parent_source_name": "pikalyticschampionssnapshot",
-      "variant_reason": "controlled-source-variant"
-    },
-    {
-      "source_type": "pikalytics_variant",
-      "source_name": "pikalyticsvariant10curatedpikalyticsimport",
-      "source_url": "",
-      "quality_class": "",
-      "archetype": "unknown",
-      "tags": [
-        "pikalytics_variant",
-        "pikalytics",
-        "meta",
-        "curated",
-        "generated",
-        "controlled-source-variant"
-      ],
-      "team": [
-        {
-          "name": "Pelipper",
-          "species": "Pelipper",
-          "base_species": "Pelipper",
-          "display_species": "Pelipper",
-          "item": "Choice Scarf",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Pelipper",
-          "role": "",
-          "archetype": "",
-          "moves": [
-            "Hurricane",
-            "Tailwind",
-            "Protect",
-            "Muddy Water"
-          ],
-          "identity_key": "pelipper::pelipper::choice scarf::"
-        },
-        {
-          "name": "Basculegion",
-          "species": "Basculegion",
-          "base_species": "Basculegion",
-          "display_species": "Basculegion",
-          "item": "Choice Scarf",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Basculegion",
-          "role": "",
-          "archetype": "",
-          "moves": [
-            "Last Respects",
-            "Wave Crash",
-            "Flip Turn",
-            "Aqua Jet"
-          ],
-          "identity_key": "basculegion::basculegion::choice scarf::"
-        },
-        {
-          "name": "Incineroar",
-          "species": "Incineroar",
-          "base_species": "Incineroar",
-          "display_species": "Incineroar",
-          "item": "Sitrus Berry",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Incineroar",
-          "role": "",
-          "archetype": "",
-          "moves": [
-            "Fake Out",
-            "Parting Shot",
-            "Flare Blitz",
-            "Knock Off"
-          ],
-          "identity_key": "incineroar::incineroar::sitrus berry::"
-        },
-        {
-          "name": "Whimsicott",
-          "species": "Whimsicott",
-          "base_species": "Whimsicott",
-          "display_species": "Whimsicott",
-          "item": "Focus Sash",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Whimsicott",
-          "role": "",
-          "archetype": "",
-          "moves": [
-            "Tailwind",
-            "Encore",
-            "Moonblast",
-            "Protect"
-          ],
-          "identity_key": "whimsicott::whimsicott::focus sash::"
-        },
-        {
-          "name": "Garchomp",
-          "species": "Garchomp",
-          "base_species": "Garchomp",
-          "display_species": "Garchomp",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Garchomp",
-          "role": "",
-          "archetype": "",
-          "moves": [],
-          "identity_key": "garchomp::garchomp::::"
-        },
-        {
-          "name": "Gengar",
-          "species": "Gengar",
-          "base_species": "Gengar",
-          "display_species": "Gengar",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Gengar",
-          "role": "",
-          "archetype": "",
-          "moves": [],
-          "identity_key": "gengar::gengar::::"
-        }
-      ],
-      "confidence": 0.838,
-      "score": 0.7561,
-      "sourceType": "pikalytics_variant",
-      "sourceName": "pikalyticsvariant10curatedpikalyticsimport",
-      "sourceUrl": "",
-      "originSourceType": "pikalytics",
-      "parentSourceName": "curatedpikalyticsimport",
-      "generated": true,
-      "variantReason": "controlled-source-variant",
-      "origin_source_type": "pikalytics",
-      "parent_source_name": "curatedpikalyticsimport",
-      "variant_reason": "controlled-source-variant"
-    },
-    {
-      "source_type": "pikalytics_variant",
-      "source_name": "pikalyticsvariant6pikalyticschampionssnapshot",
-      "source_url": "",
-      "quality_class": "",
-      "archetype": "unknown",
-      "tags": [
-        "pikalytics_variant",
-        "pikalytics",
-        "meta",
-        "generated",
-        "controlled-source-variant"
-      ],
-      "team": [
-        {
-          "name": "Incineroar",
-          "species": "Incineroar",
-          "base_species": "Incineroar",
-          "display_species": "Incineroar",
-          "item": "Sitrus Berry",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Incineroar",
-          "role": "",
-          "archetype": "",
-          "moves": [
-            "Fake Out",
-            "Flare Blitz",
-            "Parting Shot",
-            "Knock Off"
-          ],
-          "identity_key": "incineroar::incineroar::sitrus berry::"
-        },
-        {
-          "name": "Whimsicott",
-          "species": "Whimsicott",
-          "base_species": "Whimsicott",
-          "display_species": "Whimsicott",
-          "item": "Focus Sash",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Whimsicott",
-          "role": "",
-          "archetype": "",
-          "moves": [
-            "Tailwind",
-            "Moonblast",
-            "Encore",
-            "Protect"
-          ],
-          "identity_key": "whimsicott::whimsicott::focus sash::"
-        },
-        {
-          "name": "Garchomp",
-          "species": "Garchomp",
-          "base_species": "Garchomp",
-          "display_species": "Garchomp",
-          "item": "Choice Scarf",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Garchomp",
-          "role": "",
-          "archetype": "",
-          "moves": [
-            "Earthquake",
-            "Rock Slide",
-            "Dragon Claw",
-            "Protect"
-          ],
-          "identity_key": "garchomp::garchomp::choice scarf::"
-        },
-        {
-          "name": "Kingambit",
-          "species": "Kingambit",
-          "base_species": "Kingambit",
-          "display_species": "Kingambit",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Kingambit",
-          "role": "",
-          "archetype": "",
-          "moves": [],
-          "identity_key": "kingambit::kingambit::::"
-        },
-        {
           "name": "Dragonite",
           "species": "Dragonite",
           "base_species": "Dragonite",
@@ -2471,248 +1933,6 @@
           "archetype": "",
           "moves": [],
           "identity_key": "dragonite::dragonite::::"
-        },
-        {
-          "name": "Pelipper",
-          "species": "Pelipper",
-          "base_species": "Pelipper",
-          "display_species": "Pelipper",
-          "item": "Choice Scarf",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Pelipper",
-          "role": "",
-          "archetype": "",
-          "moves": [
-            "Hurricane",
-            "Muddy Water",
-            "Tailwind",
-            "Protect"
-          ],
-          "identity_key": "pelipper::pelipper::choice scarf::"
-        }
-      ],
-      "confidence": 0.825,
-      "score": 0.7444,
-      "sourceType": "pikalytics_variant",
-      "sourceName": "pikalyticsvariant6pikalyticschampionssnapshot",
-      "sourceUrl": "",
-      "originSourceType": "pikalytics",
-      "parentSourceName": "pikalyticschampionssnapshot",
-      "generated": true,
-      "variantReason": "controlled-source-variant",
-      "origin_source_type": "pikalytics",
-      "parent_source_name": "pikalyticschampionssnapshot",
-      "variant_reason": "controlled-source-variant"
-    },
-    {
-      "source_type": "pikalytics_variant",
-      "source_name": "pikalyticsvariant20curatedpikalyticsimport",
-      "source_url": "",
-      "quality_class": "",
-      "archetype": "unknown",
-      "tags": [
-        "pikalytics_variant",
-        "pikalytics",
-        "meta",
-        "curated",
-        "generated",
-        "controlled-source-variant"
-      ],
-      "team": [
-        {
-          "name": "Pelipper",
-          "species": "Pelipper",
-          "base_species": "Pelipper",
-          "display_species": "Pelipper",
-          "item": "Choice Scarf",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Pelipper",
-          "role": "",
-          "archetype": "",
-          "moves": [
-            "Hurricane",
-            "Tailwind",
-            "Protect",
-            "Muddy Water"
-          ],
-          "identity_key": "pelipper::pelipper::choice scarf::"
-        },
-        {
-          "name": "Basculegion",
-          "species": "Basculegion",
-          "base_species": "Basculegion",
-          "display_species": "Basculegion",
-          "item": "Choice Scarf",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Basculegion",
-          "role": "",
-          "archetype": "",
-          "moves": [
-            "Last Respects",
-            "Wave Crash",
-            "Flip Turn",
-            "Aqua Jet"
-          ],
-          "identity_key": "basculegion::basculegion::choice scarf::"
-        },
-        {
-          "name": "Incineroar",
-          "species": "Incineroar",
-          "base_species": "Incineroar",
-          "display_species": "Incineroar",
-          "item": "Sitrus Berry",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Incineroar",
-          "role": "",
-          "archetype": "",
-          "moves": [
-            "Fake Out",
-            "Parting Shot",
-            "Flare Blitz",
-            "Knock Off"
-          ],
-          "identity_key": "incineroar::incineroar::sitrus berry::"
-        },
-        {
-          "name": "Whimsicott",
-          "species": "Whimsicott",
-          "base_species": "Whimsicott",
-          "display_species": "Whimsicott",
-          "item": "Focus Sash",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Whimsicott",
-          "role": "",
-          "archetype": "",
-          "moves": [
-            "Tailwind",
-            "Encore",
-            "Moonblast",
-            "Protect"
-          ],
-          "identity_key": "whimsicott::whimsicott::focus sash::"
-        },
-        {
-          "name": "Dragonite",
-          "species": "Dragonite",
-          "base_species": "Dragonite",
-          "display_species": "Dragonite",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Dragonite",
-          "role": "",
-          "archetype": "",
-          "moves": [],
-          "identity_key": "dragonite::dragonite::::"
-        },
-        {
-          "name": "Garchomp",
-          "species": "Garchomp",
-          "base_species": "Garchomp",
-          "display_species": "Garchomp",
-          "item": "Clear Amulet",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Garchomp",
-          "role": "",
-          "archetype": "",
-          "moves": [
-            "Earthquake",
-            "Rock Slide",
-            "Protect",
-            "Dragon Claw"
-          ],
-          "identity_key": "garchomp::garchomp::clear amulet::"
-        }
-      ],
-      "confidence": 0.838,
-      "score": 0.7558,
-      "sourceType": "pikalytics_variant",
-      "sourceName": "pikalyticsvariant20curatedpikalyticsimport",
-      "sourceUrl": "",
-      "originSourceType": "pikalytics",
-      "parentSourceName": "curatedpikalyticsimport",
-      "generated": true,
-      "variantReason": "controlled-source-variant",
-      "origin_source_type": "pikalytics",
-      "parent_source_name": "curatedpikalyticsimport",
-      "variant_reason": "controlled-source-variant"
-    },
-    {
-      "source_type": "pikalytics_variant",
-      "source_name": "pikalyticsvariant15pikalyticschampionssnapshot",
-      "source_url": "",
-      "quality_class": "",
-      "archetype": "unknown",
-      "tags": [
-        "pikalytics_variant",
-        "pikalytics",
-        "meta",
-        "generated",
-        "controlled-source-variant"
-      ],
-      "team": [
-        {
-          "name": "Incineroar",
-          "species": "Incineroar",
-          "base_species": "Incineroar",
-          "display_species": "Incineroar",
-          "item": "Sitrus Berry",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Incineroar",
-          "role": "",
-          "archetype": "",
-          "moves": [
-            "Fake Out",
-            "Flare Blitz",
-            "Parting Shot",
-            "Knock Off"
-          ],
-          "identity_key": "incineroar::incineroar::sitrus berry::"
-        },
-        {
-          "name": "Whimsicott",
-          "species": "Whimsicott",
-          "base_species": "Whimsicott",
-          "display_species": "Whimsicott",
-          "item": "Focus Sash",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Whimsicott",
-          "role": "",
-          "archetype": "",
-          "moves": [
-            "Tailwind",
-            "Moonblast",
-            "Encore",
-            "Protect"
-          ],
-          "identity_key": "whimsicott::whimsicott::focus sash::"
-        },
-        {
-          "name": "Garchomp",
-          "species": "Garchomp",
-          "base_species": "Garchomp",
-          "display_species": "Garchomp",
-          "item": "Choice Scarf",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Garchomp",
-          "role": "",
-          "archetype": "",
-          "moves": [
-            "Earthquake",
-            "Rock Slide",
-            "Dragon Claw",
-            "Protect"
-          ],
-          "identity_key": "garchomp::garchomp::choice scarf::"
         },
         {
           "name": "Archaludon",
@@ -2727,70 +1947,34 @@
           "archetype": "",
           "moves": [],
           "identity_key": "archaludon::archaludon::::"
-        },
-        {
-          "name": "Kingambit",
-          "species": "Kingambit",
-          "base_species": "Kingambit",
-          "display_species": "Kingambit",
-          "item": "Black Glasses",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Kingambit",
-          "role": "",
-          "archetype": "",
-          "moves": [
-            "Sucker Punch",
-            "Kowtow Cleave",
-            "Low Kick",
-            "Protect"
-          ],
-          "identity_key": "kingambit::kingambit::black glasses::"
-        },
-        {
-          "name": "Pelipper",
-          "species": "Pelipper",
-          "base_species": "Pelipper",
-          "display_species": "Pelipper",
-          "item": "Choice Scarf",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Pelipper",
-          "role": "",
-          "archetype": "",
-          "moves": [
-            "Hurricane",
-            "Muddy Water",
-            "Tailwind",
-            "Protect"
-          ],
-          "identity_key": "pelipper::pelipper::choice scarf::"
         }
       ],
-      "confidence": 0.825,
-      "score": 0.7434,
-      "sourceType": "pikalytics_variant",
-      "sourceName": "pikalyticsvariant15pikalyticschampionssnapshot",
+      "confidence": 0.819,
+      "score": 0.7493,
+      "sourceType": "high_level_variant",
+      "sourceName": "highlevelvariant954curatedpikalyticsimport",
       "sourceUrl": "",
-      "originSourceType": "pikalytics",
-      "parentSourceName": "pikalyticschampionssnapshot",
+      "originSourceType": "high_level",
+      "parentSourceName": "curatedpikalyticsimport",
       "generated": true,
       "variantReason": "controlled-source-variant",
-      "origin_source_type": "pikalytics",
-      "parent_source_name": "pikalyticschampionssnapshot",
+      "origin_source_type": "high_level",
+      "parent_source_name": "curatedpikalyticsimport",
       "variant_reason": "controlled-source-variant"
     },
     {
-      "source_type": "reddit_variant",
-      "source_name": "redditvariant11curatedredditbalanceteam",
+      "source_type": "high_level_variant",
+      "source_name": "highlevelvariant1506pokeaimmd",
       "source_url": "",
       "quality_class": "",
       "archetype": "unknown",
       "tags": [
-        "reddit_variant",
+        "high_level_variant",
+        "high_level",
         "reddit",
-        "curated",
         "verified",
+        "curated_reddit",
+        "expanded",
         "generated",
         "controlled-source-variant"
       ],
@@ -2834,23 +2018,18 @@
           "identity_key": "starmie::starmie::life orb::"
         },
         {
-          "name": "Garchomp",
-          "species": "Garchomp",
-          "base_species": "Garchomp",
-          "display_species": "Garchomp",
-          "item": "Clear Amulet",
+          "name": "Kingambit",
+          "species": "Kingambit",
+          "base_species": "Kingambit",
+          "display_species": "Kingambit",
+          "item": "",
           "mega_stone": "",
           "mega_identity": "",
-          "form_identity": "Garchomp",
+          "form_identity": "Kingambit",
           "role": "",
           "archetype": "",
-          "moves": [
-            "Earthquake",
-            "Rock Slide",
-            "Swords Dance",
-            "Protect"
-          ],
-          "identity_key": "garchomp::garchomp::clear amulet::"
+          "moves": [],
+          "identity_key": "kingambit::kingambit::::"
         },
         {
           "name": "Whimsicott",
@@ -2905,34 +2084,162 @@
           "identity_key": "pelipper::pelipper::covert cloak::"
         }
       ],
-      "confidence": 0.761,
-      "score": 0.7573,
-      "sourceType": "reddit_variant",
-      "sourceName": "redditvariant11curatedredditbalanceteam",
+      "confidence": 0.809,
+      "score": 0.7517,
+      "sourceType": "high_level_variant",
+      "sourceName": "highlevelvariant1506pokeaimmd",
       "sourceUrl": "",
-      "originSourceType": "reddit",
-      "parentSourceName": "curatedredditbalanceteam",
+      "originSourceType": "high_level",
+      "parentSourceName": "pokeaimmd",
       "generated": true,
       "variantReason": "controlled-source-variant",
-      "origin_source_type": "reddit",
-      "parent_source_name": "curatedredditbalanceteam",
+      "origin_source_type": "high_level",
+      "parent_source_name": "pokeaimmd",
       "variant_reason": "controlled-source-variant"
     },
     {
-      "source_type": "high_level_variant",
-      "source_name": "highlevelvariant14moxieboosted",
+      "source_type": "pikalytics_variant",
+      "source_name": "pikalyticsvariant469pikalyticschampionssnapshot",
       "source_url": "",
       "quality_class": "",
       "archetype": "unknown",
       "tags": [
-        "high_level_variant",
-        "high_level",
-        "niche_competitive",
-        "tailwind_balance",
-        "hard_tr",
-        "pokepaste",
-        "community",
-        "reddit",
+        "pikalytics_variant",
+        "pikalytics",
+        "meta",
+        "generated",
+        "controlled-source-variant"
+      ],
+      "team": [
+        {
+          "name": "Incineroar",
+          "species": "Incineroar",
+          "base_species": "Incineroar",
+          "display_species": "Incineroar",
+          "item": "Sitrus Berry",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Incineroar",
+          "role": "",
+          "archetype": "",
+          "moves": [
+            "Fake Out",
+            "Flare Blitz",
+            "Parting Shot",
+            "Knock Off"
+          ],
+          "identity_key": "incineroar::incineroar::sitrus berry::"
+        },
+        {
+          "name": "Whimsicott",
+          "species": "Whimsicott",
+          "base_species": "Whimsicott",
+          "display_species": "Whimsicott",
+          "item": "Focus Sash",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Whimsicott",
+          "role": "",
+          "archetype": "",
+          "moves": [
+            "Tailwind",
+            "Moonblast",
+            "Encore",
+            "Protect"
+          ],
+          "identity_key": "whimsicott::whimsicott::focus sash::"
+        },
+        {
+          "name": "Garchomp",
+          "species": "Garchomp",
+          "base_species": "Garchomp",
+          "display_species": "Garchomp",
+          "item": "Choice Scarf",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Garchomp",
+          "role": "",
+          "archetype": "",
+          "moves": [
+            "Earthquake",
+            "Rock Slide",
+            "Dragon Claw",
+            "Protect"
+          ],
+          "identity_key": "garchomp::garchomp::choice scarf::"
+        },
+        {
+          "name": "Kingambit",
+          "species": "Kingambit",
+          "base_species": "Kingambit",
+          "display_species": "Kingambit",
+          "item": "",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Kingambit",
+          "role": "",
+          "archetype": "",
+          "moves": [],
+          "identity_key": "kingambit::kingambit::::"
+        },
+        {
+          "name": "Starmie",
+          "species": "Starmie",
+          "base_species": "Starmie",
+          "display_species": "Starmie",
+          "item": "",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Starmie",
+          "role": "",
+          "archetype": "",
+          "moves": [],
+          "identity_key": "starmie::starmie::::"
+        },
+        {
+          "name": "Pelipper",
+          "species": "Pelipper",
+          "base_species": "Pelipper",
+          "display_species": "Pelipper",
+          "item": "Choice Scarf",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Pelipper",
+          "role": "",
+          "archetype": "",
+          "moves": [
+            "Hurricane",
+            "Muddy Water",
+            "Tailwind",
+            "Protect"
+          ],
+          "identity_key": "pelipper::pelipper::choice scarf::"
+        }
+      ],
+      "confidence": 0.825,
+      "score": 0.7419,
+      "sourceType": "pikalytics_variant",
+      "sourceName": "pikalyticsvariant469pikalyticschampionssnapshot",
+      "sourceUrl": "",
+      "originSourceType": "pikalytics",
+      "parentSourceName": "pikalyticschampionssnapshot",
+      "generated": true,
+      "variantReason": "controlled-source-variant",
+      "origin_source_type": "pikalytics",
+      "parent_source_name": "pikalyticschampionssnapshot",
+      "variant_reason": "controlled-source-variant"
+    },
+    {
+      "source_type": "pikalytics_variant",
+      "source_name": "pikalyticsvariant19curatedpikalyticsimport",
+      "source_url": "",
+      "quality_class": "",
+      "archetype": "unknown",
+      "tags": [
+        "pikalytics_variant",
+        "pikalytics",
+        "meta",
+        "curated",
         "generated",
         "controlled-source-variant"
       ],
@@ -2942,17 +2249,19 @@
           "species": "Pelipper",
           "base_species": "Pelipper",
           "display_species": "Pelipper",
-          "item": "Focus Sash",
+          "item": "Choice Scarf",
           "mega_stone": "",
           "mega_identity": "",
           "form_identity": "Pelipper",
           "role": "",
           "archetype": "",
           "moves": [
+            "Hurricane",
             "Tailwind",
-            "Hurricane"
+            "Protect",
+            "Muddy Water"
           ],
-          "identity_key": "pelipper::pelipper::focus sash::"
+          "identity_key": "pelipper::pelipper::choice scarf::"
         },
         {
           "name": "Basculegion",
@@ -2967,7 +2276,9 @@
           "archetype": "",
           "moves": [
             "Last Respects",
-            "Wave Crash"
+            "Wave Crash",
+            "Flip Turn",
+            "Aqua Jet"
           ],
           "identity_key": "basculegion::basculegion::choice scarf::"
         },
@@ -2976,7 +2287,7 @@
           "species": "Incineroar",
           "base_species": "Incineroar",
           "display_species": "Incineroar",
-          "item": "Safety Goggles",
+          "item": "Sitrus Berry",
           "mega_stone": "",
           "mega_identity": "",
           "form_identity": "Incineroar",
@@ -2984,16 +2295,18 @@
           "archetype": "",
           "moves": [
             "Fake Out",
-            "Parting Shot"
+            "Parting Shot",
+            "Flare Blitz",
+            "Knock Off"
           ],
-          "identity_key": "incineroar::incineroar::safety goggles::"
+          "identity_key": "incineroar::incineroar::sitrus berry::"
         },
         {
           "name": "Whimsicott",
           "species": "Whimsicott",
           "base_species": "Whimsicott",
           "display_species": "Whimsicott",
-          "item": "",
+          "item": "Focus Sash",
           "mega_stone": "",
           "mega_identity": "",
           "form_identity": "Whimsicott",
@@ -3001,59 +2314,11 @@
           "archetype": "",
           "moves": [
             "Tailwind",
-            "Encore"
+            "Encore",
+            "Moonblast",
+            "Protect"
           ],
-          "identity_key": "whimsicott::whimsicott::::"
-        },
-        {
-          "name": "Farigiraf",
-          "species": "Farigiraf",
-          "base_species": "Farigiraf",
-          "display_species": "Farigiraf",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Farigiraf",
-          "role": "",
-          "archetype": "",
-          "moves": [],
-          "identity_key": "farigiraf::farigiraf::::"
-        }
-      ],
-      "confidence": 0.581,
-      "score": 0.761,
-      "sourceType": "high_level_variant",
-      "sourceName": "highlevelvariant14moxieboosted",
-      "sourceUrl": "",
-      "originSourceType": "high_level",
-      "parentSourceName": "moxieboosted",
-      "generated": true,
-      "variantReason": "controlled-source-variant",
-      "origin_source_type": "high_level",
-      "parent_source_name": "moxieboosted",
-      "variant_reason": "controlled-source-variant"
-    },
-    {
-      "source_type": "archive",
-      "source_name": "",
-      "source_url": "",
-      "quality_class": "archive",
-      "archetype": "unknown",
-      "tags": [],
-      "team": [
-        {
-          "name": "Basculegion",
-          "species": "Basculegion",
-          "base_species": "Basculegion",
-          "display_species": "Basculegion",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Basculegion",
-          "role": "",
-          "archetype": "unknown",
-          "moves": [],
-          "identity_key": "basculegion::basculegion::::"
+          "identity_key": "whimsicott::whimsicott::focus sash::"
         },
         {
           "name": "Gengar",
@@ -3065,98 +2330,108 @@
           "mega_identity": "",
           "form_identity": "Gengar",
           "role": "",
-          "archetype": "unknown",
+          "archetype": "",
           "moves": [],
           "identity_key": "gengar::gengar::::"
+        },
+        {
+          "name": "Archaludon",
+          "species": "Archaludon",
+          "base_species": "Archaludon",
+          "display_species": "Archaludon",
+          "item": "",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Archaludon",
+          "role": "",
+          "archetype": "",
+          "moves": [],
+          "identity_key": "archaludon::archaludon::::"
+        }
+      ],
+      "confidence": 0.838,
+      "score": 0.7503,
+      "sourceType": "pikalytics_variant",
+      "sourceName": "pikalyticsvariant19curatedpikalyticsimport",
+      "sourceUrl": "",
+      "originSourceType": "pikalytics",
+      "parentSourceName": "curatedpikalyticsimport",
+      "generated": true,
+      "variantReason": "controlled-source-variant",
+      "origin_source_type": "pikalytics",
+      "parent_source_name": "curatedpikalyticsimport",
+      "variant_reason": "controlled-source-variant"
+    },
+    {
+      "source_type": "pikalytics_variant",
+      "source_name": "pikalyticsvariant945pikalyticschampionssnapshot",
+      "source_url": "",
+      "quality_class": "",
+      "archetype": "unknown",
+      "tags": [
+        "pikalytics_variant",
+        "pikalytics",
+        "meta",
+        "generated",
+        "controlled-source-variant"
+      ],
+      "team": [
+        {
+          "name": "Incineroar",
+          "species": "Incineroar",
+          "base_species": "Incineroar",
+          "display_species": "Incineroar",
+          "item": "Sitrus Berry",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Incineroar",
+          "role": "",
+          "archetype": "",
+          "moves": [
+            "Fake Out",
+            "Flare Blitz",
+            "Parting Shot",
+            "Knock Off"
+          ],
+          "identity_key": "incineroar::incineroar::sitrus berry::"
+        },
+        {
+          "name": "Whimsicott",
+          "species": "Whimsicott",
+          "base_species": "Whimsicott",
+          "display_species": "Whimsicott",
+          "item": "Focus Sash",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Whimsicott",
+          "role": "",
+          "archetype": "",
+          "moves": [
+            "Tailwind",
+            "Moonblast",
+            "Encore",
+            "Protect"
+          ],
+          "identity_key": "whimsicott::whimsicott::focus sash::"
         },
         {
           "name": "Garchomp",
           "species": "Garchomp",
           "base_species": "Garchomp",
           "display_species": "Garchomp",
-          "item": "",
+          "item": "Choice Scarf",
           "mega_stone": "",
           "mega_identity": "",
           "form_identity": "Garchomp",
           "role": "",
-          "archetype": "unknown",
-          "moves": [],
-          "identity_key": "garchomp::garchomp::::"
-        },
-        {
-          "name": "Sinistcha",
-          "species": "Sinistcha",
-          "base_species": "Sinistcha",
-          "display_species": "Sinistcha",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Sinistcha",
-          "role": "",
-          "archetype": "unknown",
-          "moves": [],
-          "identity_key": "sinistcha::sinistcha::::"
-        },
-        {
-          "name": "Kingambit",
-          "species": "Kingambit",
-          "base_species": "Kingambit",
-          "display_species": "Kingambit",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Kingambit",
-          "role": "",
-          "archetype": "unknown",
-          "moves": [],
-          "identity_key": "kingambit::kingambit::::"
-        },
-        {
-          "name": "Pelipper",
-          "species": "Pelipper",
-          "base_species": "Pelipper",
-          "display_species": "Pelipper",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Pelipper",
-          "role": "",
-          "archetype": "unknown",
-          "moves": [],
-          "identity_key": "pelipper::pelipper::::"
-        }
-      ],
-      "confidence": 0.47,
-      "score": 0.0,
-      "sourceType": "archive",
-      "sourceName": "archive",
-      "sourceUrl": "",
-      "originSourceType": "",
-      "parentSourceName": "",
-      "generated": false,
-      "variantReason": ""
-    },
-    {
-      "source_type": "archive",
-      "source_name": "",
-      "source_url": "",
-      "quality_class": "archive",
-      "archetype": "unknown",
-      "tags": [],
-      "team": [
-        {
-          "name": "Charizard",
-          "species": "Charizard",
-          "base_species": "Charizard",
-          "display_species": "Charizard",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Charizard",
-          "role": "",
-          "archetype": "unknown",
-          "moves": [],
-          "identity_key": "charizard::charizard::::"
+          "archetype": "",
+          "moves": [
+            "Earthquake",
+            "Rock Slide",
+            "Dragon Claw",
+            "Protect"
+          ],
+          "identity_key": "garchomp::garchomp::choice scarf::"
         },
         {
           "name": "Starmie",
@@ -3168,37 +2443,265 @@
           "mega_identity": "",
           "form_identity": "Starmie",
           "role": "",
-          "archetype": "unknown",
+          "archetype": "",
           "moves": [],
           "identity_key": "starmie::starmie::::"
         },
         {
-          "name": "Tyranitar",
-          "species": "Tyranitar",
-          "base_species": "Tyranitar",
-          "display_species": "Tyranitar",
-          "item": "",
+          "name": "Kingambit",
+          "species": "Kingambit",
+          "base_species": "Kingambit",
+          "display_species": "Kingambit",
+          "item": "Black Glasses",
           "mega_stone": "",
           "mega_identity": "",
-          "form_identity": "Tyranitar",
+          "form_identity": "Kingambit",
           "role": "",
-          "archetype": "unknown",
-          "moves": [],
-          "identity_key": "tyranitar::tyranitar::::"
+          "archetype": "",
+          "moves": [
+            "Sucker Punch",
+            "Kowtow Cleave",
+            "Low Kick",
+            "Protect"
+          ],
+          "identity_key": "kingambit::kingambit::black glasses::"
+        },
+        {
+          "name": "Pelipper",
+          "species": "Pelipper",
+          "base_species": "Pelipper",
+          "display_species": "Pelipper",
+          "item": "Choice Scarf",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Pelipper",
+          "role": "",
+          "archetype": "",
+          "moves": [
+            "Hurricane",
+            "Muddy Water",
+            "Tailwind",
+            "Protect"
+          ],
+          "identity_key": "pelipper::pelipper::choice scarf::"
+        }
+      ],
+      "confidence": 0.825,
+      "score": 0.7408,
+      "sourceType": "pikalytics_variant",
+      "sourceName": "pikalyticsvariant945pikalyticschampionssnapshot",
+      "sourceUrl": "",
+      "originSourceType": "pikalytics",
+      "parentSourceName": "pikalyticschampionssnapshot",
+      "generated": true,
+      "variantReason": "controlled-source-variant",
+      "origin_source_type": "pikalytics",
+      "parent_source_name": "pikalyticschampionssnapshot",
+      "variant_reason": "controlled-source-variant"
+    },
+    {
+      "source_type": "pikalytics_variant",
+      "source_name": "pikalyticsvariant329curatedpikalyticsimport",
+      "source_url": "",
+      "quality_class": "",
+      "archetype": "unknown",
+      "tags": [
+        "pikalytics_variant",
+        "pikalytics",
+        "meta",
+        "curated",
+        "generated",
+        "controlled-source-variant"
+      ],
+      "team": [
+        {
+          "name": "Pelipper",
+          "species": "Pelipper",
+          "base_species": "Pelipper",
+          "display_species": "Pelipper",
+          "item": "Choice Scarf",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Pelipper",
+          "role": "",
+          "archetype": "",
+          "moves": [
+            "Hurricane",
+            "Tailwind",
+            "Protect",
+            "Muddy Water"
+          ],
+          "identity_key": "pelipper::pelipper::choice scarf::"
+        },
+        {
+          "name": "Basculegion",
+          "species": "Basculegion",
+          "base_species": "Basculegion",
+          "display_species": "Basculegion",
+          "item": "Choice Scarf",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Basculegion",
+          "role": "",
+          "archetype": "",
+          "moves": [
+            "Last Respects",
+            "Wave Crash",
+            "Flip Turn",
+            "Aqua Jet"
+          ],
+          "identity_key": "basculegion::basculegion::choice scarf::"
+        },
+        {
+          "name": "Incineroar",
+          "species": "Incineroar",
+          "base_species": "Incineroar",
+          "display_species": "Incineroar",
+          "item": "Sitrus Berry",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Incineroar",
+          "role": "",
+          "archetype": "",
+          "moves": [
+            "Fake Out",
+            "Parting Shot",
+            "Flare Blitz",
+            "Knock Off"
+          ],
+          "identity_key": "incineroar::incineroar::sitrus berry::"
         },
         {
           "name": "Whimsicott",
           "species": "Whimsicott",
           "base_species": "Whimsicott",
           "display_species": "Whimsicott",
-          "item": "",
+          "item": "Focus Sash",
           "mega_stone": "",
           "mega_identity": "",
           "form_identity": "Whimsicott",
           "role": "",
-          "archetype": "unknown",
+          "archetype": "",
+          "moves": [
+            "Tailwind",
+            "Encore",
+            "Moonblast",
+            "Protect"
+          ],
+          "identity_key": "whimsicott::whimsicott::focus sash::"
+        },
+        {
+          "name": "Charizard",
+          "species": "Charizard",
+          "base_species": "Charizard",
+          "display_species": "Charizard",
+          "item": "",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Charizard",
+          "role": "",
+          "archetype": "",
           "moves": [],
-          "identity_key": "whimsicott::whimsicott::::"
+          "identity_key": "charizard::charizard::::"
+        },
+        {
+          "name": "Archaludon",
+          "species": "Archaludon",
+          "base_species": "Archaludon",
+          "display_species": "Archaludon",
+          "item": "",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Archaludon",
+          "role": "",
+          "archetype": "",
+          "moves": [],
+          "identity_key": "archaludon::archaludon::::"
+        }
+      ],
+      "confidence": 0.838,
+      "score": 0.75,
+      "sourceType": "pikalytics_variant",
+      "sourceName": "pikalyticsvariant329curatedpikalyticsimport",
+      "sourceUrl": "",
+      "originSourceType": "pikalytics",
+      "parentSourceName": "curatedpikalyticsimport",
+      "generated": true,
+      "variantReason": "controlled-source-variant",
+      "origin_source_type": "pikalytics",
+      "parent_source_name": "curatedpikalyticsimport",
+      "variant_reason": "controlled-source-variant"
+    },
+    {
+      "source_type": "pikalytics_variant",
+      "source_name": "pikalyticsvariant217pikalyticschampionssnapshot",
+      "source_url": "",
+      "quality_class": "",
+      "archetype": "unknown",
+      "tags": [
+        "pikalytics_variant",
+        "pikalytics",
+        "meta",
+        "generated",
+        "controlled-source-variant"
+      ],
+      "team": [
+        {
+          "name": "Incineroar",
+          "species": "Incineroar",
+          "base_species": "Incineroar",
+          "display_species": "Incineroar",
+          "item": "Sitrus Berry",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Incineroar",
+          "role": "",
+          "archetype": "",
+          "moves": [
+            "Fake Out",
+            "Flare Blitz",
+            "Parting Shot",
+            "Knock Off"
+          ],
+          "identity_key": "incineroar::incineroar::sitrus berry::"
+        },
+        {
+          "name": "Whimsicott",
+          "species": "Whimsicott",
+          "base_species": "Whimsicott",
+          "display_species": "Whimsicott",
+          "item": "Focus Sash",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Whimsicott",
+          "role": "",
+          "archetype": "",
+          "moves": [
+            "Tailwind",
+            "Moonblast",
+            "Encore",
+            "Protect"
+          ],
+          "identity_key": "whimsicott::whimsicott::focus sash::"
+        },
+        {
+          "name": "Garchomp",
+          "species": "Garchomp",
+          "base_species": "Garchomp",
+          "display_species": "Garchomp",
+          "item": "Choice Scarf",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Garchomp",
+          "role": "",
+          "archetype": "",
+          "moves": [
+            "Earthquake",
+            "Rock Slide",
+            "Dragon Claw",
+            "Protect"
+          ],
+          "identity_key": "garchomp::garchomp::choice scarf::"
         },
         {
           "name": "Kingambit",
@@ -3210,34 +2713,189 @@
           "mega_identity": "",
           "form_identity": "Kingambit",
           "role": "",
-          "archetype": "unknown",
+          "archetype": "",
           "moves": [],
           "identity_key": "kingambit::kingambit::::"
+        },
+        {
+          "name": "Basculegion",
+          "species": "Basculegion",
+          "base_species": "Basculegion",
+          "display_species": "Basculegion",
+          "item": "",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Basculegion",
+          "role": "",
+          "archetype": "",
+          "moves": [],
+          "identity_key": "basculegion::basculegion::::"
         },
         {
           "name": "Pelipper",
           "species": "Pelipper",
           "base_species": "Pelipper",
           "display_species": "Pelipper",
-          "item": "",
+          "item": "Choice Scarf",
           "mega_stone": "",
           "mega_identity": "",
           "form_identity": "Pelipper",
           "role": "",
-          "archetype": "unknown",
-          "moves": [],
-          "identity_key": "pelipper::pelipper::::"
+          "archetype": "",
+          "moves": [
+            "Hurricane",
+            "Muddy Water",
+            "Tailwind",
+            "Protect"
+          ],
+          "identity_key": "pelipper::pelipper::choice scarf::"
         }
       ],
-      "confidence": 0.469,
-      "score": 0.0,
-      "sourceType": "archive",
-      "sourceName": "archive",
+      "confidence": 0.825,
+      "score": 0.741,
+      "sourceType": "pikalytics_variant",
+      "sourceName": "pikalyticsvariant217pikalyticschampionssnapshot",
       "sourceUrl": "",
-      "originSourceType": "",
-      "parentSourceName": "",
-      "generated": false,
-      "variantReason": ""
+      "originSourceType": "pikalytics",
+      "parentSourceName": "pikalyticschampionssnapshot",
+      "generated": true,
+      "variantReason": "controlled-source-variant",
+      "origin_source_type": "pikalytics",
+      "parent_source_name": "pikalyticschampionssnapshot",
+      "variant_reason": "controlled-source-variant"
+    },
+    {
+      "source_type": "pikalytics_variant",
+      "source_name": "pikalyticsvariant301curatedpikalyticsimport",
+      "source_url": "",
+      "quality_class": "",
+      "archetype": "unknown",
+      "tags": [
+        "pikalytics_variant",
+        "pikalytics",
+        "meta",
+        "curated",
+        "generated",
+        "controlled-source-variant"
+      ],
+      "team": [
+        {
+          "name": "Pelipper",
+          "species": "Pelipper",
+          "base_species": "Pelipper",
+          "display_species": "Pelipper",
+          "item": "Choice Scarf",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Pelipper",
+          "role": "",
+          "archetype": "",
+          "moves": [
+            "Hurricane",
+            "Tailwind",
+            "Protect",
+            "Muddy Water"
+          ],
+          "identity_key": "pelipper::pelipper::choice scarf::"
+        },
+        {
+          "name": "Basculegion",
+          "species": "Basculegion",
+          "base_species": "Basculegion",
+          "display_species": "Basculegion",
+          "item": "Choice Scarf",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Basculegion",
+          "role": "",
+          "archetype": "",
+          "moves": [
+            "Last Respects",
+            "Wave Crash",
+            "Flip Turn",
+            "Aqua Jet"
+          ],
+          "identity_key": "basculegion::basculegion::choice scarf::"
+        },
+        {
+          "name": "Incineroar",
+          "species": "Incineroar",
+          "base_species": "Incineroar",
+          "display_species": "Incineroar",
+          "item": "Sitrus Berry",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Incineroar",
+          "role": "",
+          "archetype": "",
+          "moves": [
+            "Fake Out",
+            "Parting Shot",
+            "Flare Blitz",
+            "Knock Off"
+          ],
+          "identity_key": "incineroar::incineroar::sitrus berry::"
+        },
+        {
+          "name": "Whimsicott",
+          "species": "Whimsicott",
+          "base_species": "Whimsicott",
+          "display_species": "Whimsicott",
+          "item": "Focus Sash",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Whimsicott",
+          "role": "",
+          "archetype": "",
+          "moves": [
+            "Tailwind",
+            "Encore",
+            "Moonblast",
+            "Protect"
+          ],
+          "identity_key": "whimsicott::whimsicott::focus sash::"
+        },
+        {
+          "name": "Kingambit",
+          "species": "Kingambit",
+          "base_species": "Kingambit",
+          "display_species": "Kingambit",
+          "item": "",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Kingambit",
+          "role": "",
+          "archetype": "",
+          "moves": [],
+          "identity_key": "kingambit::kingambit::::"
+        },
+        {
+          "name": "Archaludon",
+          "species": "Archaludon",
+          "base_species": "Archaludon",
+          "display_species": "Archaludon",
+          "item": "",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Archaludon",
+          "role": "",
+          "archetype": "",
+          "moves": [],
+          "identity_key": "archaludon::archaludon::::"
+        }
+      ],
+      "confidence": 0.838,
+      "score": 0.7499,
+      "sourceType": "pikalytics_variant",
+      "sourceName": "pikalyticsvariant301curatedpikalyticsimport",
+      "sourceUrl": "",
+      "originSourceType": "pikalytics",
+      "parentSourceName": "curatedpikalyticsimport",
+      "generated": true,
+      "variantReason": "controlled-source-variant",
+      "origin_source_type": "pikalytics",
+      "parent_source_name": "curatedpikalyticsimport",
+      "variant_reason": "controlled-source-variant"
     },
     {
       "source_type": "archive",
@@ -3338,111 +2996,6 @@
       "score": 0.0,
       "sourceType": "archive",
       "sourceName": "selfgenerated",
-      "sourceUrl": "",
-      "originSourceType": "",
-      "parentSourceName": "",
-      "generated": false,
-      "variantReason": ""
-    },
-    {
-      "source_type": "archive",
-      "source_name": "teamarchive",
-      "source_url": "",
-      "quality_class": "archive",
-      "archetype": "unknown",
-      "tags": [
-        "archive"
-      ],
-      "team": [
-        {
-          "name": "Garchomp",
-          "species": "Garchomp",
-          "base_species": "Garchomp",
-          "display_species": "Garchomp",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Garchomp",
-          "role": "",
-          "archetype": "unknown",
-          "moves": [],
-          "identity_key": "garchomp::garchomp::::"
-        },
-        {
-          "name": "Sinistcha",
-          "species": "Sinistcha",
-          "base_species": "Sinistcha",
-          "display_species": "Sinistcha",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Sinistcha",
-          "role": "",
-          "archetype": "unknown",
-          "moves": [],
-          "identity_key": "sinistcha::sinistcha::::"
-        },
-        {
-          "name": "Starmie",
-          "species": "Starmie",
-          "base_species": "Starmie",
-          "display_species": "Starmie",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Starmie",
-          "role": "",
-          "archetype": "unknown",
-          "moves": [],
-          "identity_key": "starmie::starmie::::"
-        },
-        {
-          "name": "Incineroar",
-          "species": "Incineroar",
-          "base_species": "Incineroar",
-          "display_species": "Incineroar",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Incineroar",
-          "role": "",
-          "archetype": "unknown",
-          "moves": [],
-          "identity_key": "incineroar::incineroar::::"
-        },
-        {
-          "name": "Tyranitar",
-          "species": "Tyranitar",
-          "base_species": "Tyranitar",
-          "display_species": "Tyranitar",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Tyranitar",
-          "role": "",
-          "archetype": "unknown",
-          "moves": [],
-          "identity_key": "tyranitar::tyranitar::::"
-        },
-        {
-          "name": "Gengar",
-          "species": "Gengar",
-          "base_species": "Gengar",
-          "display_species": "Gengar",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Gengar",
-          "role": "",
-          "archetype": "unknown",
-          "moves": [],
-          "identity_key": "gengar::gengar::::"
-        }
-      ],
-      "confidence": 0.46,
-      "score": 0.0,
-      "sourceType": "archive",
-      "sourceName": "teamarchive",
       "sourceUrl": "",
       "originSourceType": "",
       "parentSourceName": "",
@@ -8492,7 +8045,7 @@
     },
     {
       "source_type": "archive",
-      "source_name": "archivepelipperbasculegion",
+      "source_name": "archivehighlevelvariant15moxieboosted",
       "source_url": "",
       "quality_class": "archive",
       "archetype": "unknown",
@@ -8505,42 +8058,51 @@
           "species": "Pelipper",
           "base_species": "Pelipper",
           "display_species": "Pelipper",
-          "item": "",
+          "item": "Focus Sash",
           "mega_stone": "",
           "mega_identity": "",
           "form_identity": "Pelipper",
           "role": "",
           "archetype": "unknown",
-          "moves": [],
-          "identity_key": "pelipper::pelipper::::"
+          "moves": [
+            "Tailwind",
+            "Hurricane"
+          ],
+          "identity_key": "pelipper::pelipper::focus sash::"
         },
         {
           "name": "Basculegion",
           "species": "Basculegion",
           "base_species": "Basculegion",
           "display_species": "Basculegion",
-          "item": "",
+          "item": "Choice Scarf",
           "mega_stone": "",
           "mega_identity": "",
           "form_identity": "Basculegion",
           "role": "",
           "archetype": "unknown",
-          "moves": [],
-          "identity_key": "basculegion::basculegion::::"
+          "moves": [
+            "Last Respects",
+            "Wave Crash"
+          ],
+          "identity_key": "basculegion::basculegion::choice scarf::"
         },
         {
           "name": "Incineroar",
           "species": "Incineroar",
           "base_species": "Incineroar",
           "display_species": "Incineroar",
-          "item": "",
+          "item": "Safety Goggles",
           "mega_stone": "",
           "mega_identity": "",
           "form_identity": "Incineroar",
           "role": "",
           "archetype": "unknown",
-          "moves": [],
-          "identity_key": "incineroar::incineroar::::"
+          "moves": [
+            "Fake Out",
+            "Parting Shot"
+          ],
+          "identity_key": "incineroar::incineroar::safety goggles::"
         },
         {
           "name": "Whimsicott",
@@ -8553,7 +8115,113 @@
           "form_identity": "Whimsicott",
           "role": "",
           "archetype": "unknown",
+          "moves": [
+            "Tailwind",
+            "Encore"
+          ],
+          "identity_key": "whimsicott::whimsicott::::"
+        },
+        {
+          "name": "Kingambit",
+          "species": "Kingambit",
+          "base_species": "Kingambit",
+          "display_species": "Kingambit",
+          "item": "",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Kingambit",
+          "role": "",
+          "archetype": "unknown",
           "moves": [],
+          "identity_key": "kingambit::kingambit::::"
+        }
+      ],
+      "confidence": 0.561,
+      "score": 0.0,
+      "sourceType": "archive",
+      "sourceName": "archivehighlevelvariant15moxieboosted",
+      "sourceUrl": "",
+      "originSourceType": "",
+      "parentSourceName": "",
+      "generated": false,
+      "variantReason": ""
+    },
+    {
+      "source_type": "archive",
+      "source_name": "archivehighlevelvariant2moxieboosted",
+      "source_url": "",
+      "quality_class": "archive",
+      "archetype": "unknown",
+      "tags": [
+        "archive"
+      ],
+      "team": [
+        {
+          "name": "Pelipper",
+          "species": "Pelipper",
+          "base_species": "Pelipper",
+          "display_species": "Pelipper",
+          "item": "Focus Sash",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Pelipper",
+          "role": "",
+          "archetype": "unknown",
+          "moves": [
+            "Tailwind",
+            "Hurricane"
+          ],
+          "identity_key": "pelipper::pelipper::focus sash::"
+        },
+        {
+          "name": "Basculegion",
+          "species": "Basculegion",
+          "base_species": "Basculegion",
+          "display_species": "Basculegion",
+          "item": "Choice Scarf",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Basculegion",
+          "role": "",
+          "archetype": "unknown",
+          "moves": [
+            "Last Respects",
+            "Wave Crash"
+          ],
+          "identity_key": "basculegion::basculegion::choice scarf::"
+        },
+        {
+          "name": "Incineroar",
+          "species": "Incineroar",
+          "base_species": "Incineroar",
+          "display_species": "Incineroar",
+          "item": "Safety Goggles",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Incineroar",
+          "role": "",
+          "archetype": "unknown",
+          "moves": [
+            "Fake Out",
+            "Parting Shot"
+          ],
+          "identity_key": "incineroar::incineroar::safety goggles::"
+        },
+        {
+          "name": "Whimsicott",
+          "species": "Whimsicott",
+          "base_species": "Whimsicott",
+          "display_species": "Whimsicott",
+          "item": "",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Whimsicott",
+          "role": "",
+          "archetype": "unknown",
+          "moves": [
+            "Tailwind",
+            "Encore"
+          ],
           "identity_key": "whimsicott::whimsicott::::"
         },
         {
@@ -8574,7 +8242,7 @@
       "confidence": 0.546,
       "score": 0.0,
       "sourceType": "archive",
-      "sourceName": "archivepelipperbasculegion",
+      "sourceName": "archivehighlevelvariant2moxieboosted",
       "sourceUrl": "",
       "originSourceType": "",
       "parentSourceName": "",
@@ -10276,109 +9944,6 @@
           "identity_key": "pelipper::pelipper::::"
         },
         {
-          "name": "Gengar",
-          "species": "Gengar",
-          "base_species": "Gengar",
-          "display_species": "Gengar",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Gengar",
-          "role": "",
-          "archetype": "unknown",
-          "moves": [],
-          "identity_key": "gengar::gengar::::"
-        },
-        {
-          "name": "Incineroar",
-          "species": "Incineroar",
-          "base_species": "Incineroar",
-          "display_species": "Incineroar",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Incineroar",
-          "role": "",
-          "archetype": "unknown",
-          "moves": [],
-          "identity_key": "incineroar::incineroar::::"
-        },
-        {
-          "name": "Whimsicott",
-          "species": "Whimsicott",
-          "base_species": "Whimsicott",
-          "display_species": "Whimsicott",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Whimsicott",
-          "role": "",
-          "archetype": "unknown",
-          "moves": [],
-          "identity_key": "whimsicott::whimsicott::::"
-        },
-        {
-          "name": "Archaludon",
-          "species": "Archaludon",
-          "base_species": "Archaludon",
-          "display_species": "Archaludon",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Archaludon",
-          "role": "",
-          "archetype": "unknown",
-          "moves": [],
-          "identity_key": "archaludon::archaludon::::"
-        },
-        {
-          "name": "Garchomp",
-          "species": "Garchomp",
-          "base_species": "Garchomp",
-          "display_species": "Garchomp",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Garchomp",
-          "role": "",
-          "archetype": "unknown",
-          "moves": [],
-          "identity_key": "garchomp::garchomp::::"
-        }
-      ],
-      "confidence": 0.4,
-      "score": 0.0,
-      "sourceType": "archive",
-      "sourceName": "archive",
-      "sourceUrl": "",
-      "originSourceType": "",
-      "parentSourceName": "",
-      "generated": false,
-      "variantReason": ""
-    },
-    {
-      "source_type": "archive",
-      "source_name": "",
-      "source_url": "",
-      "quality_class": "archive",
-      "archetype": "unknown",
-      "tags": [],
-      "team": [
-        {
-          "name": "Pelipper",
-          "species": "Pelipper",
-          "base_species": "Pelipper",
-          "display_species": "Pelipper",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Pelipper",
-          "role": "",
-          "archetype": "unknown",
-          "moves": [],
-          "identity_key": "pelipper::pelipper::::"
-        },
-        {
           "name": "Basculegion",
           "species": "Basculegion",
           "base_species": "Basculegion",
@@ -11048,128 +10613,6 @@
       "score": 0.0,
       "sourceType": "archive",
       "sourceName": "generated524",
-      "sourceUrl": "",
-      "originSourceType": "",
-      "parentSourceName": "",
-      "generated": false,
-      "variantReason": ""
-    },
-    {
-      "source_type": "archive",
-      "source_name": "generated708",
-      "source_url": "",
-      "quality_class": "archive",
-      "archetype": "unknown",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
-      ],
-      "team": [
-        {
-          "name": "Tyranitar",
-          "species": "Tyranitar",
-          "base_species": "Tyranitar",
-          "display_species": "Tyranitar",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Tyranitar",
-          "role": "",
-          "archetype": "unknown",
-          "moves": [],
-          "identity_key": "tyranitar::tyranitar::::"
-        },
-        {
-          "name": "Garchomp",
-          "species": "Garchomp",
-          "base_species": "Garchomp",
-          "display_species": "Garchomp",
-          "item": "Choice Scarf",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Garchomp",
-          "role": "",
-          "archetype": "unknown",
-          "moves": [
-            "Earthquake",
-            "Rock Slide",
-            "Dragon Claw",
-            "Protect"
-          ],
-          "identity_key": "garchomp::garchomp::choice scarf::"
-        },
-        {
-          "name": "Farigiraf",
-          "species": "Farigiraf",
-          "base_species": "Farigiraf",
-          "display_species": "Farigiraf",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Farigiraf",
-          "role": "",
-          "archetype": "unknown",
-          "moves": [],
-          "identity_key": "farigiraf::farigiraf::::"
-        },
-        {
-          "name": "Starmie",
-          "species": "Starmie",
-          "base_species": "Starmie",
-          "display_species": "Starmie",
-          "item": "Life Orb",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Starmie",
-          "role": "",
-          "archetype": "unknown",
-          "moves": [
-            "Hydro Pump",
-            "Ice Beam",
-            "Thunderbolt",
-            "Protect"
-          ],
-          "identity_key": "starmie::starmie::life orb::"
-        },
-        {
-          "name": "Dragonite",
-          "species": "Dragonite",
-          "base_species": "Dragonite",
-          "display_species": "Dragonite",
-          "item": "Dragoninite",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Dragonite",
-          "role": "",
-          "archetype": "unknown",
-          "moves": [
-            "Extreme Speed",
-            "Dragon Claw",
-            "Fire Punch",
-            "Protect"
-          ],
-          "identity_key": "dragonite::dragonite::dragoninite::"
-        },
-        {
-          "name": "Kingambit",
-          "species": "Kingambit",
-          "base_species": "Kingambit",
-          "display_species": "Kingambit",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Kingambit",
-          "role": "",
-          "archetype": "unknown",
-          "moves": [],
-          "identity_key": "kingambit::kingambit::::"
-        }
-      ],
-      "confidence": 0.4,
-      "score": 0.0,
-      "sourceType": "archive",
-      "sourceName": "generated708",
       "sourceUrl": "",
       "originSourceType": "",
       "parentSourceName": "",
@@ -12569,123 +12012,6 @@
     },
     {
       "source_type": "archive",
-      "source_name": "generated594",
-      "source_url": "",
-      "quality_class": "archive",
-      "archetype": "unknown",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
-      ],
-      "team": [
-        {
-          "name": "Rotom-Wash",
-          "species": "Rotom-Wash",
-          "base_species": "Rotom-Wash",
-          "display_species": "Rotom-Wash",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Rotom-Wash",
-          "role": "",
-          "archetype": "unknown",
-          "moves": [],
-          "identity_key": "rotom-wash::rotom-wash::::"
-        },
-        {
-          "name": "Archaludon",
-          "species": "Archaludon",
-          "base_species": "Archaludon",
-          "display_species": "Archaludon",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Archaludon",
-          "role": "",
-          "archetype": "unknown",
-          "moves": [],
-          "identity_key": "archaludon::archaludon::::"
-        },
-        {
-          "name": "Farigiraf",
-          "species": "Farigiraf",
-          "base_species": "Farigiraf",
-          "display_species": "Farigiraf",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Farigiraf",
-          "role": "",
-          "archetype": "unknown",
-          "moves": [],
-          "identity_key": "farigiraf::farigiraf::::"
-        },
-        {
-          "name": "Starmie",
-          "species": "Starmie",
-          "base_species": "Starmie",
-          "display_species": "Starmie",
-          "item": "Life Orb",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Starmie",
-          "role": "",
-          "archetype": "unknown",
-          "moves": [
-            "Hydro Pump",
-            "Ice Beam",
-            "Thunderbolt",
-            "Protect"
-          ],
-          "identity_key": "starmie::starmie::life orb::"
-        },
-        {
-          "name": "Dragonite",
-          "species": "Dragonite",
-          "base_species": "Dragonite",
-          "display_species": "Dragonite",
-          "item": "Dragoninite",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Dragonite",
-          "role": "",
-          "archetype": "unknown",
-          "moves": [
-            "Extreme Speed",
-            "Dragon Claw",
-            "Fire Punch",
-            "Protect"
-          ],
-          "identity_key": "dragonite::dragonite::dragoninite::"
-        },
-        {
-          "name": "Gengar",
-          "species": "Gengar",
-          "base_species": "Gengar",
-          "display_species": "Gengar",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Gengar",
-          "role": "",
-          "archetype": "unknown",
-          "moves": [],
-          "identity_key": "gengar::gengar::::"
-        }
-      ],
-      "confidence": 0.4,
-      "score": 0.0,
-      "sourceType": "archive",
-      "sourceName": "generated594",
-      "sourceUrl": "",
-      "originSourceType": "",
-      "parentSourceName": "",
-      "generated": false,
-      "variantReason": ""
-    },
-    {
-      "source_type": "archive",
       "source_name": "generated494",
       "source_url": "",
       "quality_class": "archive",
@@ -12790,123 +12116,6 @@
       "score": 0.0,
       "sourceType": "archive",
       "sourceName": "generated494",
-      "sourceUrl": "",
-      "originSourceType": "",
-      "parentSourceName": "",
-      "generated": false,
-      "variantReason": ""
-    },
-    {
-      "source_type": "archive",
-      "source_name": "generated218",
-      "source_url": "",
-      "quality_class": "archive",
-      "archetype": "unknown",
-      "tags": [
-        "selfplay",
-        "generated",
-        "exploratory"
-      ],
-      "team": [
-        {
-          "name": "Farigiraf",
-          "species": "Farigiraf",
-          "base_species": "Farigiraf",
-          "display_species": "Farigiraf",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Farigiraf",
-          "role": "",
-          "archetype": "unknown",
-          "moves": [],
-          "identity_key": "farigiraf::farigiraf::::"
-        },
-        {
-          "name": "Archaludon",
-          "species": "Archaludon",
-          "base_species": "Archaludon",
-          "display_species": "Archaludon",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Archaludon",
-          "role": "",
-          "archetype": "unknown",
-          "moves": [],
-          "identity_key": "archaludon::archaludon::::"
-        },
-        {
-          "name": "Tyranitar",
-          "species": "Tyranitar",
-          "base_species": "Tyranitar",
-          "display_species": "Tyranitar",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Tyranitar",
-          "role": "",
-          "archetype": "unknown",
-          "moves": [],
-          "identity_key": "tyranitar::tyranitar::::"
-        },
-        {
-          "name": "Starmie",
-          "species": "Starmie",
-          "base_species": "Starmie",
-          "display_species": "Starmie",
-          "item": "Life Orb",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Starmie",
-          "role": "",
-          "archetype": "unknown",
-          "moves": [
-            "Hydro Pump",
-            "Ice Beam",
-            "Thunderbolt",
-            "Protect"
-          ],
-          "identity_key": "starmie::starmie::life orb::"
-        },
-        {
-          "name": "Dragonite",
-          "species": "Dragonite",
-          "base_species": "Dragonite",
-          "display_species": "Dragonite",
-          "item": "Dragoninite",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Dragonite",
-          "role": "",
-          "archetype": "unknown",
-          "moves": [
-            "Extreme Speed",
-            "Dragon Claw",
-            "Fire Punch",
-            "Protect"
-          ],
-          "identity_key": "dragonite::dragonite::dragoninite::"
-        },
-        {
-          "name": "Rotom-Wash",
-          "species": "Rotom-Wash",
-          "base_species": "Rotom-Wash",
-          "display_species": "Rotom-Wash",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Rotom-Wash",
-          "role": "",
-          "archetype": "unknown",
-          "moves": [],
-          "identity_key": "rotom-wash::rotom-wash::::"
-        }
-      ],
-      "confidence": 0.4,
-      "score": 0.0,
-      "sourceType": "archive",
-      "sourceName": "generated218",
       "sourceUrl": "",
       "originSourceType": "",
       "parentSourceName": "",
@@ -13901,138 +13110,21 @@
           "identity_key": "whimsicott::whimsicott::::"
         },
         {
-          "name": "Gengar",
-          "species": "Gengar",
-          "base_species": "Gengar",
-          "display_species": "Gengar",
+          "name": "Farigiraf",
+          "species": "Farigiraf",
+          "base_species": "Farigiraf",
+          "display_species": "Farigiraf",
           "item": "",
           "mega_stone": "",
           "mega_identity": "",
-          "form_identity": "Gengar",
+          "form_identity": "Farigiraf",
           "role": "",
           "archetype": "",
           "moves": [],
-          "identity_key": "gengar::gengar::::"
-        },
-        {
-          "name": "Archaludon",
-          "species": "Archaludon",
-          "base_species": "Archaludon",
-          "display_species": "Archaludon",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Archaludon",
-          "role": "",
-          "archetype": "",
-          "moves": [],
-          "identity_key": "archaludon::archaludon::::"
+          "identity_key": "farigiraf::farigiraf::::"
         }
       ],
-      "confidence": 0.753,
-      "score": 0.75,
-      "sourceType": "archive",
-      "sourceName": "archive",
-      "sourceUrl": "",
-      "originSourceType": "",
-      "parentSourceName": "",
-      "generated": false,
-      "variantReason": ""
-    },
-    {
-      "source_type": "archive",
-      "source_name": "",
-      "source_url": "",
-      "quality_class": "archive",
-      "archetype": "unknown",
-      "tags": [],
-      "team": [
-        {
-          "name": "Pelipper",
-          "species": "Pelipper",
-          "base_species": "Pelipper",
-          "display_species": "Pelipper",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Pelipper",
-          "role": "",
-          "archetype": "",
-          "moves": [],
-          "identity_key": "pelipper::pelipper::::"
-        },
-        {
-          "name": "Basculegion",
-          "species": "Basculegion",
-          "base_species": "Basculegion",
-          "display_species": "Basculegion",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Basculegion",
-          "role": "",
-          "archetype": "",
-          "moves": [],
-          "identity_key": "basculegion::basculegion::::"
-        },
-        {
-          "name": "Incineroar",
-          "species": "Incineroar",
-          "base_species": "Incineroar",
-          "display_species": "Incineroar",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Incineroar",
-          "role": "",
-          "archetype": "",
-          "moves": [],
-          "identity_key": "incineroar::incineroar::::"
-        },
-        {
-          "name": "Whimsicott",
-          "species": "Whimsicott",
-          "base_species": "Whimsicott",
-          "display_species": "Whimsicott",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Whimsicott",
-          "role": "",
-          "archetype": "",
-          "moves": [],
-          "identity_key": "whimsicott::whimsicott::::"
-        },
-        {
-          "name": "Archaludon",
-          "species": "Archaludon",
-          "base_species": "Archaludon",
-          "display_species": "Archaludon",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Archaludon",
-          "role": "",
-          "archetype": "",
-          "moves": [],
-          "identity_key": "archaludon::archaludon::::"
-        },
-        {
-          "name": "Tyranitar",
-          "species": "Tyranitar",
-          "base_species": "Tyranitar",
-          "display_species": "Tyranitar",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Tyranitar",
-          "role": "",
-          "archetype": "",
-          "moves": [],
-          "identity_key": "tyranitar::tyranitar::::"
-        }
-      ],
-      "confidence": 0.753,
+      "confidence": 0.561,
       "score": 0.746,
       "sourceType": "archive",
       "sourceName": "archive",
@@ -14051,163 +13143,18 @@
       "tags": [],
       "team": [
         {
-          "name": "Pelipper",
-          "species": "Pelipper",
-          "base_species": "Pelipper",
-          "display_species": "Pelipper",
+          "name": "Tyranitar",
+          "species": "Tyranitar",
+          "base_species": "Tyranitar",
+          "display_species": "Tyranitar",
           "item": "",
           "mega_stone": "",
           "mega_identity": "",
-          "form_identity": "Pelipper",
+          "form_identity": "Tyranitar",
           "role": "",
           "archetype": "",
           "moves": [],
-          "identity_key": "pelipper::pelipper::::"
-        },
-        {
-          "name": "Basculegion",
-          "species": "Basculegion",
-          "base_species": "Basculegion",
-          "display_species": "Basculegion",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Basculegion",
-          "role": "",
-          "archetype": "",
-          "moves": [],
-          "identity_key": "basculegion::basculegion::::"
-        },
-        {
-          "name": "Incineroar",
-          "species": "Incineroar",
-          "base_species": "Incineroar",
-          "display_species": "Incineroar",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Incineroar",
-          "role": "",
-          "archetype": "",
-          "moves": [],
-          "identity_key": "incineroar::incineroar::::"
-        },
-        {
-          "name": "Whimsicott",
-          "species": "Whimsicott",
-          "base_species": "Whimsicott",
-          "display_species": "Whimsicott",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Whimsicott",
-          "role": "",
-          "archetype": "",
-          "moves": [],
-          "identity_key": "whimsicott::whimsicott::::"
-        },
-        {
-          "name": "Kingambit",
-          "species": "Kingambit",
-          "base_species": "Kingambit",
-          "display_species": "Kingambit",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Kingambit",
-          "role": "",
-          "archetype": "",
-          "moves": [],
-          "identity_key": "kingambit::kingambit::::"
-        },
-        {
-          "name": "Archaludon",
-          "species": "Archaludon",
-          "base_species": "Archaludon",
-          "display_species": "Archaludon",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Archaludon",
-          "role": "",
-          "archetype": "",
-          "moves": [],
-          "identity_key": "archaludon::archaludon::::"
-        }
-      ],
-      "confidence": 0.739,
-      "score": 0.749,
-      "sourceType": "archive",
-      "sourceName": "archive",
-      "sourceUrl": "",
-      "originSourceType": "",
-      "parentSourceName": "",
-      "generated": false,
-      "variantReason": ""
-    },
-    {
-      "source_type": "archive",
-      "source_name": "",
-      "source_url": "",
-      "quality_class": "archive",
-      "archetype": "unknown",
-      "tags": [],
-      "team": [
-        {
-          "name": "Incineroar",
-          "species": "Incineroar",
-          "base_species": "Incineroar",
-          "display_species": "Incineroar",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Incineroar",
-          "role": "",
-          "archetype": "",
-          "moves": [],
-          "identity_key": "incineroar::incineroar::::"
-        },
-        {
-          "name": "Whimsicott",
-          "species": "Whimsicott",
-          "base_species": "Whimsicott",
-          "display_species": "Whimsicott",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Whimsicott",
-          "role": "",
-          "archetype": "",
-          "moves": [],
-          "identity_key": "whimsicott::whimsicott::::"
-        },
-        {
-          "name": "Basculegion",
-          "species": "Basculegion",
-          "base_species": "Basculegion",
-          "display_species": "Basculegion",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Basculegion",
-          "role": "",
-          "archetype": "",
-          "moves": [],
-          "identity_key": "basculegion::basculegion::::"
-        },
-        {
-          "name": "Sinistcha",
-          "species": "Sinistcha",
-          "base_species": "Sinistcha",
-          "display_species": "Sinistcha",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Sinistcha",
-          "role": "",
-          "archetype": "",
-          "moves": [],
-          "identity_key": "sinistcha::sinistcha::::"
+          "identity_key": "tyranitar::tyranitar::::"
         },
         {
           "name": "Garchomp",
@@ -14224,154 +13171,18 @@
           "identity_key": "garchomp::garchomp::::"
         },
         {
-          "name": "Pelipper",
-          "species": "Pelipper",
-          "base_species": "Pelipper",
-          "display_species": "Pelipper",
+          "name": "Farigiraf",
+          "species": "Farigiraf",
+          "base_species": "Farigiraf",
+          "display_species": "Farigiraf",
           "item": "",
           "mega_stone": "",
           "mega_identity": "",
-          "form_identity": "Pelipper",
+          "form_identity": "Farigiraf",
           "role": "",
           "archetype": "",
           "moves": [],
-          "identity_key": "pelipper::pelipper::::"
-        }
-      ],
-      "confidence": 0.744,
-      "score": 0.743,
-      "sourceType": "archive",
-      "sourceName": "archive",
-      "sourceUrl": "",
-      "originSourceType": "",
-      "parentSourceName": "",
-      "generated": false,
-      "variantReason": ""
-    },
-    {
-      "source_type": "archive",
-      "source_name": "",
-      "source_url": "",
-      "quality_class": "archive",
-      "archetype": "unknown",
-      "tags": [],
-      "team": [
-        {
-          "name": "Incineroar",
-          "species": "Incineroar",
-          "base_species": "Incineroar",
-          "display_species": "Incineroar",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Incineroar",
-          "role": "",
-          "archetype": "",
-          "moves": [],
-          "identity_key": "incineroar::incineroar::::"
-        },
-        {
-          "name": "Whimsicott",
-          "species": "Whimsicott",
-          "base_species": "Whimsicott",
-          "display_species": "Whimsicott",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Whimsicott",
-          "role": "",
-          "archetype": "",
-          "moves": [],
-          "identity_key": "whimsicott::whimsicott::::"
-        },
-        {
-          "name": "Dragonite",
-          "species": "Dragonite",
-          "base_species": "Dragonite",
-          "display_species": "Dragonite",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Dragonite",
-          "role": "",
-          "archetype": "",
-          "moves": [],
-          "identity_key": "dragonite::dragonite::::"
-        },
-        {
-          "name": "Garchomp",
-          "species": "Garchomp",
-          "base_species": "Garchomp",
-          "display_species": "Garchomp",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Garchomp",
-          "role": "",
-          "archetype": "",
-          "moves": [],
-          "identity_key": "garchomp::garchomp::::"
-        },
-        {
-          "name": "Kingambit",
-          "species": "Kingambit",
-          "base_species": "Kingambit",
-          "display_species": "Kingambit",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Kingambit",
-          "role": "",
-          "archetype": "",
-          "moves": [],
-          "identity_key": "kingambit::kingambit::::"
-        },
-        {
-          "name": "Pelipper",
-          "species": "Pelipper",
-          "base_species": "Pelipper",
-          "display_species": "Pelipper",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Pelipper",
-          "role": "",
-          "archetype": "",
-          "moves": [],
-          "identity_key": "pelipper::pelipper::::"
-        }
-      ],
-      "confidence": 0.744,
-      "score": 0.741,
-      "sourceType": "archive",
-      "sourceName": "archive",
-      "sourceUrl": "",
-      "originSourceType": "",
-      "parentSourceName": "",
-      "generated": false,
-      "variantReason": ""
-    },
-    {
-      "source_type": "archive",
-      "source_name": "",
-      "source_url": "",
-      "quality_class": "archive",
-      "archetype": "unknown",
-      "tags": [],
-      "team": [
-        {
-          "name": "Incineroar",
-          "species": "Incineroar",
-          "base_species": "Incineroar",
-          "display_species": "Incineroar",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Incineroar",
-          "role": "",
-          "archetype": "",
-          "moves": [],
-          "identity_key": "incineroar::incineroar::::"
+          "identity_key": "farigiraf::farigiraf::::"
         },
         {
           "name": "Starmie",
@@ -14388,32 +13199,18 @@
           "identity_key": "starmie::starmie::::"
         },
         {
-          "name": "Tyranitar",
-          "species": "Tyranitar",
-          "base_species": "Tyranitar",
-          "display_species": "Tyranitar",
+          "name": "Dragonite",
+          "species": "Dragonite",
+          "base_species": "Dragonite",
+          "display_species": "Dragonite",
           "item": "",
           "mega_stone": "",
           "mega_identity": "",
-          "form_identity": "Tyranitar",
+          "form_identity": "Dragonite",
           "role": "",
           "archetype": "",
           "moves": [],
-          "identity_key": "tyranitar::tyranitar::::"
-        },
-        {
-          "name": "Whimsicott",
-          "species": "Whimsicott",
-          "base_species": "Whimsicott",
-          "display_species": "Whimsicott",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Whimsicott",
-          "role": "",
-          "archetype": "",
-          "moves": [],
-          "identity_key": "whimsicott::whimsicott::::"
+          "identity_key": "dragonite::dragonite::::"
         },
         {
           "name": "Kingambit",
@@ -14428,24 +13225,10 @@
           "archetype": "",
           "moves": [],
           "identity_key": "kingambit::kingambit::::"
-        },
-        {
-          "name": "Pelipper",
-          "species": "Pelipper",
-          "base_species": "Pelipper",
-          "display_species": "Pelipper",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Pelipper",
-          "role": "",
-          "archetype": "",
-          "moves": [],
-          "identity_key": "pelipper::pelipper::::"
         }
       ],
-      "confidence": 0.732,
-      "score": 0.744,
+      "confidence": 0.425,
+      "score": 0.718,
       "sourceType": "archive",
       "sourceName": "archive",
       "sourceUrl": "",
@@ -14548,7 +13331,7 @@
         }
       ],
       "confidence": 0.944,
-      "score": 0.754,
+      "score": 0.748,
       "sourceType": "archive",
       "sourceName": "archive",
       "sourceUrl": "",
@@ -14623,7 +13406,7 @@
         }
       ],
       "confidence": 0.685,
-      "score": 0.768,
+      "score": 0.76,
       "sourceType": "archive",
       "sourceName": "archive",
       "sourceUrl": "",
@@ -14726,7 +13509,7 @@
         }
       ],
       "confidence": 0.924,
-      "score": 0.756,
+      "score": 0.749,
       "sourceType": "archive",
       "sourceName": "archive",
       "sourceUrl": "",
@@ -14829,7 +13612,7 @@
         }
       ],
       "confidence": 0.992,
-      "score": 0.754,
+      "score": 0.746,
       "sourceType": "archive",
       "sourceName": "archive",
       "sourceUrl": "",
@@ -14932,7 +13715,7 @@
         }
       ],
       "confidence": 0.97,
-      "score": 0.736,
+      "score": 0.729,
       "sourceType": "archive",
       "sourceName": "archive",
       "sourceUrl": "",
@@ -14950,78 +13733,92 @@
       "tags": [],
       "team": [
         {
-          "name": "Pelipper",
-          "species": "Pelipper",
-          "base_species": "Pelipper",
-          "display_species": "Pelipper",
+          "name": "Rotom-Wash",
+          "species": "Rotom-Wash",
+          "base_species": "Rotom-Wash",
+          "display_species": "Rotom-Wash",
           "item": "",
           "mega_stone": "",
           "mega_identity": "",
-          "form_identity": "Pelipper",
+          "form_identity": "Rotom-Wash",
           "role": "",
           "archetype": "",
           "moves": [],
-          "identity_key": "pelipper::pelipper::::"
+          "identity_key": "rotom-wash::rotom-wash::::"
         },
         {
-          "name": "Basculegion",
-          "species": "Basculegion",
-          "base_species": "Basculegion",
-          "display_species": "Basculegion",
+          "name": "Archaludon",
+          "species": "Archaludon",
+          "base_species": "Archaludon",
+          "display_species": "Archaludon",
           "item": "",
           "mega_stone": "",
           "mega_identity": "",
-          "form_identity": "Basculegion",
+          "form_identity": "Archaludon",
           "role": "",
           "archetype": "",
           "moves": [],
-          "identity_key": "basculegion::basculegion::::"
+          "identity_key": "archaludon::archaludon::::"
         },
         {
-          "name": "Incineroar",
-          "species": "Incineroar",
-          "base_species": "Incineroar",
-          "display_species": "Incineroar",
+          "name": "Farigiraf",
+          "species": "Farigiraf",
+          "base_species": "Farigiraf",
+          "display_species": "Farigiraf",
           "item": "",
           "mega_stone": "",
           "mega_identity": "",
-          "form_identity": "Incineroar",
+          "form_identity": "Farigiraf",
           "role": "",
           "archetype": "",
           "moves": [],
-          "identity_key": "incineroar::incineroar::::"
+          "identity_key": "farigiraf::farigiraf::::"
         },
         {
-          "name": "Whimsicott",
-          "species": "Whimsicott",
-          "base_species": "Whimsicott",
-          "display_species": "Whimsicott",
+          "name": "Starmie",
+          "species": "Starmie",
+          "base_species": "Starmie",
+          "display_species": "Starmie",
           "item": "",
           "mega_stone": "",
           "mega_identity": "",
-          "form_identity": "Whimsicott",
+          "form_identity": "Starmie",
           "role": "",
           "archetype": "",
           "moves": [],
-          "identity_key": "whimsicott::whimsicott::::"
+          "identity_key": "starmie::starmie::::"
         },
         {
-          "name": "Kingambit",
-          "species": "Kingambit",
-          "base_species": "Kingambit",
-          "display_species": "Kingambit",
+          "name": "Dragonite",
+          "species": "Dragonite",
+          "base_species": "Dragonite",
+          "display_species": "Dragonite",
           "item": "",
           "mega_stone": "",
           "mega_identity": "",
-          "form_identity": "Kingambit",
+          "form_identity": "Dragonite",
           "role": "",
           "archetype": "",
           "moves": [],
-          "identity_key": "kingambit::kingambit::::"
+          "identity_key": "dragonite::dragonite::::"
+        },
+        {
+          "name": "Gengar",
+          "species": "Gengar",
+          "base_species": "Gengar",
+          "display_species": "Gengar",
+          "item": "",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Gengar",
+          "role": "",
+          "archetype": "",
+          "moves": [],
+          "identity_key": "gengar::gengar::::"
         }
       ],
-      "confidence": 0.561,
-      "score": 0.753,
+      "confidence": 0.425,
+      "score": 0.706,
       "sourceType": "archive",
       "sourceName": "archive",
       "sourceUrl": "",
@@ -15035,9 +13832,9 @@
     "rain_penalty": 0.0,
     "sun_support": 0.216,
     "weather_diversity_target": 0.26,
-    "rain_share": 0.0027,
+    "rain_share": 0.0026,
     "sun_share": 0.0,
-    "rain_shell_share": 0.0091,
+    "rain_shell_share": 0.0045,
     "sun_shell_share": 0.0,
     "applied": false
   }

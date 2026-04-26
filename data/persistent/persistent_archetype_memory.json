@@ -1,8 +1,8 @@
 {
   "archetypes": {
     "unknown": {
-      "count": 5962,
-      "quality_score": 5.9295,
+      "count": 6093,
+      "quality_score": 5.1585,
       "mega_count": 0,
       "anti_rain_count": 0,
       "weather_count": 0
@@ -43,8 +43,8 @@
       "weather_count": 0
     },
     "bulky-offense": {
-      "count": 12,
-      "quality_score": 4.0162,
+      "count": 13,
+      "quality_score": 4.0469,
       "mega_count": 0,
       "anti_rain_count": 0,
       "weather_count": 0
