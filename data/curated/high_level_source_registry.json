@@ -1,22 +1,148 @@
 {
   "sources": [
     {
-      "source_name": "PokeaimMD",
-      "patterns": ["pokeaim", "pokeaimmd", "joey"],
-      "quality_class": "high_level_analysis",
-      "tags": ["tailwind_balance", "niche_competitive", "experimental_high_level"]
-    },
-    {
       "source_name": "Wolfe Glick",
+      "priority": "primary",
       "patterns": ["wolfe", "wolfe glick", "world champ"],
-      "quality_class": "tournament_result",
+      "quality_class": "original_creator_source",
+      "ingestionStatus": "tracked_pending_real_team_rows",
       "tags": ["standard_meta", "mega_sun", "bulky_offense", "anti_rain"]
     },
     {
+      "source_name": "PokeaimMD",
+      "priority": "primary",
+      "patterns": ["pokeaim", "pokeaimmd", "joey"],
+      "quality_class": "original_creator_source",
+      "ingestionStatus": "retained_real_rows",
+      "tags": ["tailwind_balance", "niche_competitive", "experimental_high_level"]
+    },
+    {
       "source_name": "Moxie Boosted",
+      "priority": "primary",
       "patterns": ["moxie boosted", "moxie"],
-      "quality_class": "serious_ladder",
+      "quality_class": "original_creator_source",
+      "ingestionStatus": "retained_real_rows",
       "tags": ["niche_competitive", "tailwind_balance", "hard_tr"]
+    },
+    {
+      "source_name": "CybertronVGC",
+      "priority": "primary",
+      "patterns": ["cybertronvgc", "cybertron", "aaron zheng"],
+      "quality_class": "original_creator_source",
+      "ingestionStatus": "tracked_pending_real_team_rows",
+      "tags": ["featured_matches", "team_reports", "ladder_showcase"]
+    },
+    {
+      "source_name": "James Baek",
+      "priority": "primary",
+      "patterns": ["james baek", "baek"],
+      "quality_class": "original_creator_source",
+      "ingestionStatus": "tracked_pending_real_team_rows",
+      "tags": ["tournament_preparation", "team_reports"]
+    },
+    {
+      "source_name": "Aaron Zheng",
+      "priority": "primary",
+      "patterns": ["aaron zheng", "cybertronvgc", "cybertron"],
+      "quality_class": "original_creator_source",
+      "ingestionStatus": "tracked_pending_real_team_rows",
+      "tags": ["featured_matches", "team_reports"]
+    },
+    {
+      "source_name": "ThatsAplusOne",
+      "priority": "primary",
+      "patterns": ["thatsaplusone", "thats a plus one", "thatsaplus1"],
+      "quality_class": "original_creator_source",
+      "ingestionStatus": "tracked_pending_real_team_rows",
+      "tags": ["metagame_analysis", "team_reports"]
+    },
+    {
+      "source_name": "Ray Rizzo",
+      "priority": "primary",
+      "patterns": ["ray rizzo", "rizzo"],
+      "quality_class": "original_creator_source",
+      "ingestionStatus": "tracked_pending_real_team_rows",
+      "tags": ["world_champion", "tournament_shells"]
+    },
+    {
+      "source_name": "JoeUX9",
+      "priority": "primary",
+      "patterns": ["joeux9", "joe ux9"],
+      "quality_class": "original_creator_source",
+      "ingestionStatus": "tracked_pending_real_team_rows",
+      "tags": ["team_reports", "ladder_showcase"]
+    },
+    {
+      "source_name": "HamstermaniaVGC",
+      "priority": "primary",
+      "patterns": ["hamstermaniavgc", "hamstermania"],
+      "quality_class": "original_creator_source",
+      "ingestionStatus": "tracked_pending_real_team_rows",
+      "tags": ["team_reports", "ladder_showcase"]
+    },
+    {
+      "source_name": "Foofootoo",
+      "priority": "secondary",
+      "patterns": ["foofootoo"],
+      "quality_class": "secondary_creator_source",
+      "ingestionStatus": "tracked_pending_real_team_rows",
+      "tags": ["off_meta", "team_reports"]
+    },
+    {
+      "source_name": "NeilVGC",
+      "priority": "secondary",
+      "patterns": ["neilvgc", "neil vgc"],
+      "quality_class": "secondary_creator_source",
+      "ingestionStatus": "tracked_pending_real_team_rows",
+      "tags": ["team_reports"]
+    },
+    {
+      "source_name": "Cloverbells",
+      "priority": "secondary",
+      "patterns": ["cloverbells", "clover bells"],
+      "quality_class": "secondary_creator_source",
+      "ingestionStatus": "tracked_pending_real_team_rows",
+      "tags": ["team_reports"]
+    },
+    {
+      "source_name": "Osirus Studios",
+      "priority": "secondary",
+      "patterns": ["osirus studios", "osirus"],
+      "quality_class": "secondary_creator_source",
+      "ingestionStatus": "tracked_pending_real_team_rows",
+      "tags": ["team_reports"]
+    },
+    {
+      "source_name": "Victory Road",
+      "priority": "secondary",
+      "patterns": ["victory road", "victoryroad"],
+      "quality_class": "tournament_verified",
+      "ingestionStatus": "tracked_pending_real_team_rows",
+      "tags": ["tournament_verified", "regional_winners"]
+    },
+    {
+      "source_name": "feature matches",
+      "priority": "secondary",
+      "patterns": ["feature match", "featured match", "stream match"],
+      "quality_class": "tournament_verified",
+      "ingestionStatus": "tracked_pending_real_team_rows",
+      "tags": ["tournament_verified"]
+    },
+    {
+      "source_name": "regional winners",
+      "priority": "secondary",
+      "patterns": ["regional winner", "regional champion", "regional top cut"],
+      "quality_class": "tournament_verified",
+      "ingestionStatus": "tracked_pending_real_team_rows",
+      "tags": ["tournament_verified"]
+    },
+    {
+      "source_name": "GC ladder leaders",
+      "priority": "secondary",
+      "patterns": ["gc ladder", "grand challenge ladder", "ladder leader"],
+      "quality_class": "gc_ladder_verified",
+      "ingestionStatus": "tracked_pending_real_team_rows",
+      "tags": ["grand_challenge", "ladder_verified"]
     }
   ],
   "manual_teams": []
