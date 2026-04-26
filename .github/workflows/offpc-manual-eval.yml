@@ -42,6 +42,7 @@ jobs:
           TRAIN_ITERATIONS: ${{ github.event.inputs.iterations || '10' }}
         run: |
           python scripts/offpc_training/train.py --iterations "${TRAIN_ITERATIONS}"
+          python scripts/offpc_training/persistent_memory.py
 
       - name: Upload evaluation artifacts
         uses: actions/upload-artifact@v4
@@ -49,6 +50,7 @@ jobs:
           name: offpc-eval-${{ github.run_id }}
           path: |
             data/normalized
+            data/persistent
             data/learned_weights.json
             data/species_role_priors.json
             data/move_choice_weights.json
@@ -56,3 +58,4 @@ jobs:
             data/team_archive.json
             data/battle_logs
             reports/training_summary.md
+            reports/training_memory_report.md
