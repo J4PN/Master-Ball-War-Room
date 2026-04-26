@@ -1760,6 +1760,62 @@
     return aiPromptLineupHistory.filter((row) => row.promptSignature === promptSignature).map((row) => row.lineupSignature);
   }
 
+  function ensureVariationDebug(context = {}) {
+    if (typeof window === "undefined") return null;
+    window.__MBWR_VARIATION_DEBUG = window.__MBWR_VARIATION_DEBUG || {
+      promptSignature: context.promptSignature || "",
+      rejectedRepeatedShells: [],
+      rejectedRepeatedMegas: [],
+      alternativeShellsConsidered: [],
+      finalShellReason: ""
+    };
+    window.__MBWR_VARIATION_DEBUG.promptSignature = context.promptSignature || window.__MBWR_VARIATION_DEBUG.promptSignature || "";
+    return window.__MBWR_VARIATION_DEBUG;
+  }
+
+  function getLineupNamesFromSignature(signature = "") {
+    return String(signature || "").split("|").map((name) => name.trim()).filter(Boolean);
+  }
+
+  function getMeaningfulShellSignatureFromNames(names = []) {
+    const keys = new Set(names.map(normalizeNameKey));
+    const shellParts = [];
+    const trSetters = ["farigiraf", "oranguru", "hatterene", "slowbro", "mega slowbro"];
+    const redirection = ["sinistcha", "clefable", "maushold", "alcremie"];
+    const fireBreakers = ["torkoal", "camerupt", "mega camerupt", "skeledirge", "armarouge"];
+    const pickedSetter = trSetters.find((name) => keys.has(name));
+    const pickedRedirect = redirection.find((name) => keys.has(name));
+    const pickedFire = fireBreakers.find((name) => keys.has(name));
+    if (pickedSetter) shellParts.push(pickedSetter);
+    if (pickedRedirect) shellParts.push(pickedRedirect);
+    if (pickedFire) shellParts.push(pickedFire);
+    return shellParts.length >= 2 ? shellParts.join("+") : "";
+  }
+
+  function getRecentPromptShells(context = {}) {
+    return new Set((context.duplicateLineupHistory || []).map((signature) => getMeaningfulShellSignatureFromNames(getLineupNamesFromSignature(signature))).filter(Boolean));
+  }
+
+  function getRecentPromptMegas(context = {}) {
+    const megas = new Set();
+    (context.duplicateLineupHistory || []).forEach((signature) => {
+      getLineupNamesFromSignature(signature).forEach((name) => {
+        const entry = getRosterEntry(name);
+        if (entry && isMegaEntry(entry)) megas.add(normalizeNameKey(entry.name));
+      });
+    });
+    return megas;
+  }
+
+  function getShellDiversityPenalty(entry, partialEntries = [], context = {}) {
+    if (!context.promptSignature || promptAllowsExactRepeat(context.request || {})) return { penalty: 0, shell: "", reason: "" };
+    const names = [...partialEntries.map((picked) => picked.name), entry?.name].filter(Boolean);
+    const shell = getMeaningfulShellSignatureFromNames(names);
+    if (!shell || !getRecentPromptShells(context).has(shell)) return { penalty: 0, shell, reason: "" };
+    const penalty = context.intentLock === "hard_tr" ? 90 : 42;
+    return { penalty, shell, reason: `Repeated ${shell} core for same prompt` };
+  }
+
   function rememberPromptLineup(context = {}, draft = []) {
     const promptSignature = context.promptSignature || getBuilderPromptSignature(context.request || {}, context.focus, context.notes);
     const lineupSignature = getLineupSignature(draft);
@@ -8351,6 +8407,24 @@
     }
     if (!context.promptLocks?.noMegas && isMegaEntry(entry)) {
       score += slotIndex >= 4 && countMegasInEntries(partialEntries) === 0 ? 28 : 12;
+      const tier = getMegaPreferenceTier(entry);
+      const recentMegas = getRecentPromptMegas(context);
+      if (["S", "A", "B"].includes(tier)) score += 14;
+      if (["D", "F"].includes(tier) && !isPromptRequiredEntry(entry, context)) score -= tier === "D" ? 36 : 52;
+      if (context.intentLock === "hard_tr" && normalizeNameKey(entry.name) === "mega ampharos" && !isPromptRequiredEntry(entry, context)) score -= 58;
+      if (recentMegas.has(normalizeNameKey(entry.name)) && !isPromptRequiredEntry(entry, context)) {
+        const repeatPenalty = ["D", "F"].includes(tier) ? 60 : 34;
+        score -= repeatPenalty;
+        const variationDebug = ensureVariationDebug(context);
+        if (variationDebug) {
+          variationDebug.rejectedRepeatedMegas.push({
+            mega: entry.name,
+            tier,
+            penalty: repeatPenalty,
+            reason: "same Mega was used recently for this prompt"
+          });
+        }
+      }
     }
     if (!context.promptLocks?.noMegas && !isMegaEntry(entry) && slotIndex >= 4 && countMegasInEntries(partialEntries) === 0) {
       score -= 16;
@@ -8385,6 +8459,19 @@
     if (rules.hyperOffense && isSupportEntry(entry) && !isMegaEntry(entry)) score -= 22;
     if (rules.isTrickRoom && isRealTrAbuserEntry(entry)) score += 20;
     if (isRealAttackerEntry(entry)) score += rules.hyperOffense ? 18 : 8;
+    const shellDiversity = getShellDiversityPenalty(entry, partialEntries, context);
+    if (shellDiversity.penalty) {
+      score -= shellDiversity.penalty;
+      const variationDebug = ensureVariationDebug(context);
+      if (variationDebug) {
+        variationDebug.rejectedRepeatedShells.push({
+          shell: shellDiversity.shell,
+          pokemon: entry.name,
+          penalty: shellDiversity.penalty,
+          reason: shellDiversity.reason
+        });
+      }
+    }
     ["icy wind", "electroweb", "thunder wave", "tailwind", "trick room"].forEach((moveKey) => {
       if (hasAnyLegalMove(legalMoves, [moveKey]) && (moveDupCounts.get(moveKey) || 0) > 0) {
         score -= moveKey === "trick room" ? 26 : 12;
@@ -8724,12 +8811,50 @@
     const noMegas = !!context.promptLocks?.noMegas;
     const requestedMegaKey = normalizeNameKey(requestedMega);
     const duplicateVariant = (context.duplicateLineupHistory || []).length > 0 && !promptAllowsExactRepeat(context.request || {});
+    const repeatedShells = getRecentPromptShells(context);
+    const repeatedMegas = getRecentPromptMegas(context);
+    const applyRequestedMega = (names) => names.map((name) => {
+      if (!requestedMega || !isMegaEntry(getRosterEntry(name))) return name;
+      return name === requestedMega ? name : requestedMega;
+    });
+    const trTemplateRoutes = [
+      ["Farigiraf", "Sinistcha", "Torkoal", requestedMega || "Mega Crabominable", "Kingambit", "Incineroar"],
+      ["Oranguru", "Hatterene", "Torkoal", requestedMega || "Mega Blastoise", "Tyranitar", "Incineroar"],
+      ["Slowbro", "Maushold", "Camerupt", requestedMega || "Mega Slowbro", "Conkeldurr", "Scrafty"],
+      ["Farigiraf", "Alcremie", "Skeledirge", requestedMega || "Mega Meganium", "Garganacl", "Incineroar"]
+    ].map(applyRequestedMega);
+    const availableTrRoutes = trTemplateRoutes.filter((route) => {
+      const shell = getMeaningfulShellSignatureFromNames(route);
+      const mega = route.find((name) => isMegaEntry(getRosterEntry(name)));
+      if (!duplicateVariant) return true;
+      if (shell && repeatedShells.has(shell)) return false;
+      if (mega && repeatedMegas.has(normalizeNameKey(mega)) && !requestedMegaKey) return false;
+      return true;
+    });
+    const selectedTrRoute = (duplicateVariant ? availableTrRoutes[0] : trTemplateRoutes[0]) || trTemplateRoutes[(context.duplicateLineupHistory || []).length % trTemplateRoutes.length];
+    const variationDebug = ensureVariationDebug(context);
+    if (variationDebug && intent === "tr") {
+      variationDebug.alternativeShellsConsidered = trTemplateRoutes.map((route) => ({
+        route,
+        shell: getMeaningfulShellSignatureFromNames(route),
+        mega: route.find((name) => isMegaEntry(getRosterEntry(name))) || "",
+        repeatedShell: repeatedShells.has(getMeaningfulShellSignatureFromNames(route)),
+        repeatedMega: repeatedMegas.has(normalizeNameKey(route.find((name) => isMegaEntry(getRosterEntry(name))) || ""))
+      }));
+      variationDebug.rejectedRepeatedShells.push(...variationDebug.alternativeShellsConsidered
+        .filter((row) => row.repeatedShell)
+        .map((row) => ({ shell: row.shell, route: row.route, reason: "same core shell was used recently for this prompt" })));
+      variationDebug.rejectedRepeatedMegas.push(...variationDebug.alternativeShellsConsidered
+        .filter((row) => row.repeatedMega && !requestedMegaKey)
+        .map((row) => ({ mega: row.mega, route: row.route, reason: "same Mega was used recently for this prompt" })));
+      variationDebug.finalShellReason = duplicateVariant
+        ? `Selected alternate Hard TR route: ${selectedTrRoute.join(" / ")}`
+        : `Selected first Hard TR route: ${selectedTrRoute.join(" / ")}`;
+    }
     const templates = {
       tr: requestedMegaKey === "mega camerupt"
         ? ["Farigiraf", "Sinistcha", "Mega Camerupt", "Kingambit", "Torkoal", "Incineroar"]
-        : (duplicateVariant
-          ? ["Farigiraf", "Sinistcha", "Torkoal", requestedMega || "Mega Ampharos", "Conkeldurr", "Incineroar"]
-          : ["Farigiraf", "Sinistcha", "Torkoal", requestedMega || "Mega Ampharos", "Kingambit", "Incineroar"]),
+        : selectedTrRoute,
       rain: ["Pelipper", "Basculegion", "Archaludon", requestedMega || "Mega Sharpedo", "Dragonite", "Kingambit"],
       sun: [requestedMega || "Mega Charizard Y", "Torkoal", "Whimsicott", "Venusaur", "Dragonite", "Incineroar"],
       tailwind: ["Whimsicott", requestedMega || "Mega Kangaskhan", "Garchomp", "Sneasler", "Dragonite", "Incineroar"],
@@ -8752,7 +8877,7 @@
       tr_setter: ["Farigiraf", "Oranguru", "Hatterene", "Slowbro", "Mega Slowbro"],
       redirector: ["Sinistcha", "Clefable", "Maushold", "Alcremie"],
       fire_breaker: ["Torkoal", "Camerupt", "Mega Camerupt", "Skeledirge", "Armarouge"],
-      mega_breaker: [requestedMega, "Mega Ampharos", "Mega Abomasnow", "Mega Camerupt", "Mega Slowbro", "Mega Kingambit"],
+      mega_breaker: [requestedMega, "Mega Crabominable", "Mega Blastoise", "Mega Slowbro", "Mega Meganium", "Mega Abomasnow", "Mega Camerupt", "Mega Ampharos", "Mega Kingambit"],
       slow_breaker: ["Kingambit", "Tyranitar", "Conkeldurr", "Ursaluna", "Garganacl"],
       support_pivot: ["Incineroar", "Arcanine", "Scrafty", "Hitmontop"]
     };
@@ -9039,6 +9164,10 @@
     const liveEval = { guidedScore: evaluation.averagedScores.overall, overall: evaluation.overallScore, fastPath: true };
     gcFailDebug.finalEntries = draft.map((set) => set.name);
     gcFailDebug.reason = "GC Hard TR fast path built successfully.";
+    const variationDebug = ensureVariationDebug(context);
+    if (variationDebug && intent === "tr") {
+      variationDebug.finalShellReason = `Final Hard TR shell: ${draft.map((set) => set.name).join(" / ")}`;
+    }
     completeFreezeScope(`buildFastArchetypeTeam:${intent}`, startedAt, { selected: true, names: draft.map((set) => set.name).join(", ") });
     return { draft, evaluation, liveEval, request: fastContext.request, coherence, fastPathIntent: intent };
   }
