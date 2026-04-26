@@ -1,0 +1,102 @@
+{
+  "completedOrFailedGracefully": true,
+  "elapsedMs": 3217,
+  "statusText": "Generation stopped before completion to keep the browser responsive. Try a narrower request or anchor Pokemon.",
+  "browserResponsivePing": 42,
+  "browserResponsivePingMs": 6,
+  "freezeDebug": {
+    "candidateAttemptCount": 0,
+    "emergencyCutoffTriggered": false,
+    "exportValidationPassCount": 4,
+    "generationElapsedMs": 3071,
+    "generationStartedAt": 4109.100000000093,
+    "lastCompletedFunction": "generateAiBuilderDraft",
+    "lastFunctionEntered": "evaluateFinalExportCoherence",
+    "loopIterationCount": 420,
+    "recursionBlocked": false,
+    "repairPassCount": 0,
+    "repeatedTeamSignatures": [],
+    "timeoutTriggered": true,
+    "timings": [
+      {
+        "ms": 3,
+        "name": "getCandidatesForSlot",
+        "poolSize": 1,
+        "resultCount": 1,
+        "slotIndex": 0
+      },
+      {
+        "ms": 0,
+        "name": "evaluateFinalExportCoherence",
+        "teamSize": 1
+      },
+      {
+        "ms": 18,
+        "name": "evaluateLiveTeamState",
+        "skipExpensiveLiveCalcs": true,
+        "slotIndex": 0
+      },
+      {
+        "ms": 523,
+        "name": "getCandidatesForSlot",
+        "poolSize": 257,
+        "resultCount": 18,
+        "slotIndex": 1
+      },
+      {
+        "ms": 0,
+        "name": "evaluateFinalExportCoherence",
+        "teamSize": 2
+      },
+      {
+        "ms": 10,
+        "name": "evaluateLiveTeamState",
+        "skipExpensiveLiveCalcs": true,
+        "slotIndex": 1
+      },
+      {
+        "ms": 317,
+        "name": "getCandidatesForSlot",
+        "poolSize": 257,
+        "resultCount": 18,
+        "slotIndex": 2
+      },
+      {
+        "ms": 0,
+        "name": "evaluateFinalExportCoherence",
+        "teamSize": 3
+      },
+      {
+        "ms": 14,
+        "name": "evaluateLiveTeamState",
+        "skipExpensiveLiveCalcs": true,
+        "slotIndex": 2
+      },
+      {
+        "ms": 0,
+        "name": "evaluateFinalExportCoherence",
+        "teamSize": 3
+      },
+      {
+        "ms": 12,
+        "name": "evaluateLiveTeamState",
+        "skipExpensiveLiveCalcs": true,
+        "slotIndex": 2
+      },
+      {
+        "ms": 3064,
+        "name": "buildGuidedDraft",
+        "partial": true,
+        "slots": 3
+      },
+      {
+        "ms": 3071,
+        "name": "generateAiBuilderDraft",
+        "partialSlots": 3,
+        "timedOut": true
+      }
+    ]
+  },
+  "generationDebug": null,
+  "pageUnresponsiveObserved": false
+}

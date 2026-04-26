@@ -62,7 +62,12 @@
   const GUIDED_LIVE_CANDIDATE_LIMIT = 10;
   const GUIDED_OPTIMIZATION_PASSES = 6;
   const GUIDED_SLOT_REVIEW_COUNT = 3;
-  const FINAL_COHERENCE_RETRY_LIMIT = 25;
+  const FINAL_COHERENCE_RETRY_LIMIT = 15;
+  const MAX_REPAIR_PASSES_PER_TEAM = 3;
+  const MAX_EXPORT_VALIDATION_PASSES = 2;
+  const GENERATION_RUNTIME_LIMIT_MS = 3000;
+  const GENERATION_EMERGENCY_CUTOFF_MS = 5000;
+  const MAIN_THREAD_YIELD_BATCH = 8;
   const EXPORT_BLOCKED_SCORE_PENALTY = 999;
   const LIVE_PRESSURE_TYPES = ["Water", "Fire", "Electric", "Fighting", "Poison"];
   const LIVE_WAR_ROOM_MEDIUM_DEBOUNCE_MS = 180;
@@ -1287,6 +1292,96 @@
   };
   let speedCalcSp = 0;
   document.addEventListener("DOMContentLoaded", init);
+
+  function ensureFreezeDebug() {
+    if (typeof window === "undefined") return null;
+    window.__MBWR_FREEZE_DEBUG = window.__MBWR_FREEZE_DEBUG || {
+      lastFunctionEntered: "",
+      lastCompletedFunction: "",
+      loopIterationCount: 0,
+      repairPassCount: 0,
+      candidateAttemptCount: 0,
+      exportValidationPassCount: 0,
+      repeatedTeamSignatures: [],
+      timeoutTriggered: false,
+      emergencyCutoffTriggered: false,
+      recursionBlocked: false,
+      timings: [],
+      generationStartedAt: 0,
+      generationElapsedMs: 0
+    };
+    return window.__MBWR_FREEZE_DEBUG;
+  }
+
+  function enterFreezeScope(name) {
+    const debug = ensureFreezeDebug();
+    if (!debug) return 0;
+    debug.lastFunctionEntered = name;
+    return performance.now();
+  }
+
+  function completeFreezeScope(name, startedAt = 0, extra = {}) {
+    const debug = ensureFreezeDebug();
+    if (!debug) return;
+    debug.lastCompletedFunction = name;
+    if (startedAt) {
+      debug.timings.push({ name, ms: Math.round(performance.now() - startedAt), ...extra });
+      debug.timings = debug.timings.slice(-80);
+    }
+  }
+
+  function resetFreezeDebugForGeneration() {
+    if (typeof window === "undefined") return;
+    window.__MBWR_FREEZE_DEBUG = {
+      lastFunctionEntered: "",
+      lastCompletedFunction: "",
+      loopIterationCount: 0,
+      repairPassCount: 0,
+      candidateAttemptCount: 0,
+      exportValidationPassCount: 0,
+      repeatedTeamSignatures: [],
+      timeoutTriggered: false,
+      emergencyCutoffTriggered: false,
+      recursionBlocked: false,
+      timings: [],
+      generationStartedAt: performance.now(),
+      generationElapsedMs: 0
+    };
+  }
+
+  function getGenerationElapsedMs(context = {}) {
+    const started = context.generationStartedAt || ensureFreezeDebug()?.generationStartedAt || performance.now();
+    return performance.now() - started;
+  }
+
+  function generationTimedOut(context = {}) {
+    const elapsed = getGenerationElapsedMs(context);
+    const debug = ensureFreezeDebug();
+    if (debug) debug.generationElapsedMs = Math.round(elapsed);
+    if (elapsed >= GENERATION_EMERGENCY_CUTOFF_MS) {
+      if (debug) {
+        debug.timeoutTriggered = true;
+        debug.emergencyCutoffTriggered = true;
+      }
+      return true;
+    }
+    if (elapsed >= GENERATION_RUNTIME_LIMIT_MS) {
+      if (debug) debug.timeoutTriggered = true;
+      return true;
+    }
+    return false;
+  }
+
+  async function yieldMainThread() {
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+  }
+
+  function getTeamSignature(team = []) {
+    return (team || [])
+      .filter((set) => set?.name)
+      .map((set) => `${normalizeNameKey(set.name)}:${(set.moves || []).map(normalizeNameKey).join("/")}:${normalizeNameKey(set.item || "")}`)
+      .join("|");
+  }
 
   async function init() {
     try {
@@ -6051,8 +6146,12 @@
   }
 
   function evaluateFinalExportCoherence(teamState) {
+    const startedAt = enterFreezeScope("evaluateFinalExportCoherence");
+    const debug = ensureFreezeDebug();
+    if (debug) debug.exportValidationPassCount += 1;
     const team = getFilledTeamSlots(teamState);
     if (team.length < 6) {
+      completeFreezeScope("evaluateFinalExportCoherence", startedAt, { teamSize: team.length });
       return {
         isValid: true,
         penalty: 0,
@@ -6147,7 +6246,7 @@
     }
     const blockers = issues.filter((issue) => issue.severity === "blocker");
     const isValid = blockers.length === 0 && penalty < 80;
-    return {
+    const result = {
       isValid,
       penalty,
       issues,
@@ -6157,6 +6256,8 @@
       weatherProfile,
       leadPairScore
     };
+    completeFreezeScope("evaluateFinalExportCoherence", startedAt, { teamSize: team.length, isValid });
+    return result;
   }
 
   function getTeamExportGate(teamState) {
@@ -7102,10 +7203,14 @@
   }
 
   async function evaluateLiveTeamState(teamSets, context, slotIndex) {
+    const startedAt = enterFreezeScope("evaluateLiveTeamState");
     const paddedTeam = padTeamState(teamSets);
     const evaluation = await evaluateTeamState(paddedTeam);
     const competitiveValidation = buildCompetitiveDraftValidation(teamSets, context);
-    const calcBenchmarks = await evaluateLiveCalcBenchmarks(teamSets, context, slotIndex, evaluation.threatRows);
+    const skipExpensiveLiveCalcs = !!context.generationStartedAt;
+    const calcBenchmarks = skipExpensiveLiveCalcs
+      ? { score: 60, rows: [], warnings: [] }
+      : await evaluateLiveCalcBenchmarks(teamSets, context, slotIndex, evaluation.threatRows);
     const speedControl = computeLiveSpeedControlScore(teamSets, context, evaluation.structureReport, slotIndex);
     const megaCount = countMegasInSets(teamSets);
     const megaPlanScore = clampScore(
@@ -7141,7 +7246,7 @@
     ];
     if (!context.promptLocks?.noMegas && slotIndex >= 4 && megaCount < (context.promptLocks?.megaTargetMin || 0)) warnings.push("Mega slot still missing.");
     if (!context.promptLocks?.trickRoom && hasMoveOnTeam(teamSets, "Trick Room")) warnings.push("Trick Room drift detected.");
-    return {
+    const result = {
       overall: evaluation.overallScore,
       typeDefense: evaluation.defensiveTypeScore,
       offense: evaluation.offenseReport.score,
@@ -7160,6 +7265,8 @@
       warnings,
       evaluation
     };
+    completeFreezeScope("evaluateLiveTeamState", startedAt, { slotIndex, skipExpensiveLiveCalcs });
+    return result;
   }
 
   async function scoreGuidedCandidateFit(entry, legalMoves, partialEntries, context, slotIndex) {
@@ -7293,6 +7400,7 @@
   }
 
   async function getCandidatesForSlot(context, partialEntries, slotIndex) {
+    const startedAt = enterFreezeScope("getCandidatesForSlot");
     const chosenKeys = new Set(partialEntries.map((entry) => normalizeNameKey(entry.name)));
     const requiredRemaining = context.requiredEntries.filter((entry) => !chosenKeys.has(normalizeNameKey(entry.name)));
     const slotsRemaining = 6 - slotIndex;
@@ -7300,7 +7408,13 @@
       ? requiredRemaining
       : context.pool;
     const scoredRows = [];
+    let loopIndex = 0;
     for (const entry of candidatePool) {
+      const debug = ensureFreezeDebug();
+      if (debug) debug.loopIterationCount += 1;
+      if (generationTimedOut(context)) break;
+      if (loopIndex > 0 && loopIndex % MAIN_THREAD_YIELD_BATCH === 0) await yieldMainThread();
+      loopIndex += 1;
       if (isAutoRepairFillerPokemon(entry) && !isExplicitlyRequestedSpecies(entry, context)) continue;
       if (!(await isCandidateAllowedForPrompt(entry, partialEntries, context, slotIndex))) continue;
       const legalMoves = await getLegalMovesForEntry(entry);
@@ -7314,7 +7428,9 @@
         baseScore: aiBase + fitScore
       });
     }
-    return scoredRows.sort((a, b) => b.baseScore - a.baseScore).slice(0, GUIDED_PREFILTER_LIMIT);
+    const result = scoredRows.sort((a, b) => b.baseScore - a.baseScore).slice(0, GUIDED_PREFILTER_LIMIT);
+    completeFreezeScope("getCandidatesForSlot", startedAt, { slotIndex, poolSize: candidatePool.length, resultCount: result.length });
+    return result;
   }
 
   async function findWeakestReplaceableSlot(draft, context) {
@@ -7392,9 +7508,12 @@
   }
 
   async function optimizeGuidedDraft(draft, context) {
+    const startedAt = enterFreezeScope("optimizeGuidedDraft");
     let bestDraft = draft.map((set) => cloneDraftSet(set));
     let bestLiveEval = await evaluateLiveTeamState(bestDraft, context, 5);
     for (let pass = 0; pass < GUIDED_OPTIMIZATION_PASSES; pass += 1) {
+      if (generationTimedOut(context)) break;
+      await yieldMainThread();
       if (bestLiveEval.overall >= context.targetScore && bestLiveEval.guidedScore >= context.goalScore && (context.promptLocks?.noMegas || bestLiveEval.megaCount >= (context.promptLocks?.megaTargetMin || 0))) break;
       let improved = false;
       const replacementSlots = await findReplaceableSlotsByWeakness(bestDraft, context);
@@ -7406,6 +7525,7 @@
         context.currentDraftSnapshot = bestDraft.filter((_, index) => index !== replaceIndex).map((set) => cloneDraftSet(set));
         const replacementRows = await getCandidatesForSlot(context, baseEntries, replaceIndex);
         for (const row of replacementRows.slice(0, GUIDED_LIVE_CANDIDATE_LIMIT)) {
+          if (generationTimedOut(context)) break;
           const replacementEntries = currentEntries.slice();
           replacementEntries[replaceIndex] = row.entry;
           const replacementDraft = [];
@@ -7435,24 +7555,32 @@
           }
         }
         if (improved) break;
+        if (generationTimedOut(context)) break;
       }
       if (!improved) break;
     }
-    bestDraft = await enforceMegaTargetsOnDraft(bestDraft, context);
+    if (!generationTimedOut(context)) bestDraft = await enforceMegaTargetsOnDraft(bestDraft, context);
     const evaluation = await evaluateTeamState(padTeamState(bestDraft));
-    return { draft: bestDraft, evaluation, liveEval: await evaluateLiveTeamState(bestDraft, context, 5) };
+    const result = { draft: bestDraft, evaluation, liveEval: await evaluateLiveTeamState(bestDraft, context, 5) };
+    completeFreezeScope("optimizeGuidedDraft", startedAt, { timedOut: !!ensureFreezeDebug()?.timeoutTriggered });
+    return result;
   }
 
   async function buildGuidedDraft(context) {
+    const startedAt = enterFreezeScope("buildGuidedDraft");
     const partialEntries = [];
     const partialDraft = [];
     const bestPartialStates = [];
     while (partialEntries.length < 6) {
+      if (generationTimedOut(context)) break;
+      await yieldMainThread();
       const slotIndex = partialEntries.length;
       context.currentDraftSnapshot = partialDraft.map((set) => cloneDraftSet(set));
       const candidateRows = await getCandidatesForSlot(context, partialEntries, slotIndex);
       const liveRows = [];
-      for (const row of candidateRows.slice(0, GUIDED_LIVE_CANDIDATE_LIMIT)) {
+      const liveCandidateLimit = context.generationStartedAt ? 1 : GUIDED_LIVE_CANDIDATE_LIMIT;
+      for (const row of candidateRows.slice(0, liveCandidateLimit)) {
+        if (generationTimedOut(context)) break;
         const testEntries = [...partialEntries, row.entry];
         const set = await getOptimizedDraftSetCached(row.entry, {
           mode: context.mode,
@@ -7514,6 +7642,13 @@
         overall: best.liveEval.overall
       });
     }
+    if (partialDraft.length < 6) {
+      const evaluation = await evaluateTeamState(padTeamState(partialDraft));
+      const liveEval = await evaluateLiveTeamState(partialDraft, context, Math.max(0, partialDraft.length - 1));
+      const partial = { draft: partialDraft, evaluation, liveEval, bestPartialStates, timedOut: generationTimedOut(context) };
+      completeFreezeScope("buildGuidedDraft", startedAt, { partial: true, slots: partialDraft.length });
+      return partial;
+    }
     await enforceSpeciesClauseOnDraft(partialDraft, context.pool, {
       mode: context.mode,
       focus: context.focus,
@@ -7524,18 +7659,23 @@
     });
     applyItemClauseToDraft(partialDraft);
     let optimized = await optimizeGuidedDraft(partialDraft, context);
-    if (optimized.evaluation?.overallScore < context.targetScore || optimized.liveEval?.guidedScore < context.goalScore) {
+    if (!generationTimedOut(context) && (optimized.evaluation?.overallScore < context.targetScore || optimized.liveEval?.guidedScore < context.goalScore)) {
       optimized = await optimizeGuidedDraft(optimized.draft, context);
     }
-    return {
+    const result = {
       draft: optimized.draft,
       evaluation: optimized.evaluation,
       liveEval: optimized.liveEval,
       bestPartialStates
     };
+    completeFreezeScope("buildGuidedDraft", startedAt, { slots: result.draft?.length || 0 });
+    return result;
   }
 
   async function generateAiBuilderDraft() {
+    resetFreezeDebugForGeneration();
+    const generationStartedAt = performance.now();
+    const startedAt = enterFreezeScope("generateAiBuilderDraft");
     document.body.classList.add("is-building");
     setBusyState(aiBuilderOutput, true, "Building");
     try {
@@ -7564,6 +7704,7 @@
     optimizedSetCache.clear();
     liveDamageCalcCache.clear();
     const guidedContext = buildGuidedBuildContext(request, focus, notes, enemyNames, desiredTypes, pool, anchor);
+    guidedContext.generationStartedAt = generationStartedAt;
     lastAiBuildContext = guidedContext;
     logBuilderEvent("builder:start", {
       mode,
@@ -7577,6 +7718,11 @@
       }
     });
     const guidedBuild = await buildGuidedDraft(guidedContext);
+    if (generationTimedOut(guidedContext) && (!guidedBuild?.draft?.length || guidedBuild.draft.length < 6)) {
+      aiBuilderOutput.innerHTML = `<div class="status-note">Generation stopped before completion to keep the browser responsive. Try a narrower request or anchor Pokemon.</div>`;
+      completeFreezeScope("generateAiBuilderDraft", startedAt, { timedOut: true, partialSlots: guidedBuild?.draft?.length || 0 });
+      return;
+    }
     logBuilderEvent("builder:draft-generated", {
       names: guidedBuild.draft.map((set) => set.name),
       overallScore: guidedBuild.evaluation?.overallScore ?? null,
@@ -7584,7 +7730,9 @@
     });
     const coherentSelection = await selectCoherentGeneratedDraft(guidedBuild, guidedContext, request);
     if (!coherentSelection?.draft?.length) {
-      aiBuilderOutput.innerHTML = `<div class="status-note">Could not build an export-safe draft from the current request.</div>`;
+      const timedOut = ensureFreezeDebug()?.timeoutTriggered;
+      aiBuilderOutput.innerHTML = `<div class="status-note">${timedOut ? "Generation timed out safely before finding an export-safe draft." : "Could not build an export-safe draft from the current request."}</div>`;
+      completeFreezeScope("generateAiBuilderDraft", startedAt, { timedOut: !!timedOut });
       return;
     }
     let bestDraft = coherentSelection.draft;
@@ -7602,6 +7750,7 @@
       names: lastAiDraft.map((set) => set.name),
       overallScore: bestEvaluation?.overallScore ?? null
     });
+    completeFreezeScope("generateAiBuilderDraft", startedAt, { completed: true });
     } catch (error) {
       console.error("[MBWR] builder:error", error);
       throw error;
@@ -7818,7 +7967,9 @@
   }
 
   async function buildSafeFallbackDraft(context, request) {
+    if (generationTimedOut(context)) return null;
     const { fallbackContext, fallbackRequest } = buildSafeFallbackContext(context, request);
+    fallbackContext.generationStartedAt = context.generationStartedAt;
     const entries = chooseSafeFallbackEntries(fallbackContext);
     if (entries.length < 6) return null;
     let draft = await buildDraftFromEntries(entries, fallbackContext);
@@ -7829,6 +7980,15 @@
   }
 
   async function prepareFinalDraftCandidate(candidate, request, reason) {
+    const debug = ensureFreezeDebug();
+    if (debug && debug.exportValidationPassCount >= MAX_EXPORT_VALIDATION_PASSES * Math.max(1, debug.candidateAttemptCount)) {
+      return {
+        ...candidate,
+        coherence: { isValid: false, penalty: EXPORT_BLOCKED_SCORE_PENALTY, issues: [{ code: "export_validation_pass_cap", severity: "blocker", text: "Export validation pass cap reached." }], blockers: [{ code: "export_validation_pass_cap", severity: "blocker", text: "Export validation pass cap reached." }] },
+        scoreBeforeRejection: getFinalCandidateScore(candidate),
+        reason
+      };
+    }
     const postProcessRequest = candidate.request || request;
     const finalized = await applyDraftPostProcessing({
       title: "Draft Suggestion",
@@ -7854,6 +8014,7 @@
   }
 
   async function selectCoherentGeneratedDraft(initialBuild, context, request) {
+    const startedAt = enterFreezeScope("selectCoherentGeneratedDraft");
     resetFinalGenerationRejectionDebug(request);
     const attempts = [{ build: initialBuild, reason: "initial_guided_candidate" }];
     for (let attempt = 1; attempt < FINAL_COHERENCE_RETRY_LIMIT; attempt += 1) {
@@ -7861,11 +8022,14 @@
     }
     let bestValid = null;
     for (const attempt of attempts) {
+      if (generationTimedOut(context)) break;
       const build = attempt.build || await buildGuidedDraft(context);
       const candidate = await prepareFinalDraftCandidate(build, request, attempt.reason);
       if (typeof window !== "undefined" && window.__MBWR_GENERATION_REJECTION_DEBUG) {
         window.__MBWR_GENERATION_REJECTION_DEBUG.retryCount = (window.__MBWR_GENERATION_REJECTION_DEBUG.retryCount || 0) + 1;
       }
+      const debug = ensureFreezeDebug();
+      if (debug) debug.candidateAttemptCount += 1;
       if (candidate.coherence.isValid) {
         const candidateScore = Number(candidate.scoreBeforeRejection ?? getFinalCandidateScore(candidate) ?? candidate.coherence.penalty * -1);
         const bestScore = Number(bestValid?.scoreBeforeRejection ?? getFinalCandidateScore(bestValid) ?? bestValid?.coherence?.penalty * -1 ?? -Infinity);
@@ -7879,9 +8043,11 @@
         `${attempt.reason}: export coherence blockers`
       );
       if (shouldUseImmediateSafeFallback(candidate, context)) break;
+      await yieldMainThread();
     }
     if (bestValid) {
       recordFinalGenerationSelection(bestValid.draft, bestValid.coherence, false);
+      completeFreezeScope("selectCoherentGeneratedDraft", startedAt, { selected: true, fallback: false });
       return bestValid;
     }
     const fallback = await buildSafeFallbackDraft(context, request);
@@ -7889,6 +8055,7 @@
       const candidate = await prepareFinalDraftCandidate(fallback, request, "safe_fallback_candidate");
       if (candidate.coherence.isValid) {
         recordFinalGenerationSelection(candidate.draft, candidate.coherence, true);
+        completeFreezeScope("selectCoherentGeneratedDraft", startedAt, { selected: true, fallback: true });
         return candidate;
       }
       recordFinalGenerationRejection(
@@ -7901,6 +8068,7 @@
       return null;
     }
     recordFinalGenerationFailure(null, "No safe fallback draft could be built.");
+    completeFreezeScope("selectCoherentGeneratedDraft", startedAt, { selected: false, timedOut: !!ensureFreezeDebug()?.timeoutTriggered });
     return null;
   }
 
@@ -7984,6 +8152,7 @@
       nextPayload.draft = await repairDraftByCompetitiveRules(nextPayload.draft, nextPayload.request);
       nextPayload.evaluation = await evaluateTeamState(padTeamState(nextPayload.draft));
     }
+    const repairedSignature = getTeamSignature(nextPayload.draft);
     if (isDebugFlagEnabled(DEBUG_DISABLE_FLAGS.trFix)) {
       logBuilderEvent("builder:post-hook-skipped", { reason: DEBUG_DISABLE_FLAGS.trFix });
       return nextPayload;
@@ -8007,7 +8176,7 @@
     } catch (error) {
       console.warn("[MBWR] builder:post-hook-error", error);
     }
-    if (nextPayload.request && nextPayload.draft.length) {
+    if (nextPayload.request && nextPayload.draft.length && getTeamSignature(nextPayload.draft) !== repairedSignature && !generationTimedOut({})) {
       nextPayload.draft = await repairDraftByCompetitiveRules(nextPayload.draft, nextPayload.request);
       nextPayload.evaluation = await evaluateTeamState(padTeamState(nextPayload.draft));
     }
@@ -8955,12 +9124,17 @@
   }
 
   async function findValidationReplacement(draft, replaceIndex, context, predicate = null) {
+    const startedAt = enterFreezeScope("findValidationReplacement");
     const currentEntries = draft.map((set) => getRosterEntry(set.name)).filter(Boolean);
     const baseEntries = currentEntries.filter((_, index) => index !== replaceIndex);
     context.currentDraftSnapshot = draft.filter((_, index) => index !== replaceIndex).map((set) => cloneDraftSet(set));
     const rows = await getCandidatesForSlot(context, baseEntries, replaceIndex);
     let best = null;
+    let loopIndex = 0;
     for (const row of rows.slice(0, GUIDED_LIVE_CANDIDATE_LIMIT)) {
+      if (generationTimedOut(context)) break;
+      if (loopIndex > 0 && loopIndex % MAIN_THREAD_YIELD_BATCH === 0) await yieldMainThread();
+      loopIndex += 1;
       const replacementEntries = currentEntries.slice();
       replacementEntries[replaceIndex] = row.entry;
       const replacementDraft = [];
@@ -8986,6 +9160,7 @@
         best = { score, draft: replacementDraft, validation };
       }
     }
+    completeFreezeScope("findValidationReplacement", startedAt, { replaceIndex, tried: loopIndex, found: !!best });
     return best;
   }
 
@@ -9133,8 +9308,22 @@
   }
 
   async function repairTeamPreservingArchetype(team, issues = [], detectedArchetype = "", context = {}) {
+    const startedAt = enterFreezeScope("repairTeamPreservingArchetype");
     const originalTeam = (team || []).map((set) => cloneDraftSet(set));
     const working = (team || []).map((set) => cloneDraftSet(set));
+    context.repairVisitedSignatures = context.repairVisitedSignatures || new Set();
+    const signature = getTeamSignature(working);
+    if (context.repairVisitedSignatures.has(signature)) {
+      const debug = ensureFreezeDebug();
+      if (debug) {
+        debug.recursionBlocked = true;
+        debug.repeatedTeamSignatures.push(signature);
+        debug.repeatedTeamSignatures = debug.repeatedTeamSignatures.slice(-20);
+      }
+      completeFreezeScope("repairTeamPreservingArchetype", startedAt, { recursionBlocked: true });
+      return working;
+    }
+    context.repairVisitedSignatures.add(signature);
     const archetype = detectedArchetype || detectTeamArchetype(working);
     const lockedCore = getLockedCoreIndexesForArchetype(working, archetype);
     const changesMade = [];
@@ -9165,6 +9354,7 @@
         }
       };
     }
+    completeFreezeScope("repairTeamPreservingArchetype", startedAt, { archetype, valid: finalValidation.isValid });
     return working;
   }
 
@@ -9178,6 +9368,7 @@
   }
 
   async function repairDraftByCompetitiveRules(draft, request) {
+    const startedAt = enterFreezeScope("repairDraftByCompetitiveRules");
     const focus = request.focus || "";
     const notes = request.normalizedText || "";
     const enemyNames = [];
@@ -9186,13 +9377,29 @@
     const anchor = request.mode === "pokemon" ? (requestedAnchors[0] || getRosterEntry(focus)) : null;
     const pool = championsRoster.filter((entry) => !entry.name.startsWith("Mega ") || canUseMega(entry));
     const context = buildGuidedBuildContext(request, focus, notes, enemyNames, desiredTypes, pool, anchor);
+    context.repairVisitedSignatures = context.repairVisitedSignatures || new Set();
     let working = await rebuildDraftSetsStrictly(draft, context);
     const detectedArchetype = detectTeamArchetype(working);
     const lockedCore = getLockedCoreIndexesForArchetype(working, detectedArchetype);
     working = await repairTeamPreservingArchetype(working, [], detectedArchetype, context);
     if (detectedArchetype === "unknown") return working;
     let changedSlotCount = 0;
-    for (let pass = 0; pass < 6; pass += 1) {
+    for (let pass = 0; pass < MAX_REPAIR_PASSES_PER_TEAM; pass += 1) {
+      const debug = ensureFreezeDebug();
+      if (debug) debug.repairPassCount += 1;
+      if (generationTimedOut(context)) break;
+      await yieldMainThread();
+      const signature = getTeamSignature(working);
+      if (context.repairVisitedSignatures.has(`pass:${signature}`)) {
+        const freezeDebug = ensureFreezeDebug();
+        if (freezeDebug) {
+          freezeDebug.recursionBlocked = true;
+          freezeDebug.repeatedTeamSignatures.push(signature);
+          freezeDebug.repeatedTeamSignatures = freezeDebug.repeatedTeamSignatures.slice(-20);
+        }
+        break;
+      }
+      context.repairVisitedSignatures.add(`pass:${signature}`);
       const validation = buildCompetitiveDraftValidation(working, context);
       if (validation.isValid) break;
       const primary = validation.violations[0];
@@ -9322,6 +9529,7 @@
       changedSlotCount += 1;
     }
     working = await repairTeamPreservingArchetype(working, [], detectedArchetype, context);
+    completeFreezeScope("repairDraftByCompetitiveRules", startedAt, { passes: ensureFreezeDebug()?.repairPassCount || 0 });
     return working;
   }
 
