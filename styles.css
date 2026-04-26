@@ -57,8 +57,11 @@ body::before {
 }
 body::after {
   background:
+    linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px),
     radial-gradient(circle at 32% 70%, rgba(255, 207, 118, 0.06), transparent 16%),
     radial-gradient(circle at 82% 62%, rgba(176, 110, 255, 0.08), transparent 18%);
+  background-size: 54px 54px, 54px 54px, auto, auto;
   animation: backgroundFlowReverse 40s ease-in-out infinite alternate;
 }
 button, input, select, textarea { font: inherit; }
@@ -1822,10 +1825,43 @@ body.is-applying-team .team-builder-grid {
 
 .roster-search-input--small { max-width: 170px; }
 
+.database-split-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 24px;
+  align-items: stretch;
+}
+
+.database-db-card {
+  min-height: min(72vh, 760px);
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr);
+}
+
+.database-filter-grid--single {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.database-db-card .database-list {
+  min-height: 0;
+  max-height: calc(72vh - 180px);
+  overflow: auto;
+  padding-right: 6px;
+}
+
+.sp-stepper-row--collapsed {
+  grid-template-columns: minmax(52px, 1fr) !important;
+}
+
+.sp-stepper-row--collapsed .sp-stepper-value {
+  width: 100%;
+}
+
 @media (max-width: 760px) {
   .calc-team-selectors,
   .database-filter-grid,
   .database-results-grid,
+  .database-split-layout,
   .modal-editor-grid,
   .modal-stat-grid,
   .damage-result-grid {

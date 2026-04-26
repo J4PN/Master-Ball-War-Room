@@ -92,9 +92,34 @@
     "toxel", "snom", "rolycoly", "applin", "charcadet"
   ]);
   const SUPPORT_MOVE_REQUIREMENTS = {
+    incineroar: ["Fake Out", "Parting Shot", "Throat Chop", "Protect", "Snarl", "Will-O-Wisp", "Taunt"],
+    farigiraf: ["Trick Room", "Helping Hand", "Protect"],
+    sinistcha: ["Rage Powder", "Strength Sap", "Protect", "Trick Room"],
     whimsicott: ["Tailwind", "Encore", "Taunt", "Helping Hand"],
     pelipper: ["Tailwind", "Wide Guard", "Hurricane", "Icy Wind"]
   };
+  const PRIMARY_CREATOR_SOURCES = [
+    "Wolfe Glick",
+    "PokeaimMD",
+    "Moxie Boosted",
+    "CybertronVGC",
+    "James Baek",
+    "Aaron Zheng",
+    "ThatsAplusOne",
+    "Ray Rizzo",
+    "JoeUX9",
+    "HamstermaniaVGC"
+  ];
+  const SECONDARY_CREATOR_SOURCES = [
+    "Foofootoo",
+    "NeilVGC",
+    "Cloverbells",
+    "Osirus Studios",
+    "Victory Road",
+    "feature matches",
+    "regional winners",
+    "GC ladder leaders"
+  ];
   const pikalyticsMetaSeed = [
     { name: "Incineroar", weight: 54.4, tags: ["fakeout", "intimidate", "pivot"] },
     { name: "Sneasler", weight: 45.1, tags: ["fakeout", "speed"] },
@@ -303,12 +328,21 @@
 
   function getLearnedSourceConfidenceWeight(sourceType = "") {
     const defaults = getLearnedBuilderData().learnedWeights?.sourceConfidenceDefaults || {};
-    return clampLearnedNumber(defaults[normalizeNameKey(sourceType || "")], 0.55, 0.15, 1.2);
+    const key = normalizeNameKey(sourceType || "");
+    if (["creator", "youtube", "original creator"].includes(key)) return 1.15;
+    if (["tournament", "victory road", "high level", "high_level"].includes(key)) return 1.05;
+    if (["pikalytics", "archive"].includes(key)) return 0.92;
+    if (["selfplay", "self play", "self_play"].includes(key)) return 0.35;
+    return clampLearnedNumber(defaults[key], 0.55, 0.15, 1.2);
   }
 
   function getLearnedSourceSamplingWeight(sourceType = "") {
     const weights = getLearnedBuilderData().learnedWeights?.sourceSamplingWeights || {};
-    return clampLearnedNumber(weights[normalizeNameKey(sourceType || "")], 0.55, 0.15, 1.5);
+    const key = normalizeNameKey(sourceType || "");
+    if (["creator", "youtube", "original creator"].includes(key)) return 1.35;
+    if (["tournament", "victory road", "high level", "high_level"].includes(key)) return 1.18;
+    if (["selfplay", "self play", "self_play"].includes(key)) return 0.25;
+    return clampLearnedNumber(weights[key], 0.55, 0.15, 1.5);
   }
 
   function getLearnedCombinedTeams() {
@@ -1407,6 +1441,29 @@
 
   const scheduleTeamBuilderAnalyze = debounce(() => analyzeTeamBuilder(), 180);
 
+  function refreshSourceDebug(lastIngestionStatus = "runtime snapshot loaded") {
+    if (typeof window === "undefined") return;
+    const data = getLearnedBuilderData();
+    const sources = data.sourceMetaSnapshot?.sources || [];
+    const trainingTeams = data.combinedTrainingPool?.teams || [];
+    const sourceNames = sources.map((row) => String(row.name || row.creator || row.label || row.sourceName || ""));
+    const creatorMatches = PRIMARY_CREATOR_SOURCES
+      .filter((creator) => sourceNames.some((sourceName) => normalizeNameKey(sourceName).includes(normalizeNameKey(creator))))
+      .map((creator) => ({ creator, priority: "primary" }));
+    const countBySourceType = (types) => trainingTeams.filter((row) => types.includes(normalizeNameKey(row.sourceType || row.source || ""))).length;
+    window.__MBWR_SOURCE_DEBUG = {
+      creatorMatches,
+      primaryCreatorsTracked: PRIMARY_CREATOR_SOURCES.slice(),
+      secondaryCreatorsTracked: SECONDARY_CREATOR_SOURCES.slice(),
+      youtubeCount: countBySourceType(["youtube", "creator", "video"]),
+      highLevelCount: countBySourceType(["high level", "high_level", "tournament", "victory road"]),
+      retainedOriginalCount: trainingTeams.filter((row) => /original|creator/i.test(`${row.sourceType || ""} ${row.label || ""}`)).length,
+      retainedVariantCount: trainingTeams.filter((row) => /variant|controlled/i.test(`${row.sourceType || ""} ${row.label || ""}`)).length,
+      selfplayCount: countBySourceType(["selfplay", "self play", "self_play"]),
+      lastIngestionStatus
+    };
+  }
+
   function getTeamSignature(team = []) {
     return (team || [])
       .filter((set) => set?.name)
@@ -1417,7 +1474,7 @@
   async function init() {
     try {
       gen = window.calc ? calc.Generations.get(9) : null;
-      primeLearnedBuilderData().catch(() => null);
+      primeLearnedBuilderData().then(() => refreshSourceDebug()).catch(() => refreshSourceDebug("source snapshot fallback"));
       await initializeMetaThreats();
       setupTabs();
       setupNatureSelects();
@@ -1447,6 +1504,7 @@
       await refreshAllTeamBuilderOptions();
       await refreshAllSprites();
       renderSpeedChart();
+      refreshSourceDebug();
     } catch (error) {
       console.error("App init failed.", error);
       if (teamAnalysis) {
@@ -1558,11 +1616,8 @@
             <span class="slider-value" id="team-${slotIndex}-ev-${stat}-value">${defaults[stat] || 0}</span>
           </span>
         </label>
-        <div class="slider-input-row sp-stepper-row">
-          <button class="sp-stepper-button" type="button" data-sp-slot="${slotIndex}" data-sp-stat="${stat}" data-sp-delta="-1" aria-label="Decrease slot ${slotIndex + 1} ${statLabels[stat]} SP">-</button>
-          <input class="stat-number team-stat-number sp-stepper-value" id="team-${slotIndex}-ev-${stat}" type="number" min="0" max="${SP_MAX_PER_STAT}" step="1" inputmode="numeric" value="${defaults[stat] || 0}" aria-label="Slot ${slotIndex + 1} ${statLabels[stat]} SP value" />
-          <button class="sp-stepper-button" type="button" data-sp-slot="${slotIndex}" data-sp-stat="${stat}" data-sp-delta="1" aria-label="Increase slot ${slotIndex + 1} ${statLabels[stat]} SP">+</button>
-          <button class="sp-stepper-button sp-stepper-button--max" type="button" data-sp-slot="${slotIndex}" data-sp-stat="${stat}" data-sp-max="true" aria-label="Max slot ${slotIndex + 1} ${statLabels[stat]} SP">MAX</button>
+        <div class="slider-input-row sp-stepper-row sp-stepper-row--collapsed">
+          <input class="stat-number team-stat-number sp-stepper-value" id="team-${slotIndex}-ev-${stat}" type="number" min="0" max="${SP_MAX_PER_STAT}" step="1" inputmode="numeric" value="${defaults[stat] || 0}" aria-label="Slot ${slotIndex + 1} ${statLabels[stat]} SP value" readonly />
         </div>
       `;
       grid.appendChild(wrapper);
@@ -1571,9 +1626,6 @@
       const input = document.getElementById(`team-${slotIndex}-ev-${stat}`);
       input.addEventListener("input", () => handleTeamSpNumberInput(slotIndex, stat));
       input.addEventListener("change", () => handleTeamSpNumberInput(slotIndex, stat));
-    });
-    grid.querySelectorAll(".sp-stepper-button").forEach((button) => {
-      button.addEventListener("click", () => adjustSpStepperValue(button));
     });
     updateTeamSpDisplay(slotIndex);
   }
@@ -2173,6 +2225,7 @@
       parsedImportSets = [];
     });
     document.getElementById("calculate-damage").addEventListener("click", calculateDamage);
+    document.getElementById("export-matchup-report")?.addEventListener("click", exportDamageMatchupReport);
     document.getElementById("build-team").addEventListener("click", analyzeTeamBuilder);
     document.getElementById("team-parse-import").addEventListener("click", handleUnifiedTeamBuilderInput);
     document.getElementById("team-clear-import").addEventListener("click", () => {
@@ -2181,6 +2234,15 @@
     document.getElementById("ai-builder-generate").addEventListener("click", handleUnifiedTeamBuilderInput);
     document.getElementById("ai-builder-apply").addEventListener("click", applyAiBuilderDraft);
     document.getElementById("ai-builder-tweak").addEventListener("click", handleAiBuilderTweaks);
+    document.getElementById("ai-builder-revert")?.addEventListener("click", () => {
+      const snapshot = window.__MBWR_SMART_IMPROVE_SNAPSHOT?.team;
+      if (!snapshot) {
+        teamExportStatus.textContent = "No Smart Improve snapshot to revert yet.";
+        return;
+      }
+      restoreTeamSnapshot(snapshot);
+      teamExportStatus.textContent = "Reverted the last Smart Improve / tweak snapshot.";
+    });
     document.getElementById("ai-builder-analyze").addEventListener("click", analyzeTeamBuilder);
     document.getElementById("clear-team").addEventListener("click", () => {
       document.querySelectorAll(".team-slot, .team-item, .team-ability, .team-nature, .team-move").forEach((select) => { select.value = ""; });
@@ -2250,9 +2312,9 @@
   function getPickerKind(control) {
     if (!control) return "";
     if (control.classList.contains("move-picker-input")) return "move";
-    if (control.classList.contains("team-slot") || ["attacker-name", "defender-name", "speed-pokemon"].includes(control.id)) return "pokemon";
-    if (control.classList.contains("team-item") || ["attacker-item", "defender-item"].includes(control.id)) return "item";
-    if (control.classList.contains("team-ability") || ["attacker-ability", "defender-ability"].includes(control.id)) return "ability";
+    if (control.id === "modal-slot-name" || ["attacker-name", "defender-name", "speed-pokemon"].includes(control.id)) return "pokemon";
+    if (control.id === "modal-slot-item" || control.classList.contains("team-item") || ["attacker-item", "defender-item"].includes(control.id)) return "item";
+    if (control.id === "modal-slot-ability" || control.classList.contains("team-ability") || ["attacker-ability", "defender-ability"].includes(control.id)) return "ability";
     return "";
   }
 
@@ -2361,8 +2423,22 @@
         <select id="picker-pokemon-type" class="move-filter-control" aria-label="Pokemon type"></select>
         <select id="picker-pokemon-type1" class="move-filter-control" aria-label="Pokemon type 1"></select>
         <select id="picker-pokemon-type2" class="move-filter-control" aria-label="Pokemon type 2"></select>
+        <input id="picker-pokemon-ability" class="move-filter-control" type="text" placeholder="Ability" aria-label="Ability filter" />
+        <input id="picker-pokemon-move" class="move-filter-control" type="text" placeholder="Move learned" aria-label="Move learned filter" />
+        <select id="picker-pokemon-mega" class="move-filter-control" aria-label="Mega capable">
+          <option value="">Mega: Any</option>
+          <option value="yes">Mega capable</option>
+          <option value="no">No Mega</option>
+        </select>
         <input id="picker-pokemon-spe-min" class="move-filter-control" type="number" min="0" max="255" inputmode="numeric" placeholder="Spe min" aria-label="Speed minimum" />
+        <input id="picker-pokemon-spe-max" class="move-filter-control" type="number" min="0" max="255" inputmode="numeric" placeholder="Spe max" aria-label="Speed maximum" />
+        <input id="picker-pokemon-hp-min" class="move-filter-control" type="number" min="0" max="255" inputmode="numeric" placeholder="HP min" aria-label="HP minimum" />
+        <input id="picker-pokemon-atk-min" class="move-filter-control" type="number" min="0" max="255" inputmode="numeric" placeholder="Atk min" aria-label="Attack minimum" />
+        <input id="picker-pokemon-def-min" class="move-filter-control" type="number" min="0" max="255" inputmode="numeric" placeholder="Def min" aria-label="Defense minimum" />
         <input id="picker-pokemon-spa-min" class="move-filter-control" type="number" min="0" max="255" inputmode="numeric" placeholder="SpA min" aria-label="Special Attack minimum" />
+        <input id="picker-pokemon-spd-min" class="move-filter-control" type="number" min="0" max="255" inputmode="numeric" placeholder="SpD min" aria-label="Special Defense minimum" />
+        <input id="picker-pokemon-role" class="move-filter-control" type="text" placeholder="Role tag" aria-label="Role tag filter" />
+        <input id="picker-pokemon-archetype" class="move-filter-control" type="text" placeholder="Archetype tag" aria-label="Archetype tag filter" />
       `;
       setTypeFilterOptions(document.getElementById("picker-pokemon-type"), "Any Type");
       setTypeFilterOptions(document.getElementById("picker-pokemon-type1"), "Type 1");
@@ -2408,6 +2484,14 @@
       const ranked = entry ? await rankDamagingMoves(entry, legalMoves, getOffenseProfile(slotState, entry), inferCoverageTargetsFromContext({ focus: "", notes: "" }), {}) : [];
       return { entry, legalMoves, ranked, slotState };
     }
+    if (control.id?.startsWith("modal-slot-move-")) {
+      const slotIndex = Number(control.dataset.slot || document.getElementById("team-slot-editor")?.dataset.slotIndex || 0);
+      const slotState = getTeamBuilderState()[slotIndex];
+      const entry = getRosterEntry(slotState?.name || document.getElementById("modal-slot-name")?.value || "");
+      const legalMoves = entry ? await getLegalMovesForEntry(entry) : [];
+      const ranked = entry ? await rankDamagingMoves(entry, legalMoves, getOffenseProfile(slotState, entry), inferCoverageTargetsFromContext({ focus: "", notes: "" }), {}) : [];
+      return { entry, legalMoves, ranked, slotState };
+    }
     return { entry: null, legalMoves: [], ranked: [], slotState: null };
   }
 
@@ -2420,11 +2504,17 @@
         .filter(Boolean);
       const focusText = `${document.getElementById("ai-builder-focus")?.value || ""} ${teamImportInput?.value || ""}`.trim().toLowerCase();
       const desiredTypes = inferDesiredTypesFromText(focusText);
-      const options = await Promise.all(championsRoster.map(async (entry) => ({
-        value: entry.name,
-        entry,
-        row: await buildPokemonPickerRow(entry, chosen, desiredTypes)
-      })));
+      const options = await Promise.all(championsRoster.map(async (entry) => {
+        const abilities = await getPokemonAbilities(entry);
+        const legalMoves = await getLegalMovesForEntry(entry);
+        return {
+          value: entry.name,
+          entry,
+          abilityKeys: abilities.map(normalizeNameKey),
+          moveKeys: legalMoves.map(normalizeNameKey),
+          row: await buildPokemonPickerRow(entry, chosen, desiredTypes)
+        };
+      }));
       return { entry: null, options };
     }
     if (kind === "item") {
@@ -2452,6 +2542,9 @@
   }
 
   function resolvePickerEntryForControl(control) {
+    if (control.id === "modal-slot-item" || control.id === "modal-slot-ability") {
+      return getRosterEntry(document.getElementById("modal-slot-name")?.value || "");
+    }
     if (control.classList.contains("team-item") || control.classList.contains("team-ability")) {
       return getRosterEntry(document.querySelector(`.team-slot[data-slot="${control.dataset.slot}"]`)?.value || "");
     }
@@ -2461,6 +2554,9 @@
   }
 
   function resolvePickerSlotState(control) {
+    if (control.id === "modal-slot-item" || control.id === "modal-slot-ability") {
+      return getTeamBuilderState()[Number(document.getElementById("team-slot-editor")?.dataset.slotIndex || 0)] || null;
+    }
     if (control.classList.contains("team-item") || control.classList.contains("team-ability")) {
       return getTeamBuilderState()[Number(control.dataset.slot)] || null;
     }
@@ -2555,7 +2651,17 @@
       const pokemonType1 = document.getElementById("picker-pokemon-type1")?.value || "";
       const pokemonType2 = document.getElementById("picker-pokemon-type2")?.value || "";
       const speMin = Number(document.getElementById("picker-pokemon-spe-min")?.value || NaN);
+      const speMax = Number(document.getElementById("picker-pokemon-spe-max")?.value || NaN);
+      const hpMin = Number(document.getElementById("picker-pokemon-hp-min")?.value || NaN);
+      const atkMin = Number(document.getElementById("picker-pokemon-atk-min")?.value || NaN);
+      const defMin = Number(document.getElementById("picker-pokemon-def-min")?.value || NaN);
       const spaMin = Number(document.getElementById("picker-pokemon-spa-min")?.value || NaN);
+      const spdMin = Number(document.getElementById("picker-pokemon-spd-min")?.value || NaN);
+      const abilityQuery = normalizeNameKey(document.getElementById("picker-pokemon-ability")?.value || "");
+      const moveQuery = normalizeNameKey(document.getElementById("picker-pokemon-move")?.value || "");
+      const megaFilter = document.getElementById("picker-pokemon-mega")?.value || "";
+      const roleQuery = normalizeNameKey(document.getElementById("picker-pokemon-role")?.value || "");
+      const archetypeQuery = normalizeNameKey(document.getElementById("picker-pokemon-archetype")?.value || "");
       const filtered = movePickerState.options.filter((option) => {
         if (query && !normalizeNameKey(option.value).includes(query)) return false;
         if (movePickerState.kind !== "pokemon" || !option.entry) return true;
@@ -2563,8 +2669,19 @@
         if (pokemonType && !types.includes(pokemonType)) return false;
         if (pokemonType1 && types[0] !== pokemonType1) return false;
         if (pokemonType2 && types[1] !== pokemonType2) return false;
+        if (megaFilter === "yes" && !isMegaEntry(option.entry)) return false;
+        if (megaFilter === "no" && isMegaEntry(option.entry)) return false;
+        if (abilityQuery && !(option.abilityKeys || []).some((ability) => ability.includes(abilityQuery))) return false;
+        if (moveQuery && !(option.moveKeys || []).some((move) => move.includes(moveQuery))) return false;
+        if (roleQuery && !normalizeNameKey(`${option.entry.metaRole || ""} ${(option.entry.tags || []).join(" ")}`).includes(roleQuery)) return false;
+        if (archetypeQuery && !normalizeNameKey(`${option.entry.metaRole || ""} ${(option.entry.tags || []).join(" ")} ${option.entry.name}`).includes(archetypeQuery)) return false;
+        if (Number.isFinite(hpMin) && getPokemonStatValue(option.entry, "hp") < hpMin) return false;
+        if (Number.isFinite(atkMin) && getPokemonStatValue(option.entry, "atk") < atkMin) return false;
+        if (Number.isFinite(defMin) && getPokemonStatValue(option.entry, "def") < defMin) return false;
         if (Number.isFinite(speMin) && getPokemonStatValue(option.entry, "spe") < speMin) return false;
+        if (Number.isFinite(speMax) && getPokemonStatValue(option.entry, "spe") > speMax) return false;
         if (Number.isFinite(spaMin) && getPokemonStatValue(option.entry, "spa") < spaMin) return false;
+        if (Number.isFinite(spdMin) && getPokemonStatValue(option.entry, "spd") < spdMin) return false;
         return true;
       });
       movePickerHead.className = `move-picker__head move-picker__head--${movePickerState.kind === "pokemon" ? "pokemon" : "simple"}`;
@@ -2685,6 +2802,13 @@
 
   function setupTeamBuilderControls() {
     document.querySelectorAll(".team-slot").forEach((select) => {
+      select.addEventListener("click", (event) => {
+        event.preventDefault();
+        openTeamSlotModal(Number(event.currentTarget.dataset.slot));
+      });
+      select.addEventListener("focus", (event) => {
+        openTeamSlotModal(Number(event.currentTarget.dataset.slot));
+      });
       select.addEventListener("input", async (event) => {
         const slotIndex = Number(event.currentTarget.dataset.slot);
         const previousName = event.currentTarget.dataset.currentSpecies || "";
@@ -2796,6 +2920,7 @@
     const modal = document.getElementById("team-slot-editor");
     const content = document.getElementById("team-slot-modal-content");
     if (!modal || !content || slotIndex < 0) return;
+    modal.dataset.slotIndex = String(slotIndex);
     const slot = getTeamBuilderState()[slotIndex] || {};
     content.innerHTML = `
       <div class="team-slot-modal__heading">
@@ -2807,7 +2932,7 @@
         <label>Item<input id="modal-slot-item" class="combo-input" value="${escapeAttribute(slot.item || "")}" placeholder="Search item" /></label>
         <label>Ability<input id="modal-slot-ability" class="combo-input" value="${escapeAttribute(slot.ability || "")}" placeholder="Search ability" /></label>
         <label>Nature<select id="modal-slot-nature">${cloneSelectOptionsFromControl(`.team-nature[data-slot="${slotIndex}"]`, slot.nature || "")}</select></label>
-        ${[0, 1, 2, 3].map((moveIndex) => `<label>Move ${moveIndex + 1}<input id="modal-slot-move-${moveIndex}" class="combo-input" value="${escapeAttribute(slot.moves?.[moveIndex] || "")}" /></label>`).join("")}
+        ${[0, 1, 2, 3].map((moveIndex) => `<label>Move ${moveIndex + 1}<input id="modal-slot-move-${moveIndex}" class="combo-input move-picker-input" data-slot="${slotIndex}" data-move-slot="${moveIndex}" value="${escapeAttribute(slot.moves?.[moveIndex] || "")}" readonly /></label>`).join("")}
       </div>
       <div class="team-sp-block">
         <div class="sp-total" id="modal-team-sp-total">${Object.values(slot.sps || {}).reduce((sum, value) => sum + (Number(value) || 0), 0)} / ${SP_MAX_TOTAL} SP</div>
@@ -2868,6 +2993,10 @@
   }
 
   function bindModalSlotControls(slotIndex) {
+    ["modal-slot-name", "modal-slot-item", "modal-slot-ability", "modal-slot-move-0", "modal-slot-move-1", "modal-slot-move-2", "modal-slot-move-3"].forEach((id) => {
+      const control = document.getElementById(id);
+      if (control) bindPickerControl(control);
+    });
     syncModalControlToSlot(slotIndex, "#modal-slot-name", `.team-slot[data-slot="${slotIndex}"]`);
     syncModalControlToSlot(slotIndex, "#modal-slot-item", `.team-item[data-slot="${slotIndex}"]`);
     syncModalControlToSlot(slotIndex, "#modal-slot-ability", `.team-ability[data-slot="${slotIndex}"]`);
@@ -6001,6 +6130,9 @@
     });
     const dockedPointDetails = buildDockedPointDetails(evaluation);
     const defenseTypeChartMarkup = buildTeamTypeChartMarkup(teamState);
+    const exportGate = getTeamExportGate(teamState.filter((slot) => slot.name));
+    const qualityStatus = exportGate.blockers.length ? "Critical issue" : exportGate.issues.length ? "Needs fixes" : "Valid";
+    const sourceDebug = window.__MBWR_SOURCE_DEBUG || {};
 
     teamAnalysis.innerHTML = `
       <div class="analysis-grid">
@@ -6008,6 +6140,17 @@
           <p class="result-title">Team Readout</p>
           <p class="result-copy">Current core: <strong>${team.map((entry) => entry.name).join(", ")}</strong></p>
           <div class="analysis-row">${teamPreview}</div>
+        </div>
+        <div class="analysis-stack team-quality-panel">
+          <p class="result-title">Team Quality Panel</p>
+          <div class="analysis-row">
+            <span class="analysis-chip ${exportGate.blockers.length ? "severity-high" : exportGate.issues.length ? "severity-medium" : "severity-good"}">${qualityStatus}</span>
+            <span class="analysis-chip severity-neutral">Confidence: ${exportGate.blockers.length ? "low" : exportGate.issues.length ? "medium" : "high"}</span>
+          </div>
+          <div class="fix-list">
+            ${(exportGate.blockers.length ? exportGate.blockers : exportGate.issues).slice(0, 4).map((issue) => `<div class="fix-list__item"><strong>${escapeHtml(issue.severity || "warning")}:</strong> ${escapeHtml(issue.text || issue.code)}</div>`).join("") || `<div class="fix-list__item">No final-export blockers detected.</div>`}
+          </div>
+          <p class="result-copy"><strong>Source Evidence:</strong> ${(sourceDebug.creatorMatches || []).map((row) => row.creator).join(", ") || "No direct creator match claimed"} | YouTube ${sourceDebug.youtubeCount || 0} | high-level ${sourceDebug.highLevelCount || 0} | selfplay ${sourceDebug.selfplayCount || 0}</p>
         </div>
         <div class="analysis-stack">
           <p class="result-title">Overall Team Score</p>
@@ -6870,7 +7013,7 @@
     for (let i = 0; i < occupied.length; i += 1) {
       for (let j = i; j < occupied.length; j += 1) {
         const pair = [occupied[i], occupied[j]].filter((value, idx, arr) => arr.findIndex((item) => item.index === value.index) === idx);
-        const score = await scoreLeadPair(pair, topThreats);
+        const score = await scoreLeadPairDetailed(pair, topThreats);
         scoredPairs.push(score);
       }
     }
@@ -6884,7 +7027,7 @@
     return unique.length ? unique : [{ names: [occupied[0].entry.name], score: 40, summary: "Fallback single lead recommendation." }];
   }
 
-  async function scoreLeadPair(pair, topThreats) {
+  async function scoreLeadPairDetailed(pair, topThreats) {
     const names = pair.map((row) => row.entry.name);
     let score = 42;
     const reasons = [];
@@ -8504,15 +8647,32 @@
   }
 
   function renderAiBuilderOutput(title, explanation, evaluation, draft) {
+    const sourceDebug = window.__MBWR_SOURCE_DEBUG || {};
     aiBuilderOutput.innerHTML = `
       <p class="result-title">${title}</p>
       <p class="result-copy">${explanation}</p>
       ${evaluation ? `<p class="result-copy"><strong>Projected grade:</strong> ${(evaluation.averagedScores?.overall ?? evaluation.overallScore)}/100 | Structure ${(evaluation.averagedScores?.structure ?? evaluation.structureReport.score)}/100 | Offense ${(evaluation.averagedScores?.offense ?? evaluation.offenseReport.score)}/100 | Vs Meta ${(evaluation.averagedScores?.meta ?? evaluation.metaMatchupScore)}/100</p>` : ""}
       <div class="analysis-row">
-        ${(draft || []).map((set) => `<span class="analysis-chip severity-neutral"><strong>${set.name}</strong><br>${[set.item, set.ability, set.nature].filter(Boolean).join(" | ")}<br>${formatSpSummary(set.sps)}<br>${set.moves.filter(Boolean).join(" / ")}<br>${explainDraftSet(set)}</span>`).join("")}
+        ${(draft || []).map((set) => `<span class="analysis-chip severity-neutral"><strong>${set.name}</strong><br>Item: ${escapeHtml(set.item || "none")} | Ability: ${escapeHtml(set.ability || "none")} | Nature: ${escapeHtml(set.nature || "none")}<br>Moves: ${escapeHtml((set.moves || []).filter(Boolean).slice(0, 4).join(" / "))}<br>SP: ${escapeHtml(formatSpSummary(set.sps))}<br>Role: ${escapeHtml(describeSetRoleForSchema(set, draft))}<br>Reason: ${escapeHtml(explainDraftSet(set))}<br>Matchup impact: ${escapeHtml(buildSetMatchupImpact(set, evaluation))}<br>Replaces: ${escapeHtml(set.replaces || "current slot / open slot")}<br>Confidence: ${evaluation ? "medium-high" : "medium"}</span>`).join("")}
       </div>
+      <p class="result-copy"><strong>Source Evidence:</strong> ${(sourceDebug.creatorMatches || []).map((row) => row.creator).join(", ") || "No direct creator match claimed"} | YouTube ${sourceDebug.youtubeCount || 0} | high-level ${sourceDebug.highLevelCount || 0} | selfplay ${sourceDebug.selfplayCount || 0}</p>
     `;
     animateScorePanelChanges(aiBuilderOutput);
+  }
+
+  function buildSetMatchupImpact(set, evaluation) {
+    const topThreat = evaluation?.threatRows?.[0]?.threat?.name;
+    if ((set.moves || []).some((move) => ["Fake Out", "Tailwind", "Trick Room", "Rage Powder", "Follow Me"].includes(move))) {
+      return topThreat ? `improves positioning into ${topThreat}` : "improves board control";
+    }
+    return topThreat ? `adds pressure into ${topThreat}` : "adds role-complete pressure";
+  }
+
+  function describeSetRoleForSchema(set, draft) {
+    const entry = getRosterEntry(set?.name || "");
+    if (!entry) return "unknown";
+    const profile = inferSetRoleProfile(entry, { currentDraft: draft || [] }, set.moves || [], set.moves || []);
+    return profile.primaryRole || "flex";
   }
 
   function padTeamState(draft) {
@@ -8815,6 +8975,209 @@
     return null;
   }
 
+  function cloneTeamSnapshot(team = getTeamBuilderState()) {
+    return team.map((slot) => cloneDraftSet(slot));
+  }
+
+  function restoreTeamSnapshot(snapshot) {
+    if (!Array.isArray(snapshot)) return;
+    document.querySelectorAll(".team-slot, .team-item, .team-ability, .team-nature, .team-move").forEach((control) => { control.value = ""; });
+    snapshot.slice(0, 6).forEach((slot, index) => {
+      const species = document.querySelector(`.team-slot[data-slot="${index}"]`);
+      const item = document.querySelector(`.team-item[data-slot="${index}"]`);
+      const ability = document.querySelector(`.team-ability[data-slot="${index}"]`);
+      const nature = document.querySelector(`.team-nature[data-slot="${index}"]`);
+      if (species) species.value = slot.name || "";
+      if (item) item.value = slot.item || "";
+      if (ability) ability.value = slot.ability || "";
+      if (nature) nature.value = slot.nature || "";
+      (slot.moves || []).slice(0, 4).forEach((move, moveIndex) => {
+        const control = document.querySelector(`.team-move[data-slot="${index}"][data-move-slot="${moveIndex}"]`);
+        if (control) control.value = move || "";
+      });
+      applyImportedTeamSlotSpSpread(index, slot.sps || {});
+    });
+    lastAiDraft = cloneTeamSnapshot(snapshot).filter((slot) => slot.name);
+    refreshAllTeamBuilderOptions();
+    refreshAllSprites();
+    notifyTeamBuilderStateChange("smart-improve-reverted");
+    analyzeTeamBuilder();
+  }
+
+  function parseExplicitTweakRequests(text = "") {
+    const normalized = normalizeNameKey(text);
+    const requests = [];
+    const add = (id, label, payload = {}) => requests.push({ id, label, ...payload });
+    const replacementMatch = normalized.match(/(?:replace|change|swap)\s+([a-z0-9 .'-]+?)\s+(?:for|with|to)\s+(?:a\s+)?(?:backup\s+)?mega/);
+    if (replacementMatch) add("replace_with_backup_mega", `Replace ${replacementMatch[1].trim()} with backup Mega`, { target: replacementMatch[1].trim(), matchup: normalized.includes("rain") ? "rain" : "" });
+    if (/\bbackup mega\b/.test(normalized)) add("backup_mega_plan", "Add backup Mega plan", { matchup: normalized.includes("rain") ? "rain" : "" });
+    if (/\bflamethrower\b.*\beruption\b|\beruption\b.*\bflamethrower\b/.test(normalized)) add("flamethrower_to_eruption", "Change Flamethrower to Eruption");
+    if (/\bincineroar\b.*\b(blaze kick|support|bulk|bulkier|moves?)\b/.test(normalized)) add("fix_incineroar_support", "Fix Incineroar support set");
+    if (/\bsinistcha\b.*\b(bulk|bulkier|bulky)\b/.test(normalized)) add("bulk_sinistcha", "Make Sinistcha bulkier");
+    if (/\bfarigiraf\b.*\btrick room\b/.test(normalized)) add("preserve_farigiraf_tr", "Preserve Farigiraf Trick Room");
+    if (!requests.some((request) => request.id === "replace_with_backup_mega") && /\b(conkeldurr)\b.*\b(replace|change|swap|remove)\b|\b(replace|change|swap|remove)\b.*\b(conkeldurr)\b/.test(normalized)) add("replace_conkeldurr", "Replace Conkeldurr", { target: "conkeldurr", matchup: normalized.includes("rain") ? "rain" : "" });
+    const seen = new Set();
+    return requests.filter((request) => {
+      const key = `${request.id}:${request.target || ""}:${request.matchup || ""}`;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+  }
+
+  function getSupportBulkSpreadForName(name) {
+    const key = normalizeNameKey(name);
+    if (key === "incineroar") return { hp: 32, atk: 0, def: 14, spa: 0, spd: 16, spe: 4 };
+    if (key === "pelipper") return { hp: 28, atk: 0, def: 10, spa: 0, spd: 12, spe: 16 };
+    if (key === "whimsicott") return { hp: 24, atk: 0, def: 8, spa: 0, spd: 10, spe: 24 };
+    return { hp: 32, atk: 0, def: 16, spa: 0, spd: 18, spe: 0 };
+  }
+
+  async function ensureLegalMoveOnSet(set, desiredMove, replaceMoveNames = []) {
+    const entry = getRosterEntry(set.name);
+    if (!entry) return false;
+    const legalMoves = await getLegalMovesForEntry(entry);
+    const legal = legalMoves.find((move) => normalizeNameKey(move) === normalizeNameKey(desiredMove));
+    if (!legal) return false;
+    if ((set.moves || []).some((move) => normalizeNameKey(move) === normalizeNameKey(legal))) return true;
+    const replaceIndex = (set.moves || []).findIndex((move) => replaceMoveNames.some((bad) => normalizeNameKey(move) === normalizeNameKey(bad)));
+    if (replaceIndex >= 0) set.moves[replaceIndex] = legal;
+    else if ((set.moves || []).length < 4) set.moves.push(legal);
+    else set.moves[0] = legal;
+    set.moves = [...new Set(set.moves.filter(Boolean))].slice(0, 4);
+    return true;
+  }
+
+  async function applyIncineroarSupportFix(set) {
+    const entry = getRosterEntry(set.name);
+    if (!entry) return false;
+    const legalMoves = await getLegalMovesForEntry(entry);
+    const legalKeys = new Set(legalMoves.map(normalizeNameKey));
+    const desired = ["Fake Out", "Flare Blitz", "Parting Shot", "Throat Chop", "Protect", "Snarl", "Will-O-Wisp", "Taunt"].filter((move) => legalKeys.has(normalizeNameKey(move)));
+    const keep = [];
+    desired.forEach((move) => {
+      if (keep.length < 4 && !keep.some((existing) => normalizeNameKey(existing) === normalizeNameKey(move))) keep.push(move);
+    });
+    if (keep.length >= 4) set.moves = keep.slice(0, 4);
+    set.ability = (await getPokemonAbilities(entry)).find((ability) => normalizeNameKey(ability) === "intimidate") || set.ability || "";
+    set.item = set.item || "Sitrus Berry";
+    set.nature = "Careful";
+    set.sps = getSupportBulkSpreadForName(set.name);
+    return true;
+  }
+
+  function getTeamArchetypeLabel(team) {
+    const moveKeys = (team || []).flatMap((slot) => (slot.moves || []).map(normalizeNameKey));
+    const names = new Set((team || []).map((slot) => normalizeNameKey(slot.name)));
+    const slowCount = (team || []).map((slot) => resolveBattleEntry(slot) || getRosterEntry(slot.name)).filter((entry) => entry && (entry.baseSpeed || 0) <= 65).length;
+    if (moveKeys.includes("trick room") && (names.has("mega camerupt") || slowCount >= 3)) return "Hard Trick Room";
+    if (moveKeys.includes("trick room")) return "Soft Trick Room";
+    const key = detectTeamArchetype(team);
+    const labels = {
+      hard_tr: "Hard Trick Room",
+      soft_tr: "Soft Trick Room",
+      rain: "Rain Balance",
+      sun: "Sun Offense",
+      sand: "Sand Balance",
+      snow: "Snow Trick Room",
+      tailwind: "Tailwind Balance",
+      bulky_offense: "Bulky Offense",
+      fast_offense: "Fast Offense",
+      anti_meta: "Anti-Meta",
+      balance: "Balance"
+    };
+    return labels[key] || "Balance";
+  }
+
+  function scoreBackupMegaCandidate(entry, currentDraft, matchup = "") {
+    const archetype = detectTeamArchetype(currentDraft);
+    let score = 0;
+    if (!isMegaEntry(entry)) return -999;
+    if (currentDraft.some((set) => normalizeNameKey(set.name) === normalizeNameKey(entry.name))) return -999;
+    if (violatesSpeciesClause(currentDraft.map((set) => getRosterEntry(set.name)).filter(Boolean), entry)) return -999;
+    if (archetype.includes("tr") && entry.baseSpeed <= 65) score += 28;
+    if (archetype === "rain" && (entry.types.includes("Water") || entry.types.includes("Electric"))) score += 18;
+    if (matchup === "rain") {
+      if (entry.types.includes("Water") || entry.types.includes("Grass") || entry.types.includes("Electric") || entry.types.includes("Dragon")) score += 24;
+      if (entry.types.includes("Fire") && entry.baseSpeed > 40) score -= 24;
+    }
+    if ((entry.baseStats?.[0] || 0) + (entry.baseStats?.[2] || 0) + (entry.baseStats?.[4] || 0) >= 260) score += 10;
+    score += Math.max(entry.baseStats?.[1] || 0, entry.baseStats?.[3] || 0) / 10;
+    return score;
+  }
+
+  async function chooseBackupMegaSet(currentDraft, request = {}) {
+    const candidates = championsRoster
+      .filter(isMegaEntry)
+      .map((entry) => ({ entry, score: scoreBackupMegaCandidate(entry, currentDraft, request.matchup || "") }))
+      .filter((row) => row.score > -999)
+      .sort((a, b) => b.score - a.score);
+    const best = candidates[0]?.entry;
+    if (!best) return null;
+    const context = {
+      mode: "archetype",
+      focus: best.name,
+      notes: `backup Mega for ${request.matchup || "bad"} matchup while preserving ${getTeamArchetypeLabel(currentDraft)}`,
+      enemyNames: [],
+      chosen: currentDraft.map((set) => getRosterEntry(set.name)).filter(Boolean),
+      currentDraft,
+      requestedModes: { trickRoom: detectTeamArchetype(currentDraft).includes("tr") },
+      requestedPressure: { counterMeta: true }
+    };
+    return getOptimizedDraftSetCached(best, context);
+  }
+
+  async function applyExplicitTweakRequests(draft, requests) {
+    const completedRequests = [];
+    const blockedRequests = [];
+    const fallbackUsed = [];
+    const complete = (request, detail = "") => completedRequests.push({ ...request, detail });
+    const block = (request, reasonIfBlocked) => blockedRequests.push({ ...request, reasonIfBlocked });
+    for (const request of requests) {
+      if (request.id === "flamethrower_to_eruption") {
+        const target = draft.find((set) => normalizeNameKey(set.name) === "mega camerupt");
+        if (target && await ensureLegalMoveOnSet(target, "Eruption", ["Flamethrower"])) complete(request);
+        else block(request, "Eruption was not legal or Mega Camerupt was not present.");
+      } else if (request.id === "fix_incineroar_support") {
+        const target = draft.find((set) => normalizeNameKey(set.name) === "incineroar");
+        if (target && await applyIncineroarSupportFix(target)) complete(request);
+        else block(request, "Incineroar was not present.");
+      } else if (request.id === "bulk_sinistcha") {
+        const target = draft.find((set) => normalizeNameKey(set.name) === "sinistcha");
+        if (target) {
+          target.sps = getSupportBulkSpreadForName("Sinistcha");
+          target.nature = "Sassy";
+          complete(request);
+        } else block(request, "Sinistcha was not present.");
+      } else if (request.id === "preserve_farigiraf_tr") {
+        const target = draft.find((set) => normalizeNameKey(set.name) === "farigiraf");
+        if (target && await ensureLegalMoveOnSet(target, "Trick Room", [])) complete(request);
+        else block(request, "Farigiraf was not present or Trick Room was not legal.");
+      } else if (["replace_with_backup_mega", "replace_conkeldurr", "backup_mega_plan"].includes(request.id)) {
+        const backup = await chooseBackupMegaSet(draft, request);
+        if (!backup) {
+          block(request, "No legal Mega improved the requested matchup without breaking the current archetype.");
+          continue;
+        }
+        let replaceIndex = -1;
+        if (request.target) replaceIndex = draft.findIndex((set) => normalizeNameKey(set.name).includes(normalizeNameKey(request.target)));
+        if (replaceIndex < 0 && request.id === "replace_conkeldurr") replaceIndex = draft.findIndex((set) => normalizeNameKey(set.name) === "conkeldurr");
+        if (replaceIndex < 0 && request.id !== "backup_mega_plan") replaceIndex = draft.findIndex((set) => !isMegaEntry(getRosterEntry(set.name)) && !getSetMoveKeys(set).includes("trick room"));
+        if (request.id === "backup_mega_plan") {
+          fallbackUsed.push({ request: request.id, plan: backup.name });
+          complete(request, `Backup Mega plan recorded: ${backup.name}.`);
+        } else if (replaceIndex >= 0) {
+          draft[replaceIndex] = backup;
+          complete(request, `Used ${backup.name}.`);
+        } else {
+          fallbackUsed.push({ request: request.id, plan: backup.name });
+          complete(request, `Backup Mega plan recorded: ${backup.name}.`);
+        }
+      }
+    }
+    return { draft, completedRequests, blockedRequests, fallbackUsed };
+  }
+
   async function handleAiBuilderTweaks() {
     document.body.classList.add("is-building");
     setBusyState(aiBuilderOutput, true, "Updating");
@@ -8830,42 +9193,80 @@
       return;
     }
     const request = parseBuilderRequest(tweakText, document.getElementById("ai-builder-focus").value.trim(), document.getElementById("ai-builder-mode").value);
+    const parsedRequests = parseExplicitTweakRequests(tweakText);
+    window.__MBWR_SMART_IMPROVE_SNAPSHOT = {
+      team: cloneTeamSnapshot(getTeamBuilderState()),
+      exportText: buildTeamExportText(),
+      validation: getTeamExportGate(getTeamBuilderState().filter((slot) => slot.name))
+    };
+    window.__MBWR_TWEAK_DEBUG = {
+      parsedRequests,
+      completedRequests: [],
+      blockedRequests: [],
+      reasonIfBlocked: "",
+      fallbackUsed: [],
+      finalValidationResult: null
+    };
     const notes = [tweakText, `Current roster: ${sourceEntries.map((entry) => entry.name).join(", ")}`].filter(Boolean).join(". ");
-    const tweakedDraft = [];
+    let tweakedDraft = parsedRequests.length ? cloneTeamSnapshot(currentTeamState) : [];
     optimizedSetCache.clear();
-    for (const entry of sourceEntries.slice(0, 6)) {
-      tweakedDraft.push(await getOptimizedDraftSetCached(entry, {
+    if (!parsedRequests.length) {
+      for (const entry of sourceEntries.slice(0, 6)) {
+        tweakedDraft.push(await getOptimizedDraftSetCached(entry, {
+          mode: request.mode || "pokemon",
+          focus: request.focus || sourceEntries[0]?.name || "",
+          notes,
+          enemyNames: [],
+          chosen: sourceEntries,
+          currentDraft: tweakedDraft,
+          buildCounter: ++aiBuildCounter,
+          requestedModes: request.requestedModes,
+          requestedPressure: request.requestedPressure
+        }));
+      }
+    } else {
+      const explicitResult = await applyExplicitTweakRequests(tweakedDraft, parsedRequests);
+      tweakedDraft = explicitResult.draft;
+      window.__MBWR_TWEAK_DEBUG.completedRequests = explicitResult.completedRequests;
+      window.__MBWR_TWEAK_DEBUG.blockedRequests = explicitResult.blockedRequests;
+      window.__MBWR_TWEAK_DEBUG.reasonIfBlocked = explicitResult.blockedRequests.map((row) => `${row.label}: ${row.reasonIfBlocked}`).join(" | ");
+      window.__MBWR_TWEAK_DEBUG.fallbackUsed = explicitResult.fallbackUsed;
+    }
+    if (!parsedRequests.length) {
+      await enforceSpeciesClauseOnDraft(tweakedDraft, championsRoster.filter((entry) => !entry.name.startsWith("Mega ") || canUseMega(entry)), {
         mode: request.mode || "pokemon",
         focus: request.focus || sourceEntries[0]?.name || "",
         notes,
         enemyNames: [],
-        chosen: sourceEntries,
-        currentDraft: tweakedDraft,
-        buildCounter: ++aiBuildCounter,
         requestedModes: request.requestedModes,
         requestedPressure: request.requestedPressure
-      }));
+      });
     }
-    await enforceSpeciesClauseOnDraft(tweakedDraft, championsRoster.filter((entry) => !entry.name.startsWith("Mega ") || canUseMega(entry)), {
-      mode: request.mode || "pokemon",
-      focus: request.focus || sourceEntries[0]?.name || "",
-      notes,
-      enemyNames: [],
-      requestedModes: request.requestedModes,
-      requestedPressure: request.requestedPressure
-    });
     applyItemClauseToDraft(tweakedDraft);
     let evaluation = await evaluateTeamState(padTeamState(tweakedDraft));
-    const finalizedDraftPayload = await applyDraftPostProcessing({
-      title: "Tweaked Draft",
-      request,
-      evaluation,
-      draft: tweakedDraft
-    });
-    evaluation = finalizedDraftPayload.evaluation;
-    lastAiDraft = finalizedDraftPayload.draft;
+    if (parsedRequests.length) {
+      lastAiDraft = tweakedDraft.map((set) => cloneDraftSet(set));
+    } else {
+      const finalizedDraftPayload = await applyDraftPostProcessing({
+        title: "Tweaked Draft",
+        request,
+        evaluation,
+        draft: tweakedDraft
+      });
+      evaluation = finalizedDraftPayload.evaluation;
+      lastAiDraft = finalizedDraftPayload.draft;
+    }
+    evaluation = await evaluateTeamState(padTeamState(lastAiDraft));
     const repairDebug = typeof window !== "undefined" ? window.__MBWR_REPAIR_DEBUG : null;
     const finalCoherence = evaluateFinalExportCoherence(lastAiDraft);
+    if (window.__MBWR_TWEAK_DEBUG) {
+      window.__MBWR_TWEAK_DEBUG.finalValidationResult = {
+        isValid: finalCoherence.isValid,
+        penalty: finalCoherence.penalty,
+        blockers: finalCoherence.blockers.map((issue) => issue.code),
+        issues: finalCoherence.issues.map((issue) => issue.code)
+      };
+    }
     const repairSummary = repairDebug ? [
       `Detected archetype: ${repairDebug.detectedArchetype || detectTeamArchetype(lastAiDraft)}.`,
       `Preserved core: ${(repairDebug.lockedCore || []).join(", ") || "none"}.`,
@@ -9330,8 +9731,9 @@
     if (!roleProfile.buildRules.isTrickRoom || roleProfile.buildRules.hybridSpeed) ordered.push("Icy Wind", "Electroweb", "Thunder Wave");
     if (roleProfile.buildRules.intent === "hard_tr") ordered.push("Helping Hand", "Rage Powder", "Follow Me", "Fake Out");
     if (key === "incineroar") {
-      return ["Protect", "Fake Out", "Parting Shot", "Taunt", "Will-O-Wisp", "Throat Chop"];
+      return ["Fake Out", "Flare Blitz", "Parting Shot", "Throat Chop", "Protect", "Snarl", "Will-O-Wisp", "Taunt"];
     }
+    if (key === "mega camerupt") return ["Eruption", "Earth Power", "Protect", "Heat Wave", "Ancient Power"];
     return [...new Set(ordered)];
   }
 
@@ -10374,6 +10776,7 @@
       if (hasAnyLegalMove(legalMoves, ["u-turn", "parting shot", "taunt", "protect", "substitute"])) score += 5;
     }
     if (LOW_PRIORITY_AI_PICKS.has(normalizeNameKey(entry.name))) score -= 22;
+    if (normalizeNameKey(entry.name) === "conkeldurr" && requestedModes.trickRoom && !requestedPressure.damageAnchor) score -= 28;
     if ((entry.baseStats || []).reduce((sum, stat) => sum + stat, 0) < 500) score -= 8;
     if (!metaThreats.some((threat) => normalizeNameKey(threat.name) === normalizeNameKey(entry.name))) score -= 12;
     if (requestedPressure.avoidStaples && metaThreats.slice(0, 12).some((threat) => normalizeNameKey(threat.name) === normalizeNameKey(entry.name))) score -= 30;
@@ -11136,6 +11539,21 @@
       const replacement = preferredMoves.find((move) => !result.includes(move)) || damagingMovePool.find((move) => preferredMoves.includes(move) && !result.includes(move));
       if (replacement) result.splice(badIndex, 1, replacement);
     };
+    if (key === "incineroar") {
+      replaceMove(["blaze kick", "close combat"], ["Throat Chop", "Protect", "Snarl", "Will-O-Wisp", "Taunt"]);
+      if (result.some((move) => normalizeNameKey(move) === "flare blitz") && result.some((move) => normalizeNameKey(move) === "blaze kick")) {
+        replaceMove(["blaze kick"], ["Throat Chop", "Protect", "Snarl", "Will-O-Wisp", "Taunt"]);
+      }
+      ["Fake Out", "Flare Blitz", "Parting Shot"].forEach((move) => {
+        if (result.length < 4 && !result.includes(move)) result.push(move);
+      });
+      if (!result.some((move) => ["throat chop", "protect", "snarl", "will-o-wisp", "taunt"].includes(normalizeNameKey(move)))) {
+        const utility = ["Throat Chop", "Protect", "Snarl", "Will-O-Wisp", "Taunt"].find((move) => !result.includes(move));
+        const replaceIndex = result.findIndex((move) => !["fake out", "flare blitz", "parting shot"].includes(normalizeNameKey(move)));
+        if (utility && replaceIndex >= 0) result.splice(replaceIndex, 1, utility);
+        else if (utility && result.length < 4) result.push(utility);
+      }
+    }
     if (key === "dragapult") {
       replaceMove(["body slam"], ["Protect", "Dragon Darts", "Dragon Claw", "Shadow Ball"]);
     }
@@ -11194,6 +11612,12 @@
       }
     }
     if (key === "mega camerupt") {
+      replaceMove(["flamethrower"], ["Eruption", "Heat Wave"]);
+      if (!result.some((move) => normalizeNameKey(move) === "eruption") && damagingMovePool.includes("Eruption")) {
+        const replaceIndex = result.findIndex((move) => ["flamethrower", "lava plume", "fire blast"].includes(normalizeNameKey(move)));
+        if (replaceIndex >= 0) result.splice(replaceIndex, 1, "Eruption");
+        else if (result.length < 4) result.unshift("Eruption");
+      }
       ["Protect", "Earth Power", "Heat Wave"].forEach((move) => {
         if (result.length < 4 && !result.includes(move) && (damagingMovePool.includes(move) || move === "Protect")) result.push(move);
       });
@@ -11621,6 +12045,16 @@
     const physicalLean = entry.baseStats[1] >= entry.baseStats[3];
     const speedLean = entry.baseSpeed >= 95;
     const roleProfile = inferSetRoleProfile(entry, context, moves, moves);
+    const supportLike = SUPPORT_ROLE_LOCKS.has(normalizeNameKey(entry.name))
+      || ["pivot_support", "bulky_support", "disruption_support", "speed_control_support", "redirection_support", "tr_setter", "fakeout_support"].includes(roleProfile.primaryRole)
+      || moveKeys.filter((move) => getSupportMoveKeySet().has(move)).length >= 2;
+    if (supportLike) {
+      if (moveKeys.includes("trick room")) return { hp: 32, atk: 0, def: 16, spa: 0, spd: 18, spe: 0 };
+      if (normalizeNameKey(entry.name) === "incineroar") return { hp: 32, atk: 0, def: 14, spa: 0, spd: 16, spe: 4 };
+      if (normalizeNameKey(entry.name) === "pelipper") return { hp: 28, atk: 0, def: 10, spa: 0, spd: 12, spe: 16 };
+      if (moveKeys.includes("tailwind") || moveKeys.includes("icy wind") || moveKeys.includes("electroweb")) return { hp: 24, atk: 0, def: 8, spa: 0, spd: 10, spe: 24 };
+      return { hp: 32, atk: 0, def: 16, spa: 0, spd: 18, spe: 0 };
+    }
     if (normalizeNameKey(entry.name) === "kingambit") return { hp: 20, atk: 32, def: 6, spa: 0, spd: 8, spe: 0 };
     if (normalizeNameKey(entry.name) === "sneasler") return { hp: 0, atk: 32, def: 0, spa: 0, spd: 2, spe: 32 };
     if (HARD_SPECIAL_LOCKS.has(normalizeNameKey(entry.name))) return speedLean
@@ -11996,6 +12430,24 @@
     bugStatus.textContent = "Opened a prefilled GitHub issue in a new tab.";
   }
 
+  function exportDamageMatchupReport() {
+    const mode = document.body.dataset.calcMode || "single";
+    const report = [
+      "Champions Damage Matchup Report",
+      `Mode: ${mode === "team" ? "Saved Team vs Team" : "Single Pokemon"}`,
+      `Attacker: ${document.getElementById("attacker-name").value || "(none)"}`,
+      `Defender: ${document.getElementById("defender-name").value || "(none)"}`,
+      `Move: ${document.getElementById("attacker-move").value || "(none)"}`,
+      `Weather: ${document.getElementById("calc-weather")?.value || "None"}`,
+      `Terrain: ${document.getElementById("calc-terrain")?.value || "None"}`,
+      "",
+      (damageResult?.innerText || "No calculation has been run yet.").trim(),
+      "",
+      "Engine note: uses this app's Champions legality, SP spreads, move/item/ability data, Mega handling, and calc engine."
+    ].join("\n");
+    downloadTextFile(report, `champions-matchup-report-${Date.now()}.txt`);
+  }
+
   function downloadBugReport() {
     const report = bugOutput.value || generateBugReport();
     const blob = new Blob([report], { type: "text/plain;charset=utf-8" });
@@ -12015,7 +12467,10 @@
       .map((slot, slotIndex) => ({ ...slot, originalSlotIndex: slotIndex }))
       .filter((slot) => slot.name);
     if (!team.length) return "";
-    return team.map((slot) => {
+    return [
+      buildDynamicExportTitle(team),
+      "",
+      ...team.map((slot) => {
       const header = `${slot.name}${slot.item ? ` @ ${slot.item}` : ""}`;
       const lines = [header];
       if (slot.ability) lines.push(`Ability: ${slot.ability}`);
@@ -12027,7 +12482,84 @@
       if (spread) lines.push(`SPs: ${spread}`);
       slot.moves.filter(Boolean).forEach((move) => lines.push(`- ${move}`));
       return lines.join("\n");
-    }).join("\n\n");
+      }),
+      buildExportMatchupNotes(team)
+    ].filter(Boolean).join("\n\n");
+  }
+
+  function buildDynamicExportTitle(team) {
+    const archetype = getTeamArchetypeLabel(team);
+    const megaNames = team.filter((slot) => isMegaEntry(getRosterEntry(slot.name))).map((slot) => slot.name);
+    const weather = inferTeamWeatherProfile(team).modes[0] || "";
+    const mainMega = megaNames.find((name) => !/abomasnow/i.test(name)) || megaNames[0] || "";
+    const weatherLabel = weather ? weather.charAt(0).toUpperCase() + weather.slice(1) : "";
+    if (archetype.includes("Trick Room") && mainMega) return `${archetype.replace("Trick Room", "TR")} ${mainMega} Team`;
+    if (weatherLabel && mainMega) return `${weatherLabel} ${archetype} ${mainMega} Team`;
+    if (mainMega) return `${archetype} ${mainMega} Team`;
+    const core = team.find((slot) => ["kingambit", "incineroar", "farigiraf", "whimsicott"].includes(normalizeNameKey(slot.name)))?.name || "";
+    return core ? `${archetype} ${core} Core` : `${archetype} Team`;
+  }
+
+  function buildExportMatchupNotes(team) {
+    const archetype = getTeamArchetypeLabel(team);
+    const weather = inferTeamWeatherProfile(team).modes[0] || "none";
+    const moveKeys = getSetMoveKeys({ moves: team.flatMap((slot) => slot.moves || []) });
+    const bestLeads = getSimpleBestLeads(team);
+    const weak = evaluateFinalExportCoherence(team).issues.slice(0, 3).map((issue) => issue.text);
+    const backupMega = chooseStaticBackupMegaName(team, weather);
+    const sourceDebug = window.__MBWR_SOURCE_DEBUG || {};
+    const matchedCreator = sourceDebug.creatorMatches?.[0]?.creator || "No creator attribution claimed";
+    return [
+      "Matchup Notes",
+      "",
+      "Primary Mode:",
+      archetype,
+      "",
+      "Secondary Mode:",
+      moveKeys.includes("parting shot") || moveKeys.includes("u-turn") ? "Bulky Midgame Pivot" : "Flexible Positioning",
+      "",
+      "Weak Matchups:",
+      weak.length ? weak.join("\n") : "No critical blocker detected by the quality gate.",
+      "",
+      "Best Leads:",
+      bestLeads.join("\n"),
+      "",
+      "Rain matchup plan:",
+      weather === "rain" ? "Win weather turns with your own rain mode, speed control, and protected pivots." : "Preserve resists, deny Pelipper tempo, and use the listed backup plan if your primary Mega is rain-sensitive.",
+      "",
+      "Trick Room matchup plan:",
+      moveKeys.includes("trick room") ? "Lead setter plus Fake Out/redirection, then pivot into the slow breaker." : "Pressure setters with Taunt, Fake Out, Encore, or immediate double targets.",
+      "",
+      "Tailwind matchup plan:",
+      moveKeys.includes("tailwind") ? "Use Tailwind early, then trade with Protect turns and priority." : "Stall Tailwind turns with Protect and pivoting, then reset speed control.",
+      "",
+      backupMega ? `Backup Mega plan:\n${backupMega}` : "Backup Mega plan:\nNo secondary Mega required by current read.",
+      "",
+      "Source Evidence:",
+      `Matched Creator: ${matchedCreator}`,
+      `Matched Shell: ${archetype} with ${weather === "none" ? "non-weather" : weather} support`,
+      `Supporting Sources: ${(sourceDebug.primaryCreatorsTracked || PRIMARY_CREATOR_SOURCES).slice(0, 3).join(" + ")} + retained archive`,
+      "Attribution note: creator names are shown only when matched from local source metadata; otherwise this is shell-level evidence."
+    ].join("\n");
+  }
+
+  function getSimpleBestLeads(team) {
+    const support = team.filter((slot) => (slot.moves || []).some((move) => ["Fake Out", "Trick Room", "Tailwind", "Rage Powder", "Follow Me"].includes(move)));
+    const attackers = team.filter((slot) => !(support.includes(slot)));
+    const first = [support[0]?.name, attackers[0]?.name || support[1]?.name].filter(Boolean).join(" + ");
+    const second = [support[1]?.name || support[0]?.name, attackers[1]?.name || attackers[0]?.name].filter(Boolean).join(" + ");
+    return [...new Set([first, second].filter(Boolean))].slice(0, 2);
+  }
+
+  function chooseStaticBackupMegaName(team, weather) {
+    const currentMegaNames = new Set(team.filter((slot) => isMegaEntry(getRosterEntry(slot.name))).map((slot) => normalizeNameKey(slot.name)));
+    const archetype = detectTeamArchetype(team);
+    const candidates = championsRoster
+      .filter(isMegaEntry)
+      .filter((entry) => !currentMegaNames.has(normalizeNameKey(entry.name)))
+      .map((entry) => ({ entry, score: scoreBackupMegaCandidate(entry, team, weather === "rain" ? "rain" : "") + (archetype.includes("tr") && entry.baseSpeed <= 50 ? 8 : 0) }))
+      .sort((a, b) => b.score - a.score);
+    return candidates[0]?.entry ? `${candidates[0].entry.name} as matchup-specific alternative while preserving ${getTeamArchetypeLabel(team)}.` : "";
   }
 
   function blockTeamExportIfNeeded(teamState) {
@@ -12163,10 +12695,7 @@
 
     ctx.fillStyle = "#f7eefe";
     ctx.font = "700 52px Georgia";
-    ctx.fillText("Pokemon Champions Team Export", 54, 88);
-    ctx.fillStyle = "#cab7f7";
-    ctx.font = "24px 'Segoe UI'";
-    ctx.fillText("Level 50 | Legal items, abilities, nature, SP, and moves", 56, 126);
+    ctx.fillText(buildDynamicExportTitle(team), 54, 88);
 
     for (let index = 0; index < team.length; index += 1) {
       const slot = team[index];
@@ -12472,6 +13001,7 @@
   async function buildTeamExportSvg(team) {
     const dimensions = getTeamExportDimensions(team.length);
     const rows = await Promise.all(team.map((slot, index) => buildExportCardSvg(slot, index, dimensions)));
+    const title = buildDynamicExportTitle(team);
     return `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="${dimensions.width}" height="${dimensions.height}" viewBox="0 0 ${dimensions.width} ${dimensions.height}">
   <defs>
@@ -12507,8 +13037,7 @@
   </defs>
   <rect class="export-shell" width="${dimensions.width}" height="${dimensions.height}" rx="30"/>
   <rect class="export-frame" x="18" y="18" width="${dimensions.width - 36}" height="${dimensions.height - 36}" rx="24"/>
-  <text class="export-title" x="${dimensions.padding}" y="68">Pokemon Champions Team Export</text>
-  <text class="export-subtitle" x="${dimensions.padding}" y="100">Competitive team sheet with role details, move slots, type icons, and SP bar spreads</text>
+  <text class="export-title" x="${dimensions.padding}" y="68">${escapeXml(title)}</text>
   ${rows.join("")}
 </svg>`;
   }

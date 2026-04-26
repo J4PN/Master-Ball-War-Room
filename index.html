@@ -41,6 +41,7 @@
       <button class="tab-button" data-tab-trigger="damage">💥 Damage Calc</button>
       <button class="tab-button" data-tab-trigger="speed">⚡ Speed Calc</button>
       <button class="tab-button" data-tab-trigger="database">Champions DB</button>
+      <button class="tab-button" data-tab-trigger="credits">Credits</button>
       <button class="tab-button" data-tab-trigger="meta">📊 Meta</button>
     </nav>
 
@@ -223,6 +224,7 @@
 
             <div class="inline-actions calc-actions">
               <button id="calculate-damage" class="action-button accent">Calculate Damage</button>
+              <button id="export-matchup-report" class="action-button ghost" type="button">Export Matchup Report</button>
               <button id="send-to-bug-tab" class="action-button ghost">Report A Problem</button>
             </div>
 
@@ -381,6 +383,7 @@
                 <textarea id="ai-builder-tweaks" class="compact-box" placeholder="Examples: make Whimsicott bulkier into Sneasler, give me stronger anti-Fairy coverage, clean up support moves, optimize items for this six."></textarea>
                 <div class="inline-actions">
                   <button id="ai-builder-tweak" class="action-button accent">Apply Tweaks</button>
+                  <button id="ai-builder-revert" class="action-button ghost" type="button">Revert Smart Improve</button>
                   <button id="ai-builder-analyze" class="action-button ghost">Analyze Current Team</button>
                 </div>
               </section>
@@ -611,22 +614,28 @@
       </section>
 
       <section class="tab-panel" data-tab-panel="database">
-        <div class="panel-grid speed-layout">
-          <section class="card">
+        <div class="database-split-layout">
+          <section class="card database-db-card">
             <div class="section-heading">
               <p class="section-kicker">Champions Database</p>
-              <h2>Abilities And Items</h2>
+              <h2>Abilities</h2>
             </div>
-            <div class="database-filter-grid">
+            <div class="database-filter-grid database-filter-grid--single">
               <label>Ability search<input id="ability-db-search" class="combo-input" placeholder="Search abilities" /></label>
               <label>Mega ability<select id="ability-db-mega-filter"><option value="">Any</option><option value="yes">Used by Mega</option><option value="no">Not Mega-only</option></select></label>
+            </div>
+            <div id="ability-db-results" class="database-list"></div>
+          </section>
+          <section class="card database-db-card">
+            <div class="section-heading">
+              <p class="section-kicker">Champions Database</p>
+              <h2>Items</h2>
+            </div>
+            <div class="database-filter-grid database-filter-grid--single">
               <label>Item search<input id="item-db-search" class="combo-input" placeholder="Search items" /></label>
               <label>Item category<select id="item-db-category"><option value="">Any Category</option><option value="mega">Mega Stone</option><option value="berry">Berry</option><option value="choice">Choice</option><option value="defensive">Defensive</option><option value="offensive">Offensive</option><option value="utility">Utility</option><option value="recovery">Recovery</option><option value="focus">Focus/Sash-style</option></select></label>
             </div>
-            <div class="database-results-grid">
-              <section><h3>Abilities</h3><div id="ability-db-results" class="database-list"></div></section>
-              <section><h3>Items</h3><div id="item-db-results" class="database-list"></div></section>
-            </div>
+            <div id="item-db-results" class="database-list"></div>
           </section>
         </div>
       </section>
@@ -666,7 +675,8 @@
                 <p class="result-copy">Credit to the owner of PokeCounter for inspiration on matchup presentation and team-analysis clarity.</p>
                 <p class="result-copy"><strong>pkmn.help inspiration:</strong> <a href="https://www.pkmn.help/about/" target="_blank" rel="noreferrer">pkmn.help/about</a></p>
                 <p class="result-copy">Credit to wavebeem's pkmn.help for type-chart and matchup-calculator inspiration.</p>
-                <p class="result-copy"><strong>Inspired by PokéBase tools and layout patterns.</strong><br>PokéBase: <a href="https://pokebase.app/" target="_blank" rel="noreferrer">https://pokebase.app/</a></p>
+                <p class="result-copy"><strong>Credit: PokéBase.app</strong><br>PokéBase: <a href="https://pokebase.app/" target="_blank" rel="noreferrer">https://pokebase.app/</a></p>
+                <p class="result-copy">UI inspiration only: type chart UX, team builder UX concepts, damage calc UX flow, and Champions DB presentation. Implementation, data handling, legality, set logic, and calculations in this app are original.</p>
               </div>
               <div class="analysis-stack">
                 <p class="result-title">Sources</p>
