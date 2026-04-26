@@ -479,6 +479,10 @@ h3 { font-size: 1.2rem; }
   gap: 10px;
   align-items: center;
 }
+.sp-stepper-row {
+  grid-template-columns: 42px minmax(54px, 1fr) 42px;
+  gap: 8px;
+}
 .slider-value,
 .range-value {
   color: #ffc4df;
@@ -499,6 +503,29 @@ h3 { font-size: 1.2rem; }
 .stat-number::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
+}
+.sp-stepper-button {
+  width: 100%;
+  min-width: 40px;
+  min-height: 42px;
+  padding: 0;
+  border-radius: 10px;
+  border: 1px solid rgba(176, 110, 255, 0.24);
+  background: rgba(16, 17, 40, 0.95);
+  color: var(--text);
+  font-size: 1.15rem;
+  font-weight: 800;
+  line-height: 1;
+  cursor: pointer;
+}
+.sp-stepper-button:hover,
+.sp-stepper-button:focus-visible {
+  border-color: rgba(255, 93, 143, 0.5);
+  background: rgba(47, 28, 72, 0.98);
+}
+.sp-stepper-value {
+  min-width: 54px;
+  height: 42px;
 }
 .stat-range {
   padding: 0;
@@ -865,9 +892,8 @@ input:focus, select:focus, textarea:focus {
   background: linear-gradient(180deg, rgba(25, 18, 48, 0.72), rgba(12, 12, 28, 0.7));
   transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
 }
-.team-stats-grid .slider-input-row {
-  grid-template-columns: minmax(0, 1fr) 80px;
-}
+.team-stats-grid .slider-input-row { grid-template-columns: minmax(0, 1fr) 80px; }
+.team-stats-grid .sp-stepper-row { grid-template-columns: 40px minmax(52px, 1fr) 40px; }
 .team-stats-grid .stat-number {
   font-size: 0.92rem;
 }
@@ -1473,10 +1499,47 @@ body.is-applying-team .team-builder-grid {
   background: rgba(18,12,34,0.75); color: var(--text); font-size: 0.87rem; cursor: pointer;
 }
 .roster-count { font-size: 0.8rem; color: var(--muted); white-space: nowrap; }
+.roster-stat-filter-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(132px, 1fr));
+  gap: 8px;
+  margin: -4px 0 14px;
+}
+.roster-stat-filter {
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr) minmax(0, 1fr);
+  gap: 6px;
+  align-items: center;
+  padding: 7px;
+  border: 1px solid rgba(138, 99, 255, 0.14);
+  border-radius: 10px;
+  background: rgba(18, 12, 34, 0.55);
+}
+.roster-stat-filter span {
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+.roster-stat-filter input,
+.move-filter-control {
+  min-width: 0;
+  padding: 8px 9px;
+  border-radius: 9px;
+  font-size: 0.82rem;
+}
+.roster-stat-line {
+  display: block;
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 0.72rem;
+  line-height: 1.35;
+}
 
 /* ── Roster chips: clickable quick-add ── */
 .roster-chip {
   cursor: pointer; position: relative; user-select: none;
+  width: auto;
+  text-align: left;
   transition: transform 120ms ease, box-shadow 120ms ease, border-color 120ms ease;
 }
 .roster-chip:hover { transform: translateY(-2px) scale(1.04); border-color: var(--accent-hot); box-shadow: 0 4px 16px rgba(255,61,154,0.28); }
@@ -1491,6 +1554,12 @@ body.is-applying-team .team-builder-grid {
 .roster-chip:hover .chip-add-hint { display: block; }
 .roster-chip-types { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
 .roster-type-chip { font-size: 0.65rem; font-weight: 600; padding: 1px 7px; border-radius: 999px; letter-spacing: 0.03em; }
+.move-picker__filters {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(126px, 1fr));
+  gap: 8px;
+  margin: 10px 0;
+}
 
 /* ── Team slot flash on add ── */
 .team-card.pokemon-added { animation: slotFlash 550ms ease; }

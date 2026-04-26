@@ -519,8 +519,16 @@
                   <option value="Steel">Steel</option>
                   <option value="Fairy">Fairy</option>
                 </select>
+                <select id="roster-type1-filter" class="roster-type-select" aria-label="Type 1 filter"></select>
+                <select id="roster-type2-filter" class="roster-type-select" aria-label="Type 2 filter"></select>
+                <select id="roster-stat-sort" class="roster-type-select" aria-label="Sort stat"></select>
+                <select id="roster-sort-direction" class="roster-type-select" aria-label="Sort direction">
+                  <option value="desc">High to low</option>
+                  <option value="asc">Low to high</option>
+                </select>
                 <span id="roster-count" class="roster-count"></span>
               </div>
+              <div class="roster-stat-filter-grid" id="roster-stat-filter-grid"></div>
               <div id="confirmed-roster" class="confirmed-roster confirmed-roster--row"></div>
             </div>
           </section>
@@ -710,6 +718,7 @@
         <button id="move-picker-close" class="move-picker__close" type="button">×</button>
       </div>
       <input id="move-picker-search" class="move-picker__search" placeholder="Search Moves..." />
+      <div id="move-picker-filters" class="move-picker__filters" hidden></div>
       <div class="move-picker__table">
         <div id="move-picker-head" class="move-picker__head">
           <span>Move</span>

@@ -1,0 +1,69 @@
+{
+  "rosterRows": [
+    "Mega Delphox",
+    "Mega Houndoom",
+    "Mega Charizard X",
+    "Mega Charizard Y",
+    "Volcarona"
+  ],
+  "rosterValid": true,
+  "moveFilter": {
+    "details": [
+      {
+        "accuracy": 100,
+        "move": "Liquidation",
+        "power": 85,
+        "type": "water"
+      },
+      {
+        "accuracy": 100,
+        "move": "Surf",
+        "power": 90,
+        "type": "water"
+      },
+      {
+        "accuracy": 100,
+        "move": "Waterfall",
+        "power": 80,
+        "type": "water"
+      },
+      {
+        "accuracy": 100,
+        "move": "Wave Crash",
+        "power": 120,
+        "type": "water"
+      }
+    ],
+    "rows": [
+      "Liquidation",
+      "Surf",
+      "Waterfall",
+      "Wave Crash"
+    ],
+    "valid": true
+  },
+  "sp": {
+    "changeEvents": 4,
+    "hpValue": 32,
+    "inputEvents": 4,
+    "maxPerStatOk": true,
+    "noOverlap": true,
+    "spread": {
+      "atk": 32,
+      "def": 2,
+      "hp": 32,
+      "spa": 0,
+      "spd": 0,
+      "spe": 0
+    },
+    "stepperVisible": true,
+    "total": 66,
+    "totalCapOk": true
+  },
+  "exportSpRead": true,
+  "importSpRead": true,
+  "mobileSpLayout": {
+    "noOverlap": true,
+    "visible": true
+  }
+}

@@ -67,6 +67,15 @@
   const LIVE_PRESSURE_TYPES = ["Water", "Fire", "Electric", "Fighting", "Poison"];
   const LIVE_WAR_ROOM_MEDIUM_DEBOUNCE_MS = 180;
   const LIVE_WAR_ROOM_SLOW_DEBOUNCE_MS = 420;
+  const POKEMON_FILTER_STATS = [
+    ["hp", "HP", 0],
+    ["atk", "Atk", 1],
+    ["def", "Def", 2],
+    ["spa", "SpA", 3],
+    ["spd", "SpD", 4],
+    ["spe", "Spe", 5],
+    ["total", "Total", -1]
+  ];
   const DEBUG_DISABLE_FLAGS = {
     patch: "MBWR_DEBUG_DISABLE_PATCH",
     engine2: "MBWR_DEBUG_DISABLE_ENGINE2",
@@ -1252,6 +1261,7 @@
   const movePickerHead = document.getElementById("move-picker-head");
   const movePickerResults = document.getElementById("move-picker-results");
   const movePickerClose = document.getElementById("move-picker-close");
+  const movePickerFilters = document.getElementById("move-picker-filters");
   const uiAnimationTimers = new WeakMap();
   let metaCountdownTimer = null;
   let moveDiscouragePolicy = null;
@@ -1290,6 +1300,7 @@
       renderAllTeamSpSliders();
       setupRosterSelects();
       setupItemSelects();
+      setupRosterFilters();
       renderConfirmedRoster();
       bindButtons();
       bindSpeciesHelpers();
@@ -1375,9 +1386,10 @@
             <span class="slider-value" id="${side}-ev-${stat}-value">${defaults[stat] || 0}</span>
           </span>
         </label>
-        <div class="slider-input-row">
-          <input class="stat-range" id="${side}-ev-${stat}" type="range" min="0" max="${SP_MAX_PER_STAT}" step="1" value="${defaults[stat] || 0}" />
-          <input class="stat-number" id="${side}-ev-${stat}-input" type="number" min="0" max="${SP_MAX_PER_STAT}" step="1" inputmode="numeric" value="${defaults[stat] || 0}" aria-label="${statLabels[stat]} SP value" />
+        <div class="slider-input-row sp-stepper-row">
+          <button class="sp-stepper-button" type="button" data-sp-side="${side}" data-sp-stat="${stat}" data-sp-delta="-1" aria-label="Decrease ${statLabels[stat]} SP">-</button>
+          <input class="stat-number sp-stepper-value" id="${side}-ev-${stat}" type="number" min="0" max="${SP_MAX_PER_STAT}" step="1" inputmode="numeric" value="${defaults[stat] || 0}" aria-label="${statLabels[stat]} SP value" />
+          <button class="sp-stepper-button" type="button" data-sp-side="${side}" data-sp-stat="${stat}" data-sp-delta="1" aria-label="Increase ${statLabels[stat]} SP">+</button>
         </div>
       `;
       grid.appendChild(wrapper);
@@ -1385,11 +1397,11 @@
 
     statOrder.forEach((stat) => {
       const input = document.getElementById(`${side}-ev-${stat}`);
-      input.addEventListener("input", () => handleSpSliderChange(side, stat));
-      input.addEventListener("change", () => handleSpSliderChange(side, stat));
-      const numberInput = document.getElementById(`${side}-ev-${stat}-input`);
-      numberInput.addEventListener("input", () => handleSpNumberInput(side, stat));
-      numberInput.addEventListener("change", () => handleSpNumberInput(side, stat));
+      input.addEventListener("input", () => handleSpNumberInput(side, stat));
+      input.addEventListener("change", () => handleSpNumberInput(side, stat));
+    });
+    grid.querySelectorAll(".sp-stepper-button").forEach((button) => {
+      button.addEventListener("click", () => adjustSpStepperValue(button));
     });
     updateSpDisplay(side);
   }
@@ -1414,20 +1426,21 @@
             <span class="slider-value" id="team-${slotIndex}-ev-${stat}-value">${defaults[stat] || 0}</span>
           </span>
         </label>
-        <div class="slider-input-row">
-          <input class="stat-range team-stat-range" id="team-${slotIndex}-ev-${stat}" type="range" min="0" max="${SP_MAX_PER_STAT}" step="1" value="${defaults[stat] || 0}" />
-          <input class="stat-number team-stat-number" id="team-${slotIndex}-ev-${stat}-input" type="number" min="0" max="${SP_MAX_PER_STAT}" step="1" inputmode="numeric" value="${defaults[stat] || 0}" aria-label="Slot ${slotIndex + 1} ${statLabels[stat]} SP value" />
+        <div class="slider-input-row sp-stepper-row">
+          <button class="sp-stepper-button" type="button" data-sp-slot="${slotIndex}" data-sp-stat="${stat}" data-sp-delta="-1" aria-label="Decrease slot ${slotIndex + 1} ${statLabels[stat]} SP">-</button>
+          <input class="stat-number team-stat-number sp-stepper-value" id="team-${slotIndex}-ev-${stat}" type="number" min="0" max="${SP_MAX_PER_STAT}" step="1" inputmode="numeric" value="${defaults[stat] || 0}" aria-label="Slot ${slotIndex + 1} ${statLabels[stat]} SP value" />
+          <button class="sp-stepper-button" type="button" data-sp-slot="${slotIndex}" data-sp-stat="${stat}" data-sp-delta="1" aria-label="Increase slot ${slotIndex + 1} ${statLabels[stat]} SP">+</button>
         </div>
       `;
       grid.appendChild(wrapper);
     });
     statOrder.forEach((stat) => {
       const input = document.getElementById(`team-${slotIndex}-ev-${stat}`);
-      input.addEventListener("input", () => handleTeamSpSliderChange(slotIndex, stat));
-      input.addEventListener("change", () => handleTeamSpSliderChange(slotIndex, stat));
-      const numberInput = document.getElementById(`team-${slotIndex}-ev-${stat}-input`);
-      numberInput.addEventListener("input", () => handleTeamSpNumberInput(slotIndex, stat));
-      numberInput.addEventListener("change", () => handleTeamSpNumberInput(slotIndex, stat));
+      input.addEventListener("input", () => handleTeamSpNumberInput(slotIndex, stat));
+      input.addEventListener("change", () => handleTeamSpNumberInput(slotIndex, stat));
+    });
+    grid.querySelectorAll(".sp-stepper-button").forEach((button) => {
+      button.addEventListener("click", () => adjustSpStepperValue(button));
     });
     updateTeamSpDisplay(slotIndex);
   }
@@ -1460,18 +1473,28 @@
 
   function handleSpNumberInput(side, changedStat) {
     const rangeInput = document.getElementById(`${side}-ev-${changedStat}`);
-    const numberInput = document.getElementById(`${side}-ev-${changedStat}-input`);
-    if (!rangeInput || !numberInput) return;
-    rangeInput.value = clampSpInputValue(numberInput.value);
+    if (!rangeInput) return;
+    rangeInput.value = clampSpInputValue(rangeInput.value);
     handleSpSliderChange(side, changedStat);
   }
 
   function handleTeamSpNumberInput(slotIndex, changedStat) {
     const rangeInput = document.getElementById(`team-${slotIndex}-ev-${changedStat}`);
-    const numberInput = document.getElementById(`team-${slotIndex}-ev-${changedStat}-input`);
-    if (!rangeInput || !numberInput) return;
-    rangeInput.value = clampSpInputValue(numberInput.value);
+    if (!rangeInput) return;
+    rangeInput.value = clampSpInputValue(rangeInput.value);
     handleTeamSpSliderChange(slotIndex, changedStat);
+  }
+
+  function adjustSpStepperValue(button) {
+    const stat = button?.dataset?.spStat || "";
+    const delta = Number(button?.dataset?.spDelta || 0);
+    const input = button?.dataset?.spSlot != null
+      ? document.getElementById(`team-${button.dataset.spSlot}-ev-${stat}`)
+      : document.getElementById(`${button.dataset.spSide}-ev-${stat}`);
+    if (!input || !Number.isFinite(delta)) return;
+    input.value = clampSpInputValue(Number(input.value || 0) + delta);
+    input.dispatchEvent(new Event("input", { bubbles: true }));
+    input.dispatchEvent(new Event("change", { bubbles: true }));
   }
 
   function getTeamCard(slotIndex) {
@@ -1544,7 +1567,7 @@
     statOrder.forEach((stat) => {
       const valueEl = document.getElementById(`team-${slotIndex}-ev-${stat}-value`);
       if (valueEl) valueEl.textContent = String(spread[stat]);
-      const numberInput = document.getElementById(`team-${slotIndex}-ev-${stat}-input`);
+      const numberInput = document.getElementById(`team-${slotIndex}-ev-${stat}`);
       if (numberInput) numberInput.value = String(spread[stat]);
     });
   }
@@ -1572,8 +1595,6 @@
     statOrder.forEach((stat) => {
       const input = document.getElementById(`team-${slotIndex}-ev-${stat}`);
       if (input) input.value = spSpread[stat];
-      const numberInput = document.getElementById(`team-${slotIndex}-ev-${stat}-input`);
-      if (numberInput) numberInput.value = spSpread[stat];
     });
     updateTeamSpDisplay(slotIndex);
   }
@@ -1772,7 +1793,7 @@
     document.getElementById(`${side}-sp-total`).textContent = `${total} / ${SP_MAX_TOTAL} SP`;
     statOrder.forEach((stat) => {
       document.getElementById(`${side}-ev-${stat}-value`).textContent = String(spread[stat]);
-      const numberInput = document.getElementById(`${side}-ev-${stat}-input`);
+      const numberInput = document.getElementById(`${side}-ev-${stat}`);
       if (numberInput) numberInput.value = String(spread[stat]);
     });
   }
@@ -1818,10 +1839,122 @@
     );
   }
 
-  function renderConfirmedRoster() {
-    confirmedRoster.innerHTML = championsRoster
-      .map((entry) => `<div class="roster-chip"><strong>${entry.name}</strong><br>${entry.types.join(" / ")}</div>`)
+  function getPokemonStatValue(entry, statKey) {
+    const stats = entry?.baseStats || [];
+    const statRow = POKEMON_FILTER_STATS.find(([key]) => key === statKey);
+    if (!statRow) return 0;
+    if (statKey === "total") return stats.reduce((sum, value) => sum + (Number(value) || 0), 0);
+    return Number(stats[statRow[2]] || 0);
+  }
+
+  function setTypeFilterOptions(select, label) {
+    if (!select) return;
+    const previous = select.value || "";
+    select.innerHTML = [`<option value="">${label}</option>`]
+      .concat(TYPE_ORDER.map((type) => `<option value="${escapeAttribute(type)}">${escapeHtml(type)}</option>`))
       .join("");
+    if (previous && controlHasOption(select, previous)) select.value = previous;
+  }
+
+  function setupRosterFilters() {
+    setTypeFilterOptions(document.getElementById("roster-type-filter"), "Any Type");
+    setTypeFilterOptions(document.getElementById("roster-type1-filter"), "Type 1");
+    setTypeFilterOptions(document.getElementById("roster-type2-filter"), "Type 2");
+    const sortSelect = document.getElementById("roster-stat-sort");
+    if (sortSelect) {
+      sortSelect.innerHTML = `<option value="name">Sort: Name</option>${POKEMON_FILTER_STATS.map(([key, label]) => `<option value="${key}">Sort: ${label}</option>`).join("")}`;
+    }
+    const statGrid = document.getElementById("roster-stat-filter-grid");
+    if (statGrid) {
+      statGrid.innerHTML = POKEMON_FILTER_STATS.map(([key, label]) => `
+        <div class="roster-stat-filter">
+          <span>${label}</span>
+          <input id="roster-${key}-min" type="number" min="0" max="999" inputmode="numeric" placeholder="min" aria-label="${label} minimum" />
+          <input id="roster-${key}-max" type="number" min="0" max="999" inputmode="numeric" placeholder="max" aria-label="${label} maximum" />
+        </div>
+      `).join("");
+    }
+    [
+      "roster-search", "roster-type-filter", "roster-type1-filter", "roster-type2-filter",
+      "roster-stat-sort", "roster-sort-direction",
+      ...POKEMON_FILTER_STATS.flatMap(([key]) => [`roster-${key}-min`, `roster-${key}-max`])
+    ].forEach((id) => {
+      document.getElementById(id)?.addEventListener("input", renderConfirmedRoster);
+      document.getElementById(id)?.addEventListener("change", renderConfirmedRoster);
+    });
+  }
+
+  function getFilteredRosterEntries() {
+    const query = normalizeNameKey(document.getElementById("roster-search")?.value || "");
+    const anyType = document.getElementById("roster-type-filter")?.value || "";
+    const type1 = document.getElementById("roster-type1-filter")?.value || "";
+    const type2 = document.getElementById("roster-type2-filter")?.value || "";
+    const sortKey = document.getElementById("roster-stat-sort")?.value || "name";
+    const direction = document.getElementById("roster-sort-direction")?.value === "asc" ? 1 : -1;
+    const minMax = Object.fromEntries(POKEMON_FILTER_STATS.map(([key]) => [
+      key,
+      {
+        min: Number(document.getElementById(`roster-${key}-min`)?.value || NaN),
+        max: Number(document.getElementById(`roster-${key}-max`)?.value || NaN)
+      }
+    ]));
+    const rows = championsRoster.filter((entry) => {
+      const types = entry.types || [];
+      if (query && !normalizeNameKey(entry.name).includes(query)) return false;
+      if (anyType && !types.includes(anyType)) return false;
+      if (type1 && types[0] !== type1) return false;
+      if (type2 && types[1] !== type2) return false;
+      return POKEMON_FILTER_STATS.every(([key]) => {
+        const value = getPokemonStatValue(entry, key);
+        const { min, max } = minMax[key];
+        if (Number.isFinite(min) && value < min) return false;
+        if (Number.isFinite(max) && value > max) return false;
+        return true;
+      });
+    });
+    rows.sort((a, b) => {
+      if (sortKey === "name") return a.name.localeCompare(b.name);
+      const diff = getPokemonStatValue(a, sortKey) - getPokemonStatValue(b, sortKey);
+      return diff ? diff * direction : a.name.localeCompare(b.name);
+    });
+    return rows;
+  }
+
+  function renderConfirmedRoster() {
+    const entries = getFilteredRosterEntries();
+    const count = document.getElementById("roster-count");
+    if (count) count.textContent = `${entries.length} / ${championsRoster.length}`;
+    confirmedRoster.innerHTML = entries
+      .map((entry) => {
+        const total = getPokemonStatValue(entry, "total");
+        return `<button class="roster-chip" type="button" data-roster-pick="${escapeAttribute(entry.name)}">
+          <strong>${escapeHtml(entry.name)}</strong><br>
+          <span class="roster-chip-types">${(entry.types || []).map((type) => `<span class="roster-type-chip" style="background:${getTypeColor(type)}">${escapeHtml(type)}</span>`).join("")}</span>
+          <span class="roster-stat-line">HP ${entry.baseStats?.[0] ?? "-"} | Atk ${entry.baseStats?.[1] ?? "-"} | Def ${entry.baseStats?.[2] ?? "-"} | SpA ${entry.baseStats?.[3] ?? "-"} | SpD ${entry.baseStats?.[4] ?? "-"} | Spe ${entry.baseStats?.[5] ?? "-"} | Total ${total}</span>
+          <span class="chip-add-hint">Add</span>
+        </button>`;
+      })
+      .join("");
+    confirmedRoster.querySelectorAll("[data-roster-pick]").forEach((button) => {
+      button.addEventListener("click", async () => {
+        const entry = getRosterEntry(button.dataset.rosterPick || "");
+        if (!entry) return;
+        const set = await getOptimizedDraftSetCached(entry, {
+          mode: "pokemon",
+          focus: entry.name,
+          notes: "",
+          enemyNames: [],
+          chosen: getTeamBuilderState().map((slot) => getRosterEntry(slot.name)).filter(Boolean),
+          currentDraft: getTeamBuilderState(),
+          requestedModes: {},
+          requestedPressure: {},
+          buildCounter: ++aiBuildCounter
+        });
+        await loadSetIntoTeamBuilder(set);
+        button.classList.add("just-added");
+        window.setTimeout(() => button.classList.remove("just-added"), 750);
+      });
+    });
   }
 
   function toApiSpeciesName(name) {
@@ -1982,6 +2115,7 @@
     movePickerSearch.placeholder = kind === "move" ? "Search Moves..." : kind === "pokemon" ? "Search Pokemon..." : kind === "item" ? "Search Items..." : "Search Abilities...";
     movePicker.classList.add("is-open");
     movePicker.setAttribute("aria-hidden", "false");
+    renderMovePickerFilterControls(kind);
     renderMovePickerResults();
     movePickerSearch.focus();
   }
@@ -1989,6 +2123,67 @@
   function closeMovePicker() {
     movePicker.classList.remove("is-open");
     movePicker.setAttribute("aria-hidden", "true");
+  }
+
+  function renderMovePickerFilterControls(kind) {
+    if (!movePickerFilters) return;
+    if (kind === "move") {
+      movePickerFilters.hidden = false;
+      movePickerFilters.innerHTML = `
+        <select id="move-filter-type" class="move-filter-control" aria-label="Move type"></select>
+        <select id="move-filter-category" class="move-filter-control" aria-label="Move category">
+          <option value="">Any Category</option>
+          <option value="physical">Physical</option>
+          <option value="special">Special</option>
+          <option value="status">Status</option>
+        </select>
+        <input id="move-filter-power-min" class="move-filter-control" type="number" min="0" max="300" inputmode="numeric" placeholder="Power min" aria-label="Base power minimum" />
+        <input id="move-filter-power-max" class="move-filter-control" type="number" min="0" max="300" inputmode="numeric" placeholder="Power max" aria-label="Base power maximum" />
+        <input id="move-filter-accuracy-min" class="move-filter-control" type="number" min="0" max="100" inputmode="numeric" placeholder="Accuracy min" aria-label="Accuracy minimum" />
+        <input id="move-filter-accuracy-max" class="move-filter-control" type="number" min="0" max="100" inputmode="numeric" placeholder="Accuracy max" aria-label="Accuracy maximum" />
+        <input id="move-filter-priority" class="move-filter-control" type="number" min="-7" max="7" inputmode="numeric" placeholder="Priority" aria-label="Priority" />
+        <input id="move-filter-target" class="move-filter-control" type="text" placeholder="Target" aria-label="Target" />
+      `;
+      setTypeFilterOptions(document.getElementById("move-filter-type"), "Any Type");
+      movePickerFilters.querySelectorAll("input, select").forEach((control) => {
+        control.addEventListener("input", renderMovePickerResults);
+        control.addEventListener("change", renderMovePickerResults);
+      });
+      return;
+    }
+    if (kind === "pokemon") {
+      movePickerFilters.hidden = false;
+      movePickerFilters.innerHTML = `
+        <select id="picker-pokemon-type" class="move-filter-control" aria-label="Pokemon type"></select>
+        <select id="picker-pokemon-type1" class="move-filter-control" aria-label="Pokemon type 1"></select>
+        <select id="picker-pokemon-type2" class="move-filter-control" aria-label="Pokemon type 2"></select>
+        <input id="picker-pokemon-spe-min" class="move-filter-control" type="number" min="0" max="255" inputmode="numeric" placeholder="Spe min" aria-label="Speed minimum" />
+        <input id="picker-pokemon-spa-min" class="move-filter-control" type="number" min="0" max="255" inputmode="numeric" placeholder="SpA min" aria-label="Special Attack minimum" />
+      `;
+      setTypeFilterOptions(document.getElementById("picker-pokemon-type"), "Any Type");
+      setTypeFilterOptions(document.getElementById("picker-pokemon-type1"), "Type 1");
+      setTypeFilterOptions(document.getElementById("picker-pokemon-type2"), "Type 2");
+      movePickerFilters.querySelectorAll("input, select").forEach((control) => {
+        control.addEventListener("input", renderMovePickerResults);
+        control.addEventListener("change", renderMovePickerResults);
+      });
+      return;
+    }
+    movePickerFilters.hidden = true;
+    movePickerFilters.innerHTML = "";
+  }
+
+  function getMoveFilterValues() {
+    return {
+      type: document.getElementById("move-filter-type")?.value || "",
+      category: document.getElementById("move-filter-category")?.value || "",
+      powerMin: Number(document.getElementById("move-filter-power-min")?.value || NaN),
+      powerMax: Number(document.getElementById("move-filter-power-max")?.value || NaN),
+      accuracyMin: Number(document.getElementById("move-filter-accuracy-min")?.value || NaN),
+      accuracyMax: Number(document.getElementById("move-filter-accuracy-max")?.value || NaN),
+      priority: Number(document.getElementById("move-filter-priority")?.value || NaN),
+      target: normalizeNameKey(document.getElementById("move-filter-target")?.value || "")
+    };
   }
 
   async function getMovePickerContext(control) {
@@ -2020,6 +2215,7 @@
       const desiredTypes = inferDesiredTypesFromText(focusText);
       const options = await Promise.all(championsRoster.map(async (entry) => ({
         value: entry.name,
+        entry,
         row: await buildPokemonPickerRow(entry, chosen, desiredTypes)
       })));
       return { entry: null, options };
@@ -2087,24 +2283,40 @@
   async function renderMovePickerResults() {
     const query = normalizeNameKey(movePickerSearch.value || "");
     if (movePickerState.kind === "move") {
-      const filtered = movePickerState.legalMoves.filter((move) => !query || normalizeNameKey(move).includes(query));
-      if (!filtered.length) {
-        movePickerHead.innerHTML = buildPickerHead("move");
-        movePickerResults.innerHTML = `<div class="move-picker__empty">No legal moves matched that search.</div>`;
-        return;
-      }
-      const rows = await Promise.all(filtered.slice(0, 80).map(async (move) => {
+      const filters = getMoveFilterValues();
+      const allRows = await Promise.all(movePickerState.legalMoves.map(async (move) => {
         const detail = await getMoveDetail(move);
         const typeName = detail?.type?.name ? prettyMoveName(detail.type.name) : "Status";
+        const category = normalizeNameKey(detail?.damage_class?.name || "");
+        const powerValue = Number(detail?.power || 0);
+        const accuracyValue = detail?.accuracy == null ? 100 : Number(detail.accuracy);
+        const priorityValue = Number(detail?.priority || 0);
+        const targetValue = normalizeNameKey(detail?.target?.name || "");
         const desc = formatMoveDescription(detail, move);
         const power = formatMovePowerForDisplay(move, detail);
         const accuracy = detail?.accuracy ? `${detail.accuracy}%` : "-";
         const pp = detail?.pp ?? "-";
         const fit = await scorePickerMove(movePickerState.entry, movePickerState.slotState, move, detail, movePickerState.ranked);
-        return { move, typeName, desc, power, accuracy, pp, fit };
+        return { move, typeName, category, powerValue, accuracyValue, priorityValue, targetValue, desc, power, accuracy, pp, fit };
       }));
+      const rows = allRows.filter((row) => {
+        if (query && !normalizeNameKey(row.move).includes(query)) return false;
+        if (filters.type && row.typeName !== filters.type) return false;
+        if (filters.category && row.category !== filters.category) return false;
+        if (Number.isFinite(filters.powerMin) && row.powerValue < filters.powerMin) return false;
+        if (Number.isFinite(filters.powerMax) && row.powerValue > filters.powerMax) return false;
+        if (Number.isFinite(filters.accuracyMin) && row.accuracyValue < filters.accuracyMin) return false;
+        if (Number.isFinite(filters.accuracyMax) && row.accuracyValue > filters.accuracyMax) return false;
+        if (Number.isFinite(filters.priority) && row.priorityValue !== filters.priority) return false;
+        if (filters.target && !row.targetValue.includes(filters.target)) return false;
+        return true;
+      }).slice(0, 80);
       movePickerHead.className = "move-picker__head move-picker__head--move";
       movePickerHead.innerHTML = buildPickerHead("move");
+      if (!rows.length) {
+        movePickerResults.innerHTML = `<div class="move-picker__empty">No legal moves matched those filters.</div>`;
+        return;
+      }
       movePickerResults.innerHTML = rows.map((row) => `
         <button class="move-picker__row move-picker__row--move ${movePickerState.control?.value === row.move ? "is-active" : ""}" type="button" data-pick-value="${escapeAttribute(row.move)}">
           <span class="move-picker__name"><span class="move-picker__type-dot" style="background:${getTypeColor(row.typeName)}"></span>${row.move}</span>
@@ -2116,7 +2328,22 @@
         </button>
       `).join("");
     } else {
-      const filtered = movePickerState.options.filter((option) => !query || normalizeNameKey(option.value).includes(query));
+      const pokemonType = document.getElementById("picker-pokemon-type")?.value || "";
+      const pokemonType1 = document.getElementById("picker-pokemon-type1")?.value || "";
+      const pokemonType2 = document.getElementById("picker-pokemon-type2")?.value || "";
+      const speMin = Number(document.getElementById("picker-pokemon-spe-min")?.value || NaN);
+      const spaMin = Number(document.getElementById("picker-pokemon-spa-min")?.value || NaN);
+      const filtered = movePickerState.options.filter((option) => {
+        if (query && !normalizeNameKey(option.value).includes(query)) return false;
+        if (movePickerState.kind !== "pokemon" || !option.entry) return true;
+        const types = option.entry.types || [];
+        if (pokemonType && !types.includes(pokemonType)) return false;
+        if (pokemonType1 && types[0] !== pokemonType1) return false;
+        if (pokemonType2 && types[1] !== pokemonType2) return false;
+        if (Number.isFinite(speMin) && getPokemonStatValue(option.entry, "spe") < speMin) return false;
+        if (Number.isFinite(spaMin) && getPokemonStatValue(option.entry, "spa") < spaMin) return false;
+        return true;
+      });
       movePickerHead.className = `move-picker__head move-picker__head--${movePickerState.kind === "pokemon" ? "pokemon" : "simple"}`;
       movePickerHead.innerHTML = buildPickerHead(movePickerState.kind);
       if (!filtered.length) {
@@ -11387,8 +11614,11 @@
     evaluateLiveTeamState,
     evaluateTeamState,
     getLegalMovesForEntry,
+    getMoveDetail,
     getRosterEntry,
     getTeamBuilderState,
+    buildTeamExportText,
+    getFilteredRosterEntries,
     normalizeNameKey,
     padTeamState,
     parseBuilderRequest
