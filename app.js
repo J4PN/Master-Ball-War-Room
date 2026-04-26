@@ -7885,6 +7885,12 @@
     const candidateWeather = getWeatherSetterMode(entry);
     if (partialWeatherModes.length && candidateWeather && !partialWeatherModes.includes(candidateWeather)) return -999;
     if (context.intentLock === "hard_tr") {
+      const comparison = getHardTrFireSlotComparison(context.currentDraftSnapshot || [], context);
+      if (normalizeNameKey(entry.name) === "torkoal") score += 30;
+      if (normalizeNameKey(entry.name) === "mega camerupt") {
+        score += comparison.preferred === "Mega Camerupt" ? 16 : -34;
+        if (!comparison.explicitMegaCamerupt && !comparison.hasSunSupport) score -= 12;
+      }
       if (entry.baseSpeed <= 65) score += 24;
       if (hasAnyLegalMove(legalMoves, ["trick room"])) score += 26;
       if (entry.baseSpeed >= 100) score -= 34;
@@ -7946,6 +7952,11 @@
       score -= slotIndex <= 2 ? 24 : 14;
     }
     if (rules.intent === "hard_tr") {
+      if (normalizeNameKey(entry.name) === "torkoal") score += 24;
+      if (normalizeNameKey(entry.name) === "mega camerupt" && normalizeNameKey(context.promptLocks?.specificMega || "") !== "mega camerupt") {
+        const comparison = getHardTrFireSlotComparison(context.currentDraftSnapshot || [], context);
+        if (comparison.preferred !== "Mega Camerupt") score -= 36;
+      }
       if (isMeaningfulTrSupportSet({ name: entry.name, moves: legalMoves })) score += 18;
       if (entry.baseSpeed >= 95 && !isPromptRequiredEntry(entry, context)) score -= 30;
       if (hasAnyLegalMove(legalMoves, ["tailwind", "icy wind", "electroweb", "thunder wave"])) score -= 22;
@@ -8282,8 +8293,11 @@
   function getFastPathTemplateNames(intent, context = {}) {
     const requestedMega = context.promptLocks?.specificMega || "";
     const noMegas = !!context.promptLocks?.noMegas;
+    const requestedMegaKey = normalizeNameKey(requestedMega);
     const templates = {
-      tr: ["Farigiraf", "Sinistcha", requestedMega || "Mega Camerupt", "Kingambit", "Conkeldurr", "Incineroar"],
+      tr: requestedMegaKey === "mega camerupt"
+        ? ["Farigiraf", "Sinistcha", "Mega Camerupt", "Kingambit", "Torkoal", "Incineroar"]
+        : ["Farigiraf", "Sinistcha", "Torkoal", requestedMega || "Mega Ampharos", "Kingambit", "Incineroar"],
       rain: ["Pelipper", "Basculegion", "Archaludon", requestedMega || "Mega Sharpedo", "Dragonite", "Kingambit"],
       sun: [requestedMega || "Mega Charizard Y", "Torkoal", "Whimsicott", "Venusaur", "Dragonite", "Incineroar"],
       tailwind: ["Whimsicott", requestedMega || "Mega Kangaskhan", "Garchomp", "Sneasler", "Dragonite", "Incineroar"],
@@ -8305,11 +8319,11 @@
     const bySpecies = {
       farigiraf: ["Trick Room", "Hyper Voice", "Psychic Noise", "Protect"],
       sinistcha: ["Trick Room", "Matcha Gotcha", "Rage Powder", "Protect"],
-      "mega camerupt": ["Heat Wave", "Earth Power", "Flamethrower", "Protect"],
+      "mega camerupt": ["Eruption", "Earth Power", "Heat Wave", "Protect"],
       camerupt: ["Heat Wave", "Earth Power", "Flamethrower", "Protect"],
       kingambit: ["Kowtow Cleave", "Iron Head", "Sucker Punch", "Protect"],
       conkeldurr: ["Drain Punch", "Mach Punch", "Knock Off", "Protect"],
-      incineroar: ["Fake Out", "Flare Blitz", "Parting Shot", "Knock Off"],
+      incineroar: ["Fake Out", "Flare Blitz", "Parting Shot", "Throat Chop", "Protect", "Snarl", "Will-O-Wisp", "Taunt"],
       pelipper: ["Hurricane", "Muddy Water", "Tailwind", "Protect"],
       basculegion: ["Last Respects", "Wave Crash", "Aqua Jet", "Protect"],
       archaludon: ["Electro Shot", "Dragon Pulse", "Flash Cannon", "Protect"],
@@ -8379,6 +8393,7 @@
       const key = normalizeNameKey(move);
       if (picked.some((existing) => normalizeNameKey(existing) === key)) return false;
       if (["explosion", "self-destruct"].includes(key)) return false;
+      if (normalizeNameKey(entry?.name || "") === "incineroar" && key === "blaze kick") return false;
       if (offenseProfile === "physical") return isLikelyPhysicalMove(key) || ["protect", "fake out", "tailwind", "trick room", "rage powder"].includes(key);
       return isLikelySpecialMove(key) || ["protect", "fake out", "tailwind", "trick room", "rage powder"].includes(key);
     });
@@ -8389,7 +8404,8 @@
   async function buildFastPathSet(entry, intent, context) {
     const legalMoves = await getLegalMovesForEntry(entry);
     const preferredMoves = getFastPathMoveOverrides(entry, intent);
-    const moves = pickLegalFastPathMoves(legalMoves, preferredMoves, entry);
+    let moves = pickLegalFastPathMoves(legalMoves, preferredMoves, entry);
+    moves = enforceSpeciesRoleCorrections(entry, moves, legalMoves, isSupportEntry(entry) ? "support" : "attacker");
     if (!moves.length) return null;
     const defaults = getFastPathSetDefaults(entry, intent);
     const item = legalItems.includes(defaults.item) ? defaults.item : (getMegaStoneForEntry(entry) || findUniqueItemForSet({ name: entry.name, moves, item: "" }, new Set()));
@@ -8499,6 +8515,64 @@
 
   async function buildFastTrickRoomTeam(context) {
     return buildFastArchetypeTeam(context, "tr");
+  }
+
+  function getHardTrFireSlotComparison(teamLike = [], context = {}) {
+    const team = (teamLike || []).filter((set) => set?.name);
+    const names = new Set(team.map((set) => normalizeNameKey(set.name)));
+    const moveKeys = team.flatMap((set) => getSetMoveKeys(set));
+    const weather = inferTeamWeatherProfile(team);
+    const explicitMegaCamerupt = normalizeNameKey(context.promptLocks?.specificMega || "") === "mega camerupt"
+      || normalizeNameKey(context.request?.promptLocks?.specificMega || "") === "mega camerupt";
+    const hasSunSupport = weather.modes?.includes("sun") || weather.primary === "sun" || moveKeys.includes("sunny day") || names.has("mega charizard y");
+    const hasOtherMega = team.some((set) => isMegaEntry(getRosterEntry(set.name)) && normalizeNameKey(set.name) !== "mega camerupt");
+    const hasRainConflict = weather.modes?.includes("rain") || weather.primary === "rain";
+    const torkoalReasons = [
+      "sets Sun itself",
+      "powers Eruption without spending the Mega slot",
+      "compresses weather control and Trick Room breaker roles",
+      "keeps backup Mega flexibility open"
+    ];
+    const cameruptReasons = [];
+    if (explicitMegaCamerupt) cameruptReasons.push("Mega Camerupt was explicitly requested");
+    if (hasSunSupport) cameruptReasons.push("the team already has Sun support elsewhere");
+    if (names.has("incineroar") || names.has("kingambit")) cameruptReasons.push("Earth Power improves pressure into common Steel/Fire-positioning cores");
+    if (!hasOtherMega && explicitMegaCamerupt) cameruptReasons.push("the Mega slot is intentionally reserved for TR wallbreaking");
+    if (moveKeys.includes("helping hand")) cameruptReasons.push("Helping Hand support can push specific wallbreaking thresholds");
+    let torkoalScore = 72;
+    let cameruptScore = 48;
+    if (explicitMegaCamerupt) cameruptScore += 36;
+    if (hasSunSupport) cameruptScore += 18;
+    if (hasOtherMega && !explicitMegaCamerupt) cameruptScore -= 18;
+    if (hasRainConflict) cameruptScore -= 24;
+    if (!hasSunSupport && !explicitMegaCamerupt) cameruptScore -= 14;
+    if (moveKeys.includes("helping hand")) cameruptScore += 6;
+    if (hasSunSupport) torkoalScore -= 8;
+    if (hasOtherMega) torkoalScore += 10;
+    if (hasRainConflict) torkoalScore += 8;
+    const preferred = cameruptScore > torkoalScore + 8 ? "Mega Camerupt" : "Torkoal";
+    return {
+      preferred,
+      torkoalScore,
+      cameruptScore,
+      torkoalReasons,
+      cameruptReasons: cameruptReasons.length ? cameruptReasons : ["no unique Camerupt edge over Torkoal was detected"],
+      hasSunSupport,
+      hasOtherMega,
+      hasRainConflict,
+      explicitMegaCamerupt
+    };
+  }
+
+  function recordHardTrFireSlotDebug(teamLike = [], context = {}) {
+    if (typeof window === "undefined") return null;
+    const comparison = getHardTrFireSlotComparison(teamLike, context);
+    window.__MBWR_FIRE_SLOT_DEBUG = {
+      ...(window.__MBWR_FIRE_SLOT_DEBUG || {}),
+      lastComparison: comparison,
+      team: (teamLike || []).map((set) => set?.name).filter(Boolean)
+    };
+    return comparison;
   }
 
   async function buildTimeoutRecoveryDraft(context, request, preferredIntent = "") {
@@ -8648,9 +8722,12 @@
 
   function renderAiBuilderOutput(title, explanation, evaluation, draft) {
     const sourceDebug = window.__MBWR_SOURCE_DEBUG || {};
+    const fireSlotExplanation = buildHardTrFireSlotExplanation(draft || [], lastAiBuildContext || {});
+    recordHardTrFireSlotDebug(draft || [], lastAiBuildContext || {});
     aiBuilderOutput.innerHTML = `
       <p class="result-title">${title}</p>
       <p class="result-copy">${explanation}</p>
+      ${fireSlotExplanation ? `<pre class="result-copy fire-slot-explanation">${escapeHtml(fireSlotExplanation)}</pre>` : ""}
       ${evaluation ? `<p class="result-copy"><strong>Projected grade:</strong> ${(evaluation.averagedScores?.overall ?? evaluation.overallScore)}/100 | Structure ${(evaluation.averagedScores?.structure ?? evaluation.structureReport.score)}/100 | Offense ${(evaluation.averagedScores?.offense ?? evaluation.offenseReport.score)}/100 | Vs Meta ${(evaluation.averagedScores?.meta ?? evaluation.metaMatchupScore)}/100</p>` : ""}
       <div class="analysis-row">
         ${(draft || []).map((set) => `<span class="analysis-chip severity-neutral"><strong>${set.name}</strong><br>Item: ${escapeHtml(set.item || "none")} | Ability: ${escapeHtml(set.ability || "none")} | Nature: ${escapeHtml(set.nature || "none")}<br>Moves: ${escapeHtml((set.moves || []).filter(Boolean).slice(0, 4).join(" / "))}<br>SP: ${escapeHtml(formatSpSummary(set.sps))}<br>Role: ${escapeHtml(describeSetRoleForSchema(set, draft))}<br>Reason: ${escapeHtml(explainDraftSet(set))}<br>Matchup impact: ${escapeHtml(buildSetMatchupImpact(set, evaluation))}<br>Replaces: ${escapeHtml(set.replaces || "current slot / open slot")}<br>Confidence: ${evaluation ? "medium-high" : "medium"}</span>`).join("")}
@@ -9104,6 +9181,28 @@
     if ((entry.baseStats?.[0] || 0) + (entry.baseStats?.[2] || 0) + (entry.baseStats?.[4] || 0) >= 260) score += 10;
     score += Math.max(entry.baseStats?.[1] || 0, entry.baseStats?.[3] || 0) / 10;
     return score;
+  }
+
+  function buildHardTrFireSlotExplanation(team = [], context = {}) {
+    const hasTrMode = (team || []).some((set) => getSetMoveKeys(set).includes("trick room")) || context?.intentLock === "hard_tr" || context?.request?.intentLock === "hard_tr";
+    if (!hasTrMode) return "";
+    const comparison = getHardTrFireSlotComparison(team, context);
+    const names = new Set((team || []).map((set) => normalizeNameKey(set.name)));
+    if (names.has("mega camerupt")) {
+      return [
+        "Mega Camerupt was chosen over Torkoal because:",
+        ...comparison.cameruptReasons.slice(0, 4).map((reason, index) => `${index + 1}. ${reason}`),
+        `Torkoal comparison score: ${comparison.torkoalScore}. Mega Camerupt comparison score: ${comparison.cameruptScore}.`
+      ].join("\n");
+    }
+    if (names.has("torkoal")) {
+      return [
+        "Torkoal was chosen over Mega Camerupt because:",
+        ...comparison.torkoalReasons.slice(0, 4).map((reason, index) => `${index + 1}. ${reason}`),
+        `Torkoal comparison score: ${comparison.torkoalScore}. Mega Camerupt comparison score: ${comparison.cameruptScore}.`
+      ].join("\n");
+    }
+    return "";
   }
 
   async function chooseBackupMegaSet(currentDraft, request = {}) {
@@ -12042,9 +12141,10 @@
   function getSuggestedSpSpread(entry, moves, context = {}) {
     const moveKeys = moves.map((move) => normalizeNameKey(move));
     const moveLean = getMoveCategoryLean(moves, entry);
-    const physicalLean = entry.baseStats[1] >= entry.baseStats[3];
+    const physicalLean = moveLean === "physical" ? true : moveLean === "special" ? false : entry.baseStats[1] >= entry.baseStats[3];
     const speedLean = entry.baseSpeed >= 95;
     const roleProfile = inferSetRoleProfile(entry, context, moves, moves);
+    if (normalizeNameKey(entry.name) === "torkoal") return { hp: 28, atk: 0, def: 4, spa: 32, spd: 2, spe: 0 };
     const supportLike = SUPPORT_ROLE_LOCKS.has(normalizeNameKey(entry.name))
       || ["pivot_support", "bulky_support", "disruption_support", "speed_control_support", "redirection_support", "tr_setter", "fakeout_support"].includes(roleProfile.primaryRole)
       || moveKeys.filter((move) => getSupportMoveKeySet().has(move)).length >= 2;
@@ -12535,6 +12635,7 @@
       "",
       backupMega ? `Backup Mega plan:\n${backupMega}` : "Backup Mega plan:\nNo secondary Mega required by current read.",
       "",
+      buildHardTrFireSlotExplanation(team, lastAiBuildContext || {}) ? `Fire-slot comparison:\n${buildHardTrFireSlotExplanation(team, lastAiBuildContext || {})}\n` : "",
       "Source Evidence:",
       `Matched Creator: ${matchedCreator}`,
       `Matched Shell: ${archetype} with ${weather === "none" ? "non-weather" : weather} support`,
