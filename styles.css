@@ -1113,6 +1113,26 @@ input:focus, select:focus, textarea:focus {
   border: 1px solid rgba(138, 99, 255, 0.18);
   background: linear-gradient(135deg, rgba(255, 93, 143, 0.08), rgba(93, 169, 255, 0.08), rgba(138, 99, 255, 0.08));
 }
+.builder-ruleset-bar {
+  display: flex;
+  align-items: end;
+  gap: 12px;
+  margin: 14px 0;
+  flex-wrap: wrap;
+}
+.builder-ruleset-bar label {
+  min-width: min(280px, 100%);
+}
+.gc-mode-indicator {
+  border: 1px solid rgba(127, 214, 154, 0.45);
+  background: rgba(69, 191, 125, 0.12);
+  color: #bff3cf;
+  border-radius: 8px;
+  padding: 9px 12px;
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0;
+}
 .builder-assistant__grid {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }

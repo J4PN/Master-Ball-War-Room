@@ -145,7 +145,12 @@
     threatPenalties: "./data/threat_penalties.json",
     teamArchive: "./data/team_archive.json",
     sourceMetaSnapshot: "./data/normalized/source_meta_snapshot.json",
-    combinedTrainingPool: "./data/normalized/combined_training_pool.json"
+    combinedTrainingPool: "./data/normalized/combined_training_pool.json",
+    creatorSourceRegistry: "./data/curated/high_level_source_registry.json",
+    youtubeImports: "./data/curated/youtube_imports.json",
+    highLevelExpandedCandidates: "./data/curated/high_level_expanded_candidates.json",
+    pikalyticsImports: "./data/curated/pikalytics_imports.json",
+    gcLegalRoster: "./data/gc_legal_roster.json"
   };
   const DEFAULT_LEARNED_BUILDER_DATA = {
     learnedWeights: {
@@ -190,6 +195,28 @@
     combinedTrainingPool: {
       updatedAt: null,
       teams: []
+    },
+    creatorSourceRegistry: {
+      sources: [],
+      manual_teams: []
+    },
+    youtubeImports: {
+      updatedAt: null,
+      teams: []
+    },
+    highLevelExpandedCandidates: {
+      updatedAt: null,
+      teams: []
+    },
+    pikalyticsImports: {
+      updatedAt: null,
+      teams: []
+    },
+    gcLegalRoster: {
+      ruleset: "grand_challenge",
+      displayName: "Grand Challenge (GC Legal)",
+      sourceUrl: "",
+      eligible: []
     }
   };
 
@@ -314,11 +341,18 @@
     const priors = getLearnedBuilderData().speciesRolePriors?.priors || {};
     const row = priors[normalizeNameKey(speciesName || "")];
     if (row?.weight != null) return clampLearnedNumber(row.weight, 0, -1, 1);
-    const combinedPool = getLearnedBuilderData().combinedTrainingPool?.teams || [];
+    const combinedPool = getLearnedCombinedTeams();
     const key = normalizeNameKey(speciesName || "");
-    const hits = combinedPool.filter((teamRow) => (teamRow?.team || []).some((slot) => normalizeNameKey(slot) === key)).length;
     if (!combinedPool.length) return 0;
-    return clampLearnedNumber(hits / combinedPool.length, 0, -1, 1);
+    let totalWeight = 0;
+    let hitWeight = 0;
+    combinedPool.forEach((teamRow) => {
+      const sourceType = normalizeNameKey(teamRow?.sourceType || teamRow?.sourceName || "");
+      const sourceWeight = getLearnedSourceSamplingWeight(sourceType) * getLearnedSourceConfidenceWeight(sourceType);
+      totalWeight += sourceWeight;
+      if ((teamRow?.team || []).some((slot) => normalizeNameKey(slot) === key)) hitWeight += sourceWeight;
+    });
+    return clampLearnedNumber(totalWeight ? hitWeight / totalWeight : 0, 0, -1, 1);
   }
 
   function getLearnedMoveWeight(moveName) {
@@ -329,9 +363,9 @@
   function getLearnedSourceConfidenceWeight(sourceType = "") {
     const defaults = getLearnedBuilderData().learnedWeights?.sourceConfidenceDefaults || {};
     const key = normalizeNameKey(sourceType || "");
-    if (["creator", "youtube", "original creator"].includes(key)) return 1.15;
-    if (["tournament", "victory road", "high level", "high_level"].includes(key)) return 1.05;
-    if (["pikalytics", "archive"].includes(key)) return 0.92;
+    if (["creator", "youtube", "original creator", "original_creator_source"].includes(key)) return 1.15;
+    if (["tournament", "victory road", "high level", "high_level", "tournament_verified", "gc_ladder_verified"].includes(key)) return 1.05;
+    if (["pikalytics", "pikalytics_verified", "archive"].includes(key)) return 0.92;
     if (["selfplay", "self play", "self_play"].includes(key)) return 0.35;
     return clampLearnedNumber(defaults[key], 0.55, 0.15, 1.2);
   }
@@ -339,14 +373,21 @@
   function getLearnedSourceSamplingWeight(sourceType = "") {
     const weights = getLearnedBuilderData().learnedWeights?.sourceSamplingWeights || {};
     const key = normalizeNameKey(sourceType || "");
-    if (["creator", "youtube", "original creator"].includes(key)) return 1.35;
-    if (["tournament", "victory road", "high level", "high_level"].includes(key)) return 1.18;
+    if (["creator", "youtube", "original creator", "original_creator_source"].includes(key)) return 1.35;
+    if (["tournament", "victory road", "high level", "high_level", "tournament_verified", "gc_ladder_verified"].includes(key)) return 1.18;
     if (["selfplay", "self play", "self_play"].includes(key)) return 0.25;
     return clampLearnedNumber(weights[key], 0.55, 0.15, 1.5);
   }
 
   function getLearnedCombinedTeams() {
-    return getLearnedBuilderData().combinedTrainingPool?.teams || [];
+    const data = getLearnedBuilderData();
+    return [
+      ...(data.combinedTrainingPool?.teams || []),
+      ...(data.highLevelExpandedCandidates?.teams || []),
+      ...(data.youtubeImports?.teams || []),
+      ...(data.pikalyticsImports?.teams || []),
+      ...(data.creatorSourceRegistry?.manual_teams || [])
+    ];
   }
 
   function getLearnedArchiveTeams() {
@@ -1275,6 +1316,7 @@
   let parsedImportSets = [];
   let lastAiDraft = [];
   let lastAiBuildContext = null;
+  let builderRuleset = localStorage.getItem("mbwr-builder-ruleset") === "gc" ? "gc" : "standard";
 
   const tabButtons = Array.from(document.querySelectorAll("[data-tab-trigger]"));
   const tabPanels = Array.from(document.querySelectorAll("[data-tab-panel]"));
@@ -1441,25 +1483,164 @@
 
   const scheduleTeamBuilderAnalyze = debounce(() => analyzeTeamBuilder(), 180);
 
+  function getRetainedSourceRows() {
+    const data = getLearnedBuilderData();
+    const rows = [];
+    const addRows = (origin, sourceRows = []) => {
+      (Array.isArray(sourceRows) ? sourceRows : []).forEach((row) => {
+        if (!row || typeof row !== "object") return;
+        rows.push({
+          ...row,
+          actualOrigin: origin,
+          sourceType: row.sourceType || row.source_type || row.originSourceType || row.quality_class || origin,
+          sourceName: row.sourceName || row.source_name || row.name || row.label || row.matchedCreator || origin
+        });
+      });
+    };
+    addRows("combined_training_pool", data.combinedTrainingPool?.teams);
+    addRows("team_archive", data.teamArchive?.teams);
+    addRows("youtube_imports", data.youtubeImports?.teams);
+    addRows("high_level_expanded_candidates", data.highLevelExpandedCandidates?.teams);
+    addRows("pikalytics_imports", data.pikalyticsImports?.teams);
+    addRows("manual_creator_registry", data.creatorSourceRegistry?.manual_teams);
+    return rows;
+  }
+
+  function getTrackedCreatorRows() {
+    const registryRows = getLearnedBuilderData().creatorSourceRegistry?.sources || [];
+    const fromRegistry = (Array.isArray(registryRows) ? registryRows : [])
+      .map((row) => ({
+        name: row.source_name || row.sourceName || row.name || "",
+        priority: row.priority || (PRIMARY_CREATOR_SOURCES.includes(row.source_name || row.sourceName || row.name) ? "primary" : "secondary"),
+        patterns: row.patterns || [],
+        ingestionStatus: row.ingestionStatus || row.ingestion_status || "tracked"
+      }))
+      .filter((row) => row.name);
+    const byKey = new Map();
+    [...PRIMARY_CREATOR_SOURCES.map((name) => ({ name, priority: "primary", patterns: [name], ingestionStatus: "tracked" })),
+      ...SECONDARY_CREATOR_SOURCES.map((name) => ({ name, priority: "secondary", patterns: [name], ingestionStatus: "tracked" })),
+      ...fromRegistry
+    ].forEach((row) => {
+      const key = normalizeNameKey(row.name);
+      if (!key) return;
+      byKey.set(key, {
+        ...row,
+        patterns: [...new Set([row.name, ...(row.patterns || [])])].filter(Boolean)
+      });
+    });
+    return [...byKey.values()];
+  }
+
+  function getRowSourceText(row) {
+    return [
+      row.sourceName,
+      row.source_name,
+      row.matchedCreator,
+      row.rawSourceName,
+      row.label,
+      row.id,
+      row.notes,
+      ...(Array.isArray(row.tags) ? row.tags : [])
+    ].filter(Boolean).join(" ");
+  }
+
+  function isSelfplaySourceRow(row) {
+    return /self[\s_-]*play|selfgenerated|self generated/i.test(`${row.sourceType || ""} ${row.sourceName || ""} ${row.actualOrigin || ""}`);
+  }
+
+  function matchCreatorForSourceRow(row, trackedCreators = getTrackedCreatorRows()) {
+    if (!row || isSelfplaySourceRow(row)) return null;
+    const text = normalizeNameKey(getRowSourceText(row));
+    if (!text) return null;
+    const explicitCreator = normalizeNameKey(row.matchedCreator || "");
+    return trackedCreators.find((creator) => {
+      const creatorKey = normalizeNameKey(creator.name);
+      if (explicitCreator && explicitCreator === creatorKey) return true;
+      return (creator.patterns || []).some((pattern) => {
+        const key = normalizeNameKey(pattern);
+        return key && text.includes(key);
+      });
+    }) || null;
+  }
+
+  function buildActualSourceOrigins(rows) {
+    return rows
+      .filter((row) => !isSelfplaySourceRow(row))
+      .map((row) => ({
+        origin: row.actualOrigin || "runtime",
+        sourceType: row.sourceType || "unknown",
+        sourceName: row.sourceName || row.matchedCreator || "unknown",
+        matchedCreator: row.matchedCreator || "",
+        archetype: row.archetype || "",
+        confidence: Number.isFinite(Number(row.confidence)) ? Number(row.confidence) : null
+      }))
+      .slice(0, 30);
+  }
+
+  function buildSourceEvidenceState() {
+    const trackedCreators = getTrackedCreatorRows();
+    const sourceRows = getRetainedSourceRows();
+    const creatorBuckets = new Map();
+    sourceRows.forEach((row) => {
+      const creator = matchCreatorForSourceRow(row, trackedCreators);
+      if (!creator) return;
+      const key = normalizeNameKey(creator.name);
+      const previous = creatorBuckets.get(key) || {
+        creator: creator.name,
+        priority: creator.priority || "tracked",
+        count: 0,
+        origins: []
+      };
+      previous.count += 1;
+      previous.origins.push(row.actualOrigin || row.sourceType || "runtime");
+      creatorBuckets.set(key, previous);
+    });
+    const creatorMatches = [...creatorBuckets.values()].map((row) => ({
+      ...row,
+      origins: [...new Set(row.origins)]
+    }));
+    const typeText = (row) => normalizeNameKey(`${row.sourceType || ""} ${row.sourceName || ""} ${row.actualOrigin || ""} ${(row.tags || []).join(" ")}`);
+    const countBy = (predicate) => sourceRows.filter(predicate).length;
+    const selfplayCount = countBy(isSelfplaySourceRow);
+    return {
+      creatorMatches,
+      trackedCreators,
+      matchedCreatorNames: creatorMatches.map((row) => row.creator),
+      youtubeCount: countBy((row) => /youtube|video|creator/.test(typeText(row)) && !isSelfplaySourceRow(row)),
+      highLevelCount: countBy((row) => /high[\s_-]*level|tournament|victory road|regional|gc ladder/.test(typeText(row)) && !isSelfplaySourceRow(row)),
+      retainedOriginalCount: countBy((row) => /original|creator|youtube/.test(typeText(row)) && !/variant|controlled/.test(typeText(row)) && !isSelfplaySourceRow(row)),
+      retainedVariantCount: countBy((row) => /variant|controlled/.test(typeText(row)) && !isSelfplaySourceRow(row)),
+      selfplayCount,
+      actualSourceOrigin: buildActualSourceOrigins(sourceRows),
+      sourcePriorityOrder: ["original_creator_source", "tournament_verified", "pikalytics_verified", "archive_strong_teams", "controlled_variants", "selfplay_support_only"],
+      selfplayAuthority: "support_only"
+    };
+  }
+
+  function formatSourceEvidenceLines() {
+    const sourceDebug = window.__MBWR_SOURCE_DEBUG || buildSourceEvidenceState();
+    const names = sourceDebug.matchedCreatorNames || [];
+    const origins = sourceDebug.actualSourceOrigin || [];
+    const shell = origins.find((row) => row.archetype)?.archetype || "";
+    const supporting = origins
+      .map((row) => row.matchedCreator || row.sourceName || row.sourceType)
+      .filter(Boolean)
+      .filter((value, index, list) => list.indexOf(value) === index)
+      .slice(0, 4);
+    const none = "No high-confidence creator match found";
+    return {
+      matchedCreator: names.length ? names.join(", ") : none,
+      matchedShell: shell || none,
+      supportingSources: supporting.length ? supporting.join(" + ") : none
+    };
+  }
+
   function refreshSourceDebug(lastIngestionStatus = "runtime snapshot loaded") {
     if (typeof window === "undefined") return;
-    const data = getLearnedBuilderData();
-    const sources = data.sourceMetaSnapshot?.sources || [];
-    const trainingTeams = data.combinedTrainingPool?.teams || [];
-    const sourceNames = sources.map((row) => String(row.name || row.creator || row.label || row.sourceName || ""));
-    const creatorMatches = PRIMARY_CREATOR_SOURCES
-      .filter((creator) => sourceNames.some((sourceName) => normalizeNameKey(sourceName).includes(normalizeNameKey(creator))))
-      .map((creator) => ({ creator, priority: "primary" }));
-    const countBySourceType = (types) => trainingTeams.filter((row) => types.includes(normalizeNameKey(row.sourceType || row.source || ""))).length;
     window.__MBWR_SOURCE_DEBUG = {
-      creatorMatches,
+      ...buildSourceEvidenceState(),
       primaryCreatorsTracked: PRIMARY_CREATOR_SOURCES.slice(),
       secondaryCreatorsTracked: SECONDARY_CREATOR_SOURCES.slice(),
-      youtubeCount: countBySourceType(["youtube", "creator", "video"]),
-      highLevelCount: countBySourceType(["high level", "high_level", "tournament", "victory road"]),
-      retainedOriginalCount: trainingTeams.filter((row) => /original|creator/i.test(`${row.sourceType || ""} ${row.label || ""}`)).length,
-      retainedVariantCount: trainingTeams.filter((row) => /variant|controlled/i.test(`${row.sourceType || ""} ${row.label || ""}`)).length,
-      selfplayCount: countBySourceType(["selfplay", "self play", "self_play"]),
       lastIngestionStatus
     };
   }
@@ -1474,7 +1655,8 @@
   async function init() {
     try {
       gen = window.calc ? calc.Generations.get(9) : null;
-      primeLearnedBuilderData().then(() => refreshSourceDebug()).catch(() => refreshSourceDebug("source snapshot fallback"));
+      await primeLearnedBuilderData();
+      refreshSourceDebug();
       await initializeMetaThreats();
       setupTabs();
       setupNatureSelects();
@@ -1484,6 +1666,8 @@
       setupRosterSelects();
       setupItemSelects();
       setupRosterFilters();
+      setupBuilderRulesetControls();
+      updateBuilderRulesetUi();
       renderConfirmedRoster();
       bindButtons();
       bindSpeciesHelpers();
@@ -2011,7 +2195,7 @@
   }
 
   function fillRosterSelect(select, placeholder) {
-    setSelectOptions(select, championsRoster.map((entry) => ({ value: entry.name, text: entry.name })), placeholder);
+    setSelectOptions(select, getActiveRosterPool().map((entry) => ({ value: entry.name, text: entry.name })), placeholder);
   }
 
   function setupItemSelects() {
@@ -2050,14 +2234,14 @@
   function getRosterFilterRoleTags() {
     return [...new Set([
       ...pikalyticsMetaSeed.flatMap((row) => row.tags || []),
-      ...championsRoster.map((entry) => entry.metaRole || "").filter(Boolean)
+      ...getActiveRosterPool({ includeIllegalMegas: true }).map((entry) => entry.metaRole || "").filter(Boolean)
     ].map((tag) => normalizeNameKey(tag)).filter(Boolean))].sort();
   }
 
   function hasMegaVariant(entry) {
     const baseKey = normalizeNameKey(entry?.baseName || entry?.name || "");
     const nameKey = normalizeNameKey(entry?.name || "");
-    return isMegaEntry(entry) || championsRoster.some((candidate) => isMegaEntry(candidate) && (normalizeNameKey(candidate.baseName || "") === baseKey || normalizeNameKey(candidate.baseName || "") === nameKey));
+    return isMegaEntry(entry) || getActiveRosterPool({ includeIllegalMegas: true }).some((candidate) => isMegaEntry(candidate) && (normalizeNameKey(candidate.baseName || "") === baseKey || normalizeNameKey(candidate.baseName || "") === nameKey));
   }
 
   function setupRosterFilters() {
@@ -2093,6 +2277,15 @@
     });
   }
 
+  function setupBuilderRulesetControls() {
+    const select = document.getElementById("builder-ruleset");
+    if (!select) return;
+    select.value = builderRuleset;
+    select.addEventListener("change", () => {
+      setBuilderRuleset(select.value);
+    });
+  }
+
   function getFilteredRosterEntries() {
     const startedAt = performance.now();
     const query = normalizeNameKey(document.getElementById("roster-search")?.value || "");
@@ -2112,7 +2305,7 @@
         max: Number(document.getElementById(`roster-${key}-max`)?.value || NaN)
       }
     ]));
-    const cacheKey = JSON.stringify({ query, anyType, type1, type2, abilityQuery, moveQuery, megaFilter, roleFilter, sortKey, direction, minMax });
+    const cacheKey = JSON.stringify({ ruleset: builderRuleset, query, anyType, type1, type2, abilityQuery, moveQuery, megaFilter, roleFilter, sortKey, direction, minMax });
     const debug = ensurePerfDebug();
     if (rosterFilterMemo.has(cacheKey)) {
       if (debug) {
@@ -2126,7 +2319,8 @@
       debug.lastFilterKey = cacheKey;
       debug.rosterCacheHit = false;
     }
-    const rows = championsRoster.filter((entry) => {
+    const activePool = getActiveRosterPool({ includeIllegalMegas: true });
+    const rows = activePool.filter((entry) => {
       const types = entry.types || [];
       const abilityText = (entry.abilities || []).map(normalizeNameKey).join(" ");
       const roleTags = [
@@ -2166,7 +2360,7 @@
   function renderConfirmedRoster() {
     const entries = getFilteredRosterEntries();
     const count = document.getElementById("roster-count");
-    if (count) count.textContent = `${entries.length} / ${championsRoster.length}`;
+    if (count) count.textContent = `${entries.length} / ${getActiveRosterPool({ includeIllegalMegas: true }).length}${isGcModeActive() ? " GC legal" : ""}`;
     confirmedRoster.innerHTML = entries
       .map((entry) => {
         const total = getPokemonStatValue(entry, "total");
@@ -2504,7 +2698,7 @@
         .filter(Boolean);
       const focusText = `${document.getElementById("ai-builder-focus")?.value || ""} ${teamImportInput?.value || ""}`.trim().toLowerCase();
       const desiredTypes = inferDesiredTypesFromText(focusText);
-      const options = await Promise.all(championsRoster.map(async (entry) => {
+      const options = await Promise.all(getActiveRosterPool().map(async (entry) => {
         const abilities = await getPokemonAbilities(entry);
         const legalMoves = await getLegalMovesForEntry(entry);
         return {
@@ -2813,6 +3007,15 @@
         const slotIndex = Number(event.currentTarget.dataset.slot);
         const previousName = event.currentTarget.dataset.currentSpecies || "";
         const currentName = event.currentTarget.value || "";
+        const currentEntry = getRosterEntry(currentName);
+        if (currentEntry && !isEntryAllowedInActiveRuleset(currentEntry)) {
+          event.currentTarget.value = "";
+          teamExportStatus.textContent = "GC Legal Mode Active: that Pokemon/form is not on the official GC eligible roster.";
+          resetTeamBuilderSlotData(slotIndex);
+          notifyTeamBuilderStateChange("gc-illegal-slot-blocked", slotIndex);
+          analyzeTeamBuilder();
+          return;
+        }
         if (normalizeNameKey(previousName) !== normalizeNameKey(currentName)) {
           resetTeamBuilderSlotData(slotIndex);
         }
@@ -3117,7 +3320,7 @@
   function getCompatiblePokemonForItem(item) {
     const key = normalizeNameKey(item);
     if (getItemCategory(item) === "mega") {
-      return championsRoster.filter((entry) => normalizeNameKey(getMegaStoneForEntry(entry)) === key).map((entry) => entry.baseName || entry.name);
+      return getActiveRosterPool({ includeIllegalMegas: true }).filter((entry) => normalizeNameKey(getMegaStoneForEntry(entry)) === key).map((entry) => entry.baseName || entry.name);
     }
     return Object.entries(META_MOVESET_SEED)
       .filter(([, seed]) => normalizeNameKey(seed.item || "") === key)
@@ -4388,6 +4591,10 @@
   async function loadSetIntoTeamBuilder(set) {
     const entry = getRosterEntry(set.name);
     if (!entry) return;
+    if (!isEntryAllowedInActiveRuleset(entry)) {
+      teamExportStatus.textContent = "GC Legal Mode Active: blocked a non-GC-legal Pokemon/form from being loaded.";
+      return;
+    }
     const slots = Array.from(document.querySelectorAll(".team-slot"));
     const existing = slots.find((slot) => slot.value === entry.name);
     const targetSlot = existing || slots.find((slot) => !slot.value) || slots[slots.length - 1];
@@ -6069,7 +6276,7 @@
     const damageScoutRows = await buildDamageScoutRows(teamState, threatRows);
 
     const teamItemKeys = new Set(teamState.filter((slot) => slot.name).map((slot) => normalizeNameKey(slot.item || "")).filter(Boolean));
-    const recommendations = championsRoster
+    const recommendations = getActiveRosterPool()
       .filter((entry) => !uniqueNames.includes(entry.name))
       .filter((entry) => !occupiedNameKeys.has(normalizeNameKey(entry.name)))
       .filter((entry) => !occupiedFamilyKeys.has(getSpeciesClauseKey(entry.name)))
@@ -6133,6 +6340,7 @@
     const exportGate = getTeamExportGate(teamState.filter((slot) => slot.name));
     const qualityStatus = exportGate.blockers.length ? "Critical issue" : exportGate.issues.length ? "Needs fixes" : "Valid";
     const sourceDebug = window.__MBWR_SOURCE_DEBUG || {};
+    const sourceEvidence = formatSourceEvidenceLines();
 
     teamAnalysis.innerHTML = `
       <div class="analysis-grid">
@@ -6150,7 +6358,7 @@
           <div class="fix-list">
             ${(exportGate.blockers.length ? exportGate.blockers : exportGate.issues).slice(0, 4).map((issue) => `<div class="fix-list__item"><strong>${escapeHtml(issue.severity || "warning")}:</strong> ${escapeHtml(issue.text || issue.code)}</div>`).join("") || `<div class="fix-list__item">No final-export blockers detected.</div>`}
           </div>
-          <p class="result-copy"><strong>Source Evidence:</strong> ${(sourceDebug.creatorMatches || []).map((row) => row.creator).join(", ") || "No direct creator match claimed"} | YouTube ${sourceDebug.youtubeCount || 0} | high-level ${sourceDebug.highLevelCount || 0} | selfplay ${sourceDebug.selfplayCount || 0}</p>
+          <p class="result-copy"><strong>Source Evidence:</strong> Matched Creator: ${escapeHtml(sourceEvidence.matchedCreator)} | Matched Shell: ${escapeHtml(sourceEvidence.matchedShell)} | YouTube ${sourceDebug.youtubeCount || 0} | high-level ${sourceDebug.highLevelCount || 0} | selfplay ${sourceDebug.selfplayCount || 0}</p>
         </div>
         <div class="analysis-stack">
           <p class="result-title">Overall Team Score</p>
@@ -6511,7 +6719,7 @@
     const metaTagged = metaThreats.some((threat) => normalizeNameKey(threat.name) === key)
       || pikalyticsMetaSeed.some((seed) => normalizeNameKey(seed.name) === key);
     if (metaTagged) return false;
-    const evolvedAlternative = championsRoster.some((candidate) => {
+    const evolvedAlternative = getActiveRosterPool({ includeIllegalMegas: true }).some((candidate) => {
       if (!candidate || normalizeNameKey(candidate.name) === key || isMegaEntry(candidate)) return false;
       const candidateBst = (candidate.baseStats || []).reduce((sum, stat) => sum + (Number(stat) || 0), 0);
       return candidateBst >= bst + 90 && (candidate.types || []).some((type) => (entry.types || []).includes(type));
@@ -6719,6 +6927,25 @@
     const debug = ensureFreezeDebug();
     if (debug) debug.exportValidationPassCount += 1;
     const team = getFilledTeamSlots(teamState);
+    const gcIllegalSlots = getGcIllegalTeamSlots(teamState);
+    if (gcIllegalSlots.length) {
+      const issue = {
+        code: "gc_illegal_roster_member",
+        severity: "blocker",
+        text: `GC Legal Mode blocks non-roster Pokemon/forms: ${gcIllegalSlots.map((slot) => slot.name).join(", ")}.`
+      };
+      completeFreezeScope("evaluateFinalExportCoherence", startedAt, { teamSize: team.length, isValid: false, gcIllegal: true });
+      return {
+        isValid: false,
+        penalty: EXPORT_BLOCKED_SCORE_PENALTY,
+        issues: [issue],
+        blockers: [issue],
+        megaReport: { penalty: 0, bonus: 0, issues: [] },
+        structureReport: evaluateTeamStructure(team),
+        weatherProfile: inferTeamWeatherProfile(team),
+        leadPairScore: 0
+      };
+    }
     if (team.length < 6) {
       completeFreezeScope("evaluateFinalExportCoherence", startedAt, { teamSize: team.length });
       return {
@@ -8462,6 +8689,7 @@
       const key = normalizeNameKey(entry.name);
       if (pickedKeys.has(key) || violatesSpeciesClause(entries, entry)) return false;
       if (context.promptLocks?.noMegas && isMegaEntry(entry)) return false;
+      if (!isEntryAllowedInActiveRuleset(entry)) return false;
       if (isAutoRepairFillerPokemon(entry) && !isExplicitlyRequestedSpecies(entry, context)) return false;
       entries.push(entry);
       pickedKeys.add(key);
@@ -8474,7 +8702,7 @@
     getFastPathTemplateNames("balance", context).forEach((name) => {
       if (entries.length < 6) addByName(name);
     });
-    for (const entry of context.pool || championsRoster) {
+    for (const entry of context.pool || getActiveRosterPool()) {
       if (entries.length >= 6) break;
       addByName(entry.name);
     }
@@ -8613,7 +8841,7 @@
     const avoidNames = new Set(enemyNames.map((name) => normalizeNameKey(name)));
     const stapleBanKeys = new Set(request.requestedPressure.avoidStaples ? metaThreats.slice(0, 12).map((threat) => normalizeNameKey(threat.name)) : []);
     const requestedAnchorKeys = new Set(requestedAnchors.map((entry) => normalizeNameKey(entry.name)));
-    const pool = championsRoster
+    const pool = getActiveRosterPool()
       .filter((entry) => !entry.name.startsWith("Mega ") || canUseMega(entry))
       .filter((entry) => !avoidNames.has(normalizeNameKey(entry.name)))
       .filter((entry) => !isAutoRepairFillerPokemon(entry) || requestedAnchorKeys.has(normalizeNameKey(entry.name)))
@@ -8722,6 +8950,7 @@
 
   function renderAiBuilderOutput(title, explanation, evaluation, draft) {
     const sourceDebug = window.__MBWR_SOURCE_DEBUG || {};
+    const sourceEvidence = formatSourceEvidenceLines();
     const fireSlotExplanation = buildHardTrFireSlotExplanation(draft || [], lastAiBuildContext || {});
     recordHardTrFireSlotDebug(draft || [], lastAiBuildContext || {});
     aiBuilderOutput.innerHTML = `
@@ -8732,7 +8961,7 @@
       <div class="analysis-row">
         ${(draft || []).map((set) => `<span class="analysis-chip severity-neutral"><strong>${set.name}</strong><br>Item: ${escapeHtml(set.item || "none")} | Ability: ${escapeHtml(set.ability || "none")} | Nature: ${escapeHtml(set.nature || "none")}<br>Moves: ${escapeHtml((set.moves || []).filter(Boolean).slice(0, 4).join(" / "))}<br>SP: ${escapeHtml(formatSpSummary(set.sps))}<br>Role: ${escapeHtml(describeSetRoleForSchema(set, draft))}<br>Reason: ${escapeHtml(explainDraftSet(set))}<br>Matchup impact: ${escapeHtml(buildSetMatchupImpact(set, evaluation))}<br>Replaces: ${escapeHtml(set.replaces || "current slot / open slot")}<br>Confidence: ${evaluation ? "medium-high" : "medium"}</span>`).join("")}
       </div>
-      <p class="result-copy"><strong>Source Evidence:</strong> ${(sourceDebug.creatorMatches || []).map((row) => row.creator).join(", ") || "No direct creator match claimed"} | YouTube ${sourceDebug.youtubeCount || 0} | high-level ${sourceDebug.highLevelCount || 0} | selfplay ${sourceDebug.selfplayCount || 0}</p>
+      <p class="result-copy"><strong>Source Evidence:</strong> Matched Creator: ${escapeHtml(sourceEvidence.matchedCreator)} | Matched Shell: ${escapeHtml(sourceEvidence.matchedShell)} | YouTube ${sourceDebug.youtubeCount || 0} | high-level ${sourceDebug.highLevelCount || 0} | selfplay ${sourceDebug.selfplayCount || 0}</p>
     `;
     animateScorePanelChanges(aiBuilderOutput);
   }
@@ -9206,7 +9435,7 @@
   }
 
   async function chooseBackupMegaSet(currentDraft, request = {}) {
-    const candidates = championsRoster
+    const candidates = getActiveRosterPool()
       .filter(isMegaEntry)
       .map((entry) => ({ entry, score: scoreBackupMegaCandidate(entry, currentDraft, request.matchup || "") }))
       .filter((row) => row.score > -999)
@@ -9332,7 +9561,7 @@
       window.__MBWR_TWEAK_DEBUG.fallbackUsed = explicitResult.fallbackUsed;
     }
     if (!parsedRequests.length) {
-      await enforceSpeciesClauseOnDraft(tweakedDraft, championsRoster.filter((entry) => !entry.name.startsWith("Mega ") || canUseMega(entry)), {
+      await enforceSpeciesClauseOnDraft(tweakedDraft, getActiveRosterPool(), {
         mode: request.mode || "pokemon",
         focus: request.focus || sourceEntries[0]?.name || "",
         notes,
@@ -10619,7 +10848,7 @@
     const desiredTypes = inferDesiredTypesFromText(`${focus} ${notes}`.toLowerCase());
     const requestedAnchors = (request.requestedPokemon || []).map((name) => getRosterEntry(name)).filter(Boolean);
     const anchor = request.mode === "pokemon" ? (requestedAnchors[0] || getRosterEntry(focus)) : null;
-    const pool = championsRoster.filter((entry) => !entry.name.startsWith("Mega ") || canUseMega(entry));
+    const pool = getActiveRosterPool();
     const context = buildGuidedBuildContext(request, focus, notes, enemyNames, desiredTypes, pool, anchor);
     context.repairVisitedSignatures = context.repairVisitedSignatures || new Set();
     let working = await rebuildDraftSetsStrictly(draft, context);
@@ -12421,6 +12650,131 @@
     return String(name || "").toLowerCase().trim().replace(/[.'"]/g, "").replace(/\s+/g, " ");
   }
 
+  function isGcModeActive() {
+    return builderRuleset === "gc";
+  }
+
+  function getOfficialGcRows() {
+    return Array.isArray(getLearnedBuilderData().gcLegalRoster?.eligible)
+      ? getLearnedBuilderData().gcLegalRoster.eligible
+      : [];
+  }
+
+  function getGcOfficialKeyCandidates(name) {
+    const raw = String(name || "").trim();
+    const withoutForm = raw
+      .replace(/\s*\(Alolan Form\)/i, "-Alola")
+      .replace(/\s*\(Galarian Form\)/i, "-Galar")
+      .replace(/\s*\(Hisuian Form\)/i, "-Hisui")
+      .replace(/\s*\(Paldean Form \(Combat Breed\)\)/i, "-Paldea")
+      .replace(/\s*\(Paldean Form \(Blaze Breed\)\)/i, "-Paldea-Blaze")
+      .replace(/\s*\(Paldean Form \(Aqua Breed\)\)/i, "-Paldea-Aqua")
+      .replace(/\s*\(Male\)/i, "-Male")
+      .replace(/\s*\(Female\)/i, "-Female");
+    const variants = [
+      raw,
+      withoutForm,
+      raw.replace(/\s*\([^)]*\)\s*/g, " ").trim(),
+      raw.replace(/\s*\((Alolan|Galarian|Hisuian) Form\)/i, " $1").trim(),
+      raw.replace(/\s*\(Paldean Form \((Combat|Blaze|Aqua) Breed\)\)/i, " Paldea $1").trim()
+    ];
+    return [...new Set(variants.map(normalizeNameKey).filter(Boolean))];
+  }
+
+  function getGcLegalKeySet() {
+    const keys = new Set();
+    getOfficialGcRows().forEach((row) => {
+      getGcOfficialKeyCandidates(row.name || "").forEach((key) => keys.add(key));
+      const entry = getRosterEntry(row.name || "");
+      if (entry) {
+        keys.add(normalizeNameKey(entry.name));
+        if (entry.baseName) keys.add(normalizeNameKey(entry.baseName));
+      }
+    });
+    return keys;
+  }
+
+  function getGcEligibilityKeysForEntry(entry) {
+    if (!entry) return [];
+    const names = [entry.name, entry.calcName].filter(Boolean);
+    if (isMegaEntry(entry) && entry.baseName) {
+      names.push(entry.baseName, deriveSpeciesFamilyName(entry.name), String(entry.name).replace(/^Mega\s+/i, ""));
+    } else if (entry.baseName && normalizeNameKey(entry.baseName) === normalizeNameKey(entry.name)) {
+      names.push(entry.baseName);
+    }
+    return [...new Set(names.map(normalizeNameKey).filter(Boolean))];
+  }
+
+  function isGcLegalEntry(entry) {
+    if (!entry) return false;
+    const legalKeys = getGcLegalKeySet();
+    if (!legalKeys.size) return false;
+    return getGcEligibilityKeysForEntry(entry).some((key) => legalKeys.has(key));
+  }
+
+  function isEntryAllowedInActiveRuleset(entry) {
+    if (!entry) return false;
+    if (isMegaEntry(entry) && !canUseMega(entry)) return false;
+    return !isGcModeActive() || isGcLegalEntry(entry);
+  }
+
+  function getActiveRosterPool({ includeIllegalMegas = false } = {}) {
+    return championsRoster.filter((entry) => {
+      if (!includeIllegalMegas && isMegaEntry(entry) && !canUseMega(entry)) return false;
+      return !isGcModeActive() || isGcLegalEntry(entry);
+    });
+  }
+
+  function getGcIllegalTeamSlots(teamState = []) {
+    if (!isGcModeActive()) return [];
+    return getFilledTeamSlots(teamState).filter((slot) => {
+      const entry = getRosterEntry(slot.name);
+      return !entry || !isGcLegalEntry(entry);
+    });
+  }
+
+  function updateBuilderRulesetUi() {
+    const select = document.getElementById("builder-ruleset");
+    if (select && select.value !== builderRuleset) select.value = builderRuleset;
+    const indicator = document.getElementById("gc-mode-indicator");
+    if (indicator) {
+      indicator.hidden = !isGcModeActive();
+      indicator.textContent = isGcModeActive() ? "GC Legal Mode Active" : "";
+    }
+    document.body.classList.toggle("is-gc-mode", isGcModeActive());
+    if (typeof window !== "undefined") {
+      window.__MBWR_GC_DEBUG = {
+        ruleset: builderRuleset,
+        active: isGcModeActive(),
+        officialRosterCount: getOfficialGcRows().length,
+        activeRosterCount: getActiveRosterPool({ includeIllegalMegas: true }).length,
+        sourceUrl: getLearnedBuilderData().gcLegalRoster?.sourceUrl || ""
+      };
+    }
+  }
+
+  async function setBuilderRuleset(nextRuleset) {
+    builderRuleset = nextRuleset === "gc" ? "gc" : "standard";
+    localStorage.setItem("mbwr-builder-ruleset", builderRuleset);
+    updateBuilderRulesetUi();
+    rosterFilterMemo.clear();
+    setupRosterSelects();
+    renderConfirmedRoster();
+    if (isGcModeActive()) {
+      document.querySelectorAll(".team-slot").forEach((control) => {
+        const entry = getRosterEntry(control.value);
+        if (entry && !isGcLegalEntry(entry)) {
+          control.value = "";
+          resetTeamBuilderSlotData(Number(control.dataset.slot));
+        }
+      });
+      teamExportStatus.textContent = "GC Legal Mode Active: selector, Smart Improve, and exports are locked to the official GC roster.";
+    }
+    await refreshAllTeamBuilderOptions();
+    notifyTeamBuilderStateChange("ruleset-change");
+    analyzeTeamBuilder();
+  }
+
   function normalizeApiName(name) {
     return name.toLowerCase().trim().replace(/\./g, "").replace(/[':]/g, "").replace(/\s+/g, "-");
   }
@@ -12607,10 +12961,11 @@
     const bestLeads = getSimpleBestLeads(team);
     const weak = evaluateFinalExportCoherence(team).issues.slice(0, 3).map((issue) => issue.text);
     const backupMega = chooseStaticBackupMegaName(team, weather);
-    const sourceDebug = window.__MBWR_SOURCE_DEBUG || {};
-    const matchedCreator = sourceDebug.creatorMatches?.[0]?.creator || "No creator attribution claimed";
+    const evidence = formatSourceEvidenceLines();
     return [
       "Matchup Notes",
+      "",
+      `Builder Mode: ${isGcModeActive() ? "GC Legal Mode" : "Standard Champions"}`,
       "",
       "Primary Mode:",
       archetype,
@@ -12637,9 +12992,9 @@
       "",
       buildHardTrFireSlotExplanation(team, lastAiBuildContext || {}) ? `Fire-slot comparison:\n${buildHardTrFireSlotExplanation(team, lastAiBuildContext || {})}\n` : "",
       "Source Evidence:",
-      `Matched Creator: ${matchedCreator}`,
-      `Matched Shell: ${archetype} with ${weather === "none" ? "non-weather" : weather} support`,
-      `Supporting Sources: ${(sourceDebug.primaryCreatorsTracked || PRIMARY_CREATOR_SOURCES).slice(0, 3).join(" + ")} + retained archive`,
+      `Matched Creator: ${evidence.matchedCreator}`,
+      `Matched Shell: ${evidence.matchedShell}`,
+      `Supporting Sources: ${evidence.supportingSources}`,
       "Attribution note: creator names are shown only when matched from local source metadata; otherwise this is shell-level evidence."
     ].join("\n");
   }
@@ -13202,6 +13557,10 @@
     getTeamBuilderState,
     buildTeamExportText,
     getFilteredRosterEntries,
+    getActiveRosterPool,
+    isGcModeActive,
+    isGcLegalEntry,
+    setBuilderRuleset,
     normalizeNameKey,
     padTeamState,
     parseBuilderRequest

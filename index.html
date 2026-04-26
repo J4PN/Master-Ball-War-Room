@@ -346,6 +346,16 @@
             <p class="muted">
               Build around the configured Champions roster. Recommendations account for stacked type weaknesses and common threats in this pool.
             </p>
+            <div class="builder-ruleset-bar" aria-label="Builder legality mode">
+              <label>
+                Builder Mode
+                <select id="builder-ruleset">
+                  <option value="standard">Standard Champions</option>
+                  <option value="gc">Grand Challenge (GC Legal)</option>
+                </select>
+              </label>
+              <span id="gc-mode-indicator" class="gc-mode-indicator" hidden>GC Legal Mode Active</span>
+            </div>
             <textarea id="team-import-input" class="compact-box" placeholder="Paste a Pokepaste here, or describe what you want like 'build around Mega Lucario', 'counter this team', or 'rain balance with speed control'."></textarea>
             <div class="inline-actions">
               <button id="team-parse-import" class="action-button accent">Run Request / Import Paste</button>
@@ -798,7 +808,7 @@
   <script src="./champions_database_complete.js?v=20260419l"></script>
   <script src="./items-data.js?v=20260419l"></script>
   <script src="./abilities-data.js?v=20260419l"></script>
-  <script src="./app.js?v=20260419l"></script>
+  <script src="./app.js?v=20260426gc"></script>
 <script src="./patch.js"></script>
 <script src="./engine2.js"></script>
 <script src="./tr_fix.js"></script>
