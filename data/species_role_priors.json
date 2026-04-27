@@ -1,29 +1,29 @@
 {
-  "updatedAt": "2026-04-26T23:35:07+00:00",
+  "updatedAt": "2026-04-27T09:28:57+00:00",
   "priors": {
     "incineroar": {
-      "weight": 0.141,
+      "weight": 0.177,
       "roles": [
         "pivot_support",
         "fake_out"
       ]
     },
     "whimsicott": {
-      "weight": 0.141,
+      "weight": 0.177,
       "roles": [
         "speed_control",
         "support"
       ]
     },
     "garchomp": {
-      "weight": 0.115,
+      "weight": 0.101,
       "roles": [
         "physical_pressure",
         "spread_damage"
       ]
     },
     "pelipper": {
-      "weight": 0.128,
+      "weight": 0.152,
       "roles": [
         "weather",
         "speed_control"
@@ -31,31 +31,31 @@
     },
     "basculegion": {
       "roles": [],
-      "weight": 0.064
+      "weight": 0.101
     },
     "archaludon": {
       "roles": [],
-      "weight": 0.038
+      "weight": 0.051
     },
     "sinistcha": {
       "roles": [],
-      "weight": 0.038
+      "weight": 0.013
     },
     "kingambit": {
       "roles": [],
-      "weight": 0.064
+      "weight": 0.076
     },
     "starmie": {
       "roles": [],
-      "weight": 0.09
+      "weight": 0.101
     },
     "dragonite": {
       "roles": [],
-      "weight": 0.026
+      "weight": 0.013
     },
     "rotomwash": {
       "roles": [],
-      "weight": 0.038
+      "weight": 0.025
     },
     "farigiraf": {
       "roles": [],
