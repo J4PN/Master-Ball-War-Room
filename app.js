@@ -2778,6 +2778,7 @@
     movePickerSearch.value = "";
     movePickerTitle.textContent = kind === "move" ? "Choose Move" : kind === "pokemon" ? "Choose Pokemon" : kind === "item" ? "Choose Item" : "Choose Ability";
     movePickerSearch.placeholder = kind === "move" ? "Search Moves..." : kind === "pokemon" ? "Search Pokemon..." : kind === "item" ? "Search Items..." : "Search Abilities...";
+    document.getElementById("team-slot-editor")?.classList.add("slot-editor--selector-open");
     movePicker.classList.add("is-open");
     movePicker.setAttribute("aria-hidden", "false");
     renderMovePickerFilterControls(kind);
@@ -2788,6 +2789,7 @@
   function closeMovePicker() {
     movePicker.classList.remove("is-open");
     movePicker.setAttribute("aria-hidden", "true");
+    document.getElementById("team-slot-editor")?.classList.remove("slot-editor--selector-open");
   }
 
   function renderMovePickerFilterControls(kind) {
@@ -3312,6 +3314,7 @@
     const modal = document.getElementById("team-slot-editor");
     if (!modal) return;
     modal.classList.remove("is-open");
+    modal.classList.remove("slot-editor--selector-open");
     modal.setAttribute("aria-hidden", "true");
   }
 

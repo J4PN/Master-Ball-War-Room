@@ -1791,10 +1791,15 @@ body.is-applying-team .team-builder-grid {
   display: none;
 }
 .team-slot-modal.is-open { display: block; }
+.team-slot-modal.slot-editor--selector-open {
+  z-index: 50;
+  pointer-events: none;
+}
 .team-slot-modal__scrim {
   position: absolute;
   inset: 0;
   background: rgba(4, 5, 14, 0.68);
+  transition: opacity 160ms ease;
 }
 .team-slot-modal__panel {
   position: absolute;
@@ -1807,6 +1812,14 @@ body.is-applying-team .team-builder-grid {
   border-left: 1px solid var(--line);
   background: rgba(13, 14, 34, 0.98);
   box-shadow: -18px 0 50px rgba(0,0,0,0.45);
+  transition: opacity 160ms ease, transform 180ms ease;
+}
+.team-slot-modal.slot-editor--selector-open .team-slot-modal__scrim {
+  opacity: 0;
+}
+.team-slot-modal.slot-editor--selector-open .team-slot-modal__panel {
+  opacity: 0.18;
+  transform: translateX(calc(100% - 56px));
 }
 .team-slot-modal__close {
   position: sticky;
