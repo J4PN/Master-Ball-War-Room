@@ -588,7 +588,7 @@ option {
   justify-content: center;
   background: rgba(5, 6, 16, 0.78);
   backdrop-filter: blur(10px);
-  z-index: 60;
+  z-index: 120;
 }
 .move-picker.is-open { display: flex; }
 .move-picker__dialog {
@@ -1792,7 +1792,7 @@ body.is-applying-team .team-builder-grid {
 }
 .team-slot-modal.is-open { display: block; }
 .team-slot-modal.slot-editor--selector-open {
-  z-index: 50;
+  z-index: 40;
   pointer-events: none;
 }
 .team-slot-modal__scrim {
@@ -1818,8 +1818,9 @@ body.is-applying-team .team-builder-grid {
   opacity: 0;
 }
 .team-slot-modal.slot-editor--selector-open .team-slot-modal__panel {
-  opacity: 0.18;
-  transform: translateX(calc(100% - 56px));
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(100%);
 }
 .team-slot-modal__close {
   position: sticky;

@@ -49,9 +49,9 @@
     tournaments: "https://www.pikalytics.com/pokedex/championstournaments",
     preview: "https://www.pikalytics.com/pokedex/championspreview"
   };
-  const META_REFRESH_INTERVAL_MS = 48 * 60 * 60 * 1000;
-  const META_CACHE_KEY = "champions-meta-cache-v1";
-  const META_CACHE_TS_KEY = "champions-meta-cache-ts-v1";
+  const META_REFRESH_INTERVAL_MS = 12 * 60 * 60 * 1000;
+  const META_CACHE_KEY = "champions-meta-cache-v2";
+  const META_CACHE_TS_KEY = "champions-meta-cache-ts-v2";
   const HOSTED_DAMAGE_CALC_URL = "https://damage-calc.onrender.com/calculate";
   const MOVE_POLICY_PATH = "./pokemon_move_discourage_policy.json";
   const DEFAULT_MIN_MEGAS = 1;
@@ -93,7 +93,8 @@
   ]);
   const SUPPORT_MOVE_REQUIREMENTS = {
     incineroar: ["Fake Out", "Parting Shot", "Throat Chop", "Protect", "Snarl", "Will-O-Wisp", "Taunt"],
-    farigiraf: ["Trick Room", "Helping Hand", "Protect"],
+    farigiraf: ["Trick Room", "Hyper Voice", "Protect", "Helping Hand", "Psychic", "Dazzling Gleam"],
+    oranguru: ["Trick Room", "Instruct", "Protect", "Helping Hand", "Foul Play"],
     sinistcha: ["Rage Powder", "Strength Sap", "Protect", "Trick Room"],
     whimsicott: ["Tailwind", "Encore", "Taunt", "Helping Hand"],
     pelipper: ["Tailwind", "Wide Guard", "Hurricane", "Icy Wind"]
@@ -131,9 +132,9 @@
   const MEGA_TIER_SCORE = { S: 18, A: 12, B: 6, C: 0, D: -10, F: -18 };
   const BULKY_SUPPORT_NO_DEFAULT_SASH = new Set(["incineroar", "farigiraf", "sinistcha"]);
   const pikalyticsMetaSeed = [
+    { name: "Sneasler", weight: 58.8, tags: ["fakeout", "speed", "physical"] },
     { name: "Incineroar", weight: 54.4, tags: ["fakeout", "intimidate", "pivot"] },
-    { name: "Sneasler", weight: 45.1, tags: ["fakeout", "speed"] },
-    { name: "Garchomp", weight: 37.1, tags: ["spread", "ground"] },
+    { name: "Garchomp", weight: 37.1, tags: ["spread", "ground", "physical"] },
     { name: "Sinistcha", weight: 34.6, tags: ["redirection", "support"] },
     { name: "Kingambit", weight: 27.0, tags: ["dark", "priority"] },
     { name: "Basculegion", weight: 22.1, tags: ["water", "priority"] },
@@ -148,6 +149,7 @@
     { name: "Gengar", weight: 12.3, tags: ["special", "ghost"] },
     { name: "Farigiraf", weight: 11.6, tags: ["support", "priority-block"] }
   ];
+  const META_SEED_SNAPSHOT_LABEL = "Pikalytics Champions snapshot verified 2026-04-28";
   const LEARNED_DATA_FILES = {
     learnedWeights: "./data/learned_weights.json",
     speciesRolePriors: "./data/species_role_priors.json",
@@ -321,7 +323,7 @@
       let lastError = null;
       for (const candidate of candidates) {
         try {
-          const response = await fetch(candidate, { cache: "no-store" });
+          const response = await fetch(candidate, { cache: "default" });
           if (response.ok) return { key, payload: await response.json() };
           lastError = new Error(`${key}:${response.status}:${candidate}`);
         } catch (error) {
@@ -1046,7 +1048,7 @@
     "gourgeist"
   ]);
   const SUPPORT_ROLE_LOCKS = new Set([
-    "incineroar", "whimsicott", "farigiraf", "polteageist", "slowbro", "mega slowbro", "pelipper", "sinistcha", "hatterene"
+    "incineroar", "whimsicott", "farigiraf", "oranguru", "polteageist", "slowbro", "mega slowbro", "pelipper", "sinistcha", "hatterene"
   ]);
   const HARD_ATTACKER_LOCKS = new Set([
     "kingambit",
@@ -1658,6 +1660,8 @@
         origin: row.actualOrigin || "runtime",
         sourceType: row.sourceType || "unknown",
         sourceName: row.sourceName || row.matchedCreator || "unknown",
+        sourceUrl: row.sourceUrl || row.source_url || "",
+        matchType: row.generated || /variant|controlled/i.test(`${row.sourceType || ""} ${(row.tags || []).join(" ")}`) ? "variant" : (row.matchedCreator ? "exact" : "shell match"),
         matchedCreator: row.matchedCreator || "",
         archetype: row.archetype || "",
         confidence: Number.isFinite(Number(row.confidence)) ? Number(row.confidence) : null
@@ -1715,11 +1719,19 @@
       .filter(Boolean)
       .filter((value, index, list) => list.indexOf(value) === index)
       .slice(0, 4);
-    const none = "No high-confidence creator match found";
+    const none = "No high-confidence external source found.";
+    const transparentSources = origins.slice(0, 4).map((row) => ({
+      creator: row.matchedCreator || row.sourceName || "No high-confidence external source found.",
+      sourceType: row.sourceType || "unknown",
+      matchType: row.matchType || "shell match",
+      url: row.sourceUrl || "",
+      confidence: row.confidence == null ? "unknown" : `${Math.round(row.confidence * 100)}%`
+    }));
     return {
       matchedCreator: names.length ? names.join(", ") : none,
       matchedShell: shell || none,
-      supportingSources: supporting.length ? supporting.join(" + ") : none
+      supportingSources: supporting.length ? supporting.join(" + ") : none,
+      transparentSources
     };
   }
 
@@ -1875,7 +1887,10 @@
       gen = window.calc ? calc.Generations.get(9) : null;
       await primeLearnedBuilderData();
       refreshSourceDebug();
-      await initializeMetaThreats();
+      initializeMetaThreats().then(() => {
+        renderMetaTab();
+        if (typeof updateLiveWarRoomNow === "function") updateLiveWarRoomNow("meta-refresh");
+      }).catch((error) => console.warn("Meta refresh skipped during boot.", error));
       setupTabs();
       setupNatureSelects();
       renderSpSliders("attacker", { hp: 0, atk: 0, def: 0, spa: 32, spd: 2, spe: 32 });
@@ -2200,10 +2215,18 @@
     return seed
       .map((threat) => {
         if (threat.name === "Mega Floette") {
-          return { ...threat, types: ["Fairy"] };
+          return { ...threat, sourceType: "Pikalytics", sourceName: META_SEED_SNAPSHOT_LABEL, matchType: "snapshot", confidence: "medium", sourceUrl: PIKALYTICS_SOURCES.tournaments, types: ["Fairy"] };
         }
         const info = legalPokemonData[threat.name];
-        return info ? { ...threat, types: info.types || ["Normal"] } : null;
+        return info ? {
+          ...threat,
+          sourceType: "Pikalytics",
+          sourceName: META_SEED_SNAPSHOT_LABEL,
+          matchType: "snapshot",
+          confidence: "medium",
+          sourceUrl: PIKALYTICS_SOURCES.tournaments,
+          types: info.types || ["Normal"]
+        } : null;
       })
       .filter(Boolean);
   }
@@ -2212,9 +2235,12 @@
     const cached = loadCachedMetaThreats();
     if (cached.length) {
       metaThreats = cached;
+      const cachedAt = Number(localStorage.getItem(META_CACHE_TS_KEY)) || null;
+      const stale = cachedAt && (Date.now() - cachedAt) > META_REFRESH_INTERVAL_MS * 2;
       metaStatus = {
         source: "cached",
-        updatedAt: Number(localStorage.getItem(META_CACHE_TS_KEY)) || null
+        updatedAt: cachedAt,
+        stale
       };
     }
     const lastUpdated = Number(localStorage.getItem(META_CACHE_TS_KEY)) || 0;
@@ -2272,7 +2298,12 @@
         name,
         weight: usage,
         tags: [],
-        types: info.types || ["Normal"]
+        types: info.types || ["Normal"],
+        sourceType: "Pikalytics",
+        sourceName: "Pikalytics Champions live pull",
+        matchType: "exact",
+        confidence: "high",
+        sourceUrl: PIKALYTICS_SOURCES.tournaments
       });
     }
     if (discovered.size < 6) {
@@ -2297,12 +2328,12 @@
   function formatMetaStatusCopy() {
     const updated = metaStatus.updatedAt ? new Date(metaStatus.updatedAt).toLocaleString() : "seed snapshot in use";
     if (metaStatus.source === "live") {
-      return `Meta refreshed from Pikalytics and cached locally on ${updated}. It will try again every 48 hours.`;
+      return `Meta refreshed from Pikalytics and cached locally on ${updated}. It retries every 12 hours.`;
     }
     if (metaStatus.source === "cached") {
-      return `Using cached Pikalytics meta from ${updated}. The app retries a live refresh every 48 hours.`;
+      return `${metaStatus.stale ? "Using stale cached" : "Using cached"} Pikalytics meta from ${updated}. The app retries a live refresh every 12 hours.`;
     }
-    return "Using the built-in Pikalytics seed snapshot. The app retries a live refresh every 48 hours when network fetch is available.";
+    return `Using the built-in ${META_SEED_SNAPSHOT_LABEL}. The app retries a live refresh every 12 hours when network fetch is available.`;
   }
 
   function formatMetaCountdownCopy() {
@@ -2351,19 +2382,81 @@
       return;
     }
     const maxUsage = Math.max(...rows.map((row) => row.usage), 1);
+    const currentKeys = new Set(metaThreats.slice(0, 12).map((row) => normalizeNameKey(row.name)));
+    const seedKeys = new Set(pikalyticsMetaSeed.slice(0, 12).map((row) => normalizeNameKey(row.name)));
+    const rising = metaThreats
+      .filter((row, index) => index < 12 && !seedKeys.has(normalizeNameKey(row.name)))
+      .slice(0, 6);
+    const falling = pikalyticsMetaSeed
+      .filter((row) => !currentKeys.has(normalizeNameKey(row.name)))
+      .slice(0, 6);
+    const typeUsage = TYPE_ORDER.map((type) => ({
+      type,
+      usage: metaThreats.reduce((sum, threat) => sum + ((threat.types || []).includes(type) ? Number(threat.weight) || 0 : 0), 0)
+    })).filter((row) => row.usage > 0).sort((a, b) => b.usage - a.usage).slice(0, 10);
+    const teamRows = getRetainedSourceRows()
+      .filter((row) => Array.isArray(row.team) && row.team.length >= 4 && !isSelfplaySourceRow(row))
+      .map((row) => ({
+        label: row.label || row.archetype || row.sourceName || "source-backed shell",
+        team: row.team.map((slot) => getSlotSpeciesName(slot)).filter(Boolean).slice(0, 6),
+        sourceName: row.matchedCreator || row.sourceName || "source metadata",
+        sourceType: row.sourceType || "archive",
+        confidence: Number(row.confidence) || 0.5,
+        sourceUrl: row.sourceUrl || row.source_url || ""
+      }))
+      .sort((a, b) => b.confidence - a.confidence)
+      .slice(0, 5);
     updateMetaStatusPanel();
-    metaUsageBoard.innerHTML = rows.map((row, index) => `
-      <div class="speed-bar">
-        <div class="speed-bar__label">
-          <span>#${index + 1} ${row.name}</span>
-          <span>${row.usage.toFixed(2)}%</span>
-        </div>
-        <div class="speed-bar__meta">${row.types.join(" / ")} | ${row.role}</div>
-        <div class="speed-bar__track">
-          <div class="speed-bar__fill" style="width:${((row.usage / maxUsage) * 100).toFixed(1)}%"></div>
+    metaUsageBoard.innerHTML = `
+      <div class="analysis-stack">
+        <p class="result-title">Top Pokemon Usage</p>
+        ${rows.map((row, index) => `
+          <div class="speed-bar">
+            <div class="speed-bar__label">
+              <span>#${index + 1} ${row.name}</span>
+              <span>${row.usage.toFixed(2)}%</span>
+            </div>
+            <div class="speed-bar__meta">${row.types.join(" / ")} | ${row.role}</div>
+            <div class="speed-bar__track">
+              <div class="speed-bar__fill" style="width:${((row.usage / maxUsage) * 100).toFixed(1)}%"></div>
+            </div>
+          </div>
+        `).join("")}
+      </div>
+      <div class="analysis-stack">
+        <p class="result-title">Top Meta Teams / Shells</p>
+        <div class="fix-list">
+          ${teamRows.length ? teamRows.map((row) => `
+            <div class="fix-list__item">
+              <strong>${escapeHtml(row.label)}:</strong> ${row.team.map(escapeHtml).join(" / ")}
+              <br><span class="result-copy">Source: ${escapeHtml(row.sourceName)} (${escapeHtml(row.sourceType)}), shell match, confidence ${Math.round(row.confidence * 100)}%${row.sourceUrl ? `, <a href="${escapeAttribute(row.sourceUrl)}" target="_blank" rel="noreferrer">URL</a>` : ""}</span>
+            </div>
+          `).join("") : `<div class="fix-list__item">No high-confidence external source found.</div>`}
         </div>
       </div>
-    `).join("");
+      <div class="analysis-stack">
+        <p class="result-title">Trending</p>
+        <div class="analysis-row">
+          ${(rising.length ? rising : metaThreats.slice(0, 4)).map((row) => `<span class="analysis-chip severity-good">Rising: ${escapeHtml(row.name)} ${Number(row.weight || 0).toFixed(1)}%</span>`).join("")}
+          ${(falling.length ? falling : pikalyticsMetaSeed.slice(-3)).map((row) => `<span class="analysis-chip severity-medium">Falling: ${escapeHtml(row.name)} ${Number(row.weight || 0).toFixed(1)}%</span>`).join("")}
+        </div>
+      </div>
+      <div class="analysis-stack">
+        <p class="result-title">Top Type Usage</p>
+        ${typeUsage.map((row) => `
+          <div class="speed-bar">
+            <div class="speed-bar__label"><span>${escapeHtml(row.type)}</span><span>${row.usage.toFixed(1)}</span></div>
+            <div class="speed-bar__track"><div class="speed-bar__fill" style="width:${((row.usage / Math.max(1, typeUsage[0]?.usage || 1)) * 100).toFixed(1)}%; background:${getTypeColor(row.type)}"></div></div>
+          </div>
+        `).join("")}
+      </div>
+      <div class="analysis-stack">
+        <p class="result-title">Source Transparency</p>
+        <div class="fix-list">
+          ${metaThreats.slice(0, 8).map((row) => `<div class="fix-list__item"><strong>${escapeHtml(row.name)}:</strong> ${escapeHtml(row.sourceName || "Pikalytics")} | ${escapeHtml(row.sourceType || "Pikalytics")} | ${escapeHtml(row.matchType || "snapshot")} | confidence ${escapeHtml(row.confidence || "medium")}${row.sourceUrl ? ` | <a href="${escapeAttribute(row.sourceUrl)}" target="_blank" rel="noreferrer">URL</a>` : ""}</div>`).join("")}
+        </div>
+      </div>
+    `;
     startMetaCountdown();
   }
 
@@ -3224,12 +3317,13 @@
         openTeamSlotModal(Number(event.currentTarget.dataset.slot));
       });
       select.addEventListener("input", async (event) => {
-        const slotIndex = Number(event.currentTarget.dataset.slot);
-        const previousName = event.currentTarget.dataset.currentSpecies || "";
-        const currentName = event.currentTarget.value || "";
+        const target = event.currentTarget;
+        const slotIndex = Number(target.dataset.slot);
+        const previousName = target.dataset.currentSpecies || "";
+        const currentName = target.value || "";
         const currentEntry = getRosterEntry(currentName);
         if (currentEntry && !isEntryAllowedInActiveRuleset(currentEntry)) {
-          event.currentTarget.value = "";
+          target.value = "";
           teamExportStatus.textContent = "GC Legal Mode Active: that Pokemon/form is not on the official GC eligible roster.";
           resetTeamBuilderSlotData(slotIndex);
           notifyTeamBuilderStateChange("gc-illegal-slot-blocked", slotIndex);
@@ -3242,7 +3336,7 @@
         await refreshTeamSlotOptions(slotIndex);
         syncTeamMegaStone(slotIndex);
         await updateTeamSlotSprite(slotIndex);
-        event.currentTarget.dataset.currentSpecies = getRosterEntry(currentName)?.name || currentName;
+        target.dataset.currentSpecies = getRosterEntry(currentName)?.name || currentName;
         if (normalizeNameKey(previousName) !== normalizeNameKey(currentName)) {
           animateTeamCard(slotIndex, previousName && currentName ? "is-slot-replaced" : "is-slot-added");
         } else if (currentName) {
@@ -4110,8 +4204,6 @@
     const normalized = apiName
       .toLowerCase()
       .replace(/[^a-z0-9-]/g, "")
-      .replace(/-mega-x/g, "-megax")
-      .replace(/-mega-y/g, "-megay")
       .replace(/-hisui/g, "-hisuian")
       .replace(/-galar/g, "-galarian")
       .replace(/-alola/g, "-alolan")
@@ -6850,6 +6942,11 @@
     const megaCompatibility = scoreMegaCandidateCompatibility(entry, teamState, structureReport);
     score += megaCompatibility.score;
     reasons.push(...megaCompatibility.reasons);
+    const synergyReport = getTeamSynergyReport(entry, teamState, { requestedModes: {}, focus: "", notes: "" });
+    if (synergyReport.score > 0) {
+      score += synergyReport.score;
+      reasons.push(...synergyReport.notes.map((note) => `Synergy: ${note}.`));
+    }
     if (metaWeight) {
       score += Math.min(24, metaWeight / 2);
       reasons.push("Is already proving itself in current Champions meta.");
@@ -7131,6 +7228,55 @@
       score,
       reasons: [...new Set(reasons)].slice(0, 3)
     };
+  }
+
+  function getTeamSynergyReport(entry, teamState = [], context = {}) {
+    const candidateKey = normalizeNameKey(entry?.name || "");
+    const allies = getFilledTeamSlots(teamState).map((slot) => ({
+      slot,
+      entry: resolveBattleEntry(slot) || getRosterEntry(slot.name)
+    })).filter((row) => row.entry && normalizeNameKey(row.entry.name) !== candidateKey);
+    const allyNames = new Set(allies.map((row) => normalizeNameKey(row.entry.name)));
+    const candidateLegalMoves = legalPokemonData[entry?.name || ""]?.legalMoves || legalPokemonData[entry?.baseName || ""]?.legalMoves || [];
+    const candidateMoveKeys = new Set(candidateLegalMoves.map((move) => normalizeNameKey(move)));
+    const teamMoves = allies.flatMap(({ slot }) => getSetMoveKeys(slot));
+    const teamMoveSet = new Set(teamMoves);
+    const notes = [];
+    let score = 0;
+    const hasWeatherNeed = allyNames.has("mega blastoise") || allyNames.has("basculegion") || context?.requestedModes?.rain || /rain/i.test(`${context?.focus || ""} ${context?.notes || ""}`);
+    if (hasWeatherNeed && (candidateMoveKeys.has("rain dance") || normalizeNameKey(entry?.abilities?.[0] || "") === "drizzle" || getWeatherSetterMode(entry) === "rain")) {
+      score += candidateKey === "pelipper" || candidateMoveKeys.has("tailwind") || candidateMoveKeys.has("wide guard") ? 18 : 8;
+      notes.push("rain support for Mega Blastoise/Basculegion style pressure");
+    }
+    if ((candidateMoveKeys.has("earthquake") || teamMoveSet.has("earthquake")) && allies.some(({ entry: ally, slot }) => ally.types.includes("Flying") || normalizeNameKey(slot.ability || ally.abilities?.[0] || "") === "levitate")) {
+      score += 12;
+      notes.push("Earthquake can be paired with Flying or Levitate positioning");
+    }
+    if ((candidateMoveKeys.has("discharge") || teamMoveSet.has("discharge")) && allies.some(({ entry: ally, slot }) => ["lightning rod", "volt absorb", "motor drive"].includes(normalizeNameKey(slot.ability || ally.abilities?.[0] || "")))) {
+      score += 10;
+      notes.push("spread Electric pressure has an immunity partner");
+    }
+    if ((candidateMoveKeys.has("sludge wave") || teamMoveSet.has("sludge wave")) && allies.some(({ entry: ally }) => ally.types.includes("Steel"))) {
+      score += 9;
+      notes.push("Sludge Wave is safer next to a Steel partner");
+    }
+    if ((candidateMoveKeys.has("heat wave") || teamMoveSet.has("lava plume")) && allies.some(({ slot, entry: ally }) => normalizeNameKey(slot.ability || ally.abilities?.[0] || "") === "flash fire")) {
+      score += 8;
+      notes.push("Fire spread pressure can activate or protect Flash Fire lines");
+    }
+    if (candidateMoveKeys.has("tailwind") && (context?.requestedModes?.tailwind || allies.some(({ entry: ally }) => ally.baseSpeed >= 95))) {
+      score += 10;
+      notes.push("Tailwind supports existing fast pressure");
+    }
+    if (candidateMoveKeys.has("trick room") && (context?.requestedModes?.trickRoom || allies.some(({ entry: ally }) => ally.baseSpeed <= 60))) {
+      score += 12;
+      notes.push("Trick Room supports slow breakers instead of fighting their speed plan");
+    }
+    if (candidateMoveKeys.has("will-o-wisp") && allies.some(({ slot }) => normalizeNameKey(slot.ability || "") === "guts")) {
+      score += 6;
+      notes.push("legal self-status support can activate Guts when matchup pressure justifies it");
+    }
+    return { score, notes: [...new Set(notes)].slice(0, 3) };
   }
 
   function getMegaPreferenceTier(entryOrName) {
@@ -7476,12 +7622,12 @@
     if (!occupied.length) {
       return [{ names: ["No lead"], score: 0, summary: "Pick at least one Pokemon to score a lead." }];
     }
-    const topThreats = threatRows.slice(0, 4).map((row) => row.threat);
+    const topThreats = threatRows.slice(0, 6).map((row) => row.threat);
     const scoredPairs = [];
     for (let i = 0; i < occupied.length; i += 1) {
       for (let j = i; j < occupied.length; j += 1) {
         const pair = [occupied[i], occupied[j]].filter((value, idx, arr) => arr.findIndex((item) => item.index === value.index) === idx);
-        const score = await scoreLeadPairDetailed(pair, topThreats);
+        const score = await scoreLeadPairDetailed(pair, topThreats, teamState);
         scoredPairs.push(score);
       }
     }
@@ -7495,7 +7641,7 @@
     return unique.length ? unique : [{ names: [occupied[0].entry.name], score: 40, summary: "Fallback single lead recommendation." }];
   }
 
-  async function scoreLeadPairDetailed(pair, topThreats) {
+  async function scoreLeadPairDetailed(pair, topThreats, teamState = []) {
     const names = pair.map((row) => row.entry.name);
     let score = 42;
     const reasons = [];
@@ -7524,30 +7670,105 @@
       score += 8;
       reasons.push("punishes Intimidate leads");
     }
+    const leadSimulation = await simulateLeadPairMatchup(pair, topThreats, teamState);
+    score += leadSimulation.scoreDelta;
+    reasons.push(...leadSimulation.reasons);
     for (const threat of topThreats) {
       const resists = pair.some(({ entry }) => threat.types.some((type) => getTypeEffectiveness(type, entry.types) < 1));
       const threatensBack = await pairThreatensTarget(pair, threat);
       if (resists) score += 4;
       if (threatensBack) score += 6;
     }
-    const summary = buildLeadSummary(names, reasons, topThreats);
-    return { names, score: clampScore(score), summary };
+    const summary = buildLeadSummary(names, reasons, topThreats, leadSimulation);
+    return { names, score: clampScore(score), summary, simulation: leadSimulation };
   }
 
-  function buildLeadSummary(names, reasons, topThreats) {
+  async function simulateLeadPairMatchup(pair, topThreats, teamState = []) {
+    const moveKeys = pair.flatMap(({ slot }) => getSetMoveKeys(slot));
+    const entries = pair.map((row) => row.entry);
+    let scoreDelta = 0;
+    const reasons = [];
+    const hasFakeOut = moveKeys.includes("fake out");
+    const hasTrickRoom = moveKeys.includes("trick room");
+    const hasTailwind = moveKeys.includes("tailwind");
+    const hasRedirection = moveKeys.some((move) => ["follow me", "rage powder"].includes(move));
+    const hasSpeedControl = hasTrickRoom || hasTailwind || moveKeys.some((move) => ["icy wind", "electroweb", "thunder wave"].includes(move));
+    const hasSpreadPressure = moveKeys.some((move) => SPREAD_PRESSURE_MOVE_KEYS.has(move));
+    const avgSpeed = entries.reduce((sum, entry) => sum + (entry.baseSpeed || 0), 0) / Math.max(1, entries.length);
+    const teamSlots = getFilledTeamSlots(teamState);
+    const teamPhysical = teamSlots.filter((slot) => {
+      const entry = getRosterEntry(slot.name);
+      return entry && getMoveCategoryLean(slot.moves || [], entry) === "physical";
+    }).length;
+    const teamSpecial = teamSlots.filter((slot) => {
+      const entry = getRosterEntry(slot.name);
+      return entry && getMoveCategoryLean(slot.moves || [], entry) === "special";
+    }).length;
+    const mostlySpecial = teamSpecial >= teamPhysical + 2;
+    if (hasFakeOut && (hasTrickRoom || hasTailwind || hasRedirection)) {
+      scoreDelta += 13;
+      reasons.push("protects turn-one speed control with Fake Out/redirection pressure");
+    }
+    if (hasTrickRoom && avgSpeed <= 75 && !hasTailwind) {
+      scoreDelta += 12;
+      reasons.push("keeps the opening speed plan coherent for Trick Room");
+    }
+    if (hasTailwind && avgSpeed >= 80 && !hasTrickRoom) {
+      scoreDelta += 10;
+      reasons.push("keeps the opening speed plan coherent for Tailwind");
+    }
+    if (hasTailwind && hasTrickRoom) {
+      scoreDelta -= 16;
+      reasons.push("has conflicting turn-one speed control");
+    }
+    if (hasSpreadPressure && pair.some(({ entry, slot }) => getTeamSynergyReport(entry, teamState, {}).score > 0 || ["levitate", "flash fire", "lightning rod", "volt absorb"].includes(normalizeNameKey(slot.ability || entry.abilities?.[0] || "")))) {
+      scoreDelta += 8;
+      reasons.push("uses spread pressure with a safer partner interaction");
+    }
+    if (mostlySpecial && pair.some(({ slot, entry }) => normalizeNameKey(slot.ability || entry.abilities?.[0] || "") === "intimidate")) {
+      scoreDelta -= 8;
+      reasons.push("Intimidate is less valuable because this team is mostly special");
+    }
+    const badEnemyLeads = [];
+    for (let i = 0; i < topThreats.length; i += 1) {
+      for (let j = i + 1; j < Math.min(topThreats.length, i + 3); j += 1) {
+        const left = topThreats[i];
+        const right = topThreats[j];
+        const pressure = [left, right].reduce((sum, threat) => {
+          const threatensLead = entries.filter((entry) => threat.types.some((type) => getTypeEffectiveness(type, entry.types) > 1)).length;
+          const resistedByLead = entries.filter((entry) => threat.types.some((type) => getTypeEffectiveness(type, entry.types) < 1)).length;
+          return sum + threatensLead * 9 - resistedByLead * 4;
+        }, 0);
+        if (pressure >= 14) badEnemyLeads.push(`${left.name} + ${right.name}`);
+      }
+    }
+    if (badEnemyLeads.length) scoreDelta -= Math.min(14, badEnemyLeads.length * 5);
+    const swap = teamSlots.find((slot) => !pair.some((row) => row.slot === slot) && getRosterEntry(slot.name));
+    return {
+      scoreDelta,
+      reasons: [...new Set(reasons)].slice(0, 3),
+      worstEnemyLeads: badEnemyLeads.slice(0, 2),
+      recommendedSwap: swap?.name || "",
+      pressureFlags: { fakeOut: hasFakeOut, trickRoom: hasTrickRoom, tailwind: hasTailwind, redirection: hasRedirection, speedControl: hasSpeedControl }
+    };
+  }
+
+  function buildLeadSummary(names, reasons, topThreats, simulation = {}) {
+    const worst = simulation.worstEnemyLeads?.length ? ` Watch for ${simulation.worstEnemyLeads.join(" or ")}.` : "";
+    const swap = simulation.recommendedSwap ? ` Pivot toward ${simulation.recommendedSwap} if the opening pressure is unfavorable.` : "";
     if (!reasons.length) {
-      return `${names.join(" + ")} is the cleaner generic opener when you want a stable start into the current snapshot.`;
+      return `${names.join(" + ")} is the cleaner generic opener when you want a stable start into the current snapshot.${worst}${swap}`;
     }
-    if (reasons.includes("opens games with Fake Out pressure")) {
-      return `${names.join(" + ")} is best when you need immediate tempo with Fake Out and a safer turn-one board.`;
+    if (reasons.some((reason) => reason.includes("Fake Out"))) {
+      return `${names.join(" + ")} is best when you need immediate tempo with Fake Out and a safer turn-one board.${worst}${swap}`;
     }
-    if (reasons.includes("has speed control")) {
-      return `${names.join(" + ")} is the better call when speed control matters more than raw bulk.`;
+    if (reasons.some((reason) => reason.includes("speed"))) {
+      return `${names.join(" + ")} is the better call when speed control matters more than raw bulk.${worst}${swap}`;
     }
     if (topThreats.length) {
-      return `${names.join(" + ")} is the leaner anti-meta lead when you want better play into ${topThreats.slice(0, 2).map((threat) => threat.name).join(" and ")}.`;
+      return `${names.join(" + ")} is the leaner anti-meta lead when you want better play into ${topThreats.slice(0, 2).map((threat) => threat.name).join(" and ")}.${worst}${swap}`;
     }
-    return `${names.join(" + ")} is the better opener when you want ${reasons.join(", ")}.`;
+    return `${names.join(" + ")} is the better opener when you want ${reasons.join(", ")}.${worst}${swap}`;
   }
 
   async function pairThreatensTarget(pair, threat) {
@@ -10271,6 +10492,28 @@
       perRoleMovePriority: {
         bulky_special_attacker: ["Protect", "Dragon Pulse", "Draco Meteor", "Flamethrower", "Thunderbolt", "Sludge Bomb"]
       }
+    },
+    farigiraf: {
+      tendencies: { tr_setter: 36, bulky_support: 22, disruption_support: 14, bulky_special_attacker: -10 },
+      perRoleMovePriority: {
+        tr_setter: ["Trick Room", "Hyper Voice", "Protect", "Helping Hand", "Psychic", "Dazzling Gleam"],
+        bulky_support: ["Trick Room", "Hyper Voice", "Protect", "Helping Hand", "Psychic", "Dazzling Gleam"]
+      },
+      bannedMovesByRole: {
+        tr_setter: ["Thunder Wave", "Charge Beam", "Nasty Plot"],
+        bulky_support: ["Thunder Wave", "Charge Beam", "Nasty Plot"]
+      }
+    },
+    oranguru: {
+      tendencies: { tr_setter: 38, bulky_support: 24, disruption_support: 10, bulky_special_attacker: -18 },
+      perRoleMovePriority: {
+        tr_setter: ["Trick Room", "Instruct", "Protect", "Helping Hand", "Foul Play", "Psychic"],
+        bulky_support: ["Trick Room", "Instruct", "Protect", "Helping Hand", "Foul Play", "Psychic"]
+      },
+      bannedMovesByRole: {
+        tr_setter: ["Charge Beam", "Energy Ball", "Focus Blast", "Nasty Plot"],
+        bulky_support: ["Charge Beam", "Energy Ball", "Focus Blast", "Nasty Plot"]
+      }
     }
   };
 
@@ -12595,6 +12838,28 @@
         if (result.length < 4 && !result.includes(move) && (damagingMovePool.includes(move) || keep.includes(move))) result.push(move);
       });
     }
+    if (key === "farigiraf") {
+      const keep = ["Trick Room", "Hyper Voice", "Protect", "Helping Hand", "Psychic", "Dazzling Gleam"];
+      result = result.filter((move) => keep.includes(move));
+      ["Trick Room", "Hyper Voice", "Protect"].forEach((move) => {
+        if (result.length < 4 && !result.includes(move) && (damagingMovePool.includes(move) || keep.includes(move))) result.push(move);
+      });
+      if (result.length < 4 && !result.some((move) => ["helping hand", "psychic", "dazzling gleam"].includes(normalizeNameKey(move)))) {
+        const utility = ["Helping Hand", "Psychic", "Dazzling Gleam"].find((move) => !result.includes(move) && (damagingMovePool.includes(move) || keep.includes(move)));
+        if (utility) result.push(utility);
+      }
+    }
+    if (key === "oranguru") {
+      const keep = ["Trick Room", "Instruct", "Protect", "Helping Hand", "Foul Play", "Psychic"];
+      result = result.filter((move) => keep.includes(move));
+      ["Trick Room", "Instruct", "Protect"].forEach((move) => {
+        if (result.length < 4 && !result.includes(move) && (damagingMovePool.includes(move) || keep.includes(move))) result.push(move);
+      });
+      if (result.length < 4 && !result.some((move) => ["helping hand", "foul play", "psychic"].includes(normalizeNameKey(move)))) {
+        const utility = ["Helping Hand", "Foul Play", "Psychic"].find((move) => !result.includes(move) && (damagingMovePool.includes(move) || keep.includes(move)));
+        if (utility) result.push(utility);
+      }
+    }
     if (["mega camerupt", "charizard", "mega charizard y", "whimsicott"].includes(key)) {
       result = result.filter((move) => !["solar beam", "solar blade"].includes(normalizeNameKey(move)));
       const fallbackPool = ["Protect", "Moonblast", "Earth Power", "Air Slash", "Dragon Pulse", "Icy Wind"];
@@ -13654,6 +13919,15 @@
     const weak = evaluateFinalExportCoherence(team).issues.slice(0, 3).map((issue) => issue.text);
     const backupMega = chooseStaticBackupMegaName(team, weather);
     const evidence = formatSourceEvidenceLines();
+    const sourceLines = evidence.transparentSources?.length
+      ? evidence.transparentSources.map((row) => [
+        `- Creator/source: ${row.creator}`,
+        `  Source type: ${row.sourceType}`,
+        `  Match: ${row.matchType}`,
+        `  URL: ${row.url || "not available"}`,
+        `  Confidence: ${row.confidence}`
+      ].join("\n"))
+      : ["No high-confidence external source found."];
     return [
       "Matchup Notes",
       "",
@@ -13687,6 +13961,7 @@
       `Matched Creator: ${evidence.matchedCreator}`,
       `Matched Shell: ${evidence.matchedShell}`,
       `Supporting Sources: ${evidence.supportingSources}`,
+      ...sourceLines,
       "Attribution note: creator names are shown only when matched from local source metadata; otherwise this is shell-level evidence."
     ].join("\n");
   }
