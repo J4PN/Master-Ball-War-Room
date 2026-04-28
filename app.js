@@ -5817,24 +5817,181 @@
     return `<span class="change-badge change-badge--${change.kind}"><strong>${iconMap[change.kind] || change.label}</strong> ${change.from ? `${escapeHtml(change.from)} -> ` : ""}${escapeHtml(change.to)}</span>`;
   }
 
+  const HARD_TR_ANTI_SPEED_CONTROL_KEYS = new Set(["tailwind", "icy wind", "electroweb", "thunder wave"]);
+
+  function getRecommendationValidationDebugStore() {
+    if (typeof window === "undefined") return null;
+    if (!Array.isArray(window.__MBWR_RECOMMENDATION_REJECTIONS)) window.__MBWR_RECOMMENDATION_REJECTIONS = [];
+    return window.__MBWR_RECOMMENDATION_REJECTIONS;
+  }
+
+  function rememberRejectedRecommendation(kind, label, reasons) {
+    const store = getRecommendationValidationDebugStore();
+    if (!store) return;
+    store.push({ kind, label, reasons, at: new Date().toISOString() });
+    window.__MBWR_RECOMMENDATION_REJECTIONS = store.slice(-30);
+  }
+
+  function isHardTrickRoomContext(teamState = [], structureReport = null) {
+    const rows = getLiveWarRoomOccupiedRows(teamState);
+    const trCount = structureReport?.trickRoomCount ?? rows.filter(({ slot }) => getSetMoveKeys(slot).includes("trick room")).length;
+    const slowCount = structureReport?.slowCount ?? rows.filter(({ entry }) => (entry.baseSpeed || 0) <= 65).length;
+    return trCount > 0 && slowCount >= 2;
+  }
+
+  function setHasAntiHardTrSpeedControl(set) {
+    return getSetMoveKeys(set).some((move) => HARD_TR_ANTI_SPEED_CONTROL_KEYS.has(move));
+  }
+
+  function getCoherentCoreRequirement(entry) {
+    const key = normalizeNameKey(entry?.name || "");
+    if (key === "basculegion") return { moves: ["last respects", "wave crash"], abilities: ["adaptability", "swift swim"], role: "attacker" };
+    if (key === "mega blastoise" || key === "blastoise") return { movesAny: [["water spout", "hydro pump", "muddy water", "water pulse"], ["dark pulse", "aura sphere", "dragon pulse", "water pulse"]], abilities: ["mega launcher"], items: ["blastoisinite"], role: "attacker" };
+    if (key === "sinistcha") return { movesAny: [["matcha gotcha"], ["strength sap", "life dew", "rage powder"]], abilities: ["hospitality"], role: "support" };
+    if (key === "farigiraf") return { moves: ["trick room"], abilities: ["armor tail"], role: "support" };
+    return null;
+  }
+
+  function setSatisfiesCoherentCore(set, entry) {
+    const requirement = getCoherentCoreRequirement(entry);
+    if (!requirement) return true;
+    const moveKeys = getSetMoveKeys(set);
+    const abilityKey = normalizeNameKey(set?.ability || "");
+    const itemKey = normalizeNameKey(set?.item || "");
+    if (requirement.moves?.some((move) => !moveKeys.includes(normalizeNameKey(move)))) return false;
+    if (requirement.movesAny?.some((group) => !group.some((move) => moveKeys.includes(normalizeNameKey(move))))) return false;
+    if (requirement.abilities?.length && abilityKey && !requirement.abilities.some((ability) => abilityKey === normalizeNameKey(ability))) {
+      const itemAllows = requirement.items?.some((item) => itemKey === normalizeNameKey(item));
+      if (!itemAllows) return false;
+    }
+    return true;
+  }
+
+  function getRecommendationRoleFamily(set, entry, context = {}) {
+    if (!entry) return "";
+    const profile = inferSetRoleProfile(entry, context, set?.moves || [], set?.moves || []);
+    if (isTrickRoomSetterRow({ slot: set, entry })) return "tr_setter";
+    if (isTrickRoomBreakerRow({ slot: set, entry }) && isRealAttackerSet(set)) return "tr_breaker";
+    if (profile.supportOrPivot || isMeaningfulSupportSet(set)) return "support";
+    if (isRealAttackerSet(set) || profile.attacker) return "attacker";
+    return profile.primaryFamily || "";
+  }
+
+  function getTeamArchetypeSignature(teamState = [], structureReport = null) {
+    const weather = inferTeamWeatherProfile(teamState);
+    const hardTr = isHardTrickRoomContext(teamState, structureReport);
+    const tr = isTrickRoomTeamContext(teamState, structureReport);
+    const rows = getLiveWarRoomOccupiedRows(teamState);
+    return {
+      hardTr,
+      tr,
+      weather: weather.primary || "",
+      trickRoomCount: structureReport?.trickRoomCount ?? rows.filter(({ slot }) => getSetMoveKeys(slot).includes("trick room")).length,
+      slowCount: structureReport?.slowCount ?? rows.filter(({ entry }) => (entry.baseSpeed || 0) <= 65).length
+    };
+  }
+
+  function preservesTeamArchetype(beforeTeam, afterTeam, beforeEvaluation) {
+    const before = getTeamArchetypeSignature(beforeTeam, beforeEvaluation?.structureReport);
+    const afterStructure = evaluateTeamStructure(afterTeam);
+    const after = getTeamArchetypeSignature(afterTeam, afterStructure);
+    if (before.weather && after.weather && before.weather !== after.weather) return false;
+    if (before.hardTr) {
+      if (!after.hardTr) return false;
+      if (after.trickRoomCount < before.trickRoomCount) return false;
+      if (after.slowCount < Math.min(before.slowCount, 2)) return false;
+      if (afterTeam.some(setHasAntiHardTrSpeedControl)) return false;
+    } else if (before.tr && !after.tr) {
+      return false;
+    }
+    return true;
+  }
+
+  async function isRecommendationLegal(set, entry) {
+    if (!entry || !isEntryAllowedInActiveRuleset(entry)) return false;
+    if (!isLegalItem(set?.item || "")) return false;
+    const legalMoves = await getLegalMovesForEntry(entry);
+    const legalMoveKeys = new Set(legalMoves.map((move) => normalizeNameKey(move)));
+    if ((set?.moves || []).filter(Boolean).some((move) => !legalMoveKeys.has(normalizeNameKey(move)))) return false;
+    const abilities = await getPokemonAbilities(entry);
+    const abilityKey = normalizeNameKey(set?.ability || "");
+    if (abilityKey && ![...(entry.abilities || []), ...abilities].some((ability) => normalizeNameKey(ability) === abilityKey)) return false;
+    return true;
+  }
+
+  async function validateFinalRecommendation({ kind, teamState, evaluation, currentSlot = null, candidateEntry, candidateSet, swapTarget = "" }) {
+    const reasons = [];
+    const currentMetaScore = evaluation?.metaMatchupScore ?? computeMetaMatchupScore(evaluation?.threatRows || []);
+    const currentEntry = currentSlot ? resolveBattleEntry(currentSlot) : null;
+    const beforeSet = currentSlot ? { ...currentSlot, name: currentSlot.name } : null;
+    const afterSet = { ...candidateSet, name: candidateEntry?.name || candidateSet?.name || "" };
+    if (!await isRecommendationLegal(afterSet, candidateEntry)) reasons.push("legal");
+    if (setHasAntiHardTrSpeedControl(afterSet) && isHardTrickRoomContext(teamState, evaluation?.structureReport)) reasons.push("archetype preserved");
+    if (!setSatisfiesCoherentCore(afterSet, candidateEntry)) reasons.push("no core synergy broken");
+
+    let afterTeam = teamState.map((slot) => ({ ...slot, moves: [...(slot.moves || [])], sps: { ...(slot.sps || {}) } }));
+    if (kind === "tune") {
+      const targetKey = normalizeNameKey(currentSlot?.name || "");
+      const targetIndex = afterTeam.findIndex((slot) => normalizeNameKey(slot.name || "") === targetKey);
+      if (targetIndex >= 0) afterTeam[targetIndex] = { ...afterTeam[targetIndex], ...afterSet, name: currentSlot.name };
+      const beforeRole = getRecommendationRoleFamily(beforeSet, currentEntry, { currentDraft: teamState });
+      const afterRole = getRecommendationRoleFamily(afterSet, candidateEntry, { currentDraft: afterTeam });
+      if (beforeRole && afterRole && beforeRole !== afterRole) reasons.push("role preserved");
+      if (!setSatisfiesCoherentCore(afterSet, candidateEntry)) reasons.push("no core synergy broken");
+    } else {
+      const targetKey = normalizeNameKey(swapTarget || "");
+      const targetIndex = afterTeam.findIndex((slot) => normalizeNameKey(slot.name || "") === targetKey);
+      if (targetIndex < 0) reasons.push("role preserved");
+      else {
+        const targetEntry = resolveBattleEntry(afterTeam[targetIndex]);
+        const beforeRole = getRecommendationRoleFamily(afterTeam[targetIndex], targetEntry, { currentDraft: teamState });
+        const afterRole = getRecommendationRoleFamily(afterSet, candidateEntry, { currentDraft: afterTeam });
+        if (beforeRole && afterRole && beforeRole !== afterRole) reasons.push("role preserved");
+        if (targetEntry && setSatisfiesCoherentCore(afterTeam[targetIndex], targetEntry)) reasons.push("no core synergy broken");
+        afterTeam[targetIndex] = { ...afterSet, name: candidateEntry.name };
+      }
+    }
+
+    if (!preservesTeamArchetype(teamState, afterTeam, evaluation)) reasons.push("archetype preserved");
+    const afterEvaluation = reasons.length ? null : await evaluateTeamState(afterTeam);
+    if (!afterEvaluation || (afterEvaluation.metaMatchupScore ?? 0) <= currentMetaScore) reasons.push("matchup score improves");
+    const uniqueReasons = [...new Set(reasons)];
+    if (uniqueReasons.length) {
+      rememberRejectedRecommendation(kind, kind === "swap" ? `${swapTarget} -> ${candidateEntry?.name || ""}` : currentSlot?.name || candidateEntry?.name || "", uniqueReasons);
+      return { ok: false, reasons: uniqueReasons };
+    }
+    return { ok: true, afterEvaluation };
+  }
+
   async function buildRecommendationCards(teamState, evaluation, swapRecommendations, recommendationSets) {
     const occupiedNameKeys = new Set(teamState.map((slot) => normalizeNameKey(slot.name || "")).filter(Boolean));
     const occupiedFamilyKeys = new Set(teamState.map((slot) => getSpeciesClauseKey(slot.name || "")).filter(Boolean));
     const tuneUps = await buildPokemonTuneUps(teamState, evaluation);
     const threatNames = evaluation.threatRows.slice(0, 2).map((row) => row.threat.name).filter(Boolean);
-    const tuneUpCards = await Promise.all(tuneUps.map(async (row) => {
+    const tuneUpCards = (await Promise.all(tuneUps.map(async (row) => {
       const currentEntry = getRosterEntry(row.name);
+      const currentSlot = teamState.find((slot) => normalizeNameKey(slot.name) === normalizeNameKey(row.name));
       const sprite = currentEntry ? (getSpriteUrl(currentEntry.apiName || toApiSpeciesName(currentEntry.name)) || POKEBALL_PLACEHOLDER) : POKEBALL_PLACEHOLDER;
-      const changes = buildSetChangeList(teamState.find((slot) => normalizeNameKey(slot.name) === normalizeNameKey(row.name)), row.suggested);
+      const changes = buildSetChangeList(currentSlot, row.suggested);
+      if (!changes.length) return null;
+      const validation = await validateFinalRecommendation({
+        kind: "tune",
+        teamState,
+        evaluation,
+        currentSlot,
+        candidateEntry: currentEntry,
+        candidateSet: row.suggested
+      });
+      if (!validation.ok) return null;
       return {
         type: "tune",
         title: row.name,
         sprite,
         subtitle: "Fix this slot first",
         summary: row.reason,
-        badges: changes.map(renderChangeBadge).join("") || `<span class="change-badge change-badge--ok"><strong>OK</strong> Keep current set</span>`
+        badges: changes.map(renderChangeBadge).join("")
       };
-    }));
+    }))).filter(Boolean);
     const filteredSwapRecommendations = swapRecommendations.filter((item) => {
       const entryNameKey = normalizeNameKey(item?.entry?.name || "");
       const entryFamilyKey = getSpeciesClauseKey(item?.entry?.name || "");
@@ -5845,8 +6002,18 @@
       if (swapTargetKey && swapTargetKey === entryNameKey) return false;
       return true;
     });
-    const swapCards = await Promise.all(filteredSwapRecommendations.map(async (item, index) => {
-      const set = recommendationSets[index];
+    const swapCards = (await Promise.all(filteredSwapRecommendations.map(async (item) => {
+      const set = item.suggestedSet || recommendationSets[swapRecommendations.indexOf(item)];
+      if (!set) return null;
+      const validation = await validateFinalRecommendation({
+        kind: "swap",
+        teamState,
+        evaluation,
+        candidateEntry: item.entry,
+        candidateSet: set,
+        swapTarget: item.swapTarget
+      });
+      if (!validation.ok) return null;
       const sprite = getSpriteUrl(item.entry.apiName || toApiSpeciesName(item.entry.name)) || POKEBALL_PLACEHOLDER;
       const coverageNote = threatNames.length ? `Helps the team hit back into ${threatNames.join(" and ")}.` : "Improves the current matchup spread.";
       const swapSlot = teamState.find((slot) => normalizeNameKey(slot.name || "") === normalizeNameKey(item.swapTarget || ""));
@@ -5870,7 +6037,7 @@
         badges: setChanges.map(renderChangeBadge).join(""),
         addName: item.entry.name
       };
-    }));
+    }))).filter(Boolean);
     return [...tuneUpCards, ...swapCards];
   }
 
@@ -7270,7 +7437,7 @@
         <div class="analysis-stack">
           <p class="result-title">Recommended Fixes</p>
           <div class="fix-list">
-            ${recommendationCards.map((card) => `
+            ${recommendationCards.length ? recommendationCards.map((card) => `
               <div class="import-card-item import-card-item--recommend">
                 <div class="import-card-item__header">
                   <div class="pokemon-preview">
@@ -7285,7 +7452,7 @@
                 <div class="change-badge-row">${card.badges}</div>
                 ${card.addName ? `<div class="inline-actions"><button class="action-button accent" data-add-recommendation="${card.addName}">Add</button></div>` : ""}
               </div>
-            `).join("")}
+            `).join("") : `<div class="fix-list__item">No high-confidence change recommended.</div>`}
           </div>
           <p class="result-copy">These fixes are ordered with set corrections first. If they still do not patch the matchup spread, use the swap options that follow in the same list.</p>
         </div>
@@ -7414,15 +7581,22 @@
     if (currentTeamCount >= 4 && learnedInfluence.debug.poolWeight < 0.05 && learnedInfluence.debug.rolePrior <= 0) score -= 10;
     const hasSpeedControl = (structureReport.speedControlCount || 0) > 0;
     const hasTrickRoom = (structureReport.trickRoomCount || 0) > 0;
+    const hardTrickRoom = isHardTrickRoomContext(teamState, structureReport);
     const disruptionLead = ["fake out", "encore", "taunt", "electroweb", "icy wind", "nuzzle", "parting shot"];
     const hasLeadDisruption = entryLegalMoves.some((move) => disruptionLead.includes(normalizeNameKey(move)));
-    if (!hasSpeedControl && entry.baseSpeed >= 100) {
+    if (hardTrickRoom && entryLegalMoves.some((move) => HARD_TR_ANTI_SPEED_CONTROL_KEYS.has(normalizeNameKey(move)))) {
+      score -= 18;
+    }
+    if (hardTrickRoom && entry.baseSpeed > 85 && !entryLegalMoves.some((move) => normalizeNameKey(move) === "trick room")) {
+      score -= 14;
+    }
+    if (!hardTrickRoom && !hasSpeedControl && entry.baseSpeed >= 100) {
       score += 8;
       reasons.push("Adds natural speed where the team currently has none.");
     } else if (hasTrickRoom && !hasSpeedControl && entry.baseSpeed <= 65) {
       score += 8;
       reasons.push("Fits the slower Trick Room pacing.");
-    } else if (hasTrickRoom && hasSpeedControl && entry.baseSpeed >= 55 && entry.baseSpeed <= 95) {
+    } else if (!hardTrickRoom && hasTrickRoom && hasSpeedControl && entry.baseSpeed >= 55 && entry.baseSpeed <= 95) {
       score += 7;
       reasons.push("Fits the mid-speed zone for mixed Tailwind and Trick Room plans.");
     }
