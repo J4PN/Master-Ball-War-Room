@@ -1,43 +1,43 @@
 {
-  "updatedAt": "2026-04-27T09:28:57+00:00",
+  "updatedAt": "2026-04-28T09:33:57+00:00",
   "iterations": 32,
-  "evaluationTarget": 138,
-  "evaluatedCandidates": 82,
+  "evaluationTarget": 137,
+  "evaluatedCandidates": 75,
   "retainedCandidates": 24,
   "preBalanceSourceCounts": {
     "pikalytics": 2,
     "high_level": 4,
-    "archive": 98,
-    "pikalytics_variant": 6,
+    "archive": 99,
+    "pikalytics_variant": 5,
     "high_level_variant": 6,
     "selfplay": 8,
-    "archive_variant": 6,
+    "archive_variant": 5,
     "youtube_variant": 5,
     "reddit_variant": 3
   },
   "postBalanceSourceCounts": {
-    "archive": 42,
-    "archive_variant": 6,
+    "archive": 37,
+    "archive_variant": 5,
     "high_level": 4,
     "pikalytics": 2,
-    "pikalytics_variant": 6,
+    "pikalytics_variant": 5,
     "high_level_variant": 6,
-    "reddit_variant": 3,
     "youtube_variant": 5,
+    "reddit_variant": 3,
     "selfplay": 8
   },
-  "evaluationSelfplayShare": 0.0976,
+  "evaluationSelfplayShare": 0.1067,
   "retainedSelfplayShare": 0.0,
   "variantCountsByOrigin": {
-    "archive": 6,
+    "archive": 5,
     "high_level": 6,
     "pikalytics": 6,
     "youtube": 5,
-    "reddit": 3
+    "reddit": 4
   },
   "droppedCandidatesByReason": {
-    "variant_generation_failed": 2,
-    "duplicate_team_species": 45
+    "variant_generation_failed": 3,
+    "duplicate_team_species": 53
   },
   "validationStatus": {
     "ok": true,
