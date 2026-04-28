@@ -1224,6 +1224,7 @@
   let metaThreats = buildMetaThreatsFromSeed(pikalyticsMetaSeed);
   let metaStatus = { source: "seed", updatedAt: null };
   let metaSourceTruth = buildEmergencyMetaSourceTruth();
+  let defenseChartLeadPairOnly = false;
   const rawMegaDefinitions = [
     { name: "Mega Venusaur", calcName: "Venusaur-Mega", apiName: "venusaur-mega", baseName: "Venusaur", ability: "Thick Fat", baseStats: [80, 100, 123, 122, 120, 80] },
     { name: "Mega Charizard X", calcName: "Charizard-Mega-X", apiName: "charizard-mega-x", baseName: "Charizard", types: ["Fire", "Dragon"], ability: "Tough Claws", baseStats: [78, 130, 111, 130, 85, 100] },
@@ -3059,6 +3060,12 @@
         requestedPressure: {}
       });
       await loadSetIntoTeamBuilder(set);
+      analyzeTeamBuilder();
+    });
+    teamAnalysis?.addEventListener("change", (event) => {
+      const toggle = event.target.closest("#defense-chart-lead-pair-toggle");
+      if (!toggle) return;
+      defenseChartLeadPairOnly = !!toggle.checked;
       analyzeTeamBuilder();
     });
   }
@@ -5912,10 +5919,17 @@
   function resetTeamIntentDebug(intent) {
     const debug = getTeamIntentDebugStore();
     if (!debug) return;
-      debug.detectedArchetype = intent.detectedArchetype;
-      debug.primaryWinCondition = intent.primaryWinCondition;
-      debug.primaryPlan = intent.detectedArchetype;
-      debug.secondaryEngine = intent.secondaryEngine || "";
+    debug.detectedArchetype = intent.detectedArchetype;
+    debug.detectedPrimaryPlan = intent.detectedArchetype;
+    debug.primaryWinCondition = intent.primaryWinCondition;
+    debug.primaryPlan = intent.detectedArchetype;
+    debug.secondaryEngine = intent.secondaryEngine || "";
+    debug.detectedSecondaryEngine = intent.secondaryEngine || "";
+    debug.openerPlan = intent.battlePlan?.openerPlan || "";
+    debug.turnOnePlan = intent.battlePlan?.turnOnePlan || "";
+    debug.turnTwoPlan = intent.battlePlan?.turnTwoPlan || "";
+    debug.fallbackPlan = intent.battlePlan?.fallbackPlan || "";
+    debug.secondaryWinPath = intent.battlePlan?.secondaryWinPath || "";
     debug.supportEngine = [...intent.supportEngine];
     debug.intentionalSynergies = intent.intentionalSynergies.map((row) => ({ ...row }));
     debug.rejectedBadSuggestions = [];
@@ -6019,6 +6033,167 @@
     intent.intentionalSynergies.push(synergy);
   }
 
+  function getBestTeamRow(rows, predicate, fallbackPredicate = null) {
+    return rows.find(predicate) || (fallbackPredicate ? rows.find(fallbackPredicate) : null) || rows[0] || null;
+  }
+
+  function getMainTrSetterRow(rows) {
+    return getBestTeamRow(
+      rows,
+      (row) => isTrickRoomSetterRow(row) && slotAbilityKey(row.slot, row.entry) === "armor tail",
+      (row) => isTrickRoomSetterRow(row)
+    );
+  }
+
+  function getMainTrBreakerRow(rows) {
+    return getBestTeamRow(
+      rows,
+      (row) => getSetMoveKeys(row.slot).includes("water spout") || getSetMoveKeys(row.slot).includes("eruption"),
+      (row) => isTrickRoomBreakerRow(row) && isRealAttackerSet(row.slot)
+    );
+  }
+
+  function getMainFastAttackerRow(rows) {
+    return getBestTeamRow(
+      rows,
+      (row) => isRealAttackerSet(row.slot) && (row.entry.baseSpeed || 0) >= 95,
+      (row) => isRealAttackerSet(row.slot)
+    );
+  }
+
+  function getWeatherSupportRow(rows, weatherMode) {
+    const move = weatherMode === "rain" ? "rain dance" : weatherMode === "sun" ? "sunny day" : "";
+    return getBestTeamRow(
+      rows,
+      (row) => move && getSetMoveKeys(row.slot).includes(move),
+      (row) => getWeatherSetterMode(row.entry) === weatherMode || getSetWeatherMode(row.slot) === weatherMode
+    );
+  }
+
+  function getWeatherAbuserRow(rows, weatherMode) {
+    if (weatherMode === "rain") {
+      return getBestTeamRow(
+        rows,
+        (row) => getSetMoveKeys(row.slot).includes("water spout"),
+        (row) => row.entry.types.includes("Water") && isRealAttackerSet(row.slot)
+      );
+    }
+    if (weatherMode === "sun") {
+      return getBestTeamRow(
+        rows,
+        (row) => getSetMoveKeys(row.slot).includes("eruption") || (slotAbilityKey(row.slot, row.entry) === "chlorophyll" && getSetMoveKeys(row.slot).includes("sleep powder")),
+        (row) => (row.entry.types.includes("Fire") || slotAbilityKey(row.slot, row.entry) === "chlorophyll") && isRealAttackerSet(row.slot)
+      );
+    }
+    return null;
+  }
+
+  function describeSupportTools(row) {
+    if (!row) return "";
+    const keys = getSetMoveKeys(row.slot);
+    const tools = [];
+    if (slotAbilityKey(row.slot, row.entry) === "armor tail") tools.push("Armor Tail blocks priority disruption");
+    if (slotItemKey(row.slot) === "mental herb") tools.push("Mental Herb helps absorb Taunt-style denial");
+    if (keys.includes("fake out")) tools.push("Fake Out can buy the setup turn");
+    if (keys.includes("rage powder")) tools.push("Rage Powder redirects pressure");
+    if (keys.includes("follow me")) tools.push("Follow Me redirects pressure");
+    if (keys.includes("protect")) tools.push("Protect can stall hostile double-targets");
+    if (keys.includes("helping hand")) tools.push("Helping Hand improves KO math after setup");
+    if (keys.includes("rain dance")) tools.push("Rain Dance boosts Water pressure");
+    if (keys.includes("sunny day")) tools.push("Sunny Day enables the sun mode");
+    return tools.join("; ");
+  }
+
+  function buildConcreteBattlePlan(teamState, intent) {
+    const rows = getFilledTeamRows(teamState);
+    const trSetter = getMainTrSetterRow(rows);
+    const trBreaker = getMainTrBreakerRow(rows);
+    const fastAttacker = getMainFastAttackerRow(rows);
+    const weather = inferTeamWeatherProfile(teamState);
+    const rainSupport = getWeatherSupportRow(rows, "rain");
+    const rainAbuser = getWeatherAbuserRow(rows, "rain");
+    const sunSupport = getWeatherSupportRow(rows, "sun");
+    const sunAbuser = getWeatherAbuserRow(rows, "sun");
+    const redirection = rows.find((row) => getSetMoveKeys(row.slot).some((move) => ["rage powder", "follow me"].includes(move)));
+    const fakeOut = rows.find((row) => getSetMoveKeys(row.slot).includes("fake out"));
+    const cleanup = rows.find((row) => row !== trBreaker && isRealAttackerSet(row.slot) && getSetMoveKeys(row.slot).some((move) => ["aqua jet", "sucker punch", "extreme speed", "last respects", "kowtow cleave"].includes(move)))
+      || rows.find((row) => row !== trBreaker && isRealAttackerSet(row.slot));
+    const setterName = slotLabel(trSetter?.slot, trSetter?.entry);
+    const breakerName = slotLabel(trBreaker?.slot, trBreaker?.entry);
+    const fastName = slotLabel(fastAttacker?.slot, fastAttacker?.entry);
+    const supportToolText = [describeSupportTools(trSetter), describeSupportTools(trBreaker), describeSupportTools(redirection), describeSupportTools(fakeOut)].filter(Boolean).join("; ");
+    const secondary = intent.secondaryEngine || "";
+
+    if (intent.detectedArchetype === "Hard TR" && trSetter && trBreaker) {
+      const rainLine = rainSupport && rainAbuser ? ` After Trick Room is active, ${slotLabel(rainSupport.slot, rainSupport.entry)} can use Rain Dance so ${slotLabel(rainAbuser.slot, rainAbuser.entry)} presses ${getSetMoveKeys(rainAbuser.slot).includes("water spout") ? "Water Spout" : "Water attacks"}.` : "";
+      return {
+        openerPlan: `Lead ${setterName} + ${breakerName}.`,
+        turnOnePlan: `${setterName} uses Trick Room while ${breakerName} uses Protect, Fake Out if available, or immediate pressure to stop the opponent from freely double-targeting the setter. ${supportToolText}`,
+        turnTwoPlan: `Once Trick Room is active, ${breakerName} attacks before faster teams can move.${rainLine}`,
+        fallbackPlan: redirection
+          ? `If the first setup turn looks unsafe, pivot to ${slotLabel(redirection.slot, redirection.entry)} and use ${getSetMoveKeys(redirection.slot).includes("rage powder") ? "Rage Powder" : "Follow Me"} to reopen the Trick Room turn.`
+          : `If Trick Room is denied, use Protect and switching to preserve ${setterName}, then reset Trick Room when Fake Out/Taunt pressure has been spent.`,
+        secondaryWinPath: cleanup ? `${slotLabel(cleanup.slot, cleanup.entry)} is the secondary cleanup line if ${breakerName} is denied.` : `${breakerName} remains the main damage line; preserve HP so spread damage stays strong.`
+      };
+    }
+    if (intent.detectedArchetype === "TR Hybrid" && trSetter) {
+      return {
+        openerPlan: `Choose ${setterName} + ${breakerName || fastName} when the slow mode is favored; choose speed control + ${fastName || breakerName} when the opponent overprepares for Trick Room.`,
+        turnOnePlan: `${setterName} sets Trick Room only into boards that cannot immediately deny it; otherwise use the faster mode to pressure first.`,
+        turnTwoPlan: `Commit to the chosen speed mode and avoid mixing Tailwind/Icy Wind with Trick Room unless it creates a specific KO or denial line.`,
+        fallbackPlan: `If Trick Room is blocked, play the faster attacker and reposition the setter for a later room attempt.`,
+        secondaryWinPath: secondary || "The secondary win path is the non-TR attacker cleaning after the opponent spends resources stopping room."
+      };
+    }
+    if (intent.detectedArchetype === "Tailwind") {
+      const setter = rows.find((row) => getSetMoveKeys(row.slot).includes("tailwind"));
+      const attacker = getMainFastAttackerRow(rows);
+      return {
+        openerPlan: `Lead ${slotLabel(setter?.slot, setter?.entry)} + ${slotLabel(attacker?.slot, attacker?.entry)}.`,
+        turnOnePlan: `${slotLabel(setter?.slot, setter?.entry)} sets Tailwind while ${slotLabel(attacker?.slot, attacker?.entry)} attacks or protects against double-target pressure.`,
+        turnTwoPlan: `Use the Tailwind turns to convert speed into KOs before bulky teams can reset positioning.`,
+        fallbackPlan: `If Tailwind is denied, pivot through Fake Out/redirection support and preserve the setter for a second attempt.`,
+        secondaryWinPath: cleanup ? `${slotLabel(cleanup.slot, cleanup.entry)} cleans once Tailwind chip puts targets in range.` : "The fastest attacker becomes the cleanup path."
+      };
+    }
+    if (intent.detectedArchetype === "Rain" || weather.primary === "rain") {
+      return {
+        openerPlan: `Lead ${slotLabel(rainSupport?.slot, rainSupport?.entry)} + ${slotLabel(rainAbuser?.slot, rainAbuser?.entry)}.`,
+        turnOnePlan: `${slotLabel(rainSupport?.slot, rainSupport?.entry)} activates rain while ${slotLabel(rainAbuser?.slot, rainAbuser?.entry)} protects or pressures immediately.`,
+        turnTwoPlan: `${slotLabel(rainAbuser?.slot, rainAbuser?.entry)} converts rain into boosted Water pressure.`,
+        fallbackPlan: `If rain is overwritten, preserve the rain setter and use neutral coverage until weather can be reset.`,
+        secondaryWinPath: cleanup ? `${slotLabel(cleanup.slot, cleanup.entry)} cleans after rain chip.` : "The backup path is neutral Water pressure plus defensive pivots."
+      };
+    }
+    if (intent.detectedArchetype === "Sun" || weather.primary === "sun") {
+      return {
+        openerPlan: `Lead ${slotLabel(sunSupport?.slot, sunSupport?.entry)} + ${slotLabel(sunAbuser?.slot, sunAbuser?.entry)}.`,
+        turnOnePlan: `${slotLabel(sunSupport?.slot, sunSupport?.entry)} enables sun while ${slotLabel(sunAbuser?.slot, sunAbuser?.entry)} threatens Fire pressure, Eruption, or Chlorophyll control.`,
+        turnTwoPlan: `Use the sun turn to force KOs or Sleep Powder tempo before the opponent can change weather.`,
+        fallbackPlan: `If sun is denied, switch to the safest board-control lead and reset weather later.`,
+        secondaryWinPath: cleanup ? `${slotLabel(cleanup.slot, cleanup.entry)} cleans after sun chip.` : "The backup path is standard attacker pressure."
+      };
+    }
+    if (intent.detectedArchetype === "HO") {
+      return {
+        openerPlan: `Lead ${slotLabel(fastAttacker?.slot, fastAttacker?.entry)} + ${slotLabel(cleanup?.slot, cleanup?.entry)}.`,
+        turnOnePlan: `Attack immediately and use Fake Out or priority only when it guarantees a KO or blocks setup.`,
+        turnTwoPlan: `Keep double-target pressure high so the opponent cannot stabilize.`,
+        fallbackPlan: `If the opening trade is bad, protect the faster attacker and pivot into the least exposed resist.`,
+        secondaryWinPath: cleanup ? `${slotLabel(cleanup.slot, cleanup.entry)} finishes once the first attacker creates chip.` : "The backup path is continued tempo pressure."
+      };
+    }
+    const boardControl = fakeOut || redirection || rows.find((row) => isMeaningfulSupportSet(row.slot)) || rows[0];
+    const attacker = getMainFastAttackerRow(rows) || getMainTrBreakerRow(rows);
+    return {
+      openerPlan: `Lead ${slotLabel(boardControl?.slot, boardControl?.entry)} + ${slotLabel(attacker?.slot, attacker?.entry)}.`,
+      turnOnePlan: `${slotLabel(boardControl?.slot, boardControl?.entry)} creates board control with ${describeSupportTools(boardControl) || "its safest support move"} while ${slotLabel(attacker?.slot, attacker?.entry)} pressures the highest-value target.`,
+      turnTwoPlan: `Pivot or protect around the opponent's answer, then use the attacker to convert board control into damage.`,
+      fallbackPlan: `If the opener is unfavored, switch the support slot into the best resist and keep the attacker healthy.`,
+      secondaryWinPath: cleanup ? `${slotLabel(cleanup.slot, cleanup.entry)} is the cleanup path after the first damage trade.` : "The secondary path is defensive repositioning into the next best attacker."
+    };
+  }
+
   function detectTeamIntent(teamState = [], evaluation = null) {
     const rows = getFilledTeamRows(teamState);
     const structure = evaluation?.structureReport || evaluateTeamStructure(teamState);
@@ -6033,8 +6208,9 @@
     const megaCount = rows.filter(({ entry }) => isMegaEntry(entry)).length;
     const intent = {
       detectedArchetype: "Balance",
-      primaryWinCondition: "position support around the strongest breaker and trade efficiently",
+      primaryWinCondition: "use board-control support to create a safe attacking turn",
       secondaryEngine: "",
+      battlePlan: null,
       supportEngine: [],
       riskPoints: [],
       higherEfficiencyOptions: [],
@@ -6309,7 +6485,7 @@
     } else {
       intent.secondaryEngine = "No distinct secondary combo engine detected yet.";
     }
-    if (!intent.supportEngine.length) intent.supportEngine.push("basic positioning and type pivots");
+    if (!intent.supportEngine.length) intent.supportEngine.push("board-control support");
     if (trCount && !rows.some(isTrickRoomEnablerRow)) intent.riskPoints.push("Trick Room can be denied if the setter is pressured immediately.");
     if ((weather.primary === "rain" || weather.primary === "sun") && weather.modes.length === 1) intent.riskPoints.push("Weather denial can lower the main damage plan.");
     if (attackerCount <= 1 && rows.length >= 4) intent.riskPoints.push("Too few finishers may make the support engine run out of damage.");
@@ -6318,6 +6494,7 @@
       "Only change slots that improve the detected plan.",
       "Prefer upgrades that keep the same support job while improving matchup math."
     ];
+    intent.battlePlan = buildConcreteBattlePlan(teamState, intent);
     delete intent._seenSynergies;
     return intent;
   }
@@ -6645,12 +6822,12 @@
     const spCards = buildSpOptimizationCards(teamState, evaluation, teamIntent);
     const combined = [...spCards, ...tuneUpCards, ...swapCards];
     return combined.length ? combined : [{
-      type: "sp",
-      title: "SP benchmark tune",
+      type: "check",
+      title: "Optimization check",
       sprite: POKEBALL_PLACEHOLDER,
-      subtitle: "Cleaner defensive benchmark",
-      summary: "Problem: no severe matchup leak is obvious. Fix: keep the team intact and shift 4-8 spare SP from unused Speed/offense into bulk on the slot most exposed to the top meta hit. Matchup change: improves lead consistency without breaking the detected plan.",
-      badges: renderChangeBadge({ kind: "sp", label: "SP", from: "current spread", to: "+4-8 bulk benchmark" })
+      subtitle: "No legal high-confidence edit",
+      summary: "Current spreads do not expose a verified legal SP reallocation from an invested stat, and move/item/swap candidates failed the validator. Keep the full-team structure intact and review matchup-specific benchmarks manually before changing this build.",
+      badges: `<span class="change-badge change-badge--ok"><strong>OK</strong> No automatic edit applied</span>`
     }];
   }
 
@@ -6663,19 +6840,38 @@
       || rows[0];
     const slot = weakRow.slot;
     const entry = weakRow.entry;
-    const moveFrom = teamIntent?.detectedArchetype === "Hard TR" ? "Spe" : (getOffenseProfile(slot, entry) === "physical" ? "SpA" : "Atk");
+    const targetInfo = getSpecificThreatMoveInfo(topThreat?.threat, slot, entry);
+    const targetType = targetInfo.type || topThreat?.threat?.types?.[0] || "";
+    const itemText = describeItemHelpAgainstMove(slot.item || "", targetType);
+    const preferredDumpStats = teamIntent?.detectedArchetype === "Hard TR"
+      ? ["spe", "atk", "spa"]
+      : getOffenseProfile(slot, entry) === "physical"
+        ? ["spa", "spe", "spd", "def"]
+        : ["atk", "spe", "def", "spd"];
     const moveTo = topThreat?.threat?.types?.some((type) => ["Fire", "Water", "Electric", "Grass", "Ice", "Psychic", "Dragon", "Dark", "Fairy"].includes(type)) ? "SpD" : "Def";
-    const fromKey = statOrder.find((stat) => statLabels[stat] === moveFrom.toUpperCase() || statLabels[stat] === moveFrom) || (moveFrom === "Spe" ? "spe" : moveFrom === "SpA" ? "spa" : "atk");
     const toKey = moveTo === "SpD" ? "spd" : "def";
+    const fromKey = preferredDumpStats.find((stat) => stat !== toKey && Number(slot.sps?.[stat] || 0) > 0)
+      || statOrder.find((stat) => stat !== toKey && Number(slot.sps?.[stat] || 0) > 0);
+    if (!fromKey) return [];
     const available = Number(slot.sps?.[fromKey] || 0);
-    const shift = Math.max(4, Math.min(8, available || 8));
+    if (available <= 0) return [];
+    const targetRoom = SP_MAX_PER_STAT - Number(slot.sps?.[toKey] || 0);
+    if (targetRoom <= 0) return [];
+    const shift = Math.min(8, available, targetRoom);
+    if (shift <= 0) return [];
+    const proposed = { ...(slot.sps || {}) };
+    proposed[fromKey] = Math.max(0, Number(proposed[fromKey] || 0) - shift);
+    proposed[toKey] = Number(proposed[toKey] || 0) + shift;
     const threatName = topThreat?.threat?.name || "top meta pressure";
+    const movedText = `${shift} SP from ${statLabels[fromKey]} to ${statLabels[toKey]}`;
     const benchmark = {
       pokemon: slot.name,
-      from: moveFrom,
-      to: moveTo,
+      from: statLabels[fromKey],
+      to: statLabels[toKey],
       shift,
       threat: threatName,
+      targetMove: targetInfo.move,
+      benchmark: "Benchmark not verified",
       primaryPlan: teamIntent?.detectedArchetype || ""
     };
     const debug = getRealMatchupDebugStore();
@@ -6685,9 +6881,65 @@
       title: slot.name,
       sprite: getSpriteUrl(entry.apiName || toApiSpeciesName(entry.name)) || POKEBALL_PLACEHOLDER,
       subtitle: "SP benchmark optimization",
-      summary: `Problem: ${threatName} is the clearest current pressure point. Fix: test shifting ${shift} SP from ${moveFrom} into ${moveTo} on ${slot.name}. Matchup change: this improves the defensive benchmark while preserving ${teamIntent?.detectedArchetype || "the current"} plan before considering any Pokemon swap.`,
-      badges: renderChangeBadge({ kind: "sp", label: "SP", from: `${shift} ${moveFrom}`, to: `${shift} ${moveTo}` })
+      summary: `Current: ${formatSpSummary(slot.sps)}. Proposed: ${formatSpSummary(proposed)}. Exact SP moved: ${movedText}. Reason: check whether extra ${statLabels[toKey]} improves ${slot.name}'s defensive benchmark without changing the team plan. Target: ${threatName} using ${targetInfo.move}. ${itemText} Benchmark: Benchmark not verified.`,
+      badges: renderChangeBadge({ kind: "sp", label: "SP", from: `${shift} ${statLabels[fromKey]}`, to: `${shift} ${statLabels[toKey]}` })
     }];
+  }
+
+  const RESIST_BERRY_TYPES = {
+    "occa berry": "Fire",
+    "passho berry": "Water",
+    "wacan berry": "Electric",
+    "rindo berry": "Grass",
+    "yache berry": "Ice",
+    "chople berry": "Fighting",
+    "kebia berry": "Poison",
+    "shuca berry": "Ground",
+    "coba berry": "Flying",
+    "payapa berry": "Psychic",
+    "tanga berry": "Bug",
+    "charti berry": "Rock",
+    "kasib berry": "Ghost",
+    "haban berry": "Dragon",
+    "colbur berry": "Dark",
+    "babiri berry": "Steel",
+    "roseli berry": "Fairy",
+    "chilan berry": "Normal"
+  };
+
+  function describeItemHelpAgainstMove(item, moveType) {
+    const itemKey = normalizeNameKey(item || "");
+    const berryType = RESIST_BERRY_TYPES[itemKey];
+    if (berryType) {
+      return berryType === canonicalizeTypeName(moveType)
+        ? `Current item ${item} directly helps against ${moveType}-type damage.`
+        : `Current item ${item} does not help against ${moveType || "that"} damage.`;
+    }
+    if (["leftovers", "sitrus berry", "shell bell"].includes(itemKey)) return `Current item ${item || "none"} helps only through recovery, not direct damage reduction.`;
+    if (itemKey === "mental herb") return "Current item Mental Herb helps versus disruption, not this attack's damage.";
+    if (itemKey === "blastoisinite" || itemKey.endsWith("ite")) return `Current item ${item} is the Mega item, not a damage-reduction item.`;
+    return `Current item ${item || "none"} does not directly reduce ${moveType || "the target move"} damage.`;
+  }
+
+  function getSpecificThreatMoveInfo(threat, defenderSlot, defenderEntry) {
+    const threatEntry = getRosterEntry(threat?.name || "") || threat;
+    const seed = META_MOVESET_SEED[threatEntry?.name || threat?.name || ""];
+    const moves = seed?.moves || [];
+    let best = { move: "likely STAB attack", type: threatEntry?.types?.[0] || "" };
+    let bestEffect = 0;
+    moves.forEach((move) => {
+      const type = inferMoveTypeFromKey(normalizeNameKey(move), threatEntry) || threatEntry?.types?.[0] || "";
+      const effect = type ? getEffectiveTypeEffectiveness(type, defenderSlot, defenderEntry) : 1;
+      if (effect > bestEffect) {
+        best = { move, type };
+        bestEffect = effect;
+      }
+    });
+    if (!moves.length && threatEntry?.types?.length) {
+      const type = threatEntry.types.find((candidate) => getEffectiveTypeEffectiveness(candidate, defenderSlot, defenderEntry) > 1) || threatEntry.types[0];
+      best = { move: `${type} STAB`, type };
+    }
+    return best;
   }
 
   async function calculateBestResponsePercent(attackerSet, attackerEntry, defenderEntry) {
@@ -7927,7 +8179,7 @@
     threatRows = buildMetaThreatRows(teamState, offenseReport.attackTypes);
     evaluation.threatRows = threatRows;
     resetTeamIntentDebug(teamIntent);
-    const leadRecommendations = await buildLeadRecommendation(teamState, threatRows);
+    const leadRecommendations = await buildLeadRecommendation(teamState, threatRows, teamIntent);
     const damageScoutRows = await buildDamageScoutRows(teamState, threatRows);
 
     const teamItemKeys = new Set(teamState.filter((slot) => slot.name).map((slot) => normalizeNameKey(slot.item || "")).filter(Boolean));
@@ -7995,7 +8247,10 @@
       structureReport
     });
     const dockedPointDetails = buildDockedPointDetails(evaluation);
-    const defenseTypeChartMarkup = buildTeamTypeChartMarkup(teamState);
+    const defenseTypeChartMarkup = buildTeamTypeChartMarkup(teamState, {
+      leadPairOnly: defenseChartLeadPairOnly,
+      leadNames: leadRecommendations[0]?.names || []
+    });
     const exportGate = getTeamExportGate(teamState.filter((slot) => slot.name));
     const qualityStatus = exportGate.blockers.length ? "Critical issue" : exportGate.issues.length ? "Needs fixes" : "Valid";
     const sourceDebug = window.__MBWR_SOURCE_DEBUG || {};
@@ -8035,7 +8290,11 @@
         </div>
         <div class="analysis-stack">
           <p class="result-title">Win Condition</p>
-          <p class="result-copy">${escapeHtml(teamIntent.primaryWinCondition)}</p>
+          <p class="result-copy"><strong>Opener plan:</strong> ${escapeHtml(teamIntent.battlePlan?.openerPlan || teamIntent.primaryWinCondition)}</p>
+          <p class="result-copy"><strong>Turn 1 goal:</strong> ${escapeHtml(teamIntent.battlePlan?.turnOnePlan || teamIntent.primaryWinCondition)}</p>
+          <p class="result-copy"><strong>Turn 2 pressure plan:</strong> ${escapeHtml(teamIntent.battlePlan?.turnTwoPlan || teamIntent.primaryWinCondition)}</p>
+          <p class="result-copy"><strong>Fallback if setup fails:</strong> ${escapeHtml(teamIntent.battlePlan?.fallbackPlan || "Protect, pivot, and preserve the enabling support slot for a later setup turn.")}</p>
+          <p class="result-copy"><strong>Secondary win path:</strong> ${escapeHtml(teamIntent.battlePlan?.secondaryWinPath || teamIntent.secondaryEngine || "Use the next healthiest attacker after the first damage trade.")}</p>
         </div>
         <div class="analysis-stack">
           <p class="result-title">Support Engine</p>
@@ -8072,6 +8331,7 @@
             ${leadRecommendations.map((lead) => `<span class="analysis-chip ${severityClassForScore(lead.score)}">${lead.names.join(" + ")}: ${lead.score}/100</span>`).join("")}
           </div>
           ${leadRecommendations.map((lead, index) => `<p class="result-copy"><strong>${index === 0 ? "Primary" : "Backup"}:</strong> ${lead.summary}</p>`).join("")}
+          ${leadRecommendations.map((lead, index) => `<p class="result-copy"><strong>${index === 0 ? "Primary lead line" : "Backup lead line"}:</strong> Turn 1: ${escapeHtml(lead.turnOnePlan || "")} Turn 2: ${escapeHtml(lead.turnTwoPlan || "")} Choose when: ${escapeHtml(lead.whenToChoose || "")}</p>`).join("")}
         </div>
         <div class="analysis-stack">
           <p class="result-title">Item Clause</p>
@@ -8105,9 +8365,13 @@
           <p class="result-copy">${structureReport.summary}</p>
         </div>
         <div class="analysis-stack">
-          <p class="result-title">Defense Type Chart</p>
+          <p class="result-title">${defenseChartLeadPairOnly ? "Selected Lead Pair Defense Chart" : "Full Team Defense Chart"}</p>
+          <label class="result-copy" style="display:flex;gap:8px;align-items:center;">
+            <input id="defense-chart-lead-pair-toggle" type="checkbox" ${defenseChartLeadPairOnly ? "checked" : ""} />
+            Show selected lead pair only
+          </label>
           ${defenseTypeChartMarkup}
-          <p class="result-copy">Each row shows how the current team takes that attack type. Use it to spot weaknesses, resistances, and immunities without relying only on the AI summary.</p>
+          <p class="result-copy">${defenseChartLeadPairOnly ? "Selected Lead Pair Defense Chart is enabled. This view is only the currently recommended lead pair and does not replace full-team analysis." : "Full Team Defense Chart is the default. It includes every current team member and keeps backline weaknesses, resistances, and immunities visible."}</p>
         </div>
         <div class="analysis-stack">
           <p class="result-title">Weakness Map</p>
@@ -8141,7 +8405,7 @@
           <p class="result-copy"><strong>Sources:</strong> <a href="${PIKALYTICS_SOURCES.tournaments}" target="_blank" rel="noreferrer">Champions Tournaments</a> and <a href="${PIKALYTICS_SOURCES.preview}" target="_blank" rel="noreferrer">Champions Preview</a>.</p>
         </div>
         <div class="analysis-stack">
-          <p class="result-title">Higher-Efficiency Options</p>
+          <p class="result-title">Optimization Checks</p>
           <div class="fix-list">
             ${recommendationCards.length ? recommendationCards.map((card) => `
               <div class="import-card-item import-card-item--recommend">
@@ -9200,19 +9464,191 @@
     return 8;
   }
 
-  async function buildLeadRecommendation(teamState, threatRows) {
+  function getLeadDebugStore() {
+    if (typeof window === "undefined") return null;
+    window.__MBWR_LEAD_SIM_DEBUG = window.__MBWR_LEAD_SIM_DEBUG || {
+      detectedPrimaryPlan: "",
+      detectedSecondaryEngine: "",
+      leadCandidates: [],
+      selectedPrimaryLead: null,
+      rejectedLeadCandidates: [],
+      rejectedReason: "",
+      turnOnePlan: "",
+      turnTwoPlan: "",
+      fallbackPlan: ""
+    };
+    return window.__MBWR_LEAD_SIM_DEBUG;
+  }
+
+  function resetLeadDebug(teamIntent) {
+    const debug = getLeadDebugStore();
+    if (!debug) return;
+    debug.detectedPrimaryPlan = teamIntent?.detectedArchetype || "";
+    debug.detectedSecondaryEngine = teamIntent?.secondaryEngine || "";
+    debug.leadCandidates = [];
+    debug.selectedPrimaryLead = null;
+    debug.rejectedLeadCandidates = [];
+    debug.rejectedReason = "";
+    debug.turnOnePlan = "";
+    debug.turnTwoPlan = "";
+    debug.fallbackPlan = "";
+  }
+
+  function leadHasSpecies(pair, name) {
+    const key = normalizeNameKey(name);
+    return pair.some((row) => normalizeNameKey(row.entry?.name || "") === key);
+  }
+
+  function getLeadArchetypeScore(pair, teamState, teamIntent) {
+    const archetype = teamIntent?.detectedArchetype || "";
+    const moveKeys = pair.flatMap(({ slot }) => getSetMoveKeys(slot));
+    const hasSetter = pair.some(isTrickRoomSetterRow);
+    const hasTrBreaker = pair.some(isTrickRoomBreakerRow);
+    const hasTailwind = moveKeys.includes("tailwind");
+    const hasFakeOut = moveKeys.includes("fake out");
+    const hasRedirection = moveKeys.some((move) => ["rage powder", "follow me"].includes(move));
+    const hasArmorTail = pair.some(({ slot, entry }) => slotAbilityKey(slot, entry) === "armor tail");
+    const hasMentalHerbSetter = pair.some((row) => isTrickRoomSetterRow(row) && slotItemKey(row.slot) === "mental herb");
+    const hasProtect = moveKeys.includes("protect");
+    const rainSupport = pair.some(({ slot, entry }) => getSetMoveKeys(slot).includes("rain dance") || getWeatherSetterMode(entry) === "rain");
+    const rainAbuser = pair.some(({ slot, entry }) => entry.types.includes("Water") && (isRealAttackerSet(slot) || getSetMoveKeys(slot).includes("water spout")));
+    const sunSupport = pair.some(({ slot, entry }) => getSetMoveKeys(slot).includes("sunny day") || getWeatherSetterMode(entry) === "sun");
+    const sunAbuser = pair.some(({ slot, entry }) => entry.types.includes("Fire") || slotAbilityKey(slot, entry) === "chlorophyll" || getSetMoveKeys(slot).includes("eruption"));
+    let score = 0;
+    const reasons = [];
+    if (archetype === "Hard TR") {
+      if (hasSetter && hasTrBreaker) {
+        score += 58;
+        reasons.push("TR setter plus slow breaker matches the primary plan");
+      }
+      if (hasSetter && hasArmorTail) {
+        score += 16;
+        reasons.push("Armor Tail protects the setup turn");
+      }
+      if (hasMentalHerbSetter) {
+        score += 10;
+        reasons.push("Mental Herb helps the setter absorb denial");
+      }
+      if (hasSetter && (hasFakeOut || hasRedirection || hasProtect)) {
+        score += 14;
+        reasons.push("partner can help secure turn-one Trick Room");
+      }
+      if (!hasSetter && pair.length >= 2) {
+        score -= 62;
+        reasons.push("double-attacker lead delays Trick Room");
+      }
+      if (hasTailwind && !hasSetter) {
+        score -= 22;
+        reasons.push("fast speed mode conflicts with Hard TR");
+      }
+    } else if (archetype === "TR Hybrid") {
+      if (hasSetter && hasTrBreaker) {
+        score += 34;
+        reasons.push("selects the Trick Room mode");
+      } else if (hasTailwind || pair.some(({ entry }) => (entry.baseSpeed || 0) >= 95)) {
+        score += 20;
+        reasons.push("selects the fast mode");
+      }
+    } else if (archetype === "Tailwind") {
+      if (hasTailwind && pair.some(({ slot }) => isRealAttackerSet(slot))) {
+        score += 44;
+        reasons.push("Tailwind setter plus attacker matches the speed plan");
+      }
+      if (hasTailwind && (hasFakeOut || hasRedirection)) score += 12;
+    } else if (archetype === "Rain") {
+      if (rainSupport && rainAbuser) {
+        score += 44;
+        reasons.push("rain support plus rain abuser matches the weather plan");
+      }
+    } else if (archetype === "Sun") {
+      if (sunSupport && sunAbuser) {
+        score += 44;
+        reasons.push("sun support plus sun abuser matches the weather plan");
+      }
+    } else if (archetype === "HO") {
+      if (pair.filter(({ slot }) => isRealAttackerSet(slot)).length >= 2) {
+        score += 34;
+        reasons.push("double attacker lead matches hyper offense");
+      }
+    } else {
+      if (hasFakeOut || hasRedirection || pair.some(({ slot }) => isMeaningfulSupportSet(slot))) {
+        score += 18;
+        reasons.push("board-control lead gives safer positioning");
+      }
+    }
+    if (teamIntent?.secondaryEngine?.includes("Water Spout") && rainSupport && rainAbuser) {
+      score += 18;
+      reasons.push("keeps Rain Dance plus Water Spout available early");
+    }
+    return { score, reasons };
+  }
+
+  function buildLeadPlanDetails(pair, teamState, teamIntent, simulation = {}) {
+    const names = pair.map((row) => row.entry.name);
+    const setter = pair.find(isTrickRoomSetterRow);
+    const breaker = pair.find((row) => row !== setter && isTrickRoomBreakerRow(row)) || pair.find((row) => row !== setter && isRealAttackerSet(row.slot));
+    const tailwindSetter = pair.find(({ slot }) => getSetMoveKeys(slot).includes("tailwind"));
+    const weatherSupport = pair.find(({ slot, entry }) => getSetMoveKeys(slot).includes("rain dance") || getSetMoveKeys(slot).includes("sunny day") || getWeatherSetterMode(entry));
+    const weatherAbuser = pair.find((row) => row !== weatherSupport && (row.entry.types.includes("Water") || row.entry.types.includes("Fire") || slotAbilityKey(row.slot, row.entry) === "chlorophyll"));
+    const stopText = simulation.worstEnemyLeads?.length ? `Can be stopped by ${simulation.worstEnemyLeads.join(" or ")} if they deny the setup turn.` : "Can be stopped by Taunt, double-target pressure, weather denial, or losing the speed-control setter before turn two.";
+    if (teamIntent?.detectedArchetype === "Hard TR" && setter && breaker) {
+      const breakerKeys = getSetMoveKeys(breaker.slot);
+      const breakerAction = breakerKeys.includes("fake out") ? "Fake Out" : breakerKeys.includes("protect") ? "Protect" : "immediate pressure";
+      const turnTwoExtra = teamIntent.secondaryEngine?.includes("Water Spout") ? " If Farigiraf has Rain Dance, use it to boost Mega Blastoise Water Spout/Water pressure." : "";
+      return {
+        whenToChoose: "Choose this when the opponent cannot hard-deny Trick Room on turn one.",
+        turnOnePlan: `${setter.entry.name} uses Trick Room while ${breaker.entry.name} uses ${breakerAction} to secure the setup.`,
+        turnTwoPlan: `Attack under Trick Room with ${breaker.entry.name}.${turnTwoExtra}`,
+        whatStopsIt: stopText
+      };
+    }
+    if (teamIntent?.detectedArchetype === "Tailwind" && tailwindSetter) {
+      const attacker = pair.find((row) => row !== tailwindSetter) || pair[0];
+      return {
+        whenToChoose: "Choose this when immediate speed control wins the first damage trade.",
+        turnOnePlan: `${tailwindSetter.entry.name} uses Tailwind while ${attacker.entry.name} pressures the most exposed target.`,
+        turnTwoPlan: `Use the Tailwind turns to force KOs before defensive pivots stabilize.`,
+        whatStopsIt: stopText
+      };
+    }
+    if ((teamIntent?.detectedArchetype === "Rain" || teamIntent?.secondaryEngine?.includes("Water Spout")) && weatherSupport && weatherAbuser) {
+      return {
+        whenToChoose: "Choose this when weather pressure is safer than immediate setup.",
+        turnOnePlan: `${weatherSupport.entry.name} activates rain while ${weatherAbuser.entry.name} protects or pressures.`,
+        turnTwoPlan: `${weatherAbuser.entry.name} attacks with boosted Water pressure.`,
+        whatStopsIt: stopText
+      };
+    }
+    if (teamIntent?.detectedArchetype === "Sun" && weatherSupport && weatherAbuser) {
+      return {
+        whenToChoose: "Choose this when sun pressure or Chlorophyll control wins the lead.",
+        turnOnePlan: `${weatherSupport.entry.name} enables sun while ${weatherAbuser.entry.name} threatens Fire pressure or Sleep Powder control.`,
+        turnTwoPlan: `Convert the sun turn into a KO, sleep turn, or forced switch.`,
+        whatStopsIt: stopText
+      };
+    }
+    return {
+      whenToChoose: "Choose this when board control matters more than committing to a setup mode.",
+      turnOnePlan: `${names.join(" + ")} opens with the safest support move plus immediate pressure.`,
+      turnTwoPlan: `Pivot, Protect, or double-target based on which opposing slot is exposed.`,
+      whatStopsIt: stopText
+    };
+  }
+
+  async function buildLeadRecommendation(teamState, threatRows, teamIntent = detectTeamIntent(teamState, {})) {
     const occupied = teamState
       .map((slot, index) => ({ slot, index, entry: getRosterEntry(slot.name) }))
       .filter((row) => row.entry);
     if (!occupied.length) {
       return [{ names: ["No lead"], score: 0, summary: "Pick at least one Pokemon to score a lead." }];
     }
+    resetLeadDebug(teamIntent);
     const topThreats = threatRows.slice(0, 6).map((row) => row.threat);
     const scoredPairs = [];
     for (let i = 0; i < occupied.length; i += 1) {
-      for (let j = i; j < occupied.length; j += 1) {
+      for (let j = occupied.length > 1 ? i + 1 : i; j < occupied.length; j += 1) {
         const pair = [occupied[i], occupied[j]].filter((value, idx, arr) => arr.findIndex((item) => item.index === value.index) === idx);
-        const score = await scoreLeadPairDetailed(pair, topThreats, teamState);
+        const score = await scoreLeadPairDetailed(pair, topThreats, teamState, teamIntent);
         scoredPairs.push(score);
       }
     }
@@ -9223,10 +9659,20 @@
         const key = pair.names.join("|");
         if (!unique.some((item) => item.names.join("|") === key) && unique.length < 2) unique.push(pair);
       });
+    const debug = getLeadDebugStore();
+    if (debug) {
+      debug.leadCandidates = scoredPairs.map((row) => ({ names: row.names, score: row.score, reasons: row.reasons || [], turnOnePlan: row.turnOnePlan, turnTwoPlan: row.turnTwoPlan })).slice(0, 12);
+      debug.selectedPrimaryLead = unique[0] ? { names: unique[0].names, score: unique[0].score } : null;
+      debug.rejectedLeadCandidates = scoredPairs.slice(2, 8).map((row) => ({ names: row.names, score: row.score, rejectedReason: row.rejectedReason || "Lower archetype fit or weaker setup line." }));
+      debug.rejectedReason = debug.rejectedLeadCandidates[0]?.rejectedReason || "";
+      debug.turnOnePlan = unique[0]?.turnOnePlan || "";
+      debug.turnTwoPlan = unique[0]?.turnTwoPlan || "";
+      debug.fallbackPlan = teamIntent?.battlePlan?.fallbackPlan || "";
+    }
     return unique.length ? unique : [{ names: [occupied[0].entry.name], score: 40, summary: "Fallback single lead recommendation." }];
   }
 
-  async function scoreLeadPairDetailed(pair, topThreats, teamState = []) {
+  async function scoreLeadPairDetailed(pair, topThreats, teamState = [], teamIntent = detectTeamIntent(teamState, {})) {
     const names = pair.map((row) => row.entry.name);
     let score = 42;
     const reasons = [];
@@ -9240,6 +9686,9 @@
       : 0;
     const learnedMoveBias = combinedMoves.reduce((sum, move) => sum + getLearnedMoveWeight(move), 0);
     const speedAvg = pair.reduce((sum, row) => sum + row.entry.baseSpeed, 0) / pair.length;
+    const archetypeFit = getLeadArchetypeScore(pair, teamState, teamIntent);
+    score += archetypeFit.score;
+    reasons.push(...archetypeFit.reasons);
     score += trContext ? Math.min(18, Math.round((120 - Math.min(120, speedAvg)) / 8)) : Math.min(18, Math.round(speedAvg / 10));
     score += Math.round(averageRolePrior * (getLearnedBuilderData().learnedWeights?.candidateScoreWeights?.rolePrior || 6));
     score += Math.max(-6, Math.min(6, Math.round(learnedMoveBias * (getLearnedBuilderData().learnedWeights?.candidateScoreWeights?.moveWeight || 4))));
@@ -9273,7 +9722,7 @@
       score += 8;
       reasons.push("punishes Intimidate leads");
     }
-    const leadSimulation = await simulateLeadPairMatchup(pair, topThreats, teamState);
+    const leadSimulation = await simulateLeadPairMatchup(pair, topThreats, teamState, teamIntent);
     score += leadSimulation.scoreDelta;
     reasons.push(...leadSimulation.reasons);
     for (const threat of topThreats) {
@@ -9282,11 +9731,13 @@
       if (resists) score += 4;
       if (threatensBack) score += 6;
     }
-    const summary = buildLeadSummary(names, reasons, topThreats, leadSimulation);
-    return { names, score: clampScore(score), summary, simulation: leadSimulation };
+    const plan = buildLeadPlanDetails(pair, teamState, teamIntent, leadSimulation);
+    const summary = buildLeadSummary(names, reasons, topThreats, leadSimulation, plan, teamIntent);
+    const rejectedReason = reasons.find((reason) => /delays|conflicts|leaves|double-attacker/.test(reason)) || "Lower archetype fit than the selected lead.";
+    return { names, score: clampScore(score), summary, simulation: leadSimulation, reasons: [...new Set(reasons)].slice(0, 6), rejectedReason, ...plan };
   }
 
-  async function simulateLeadPairMatchup(pair, topThreats, teamState = []) {
+  async function simulateLeadPairMatchup(pair, topThreats, teamState = [], teamIntent = detectTeamIntent(teamState, {})) {
     const moveKeys = pair.flatMap(({ slot }) => getSetMoveKeys(slot));
     const entries = pair.map((row) => row.entry);
     let scoreDelta = 0;
@@ -9325,7 +9776,7 @@
       reasons.push("sets Trick Room while protecting the setup turn or threatening immediate damage");
     }
     if (trContext && !hasTrSetterLead && pair.length >= 2) {
-      scoreDelta -= 18;
+      scoreDelta -= teamIntent?.detectedArchetype === "Hard TR" ? 32 : 18;
       reasons.push("leaves the Trick Room setter off the opening board");
     }
     if (trContext && hasTailwind && !hasTrickRoom) {
@@ -9372,25 +9823,27 @@
     };
   }
 
-  function buildLeadSummary(names, reasons, topThreats, simulation = {}) {
+  function buildLeadSummary(names, reasons, topThreats, simulation = {}, plan = {}, teamIntent = {}) {
     const worst = simulation.worstEnemyLeads?.length ? ` Watch for ${simulation.worstEnemyLeads.join(" or ")}.` : "";
     const swap = simulation.recommendedSwap ? ` Pivot toward ${simulation.recommendedSwap} if the opening pressure is unfavorable.` : "";
+    const mode = teamIntent?.detectedArchetype ? `${teamIntent.detectedArchetype} lead` : "lead";
+    const usefulPlan = `When to choose: ${plan.whenToChoose || "Choose this into neutral boards."} Turn 1: ${plan.turnOnePlan || "Open with support plus pressure."} Turn 2: ${plan.turnTwoPlan || "Convert the board position into damage."} What stops it: ${plan.whatStopsIt || "Bad positioning or immediate setup denial."}`;
     if (reasons.some((reason) => reason.includes("Trick Room"))) {
-      return `${names.join(" + ")} is the cleaner Trick Room opener because it can set room while keeping pressure on turn one.${worst}${swap}`;
+      return `${names.join(" + ")} is the cleaner ${mode} because it follows the setup plan instead of racing with raw attackers. ${usefulPlan}${worst}${swap}`;
     }
     if (!reasons.length) {
-      return `${names.join(" + ")} is the cleaner generic opener when you want a stable start into the current snapshot.${worst}${swap}`;
+      return `${names.join(" + ")} is a board-control opener. ${usefulPlan}${worst}${swap}`;
     }
     if (reasons.some((reason) => reason.includes("Fake Out"))) {
-      return `${names.join(" + ")} is best when you need immediate tempo with Fake Out and a safer turn-one board.${worst}${swap}`;
+      return `${names.join(" + ")} is best when Fake Out buys the first positioning turn. ${usefulPlan}${worst}${swap}`;
     }
     if (reasons.some((reason) => reason.includes("speed"))) {
-      return `${names.join(" + ")} is the better call when speed control matters more than raw bulk.${worst}${swap}`;
+      return `${names.join(" + ")} is the speed-control lead. ${usefulPlan}${worst}${swap}`;
     }
     if (topThreats.length) {
-      return `${names.join(" + ")} is the leaner anti-meta lead when you want better play into ${topThreats.slice(0, 2).map((threat) => threat.name).join(" and ")}.${worst}${swap}`;
+      return `${names.join(" + ")} is the anti-meta lead into ${topThreats.slice(0, 2).map((threat) => threat.name).join(" and ")}. ${usefulPlan}${worst}${swap}`;
     }
-    return `${names.join(" + ")} is the better opener when you want ${reasons.join(", ")}.${worst}${swap}`;
+    return `${names.join(" + ")} is the better opener for ${reasons.join(", ")}. ${usefulPlan}${worst}${swap}`;
   }
 
   async function pairThreatensTarget(pair, threat) {
@@ -9637,8 +10090,12 @@
     return `${Number(effect).toFixed(effect % 1 ? 2 : 0)}x`;
   }
 
-  function buildTeamTypeChartMarkup(teamState) {
-    const occupied = getOccupiedChartSlots(teamState);
+  function buildTeamTypeChartMarkup(teamState, options = {}) {
+    const allOccupied = getOccupiedChartSlots(teamState);
+    const leadKeys = new Set((options.leadNames || []).map((name) => normalizeNameKey(name)).filter(Boolean));
+    const occupied = options.leadPairOnly && leadKeys.size
+      ? allOccupied.filter(({ slot, entry }) => leadKeys.has(normalizeNameKey(slot.name || entry.name || "")))
+      : allOccupied;
     if (!occupied.length) {
       return `<p class="placeholder">Add at least one Pokemon to see the live defense matchup counts.</p>`;
     }
