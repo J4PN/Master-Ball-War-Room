@@ -1,0 +1,5399 @@
+{
+  "source": "PokeCounter",
+  "sourceType": "PokeCounter API",
+  "sourceUrl": "https://pokecounter.app/api/rankings/weekly?limit=40&scope=weekly",
+  "snapshotFetchedAt": "2026-04-28T14:24:49+00:00",
+  "week": "2026-W18",
+  "total": 39,
+  "totalPlays": 51,
+  "topTeams": [
+    {
+      "hash": "1bcde11b275f593f10aff1930d6af21077a146aa",
+      "species": [
+        154,
+        727,
+        902,
+        903,
+        983,
+        10034
+      ],
+      "count": 9,
+      "weekCount": 4,
+      "lastSeen": "2026-04-28T01:29:54.247Z",
+      "team": [
+        {
+          "id": 154,
+          "name": "Meganium",
+          "types": [
+            "Grass"
+          ],
+          "stats": {
+            "hp": 80,
+            "atk": 82,
+            "def": 100,
+            "spa": 83,
+            "spd": 100,
+            "spe": 80
+          }
+        },
+        {
+          "id": 727,
+          "name": "Incineroar",
+          "types": [
+            "Fire",
+            "Dark"
+          ],
+          "stats": {
+            "hp": 95,
+            "atk": 115,
+            "def": 90,
+            "spa": 80,
+            "spd": 90,
+            "spe": 60
+          }
+        },
+        {
+          "id": 902,
+          "name": "Basculegion",
+          "types": [
+            "Water",
+            "Ghost"
+          ],
+          "stats": {
+            "hp": 120,
+            "atk": 112,
+            "def": 65,
+            "spa": 80,
+            "spd": 75,
+            "spe": 78
+          }
+        },
+        {
+          "id": 903,
+          "name": "Sneasler",
+          "types": [
+            "Fighting",
+            "Poison"
+          ],
+          "stats": {
+            "hp": 80,
+            "atk": 130,
+            "def": 60,
+            "spa": 40,
+            "spd": 80,
+            "spe": 120
+          }
+        },
+        {
+          "id": 983,
+          "name": "Kingambit",
+          "types": [
+            "Dark",
+            "Steel"
+          ],
+          "stats": {
+            "hp": 100,
+            "atk": 135,
+            "def": 120,
+            "spa": 60,
+            "spd": 85,
+            "spe": 50
+          }
+        },
+        {
+          "id": 10034,
+          "name": "Mega Charizard X",
+          "types": [
+            "Fire",
+            "Dragon"
+          ],
+          "stats": {
+            "hp": 78,
+            "atk": 130,
+            "def": 111,
+            "spa": 130,
+            "spd": 85,
+            "spe": 100
+          }
+        }
+      ]
+    },
+    {
+      "hash": "73c8bb31400864ac6b0f82736756de346111a5f3",
+      "species": [
+        6,
+        157,
+        282,
+        445,
+        547,
+        903
+      ],
+      "count": 20,
+      "weekCount": 3,
+      "lastSeen": "2026-04-28T07:09:24.936Z",
+      "team": [
+        {
+          "id": 6,
+          "name": "Charizard",
+          "types": [
+            "Fire",
+            "Flying"
+          ],
+          "stats": {
+            "hp": 78,
+            "atk": 84,
+            "def": 78,
+            "spa": 109,
+            "spd": 85,
+            "spe": 100
+          }
+        },
+        {
+          "id": 157,
+          "name": "Typhlosion",
+          "types": [
+            "Fire"
+          ],
+          "stats": {
+            "hp": 78,
+            "atk": 84,
+            "def": 78,
+            "spa": 109,
+            "spd": 85,
+            "spe": 100
+          }
+        },
+        {
+          "id": 282,
+          "name": "Gardevoir",
+          "types": [
+            "Psychic",
+            "Fairy"
+          ],
+          "stats": {
+            "hp": 68,
+            "atk": 65,
+            "def": 65,
+            "spa": 125,
+            "spd": 115,
+            "spe": 80
+          }
+        },
+        {
+          "id": 445,
+          "name": "Garchomp",
+          "types": [
+            "Dragon",
+            "Ground"
+          ],
+          "stats": {
+            "hp": 108,
+            "atk": 130,
+            "def": 95,
+            "spa": 80,
+            "spd": 85,
+            "spe": 102
+          }
+        },
+        {
+          "id": 547,
+          "name": "Whimsicott",
+          "types": [
+            "Grass",
+            "Fairy"
+          ],
+          "stats": {
+            "hp": 60,
+            "atk": 67,
+            "def": 85,
+            "spa": 77,
+            "spd": 75,
+            "spe": 116
+          }
+        },
+        {
+          "id": 903,
+          "name": "Sneasler",
+          "types": [
+            "Fighting",
+            "Poison"
+          ],
+          "stats": {
+            "hp": 80,
+            "atk": 130,
+            "def": 60,
+            "spa": 40,
+            "spd": 80,
+            "spe": 120
+          }
+        }
+      ]
+    },
+    {
+      "hash": "0b3b04c57eac8c018ecc422353e62d796a7aa0e9",
+      "species": [
+        445,
+        778,
+        823,
+        939,
+        10020,
+        10059
+      ],
+      "count": 4,
+      "weekCount": 2,
+      "lastSeen": "2026-04-27T00:54:11.982Z",
+      "team": [
+        {
+          "id": 445,
+          "name": "Garchomp",
+          "types": [
+            "Dragon",
+            "Ground"
+          ],
+          "stats": {
+            "hp": 108,
+            "atk": 130,
+            "def": 95,
+            "spa": 80,
+            "spd": 85,
+            "spe": 102
+          }
+        },
+        {
+          "id": 778,
+          "name": "Mimikyu",
+          "types": [
+            "Ghost",
+            "Fairy"
+          ],
+          "stats": {
+            "hp": 55,
+            "atk": 90,
+            "def": 80,
+            "spa": 50,
+            "spd": 105,
+            "spe": 96
+          }
+        },
+        {
+          "id": 823,
+          "name": "Corviknight",
+          "types": [
+            "Flying",
+            "Steel"
+          ],
+          "stats": {
+            "hp": 98,
+            "atk": 87,
+            "def": 105,
+            "spa": 53,
+            "spd": 85,
+            "spe": 67
+          }
+        },
+        {
+          "id": 939,
+          "name": "Bellibolt",
+          "types": [
+            "Electric"
+          ],
+          "stats": {
+            "hp": 109,
+            "atk": 64,
+            "def": 91,
+            "spa": 103,
+            "spd": 83,
+            "spe": 45
+          }
+        },
+        {
+          "id": 10020,
+          "name": "Mega Starmie",
+          "types": [
+            "Water",
+            "Psychic"
+          ],
+          "stats": {
+            "hp": 60,
+            "atk": 115,
+            "def": 95,
+            "spa": 130,
+            "spd": 100,
+            "spe": 120
+          }
+        },
+        {
+          "id": 10059,
+          "name": "Mega Lucario",
+          "types": [
+            "Fighting",
+            "Steel"
+          ],
+          "stats": {
+            "hp": 70,
+            "atk": 145,
+            "def": 88,
+            "spa": 140,
+            "spd": 70,
+            "spe": 112
+          }
+        }
+      ]
+    },
+    {
+      "hash": "dc837ace117205415e4ed9cae6554881f23eba4e",
+      "species": [
+        3,
+        445,
+        448,
+        727,
+        902,
+        903
+      ],
+      "count": 2,
+      "weekCount": 2,
+      "lastSeen": "2026-04-28T11:55:09.621Z",
+      "team": [
+        {
+          "id": 3,
+          "name": "Venusaur",
+          "types": [
+            "Grass",
+            "Poison"
+          ],
+          "stats": {
+            "hp": 80,
+            "atk": 82,
+            "def": 83,
+            "spa": 100,
+            "spd": 100,
+            "spe": 80
+          }
+        },
+        {
+          "id": 445,
+          "name": "Garchomp",
+          "types": [
+            "Dragon",
+            "Ground"
+          ],
+          "stats": {
+            "hp": 108,
+            "atk": 130,
+            "def": 95,
+            "spa": 80,
+            "spd": 85,
+            "spe": 102
+          }
+        },
+        {
+          "id": 448,
+          "name": "Lucario",
+          "types": [
+            "Fighting",
+            "Steel"
+          ],
+          "stats": {
+            "hp": 70,
+            "atk": 110,
+            "def": 70,
+            "spa": 115,
+            "spd": 70,
+            "spe": 90
+          }
+        },
+        {
+          "id": 727,
+          "name": "Incineroar",
+          "types": [
+            "Fire",
+            "Dark"
+          ],
+          "stats": {
+            "hp": 95,
+            "atk": 115,
+            "def": 90,
+            "spa": 80,
+            "spd": 90,
+            "spe": 60
+          }
+        },
+        {
+          "id": 902,
+          "name": "Basculegion",
+          "types": [
+            "Water",
+            "Ghost"
+          ],
+          "stats": {
+            "hp": 120,
+            "atk": 112,
+            "def": 65,
+            "spa": 80,
+            "spd": 75,
+            "spe": 78
+          }
+        },
+        {
+          "id": 903,
+          "name": "Sneasler",
+          "types": [
+            "Fighting",
+            "Poison"
+          ],
+          "stats": {
+            "hp": 80,
+            "atk": 130,
+            "def": 60,
+            "spa": 40,
+            "spd": 80,
+            "spe": 120
+          }
+        }
+      ]
+    },
+    {
+      "hash": "0e8cf1207bc0a27b7f31060e00cfdd6483ebda40",
+      "species": [
+        445,
+        700,
+        778,
+        939,
+        10020,
+        10059
+      ],
+      "count": 2,
+      "weekCount": 2,
+      "lastSeen": "2026-04-27T14:37:57.579Z",
+      "team": [
+        {
+          "id": 445,
+          "name": "Garchomp",
+          "types": [
+            "Dragon",
+            "Ground"
+          ],
+          "stats": {
+            "hp": 108,
+            "atk": 130,
+            "def": 95,
+            "spa": 80,
+            "spd": 85,
+            "spe": 102
+          }
+        },
+        {
+          "id": 700,
+          "name": "Sylveon",
+          "types": [
+            "Fairy"
+          ],
+          "stats": {
+            "hp": 95,
+            "atk": 65,
+            "def": 65,
+            "spa": 110,
+            "spd": 130,
+            "spe": 60
+          }
+        },
+        {
+          "id": 778,
+          "name": "Mimikyu",
+          "types": [
+            "Ghost",
+            "Fairy"
+          ],
+          "stats": {
+            "hp": 55,
+            "atk": 90,
+            "def": 80,
+            "spa": 50,
+            "spd": 105,
+            "spe": 96
+          }
+        },
+        {
+          "id": 939,
+          "name": "Bellibolt",
+          "types": [
+            "Electric"
+          ],
+          "stats": {
+            "hp": 109,
+            "atk": 64,
+            "def": 91,
+            "spa": 103,
+            "spd": 83,
+            "spe": 45
+          }
+        },
+        {
+          "id": 10020,
+          "name": "Mega Starmie",
+          "types": [
+            "Water",
+            "Psychic"
+          ],
+          "stats": {
+            "hp": 60,
+            "atk": 115,
+            "def": 95,
+            "spa": 130,
+            "spd": 100,
+            "spe": 120
+          }
+        },
+        {
+          "id": 10059,
+          "name": "Mega Lucario",
+          "types": [
+            "Fighting",
+            "Steel"
+          ],
+          "stats": {
+            "hp": 70,
+            "atk": 145,
+            "def": 88,
+            "spa": 140,
+            "spd": 70,
+            "spe": 112
+          }
+        }
+      ]
+    },
+    {
+      "hash": "87889fb926cd77a9a2ca1daeb8f9356df77a18e4",
+      "species": [
+        510,
+        727,
+        730,
+        908,
+        10055,
+        10340
+      ],
+      "count": 2,
+      "weekCount": 2,
+      "lastSeen": "2026-04-27T15:52:43.124Z",
+      "team": [
+        {
+          "id": 510,
+          "name": "Liepard",
+          "types": [
+            "Dark"
+          ],
+          "stats": {
+            "hp": 64,
+            "atk": 88,
+            "def": 50,
+            "spa": 88,
+            "spd": 50,
+            "spe": 106
+          }
+        },
+        {
+          "id": 727,
+          "name": "Incineroar",
+          "types": [
+            "Fire",
+            "Dark"
+          ],
+          "stats": {
+            "hp": 95,
+            "atk": 115,
+            "def": 90,
+            "spa": 80,
+            "spd": 90,
+            "spe": 60
+          }
+        },
+        {
+          "id": 730,
+          "name": "Primarina",
+          "types": [
+            "Water",
+            "Fairy"
+          ],
+          "stats": {
+            "hp": 80,
+            "atk": 74,
+            "def": 74,
+            "spa": 126,
+            "spd": 116,
+            "spe": 60
+          }
+        },
+        {
+          "id": 908,
+          "name": "Meowscarada",
+          "types": [
+            "Grass",
+            "Dark"
+          ],
+          "stats": {
+            "hp": 76,
+            "atk": 110,
+            "def": 70,
+            "spa": 81,
+            "spd": 70,
+            "spe": 123
+          }
+        },
+        {
+          "id": 10055,
+          "name": "Mega Meowstic",
+          "types": [
+            "Psychic"
+          ],
+          "stats": {
+            "hp": 74,
+            "atk": 48,
+            "def": 76,
+            "spa": 143,
+            "spd": 101,
+            "spe": 124
+          }
+        },
+        {
+          "id": 10340,
+          "name": "Hisuian Zoroark",
+          "types": [
+            "Normal",
+            "Ghost"
+          ],
+          "stats": {
+            "hp": 55,
+            "atk": 100,
+            "def": 60,
+            "spa": 125,
+            "spd": 60,
+            "spe": 110
+          }
+        }
+      ]
+    },
+    {
+      "hash": "515fbeda9b1830f76330a27b9ea1865b531c8961",
+      "species": [
+        445,
+        778,
+        939,
+        1018,
+        10038,
+        10039
+      ],
+      "count": 2,
+      "weekCount": 2,
+      "lastSeen": "2026-04-27T16:22:12.554Z",
+      "team": [
+        {
+          "id": 445,
+          "name": "Garchomp",
+          "types": [
+            "Dragon",
+            "Ground"
+          ],
+          "stats": {
+            "hp": 108,
+            "atk": 130,
+            "def": 95,
+            "spa": 80,
+            "spd": 85,
+            "spe": 102
+          }
+        },
+        {
+          "id": 778,
+          "name": "Mimikyu",
+          "types": [
+            "Ghost",
+            "Fairy"
+          ],
+          "stats": {
+            "hp": 55,
+            "atk": 90,
+            "def": 80,
+            "spa": 50,
+            "spd": 105,
+            "spe": 96
+          }
+        },
+        {
+          "id": 939,
+          "name": "Bellibolt",
+          "types": [
+            "Electric"
+          ],
+          "stats": {
+            "hp": 109,
+            "atk": 64,
+            "def": 91,
+            "spa": 103,
+            "spd": 83,
+            "spe": 45
+          }
+        },
+        {
+          "id": 1018,
+          "name": "Archaludon",
+          "types": [
+            "Steel",
+            "Dragon"
+          ],
+          "stats": {
+            "hp": 90,
+            "atk": 105,
+            "def": 130,
+            "spa": 125,
+            "spd": 65,
+            "spe": 85
+          }
+        },
+        {
+          "id": 10038,
+          "name": "Mega Gengar",
+          "types": [
+            "Ghost",
+            "Poison"
+          ],
+          "stats": {
+            "hp": 60,
+            "atk": 65,
+            "def": 80,
+            "spa": 170,
+            "spd": 95,
+            "spe": 130
+          }
+        },
+        {
+          "id": 10039,
+          "name": "Mega Kangaskhan",
+          "types": [
+            "Normal"
+          ],
+          "stats": {
+            "hp": 105,
+            "atk": 125,
+            "def": 100,
+            "spa": 60,
+            "spd": 100,
+            "spe": 100
+          }
+        }
+      ]
+    },
+    {
+      "hash": "dd256aab58620149531355bc2e75a660c396d489",
+      "species": [
+        445,
+        637,
+        778,
+        939,
+        1018,
+        10014
+      ],
+      "count": 2,
+      "weekCount": 2,
+      "lastSeen": "2026-04-27T23:22:22.465Z",
+      "team": [
+        {
+          "id": 445,
+          "name": "Garchomp",
+          "types": [
+            "Dragon",
+            "Ground"
+          ],
+          "stats": {
+            "hp": 108,
+            "atk": 130,
+            "def": 95,
+            "spa": 80,
+            "spd": 85,
+            "spe": 102
+          }
+        },
+        {
+          "id": 637,
+          "name": "Volcarona",
+          "types": [
+            "Bug",
+            "Fire"
+          ],
+          "stats": {
+            "hp": 85,
+            "atk": 60,
+            "def": 65,
+            "spa": 135,
+            "spd": 105,
+            "spe": 100
+          }
+        },
+        {
+          "id": 778,
+          "name": "Mimikyu",
+          "types": [
+            "Ghost",
+            "Fairy"
+          ],
+          "stats": {
+            "hp": 55,
+            "atk": 90,
+            "def": 80,
+            "spa": 50,
+            "spd": 105,
+            "spe": 96
+          }
+        },
+        {
+          "id": 939,
+          "name": "Bellibolt",
+          "types": [
+            "Electric"
+          ],
+          "stats": {
+            "hp": 109,
+            "atk": 64,
+            "def": 91,
+            "spa": 103,
+            "spd": 83,
+            "spe": 45
+          }
+        },
+        {
+          "id": 1018,
+          "name": "Archaludon",
+          "types": [
+            "Steel",
+            "Dragon"
+          ],
+          "stats": {
+            "hp": 90,
+            "atk": 105,
+            "def": 130,
+            "spa": 125,
+            "spd": 65,
+            "spe": 85
+          }
+        },
+        {
+          "id": 10014,
+          "name": "Mega Clefable",
+          "types": [
+            "Fairy",
+            "Flying"
+          ],
+          "stats": {
+            "hp": 95,
+            "atk": 80,
+            "def": 93,
+            "spa": 135,
+            "spd": 110,
+            "spe": 70
+          }
+        }
+      ]
+    },
+    {
+      "hash": "4cc9de656d3821d26571173d724b7eccc3ee8980",
+      "species": [
+        445,
+        637,
+        778,
+        823,
+        939,
+        10014
+      ],
+      "count": 2,
+      "weekCount": 2,
+      "lastSeen": "2026-04-27T23:33:01.851Z",
+      "team": [
+        {
+          "id": 445,
+          "name": "Garchomp",
+          "types": [
+            "Dragon",
+            "Ground"
+          ],
+          "stats": {
+            "hp": 108,
+            "atk": 130,
+            "def": 95,
+            "spa": 80,
+            "spd": 85,
+            "spe": 102
+          }
+        },
+        {
+          "id": 637,
+          "name": "Volcarona",
+          "types": [
+            "Bug",
+            "Fire"
+          ],
+          "stats": {
+            "hp": 85,
+            "atk": 60,
+            "def": 65,
+            "spa": 135,
+            "spd": 105,
+            "spe": 100
+          }
+        },
+        {
+          "id": 778,
+          "name": "Mimikyu",
+          "types": [
+            "Ghost",
+            "Fairy"
+          ],
+          "stats": {
+            "hp": 55,
+            "atk": 90,
+            "def": 80,
+            "spa": 50,
+            "spd": 105,
+            "spe": 96
+          }
+        },
+        {
+          "id": 823,
+          "name": "Corviknight",
+          "types": [
+            "Flying",
+            "Steel"
+          ],
+          "stats": {
+            "hp": 98,
+            "atk": 87,
+            "def": 105,
+            "spa": 53,
+            "spd": 85,
+            "spe": 67
+          }
+        },
+        {
+          "id": 939,
+          "name": "Bellibolt",
+          "types": [
+            "Electric"
+          ],
+          "stats": {
+            "hp": 109,
+            "atk": 64,
+            "def": 91,
+            "spa": 103,
+            "spd": 83,
+            "spe": 45
+          }
+        },
+        {
+          "id": 10014,
+          "name": "Mega Clefable",
+          "types": [
+            "Fairy",
+            "Flying"
+          ],
+          "stats": {
+            "hp": 95,
+            "atk": 80,
+            "def": 93,
+            "spa": 135,
+            "spd": 110,
+            "spe": 70
+          }
+        }
+      ]
+    },
+    {
+      "hash": "8b77f694124dc7ae73658a6c6d2ee7704674cfd6",
+      "species": [
+        15,
+        143,
+        460,
+        635,
+        701,
+        983
+      ],
+      "count": 3,
+      "weekCount": 1,
+      "lastSeen": "2026-04-27T17:02:47.888Z",
+      "team": [
+        {
+          "id": 15,
+          "name": "Beedrill",
+          "types": [
+            "Bug",
+            "Poison"
+          ],
+          "stats": {
+            "hp": 65,
+            "atk": 90,
+            "def": 40,
+            "spa": 45,
+            "spd": 80,
+            "spe": 75
+          }
+        },
+        {
+          "id": 143,
+          "name": "Snorlax",
+          "types": [
+            "Normal"
+          ],
+          "stats": {
+            "hp": 160,
+            "atk": 110,
+            "def": 65,
+            "spa": 65,
+            "spd": 110,
+            "spe": 30
+          }
+        },
+        {
+          "id": 460,
+          "name": "Abomasnow",
+          "types": [
+            "Grass",
+            "Ice"
+          ],
+          "stats": {
+            "hp": 90,
+            "atk": 92,
+            "def": 75,
+            "spa": 92,
+            "spd": 85,
+            "spe": 60
+          }
+        },
+        {
+          "id": 635,
+          "name": "Hydreigon",
+          "types": [
+            "Dark",
+            "Dragon"
+          ],
+          "stats": {
+            "hp": 92,
+            "atk": 105,
+            "def": 90,
+            "spa": 125,
+            "spd": 90,
+            "spe": 98
+          }
+        },
+        {
+          "id": 701,
+          "name": "Hawlucha",
+          "types": [
+            "Fighting",
+            "Flying"
+          ],
+          "stats": {
+            "hp": 78,
+            "atk": 92,
+            "def": 75,
+            "spa": 74,
+            "spd": 63,
+            "spe": 118
+          }
+        },
+        {
+          "id": 983,
+          "name": "Kingambit",
+          "types": [
+            "Dark",
+            "Steel"
+          ],
+          "stats": {
+            "hp": 100,
+            "atk": 135,
+            "def": 120,
+            "spa": 60,
+            "spd": 85,
+            "spe": 50
+          }
+        }
+      ]
+    },
+    {
+      "hash": "348d0bc1eb03b59dfa498ac61c8184c179c798c2",
+      "species": [
+        71,
+        208,
+        310,
+        635,
+        701,
+        936
+      ],
+      "count": 4,
+      "weekCount": 1,
+      "lastSeen": "2026-04-27T16:00:10.483Z",
+      "team": [
+        {
+          "id": 71,
+          "name": "Victreebel",
+          "types": [
+            "Grass",
+            "Poison"
+          ],
+          "stats": {
+            "hp": 80,
+            "atk": 105,
+            "def": 65,
+            "spa": 100,
+            "spd": 70,
+            "spe": 70
+          }
+        },
+        {
+          "id": 208,
+          "name": "Steelix",
+          "types": [
+            "Steel",
+            "Ground"
+          ],
+          "stats": {
+            "hp": 75,
+            "atk": 85,
+            "def": 200,
+            "spa": 55,
+            "spd": 65,
+            "spe": 30
+          }
+        },
+        {
+          "id": 310,
+          "name": "Manectric",
+          "types": [
+            "Electric"
+          ],
+          "stats": {
+            "hp": 70,
+            "atk": 75,
+            "def": 60,
+            "spa": 105,
+            "spd": 60,
+            "spe": 105
+          }
+        },
+        {
+          "id": 635,
+          "name": "Hydreigon",
+          "types": [
+            "Dark",
+            "Dragon"
+          ],
+          "stats": {
+            "hp": 92,
+            "atk": 105,
+            "def": 90,
+            "spa": 125,
+            "spd": 90,
+            "spe": 98
+          }
+        },
+        {
+          "id": 701,
+          "name": "Hawlucha",
+          "types": [
+            "Fighting",
+            "Flying"
+          ],
+          "stats": {
+            "hp": 78,
+            "atk": 92,
+            "def": 75,
+            "spa": 74,
+            "spd": 63,
+            "spe": 118
+          }
+        },
+        {
+          "id": 936,
+          "name": "Armarouge",
+          "types": [
+            "Fire",
+            "Psychic"
+          ],
+          "stats": {
+            "hp": 85,
+            "atk": 60,
+            "def": 100,
+            "spa": 125,
+            "spd": 80,
+            "spe": 75
+          }
+        }
+      ]
+    },
+    {
+      "hash": "5c96fb0c22261a78b24bf2f4b600a8b393f9ded3",
+      "species": [
+        184,
+        214,
+        282,
+        460,
+        780,
+        823
+      ],
+      "count": 3,
+      "weekCount": 1,
+      "lastSeen": "2026-04-27T16:39:47.845Z",
+      "team": [
+        {
+          "id": 184,
+          "name": "Azumarill",
+          "types": [
+            "Water",
+            "Fairy"
+          ],
+          "stats": {
+            "hp": 100,
+            "atk": 50,
+            "def": 80,
+            "spa": 60,
+            "spd": 80,
+            "spe": 50
+          }
+        },
+        {
+          "id": 214,
+          "name": "Heracross",
+          "types": [
+            "Bug",
+            "Fighting"
+          ],
+          "stats": {
+            "hp": 80,
+            "atk": 125,
+            "def": 75,
+            "spa": 40,
+            "spd": 95,
+            "spe": 85
+          }
+        },
+        {
+          "id": 282,
+          "name": "Gardevoir",
+          "types": [
+            "Psychic",
+            "Fairy"
+          ],
+          "stats": {
+            "hp": 68,
+            "atk": 65,
+            "def": 65,
+            "spa": 125,
+            "spd": 115,
+            "spe": 80
+          }
+        },
+        {
+          "id": 460,
+          "name": "Abomasnow",
+          "types": [
+            "Grass",
+            "Ice"
+          ],
+          "stats": {
+            "hp": 90,
+            "atk": 92,
+            "def": 75,
+            "spa": 92,
+            "spd": 85,
+            "spe": 60
+          }
+        },
+        {
+          "id": 780,
+          "name": "Drampa",
+          "types": [
+            "Normal",
+            "Dragon"
+          ],
+          "stats": {
+            "hp": 78,
+            "atk": 60,
+            "def": 85,
+            "spa": 135,
+            "spd": 91,
+            "spe": 36
+          }
+        },
+        {
+          "id": 823,
+          "name": "Corviknight",
+          "types": [
+            "Flying",
+            "Steel"
+          ],
+          "stats": {
+            "hp": 98,
+            "atk": 87,
+            "def": 105,
+            "spa": 53,
+            "spd": 85,
+            "spe": 67
+          }
+        }
+      ]
+    },
+    {
+      "hash": "163f9ce42558ad59f8cb59afc13e1ed44f7fb3b5",
+      "species": [
+        71,
+        130,
+        310,
+        448,
+        478,
+        700
+      ],
+      "count": 5,
+      "weekCount": 1,
+      "lastSeen": "2026-04-27T15:54:39.001Z",
+      "team": [
+        {
+          "id": 71,
+          "name": "Victreebel",
+          "types": [
+            "Grass",
+            "Poison"
+          ],
+          "stats": {
+            "hp": 80,
+            "atk": 105,
+            "def": 65,
+            "spa": 100,
+            "spd": 70,
+            "spe": 70
+          }
+        },
+        {
+          "id": 130,
+          "name": "Gyarados",
+          "types": [
+            "Water",
+            "Flying"
+          ],
+          "stats": {
+            "hp": 95,
+            "atk": 125,
+            "def": 79,
+            "spa": 60,
+            "spd": 100,
+            "spe": 81
+          }
+        },
+        {
+          "id": 310,
+          "name": "Manectric",
+          "types": [
+            "Electric"
+          ],
+          "stats": {
+            "hp": 70,
+            "atk": 75,
+            "def": 60,
+            "spa": 105,
+            "spd": 60,
+            "spe": 105
+          }
+        },
+        {
+          "id": 448,
+          "name": "Lucario",
+          "types": [
+            "Fighting",
+            "Steel"
+          ],
+          "stats": {
+            "hp": 70,
+            "atk": 110,
+            "def": 70,
+            "spa": 115,
+            "spd": 70,
+            "spe": 90
+          }
+        },
+        {
+          "id": 478,
+          "name": "Froslass",
+          "types": [
+            "Ice",
+            "Ghost"
+          ],
+          "stats": {
+            "hp": 70,
+            "atk": 80,
+            "def": 70,
+            "spa": 80,
+            "spd": 70,
+            "spe": 110
+          }
+        },
+        {
+          "id": 700,
+          "name": "Sylveon",
+          "types": [
+            "Fairy"
+          ],
+          "stats": {
+            "hp": 95,
+            "atk": 65,
+            "def": 65,
+            "spa": 110,
+            "spd": 130,
+            "spe": 60
+          }
+        }
+      ]
+    },
+    {
+      "hash": "91736d56b204b7224e1bb9baf4e9917a00827478",
+      "species": [
+        142,
+        1018,
+        10025,
+        10039,
+        10233,
+        10252
+      ],
+      "count": 5,
+      "weekCount": 1,
+      "lastSeen": "2026-04-27T01:01:40.824Z",
+      "team": [
+        {
+          "id": 142,
+          "name": "Aerodactyl",
+          "types": [
+            "Rock",
+            "Flying"
+          ],
+          "stats": {
+            "hp": 80,
+            "atk": 105,
+            "def": 65,
+            "spa": 60,
+            "spd": 75,
+            "spe": 130
+          }
+        },
+        {
+          "id": 1018,
+          "name": "Archaludon",
+          "types": [
+            "Steel",
+            "Dragon"
+          ],
+          "stats": {
+            "hp": 90,
+            "atk": 105,
+            "def": 130,
+            "spa": 125,
+            "spd": 65,
+            "spe": 85
+          }
+        },
+        {
+          "id": 10025,
+          "name": "Mega Meganium",
+          "types": [
+            "Grass",
+            "Fairy"
+          ],
+          "stats": {
+            "hp": 80,
+            "atk": 92,
+            "def": 115,
+            "spa": 143,
+            "spd": 115,
+            "spe": 80
+          }
+        },
+        {
+          "id": 10039,
+          "name": "Mega Kangaskhan",
+          "types": [
+            "Normal"
+          ],
+          "stats": {
+            "hp": 105,
+            "atk": 125,
+            "def": 100,
+            "spa": 60,
+            "spd": 100,
+            "spe": 100
+          }
+        },
+        {
+          "id": 10233,
+          "name": "Hisuian Typhlosion",
+          "types": [
+            "Fire",
+            "Ghost"
+          ],
+          "stats": {
+            "hp": 73,
+            "atk": 84,
+            "def": 78,
+            "spa": 119,
+            "spd": 85,
+            "spe": 95
+          }
+        },
+        {
+          "id": 10252,
+          "name": "Paldean Tauros (Aqua)",
+          "types": [
+            "Fighting",
+            "Water"
+          ],
+          "stats": {
+            "hp": 75,
+            "atk": 110,
+            "def": 105,
+            "spa": 30,
+            "spd": 70,
+            "spe": 100
+          }
+        }
+      ]
+    },
+    {
+      "hash": "b8015882f25cbc30dfeca4e05c4ccfc39031f70d",
+      "species": [
+        530,
+        700,
+        823,
+        908,
+        10024,
+        10041
+      ],
+      "count": 1,
+      "weekCount": 1,
+      "lastSeen": "2026-04-27T01:00:35.381Z",
+      "team": [
+        {
+          "id": 530,
+          "name": "Excadrill",
+          "types": [
+            "Ground",
+            "Steel"
+          ],
+          "stats": {
+            "hp": 110,
+            "atk": 135,
+            "def": 60,
+            "spa": 50,
+            "spd": 65,
+            "spe": 88
+          }
+        },
+        {
+          "id": 700,
+          "name": "Sylveon",
+          "types": [
+            "Fairy"
+          ],
+          "stats": {
+            "hp": 95,
+            "atk": 65,
+            "def": 65,
+            "spa": 110,
+            "spd": 130,
+            "spe": 60
+          }
+        },
+        {
+          "id": 823,
+          "name": "Corviknight",
+          "types": [
+            "Flying",
+            "Steel"
+          ],
+          "stats": {
+            "hp": 98,
+            "atk": 87,
+            "def": 105,
+            "spa": 53,
+            "spd": 85,
+            "spe": 67
+          }
+        },
+        {
+          "id": 908,
+          "name": "Meowscarada",
+          "types": [
+            "Grass",
+            "Dark"
+          ],
+          "stats": {
+            "hp": 76,
+            "atk": 110,
+            "def": 70,
+            "spa": 81,
+            "spd": 70,
+            "spe": 123
+          }
+        },
+        {
+          "id": 10024,
+          "name": "Mega Dragonite",
+          "types": [
+            "Dragon",
+            "Flying"
+          ],
+          "stats": {
+            "hp": 91,
+            "atk": 124,
+            "def": 115,
+            "spa": 145,
+            "spd": 125,
+            "spe": 100
+          }
+        },
+        {
+          "id": 10041,
+          "name": "Mega Gyarados",
+          "types": [
+            "Water",
+            "Dark"
+          ],
+          "stats": {
+            "hp": 95,
+            "atk": 155,
+            "def": 109,
+            "spa": 70,
+            "spd": 130,
+            "spe": 81
+          }
+        }
+      ]
+    },
+    {
+      "hash": "21fb52170489fecb463db7539044ee9ed52c16bf",
+      "species": [
+        635,
+        902,
+        903,
+        937,
+        1018,
+        10024
+      ],
+      "count": 1,
+      "weekCount": 1,
+      "lastSeen": "2026-04-27T04:34:31.302Z",
+      "team": [
+        {
+          "id": 635,
+          "name": "Hydreigon",
+          "types": [
+            "Dark",
+            "Dragon"
+          ],
+          "stats": {
+            "hp": 92,
+            "atk": 105,
+            "def": 90,
+            "spa": 125,
+            "spd": 90,
+            "spe": 98
+          }
+        },
+        {
+          "id": 902,
+          "name": "Basculegion",
+          "types": [
+            "Water",
+            "Ghost"
+          ],
+          "stats": {
+            "hp": 120,
+            "atk": 112,
+            "def": 65,
+            "spa": 80,
+            "spd": 75,
+            "spe": 78
+          }
+        },
+        {
+          "id": 903,
+          "name": "Sneasler",
+          "types": [
+            "Fighting",
+            "Poison"
+          ],
+          "stats": {
+            "hp": 80,
+            "atk": 130,
+            "def": 60,
+            "spa": 40,
+            "spd": 80,
+            "spe": 120
+          }
+        },
+        {
+          "id": 937,
+          "name": "Ceruledge",
+          "types": [
+            "Fire",
+            "Ghost"
+          ],
+          "stats": {
+            "hp": 75,
+            "atk": 125,
+            "def": 80,
+            "spa": 60,
+            "spd": 100,
+            "spe": 85
+          }
+        },
+        {
+          "id": 1018,
+          "name": "Archaludon",
+          "types": [
+            "Steel",
+            "Dragon"
+          ],
+          "stats": {
+            "hp": 90,
+            "atk": 105,
+            "def": 130,
+            "spa": 125,
+            "spd": 65,
+            "spe": 85
+          }
+        },
+        {
+          "id": 10024,
+          "name": "Mega Dragonite",
+          "types": [
+            "Dragon",
+            "Flying"
+          ],
+          "stats": {
+            "hp": 91,
+            "atk": 124,
+            "def": 115,
+            "spa": 145,
+            "spd": 125,
+            "spe": 100
+          }
+        }
+      ]
+    },
+    {
+      "hash": "86ecdf0bd78fa045107936a0e22ca2e7cb7cbe0c",
+      "species": [
+        59,
+        248,
+        547,
+        637,
+        10008,
+        10024
+      ],
+      "count": 1,
+      "weekCount": 1,
+      "lastSeen": "2026-04-27T04:37:42.391Z",
+      "team": [
+        {
+          "id": 59,
+          "name": "Arcanine",
+          "types": [
+            "Fire"
+          ],
+          "stats": {
+            "hp": 90,
+            "atk": 110,
+            "def": 80,
+            "spa": 100,
+            "spd": 80,
+            "spe": 95
+          }
+        },
+        {
+          "id": 248,
+          "name": "Tyranitar",
+          "types": [
+            "Rock",
+            "Dark"
+          ],
+          "stats": {
+            "hp": 100,
+            "atk": 134,
+            "def": 110,
+            "spa": 95,
+            "spd": 100,
+            "spe": 61
+          }
+        },
+        {
+          "id": 547,
+          "name": "Whimsicott",
+          "types": [
+            "Grass",
+            "Fairy"
+          ],
+          "stats": {
+            "hp": 60,
+            "atk": 67,
+            "def": 85,
+            "spa": 77,
+            "spd": 75,
+            "spe": 116
+          }
+        },
+        {
+          "id": 637,
+          "name": "Volcarona",
+          "types": [
+            "Bug",
+            "Fire"
+          ],
+          "stats": {
+            "hp": 85,
+            "atk": 60,
+            "def": 65,
+            "spa": 135,
+            "spd": 105,
+            "spe": 100
+          }
+        },
+        {
+          "id": 10008,
+          "name": "Mega Manectric",
+          "types": [
+            "Electric"
+          ],
+          "stats": {
+            "hp": 70,
+            "atk": 75,
+            "def": 80,
+            "spa": 135,
+            "spd": 80,
+            "spe": 135
+          }
+        },
+        {
+          "id": 10024,
+          "name": "Mega Dragonite",
+          "types": [
+            "Dragon",
+            "Flying"
+          ],
+          "stats": {
+            "hp": 91,
+            "atk": 124,
+            "def": 115,
+            "spa": 145,
+            "spd": 125,
+            "spe": 100
+          }
+        }
+      ]
+    },
+    {
+      "hash": "a6eeb55864e76f117c7f853d0ea0e1bc5a856f19",
+      "species": [
+        142,
+        310,
+        392,
+        700,
+        887,
+        983
+      ],
+      "count": 1,
+      "weekCount": 1,
+      "lastSeen": "2026-04-27T08:18:40.436Z",
+      "team": [
+        {
+          "id": 142,
+          "name": "Aerodactyl",
+          "types": [
+            "Rock",
+            "Flying"
+          ],
+          "stats": {
+            "hp": 80,
+            "atk": 105,
+            "def": 65,
+            "spa": 60,
+            "spd": 75,
+            "spe": 130
+          }
+        },
+        {
+          "id": 310,
+          "name": "Manectric",
+          "types": [
+            "Electric"
+          ],
+          "stats": {
+            "hp": 70,
+            "atk": 75,
+            "def": 60,
+            "spa": 105,
+            "spd": 60,
+            "spe": 105
+          }
+        },
+        {
+          "id": 392,
+          "name": "Infernape",
+          "types": [
+            "Fire",
+            "Fighting"
+          ],
+          "stats": {
+            "hp": 76,
+            "atk": 104,
+            "def": 71,
+            "spa": 104,
+            "spd": 71,
+            "spe": 108
+          }
+        },
+        {
+          "id": 700,
+          "name": "Sylveon",
+          "types": [
+            "Fairy"
+          ],
+          "stats": {
+            "hp": 95,
+            "atk": 65,
+            "def": 65,
+            "spa": 110,
+            "spd": 130,
+            "spe": 60
+          }
+        },
+        {
+          "id": 887,
+          "name": "Dragapult",
+          "types": [
+            "Dragon",
+            "Ghost"
+          ],
+          "stats": {
+            "hp": 88,
+            "atk": 120,
+            "def": 75,
+            "spa": 100,
+            "spd": 75,
+            "spe": 142
+          }
+        },
+        {
+          "id": 983,
+          "name": "Kingambit",
+          "types": [
+            "Dark",
+            "Steel"
+          ],
+          "stats": {
+            "hp": 100,
+            "atk": 135,
+            "def": 120,
+            "spa": 60,
+            "spd": 85,
+            "spe": 50
+          }
+        }
+      ]
+    },
+    {
+      "hash": "aca9dfbb7435eca817aadd2838dc924e94e3d2a8",
+      "species": [
+        154,
+        279,
+        445,
+        727,
+        902,
+        903
+      ],
+      "count": 1,
+      "weekCount": 1,
+      "lastSeen": "2026-04-27T08:20:13.63Z",
+      "team": [
+        {
+          "id": 154,
+          "name": "Meganium",
+          "types": [
+            "Grass"
+          ],
+          "stats": {
+            "hp": 80,
+            "atk": 82,
+            "def": 100,
+            "spa": 83,
+            "spd": 100,
+            "spe": 80
+          }
+        },
+        {
+          "id": 279,
+          "name": "Pelipper",
+          "types": [
+            "Water",
+            "Flying"
+          ],
+          "stats": {
+            "hp": 60,
+            "atk": 50,
+            "def": 100,
+            "spa": 95,
+            "spd": 70,
+            "spe": 65
+          }
+        },
+        {
+          "id": 445,
+          "name": "Garchomp",
+          "types": [
+            "Dragon",
+            "Ground"
+          ],
+          "stats": {
+            "hp": 108,
+            "atk": 130,
+            "def": 95,
+            "spa": 80,
+            "spd": 85,
+            "spe": 102
+          }
+        },
+        {
+          "id": 727,
+          "name": "Incineroar",
+          "types": [
+            "Fire",
+            "Dark"
+          ],
+          "stats": {
+            "hp": 95,
+            "atk": 115,
+            "def": 90,
+            "spa": 80,
+            "spd": 90,
+            "spe": 60
+          }
+        },
+        {
+          "id": 902,
+          "name": "Basculegion",
+          "types": [
+            "Water",
+            "Ghost"
+          ],
+          "stats": {
+            "hp": 120,
+            "atk": 112,
+            "def": 65,
+            "spa": 80,
+            "spd": 75,
+            "spe": 78
+          }
+        },
+        {
+          "id": 903,
+          "name": "Sneasler",
+          "types": [
+            "Fighting",
+            "Poison"
+          ],
+          "stats": {
+            "hp": 80,
+            "atk": 130,
+            "def": 60,
+            "spa": 40,
+            "spd": 80,
+            "spe": 120
+          }
+        }
+      ]
+    },
+    {
+      "hash": "c7d637a792908f9f44f57a2839ab36e4f7fc469f",
+      "species": [
+        94,
+        149,
+        248,
+        700,
+        964,
+        1018
+      ],
+      "count": 1,
+      "weekCount": 1,
+      "lastSeen": "2026-04-27T08:26:22.972Z",
+      "team": [
+        {
+          "id": 94,
+          "name": "Gengar",
+          "types": [
+            "Ghost",
+            "Poison"
+          ],
+          "stats": {
+            "hp": 60,
+            "atk": 65,
+            "def": 60,
+            "spa": 130,
+            "spd": 75,
+            "spe": 110
+          }
+        },
+        {
+          "id": 149,
+          "name": "Dragonite",
+          "types": [
+            "Dragon",
+            "Flying"
+          ],
+          "stats": {
+            "hp": 91,
+            "atk": 134,
+            "def": 95,
+            "spa": 100,
+            "spd": 100,
+            "spe": 80
+          }
+        },
+        {
+          "id": 248,
+          "name": "Tyranitar",
+          "types": [
+            "Rock",
+            "Dark"
+          ],
+          "stats": {
+            "hp": 100,
+            "atk": 134,
+            "def": 110,
+            "spa": 95,
+            "spd": 100,
+            "spe": 61
+          }
+        },
+        {
+          "id": 700,
+          "name": "Sylveon",
+          "types": [
+            "Fairy"
+          ],
+          "stats": {
+            "hp": 95,
+            "atk": 65,
+            "def": 65,
+            "spa": 110,
+            "spd": 130,
+            "spe": 60
+          }
+        },
+        {
+          "id": 964,
+          "name": "Palafin",
+          "types": [
+            "Water"
+          ],
+          "stats": {
+            "hp": 100,
+            "atk": 70,
+            "def": 72,
+            "spa": 53,
+            "spd": 62,
+            "spe": 100
+          }
+        },
+        {
+          "id": 1018,
+          "name": "Archaludon",
+          "types": [
+            "Steel",
+            "Dragon"
+          ],
+          "stats": {
+            "hp": 90,
+            "atk": 105,
+            "def": 130,
+            "spa": 125,
+            "spd": 65,
+            "spe": 85
+          }
+        }
+      ]
+    },
+    {
+      "hash": "f36e0b0f59065f9fb94724e5aa2b118db18d6066",
+      "species": [
+        80,
+        445,
+        778,
+        903,
+        908,
+        10035
+      ],
+      "count": 1,
+      "weekCount": 1,
+      "lastSeen": "2026-04-27T11:21:46.096Z",
+      "team": [
+        {
+          "id": 80,
+          "name": "Slowbro",
+          "types": [
+            "Water",
+            "Psychic"
+          ],
+          "stats": {
+            "hp": 95,
+            "atk": 75,
+            "def": 110,
+            "spa": 100,
+            "spd": 80,
+            "spe": 30
+          }
+        },
+        {
+          "id": 445,
+          "name": "Garchomp",
+          "types": [
+            "Dragon",
+            "Ground"
+          ],
+          "stats": {
+            "hp": 108,
+            "atk": 130,
+            "def": 95,
+            "spa": 80,
+            "spd": 85,
+            "spe": 102
+          }
+        },
+        {
+          "id": 778,
+          "name": "Mimikyu",
+          "types": [
+            "Ghost",
+            "Fairy"
+          ],
+          "stats": {
+            "hp": 55,
+            "atk": 90,
+            "def": 80,
+            "spa": 50,
+            "spd": 105,
+            "spe": 96
+          }
+        },
+        {
+          "id": 903,
+          "name": "Sneasler",
+          "types": [
+            "Fighting",
+            "Poison"
+          ],
+          "stats": {
+            "hp": 80,
+            "atk": 130,
+            "def": 60,
+            "spa": 40,
+            "spd": 80,
+            "spe": 120
+          }
+        },
+        {
+          "id": 908,
+          "name": "Meowscarada",
+          "types": [
+            "Grass",
+            "Dark"
+          ],
+          "stats": {
+            "hp": 76,
+            "atk": 110,
+            "def": 70,
+            "spa": 81,
+            "spd": 70,
+            "spe": 123
+          }
+        },
+        {
+          "id": 10035,
+          "name": "Mega Charizard Y",
+          "types": [
+            "Fire",
+            "Flying"
+          ],
+          "stats": {
+            "hp": 78,
+            "atk": 104,
+            "def": 78,
+            "spa": 159,
+            "spd": 115,
+            "spe": 100
+          }
+        }
+      ]
+    },
+    {
+      "hash": "3ef81640b7eba7d6ae5016583ba365c740466e81",
+      "species": [
+        196,
+        445,
+        700,
+        823,
+        10035,
+        10038
+      ],
+      "count": 1,
+      "weekCount": 1,
+      "lastSeen": "2026-04-27T14:14:45.539Z",
+      "team": [
+        {
+          "id": 196,
+          "name": "Espeon",
+          "types": [
+            "Psychic"
+          ],
+          "stats": {
+            "hp": 65,
+            "atk": 65,
+            "def": 60,
+            "spa": 130,
+            "spd": 95,
+            "spe": 110
+          }
+        },
+        {
+          "id": 445,
+          "name": "Garchomp",
+          "types": [
+            "Dragon",
+            "Ground"
+          ],
+          "stats": {
+            "hp": 108,
+            "atk": 130,
+            "def": 95,
+            "spa": 80,
+            "spd": 85,
+            "spe": 102
+          }
+        },
+        {
+          "id": 700,
+          "name": "Sylveon",
+          "types": [
+            "Fairy"
+          ],
+          "stats": {
+            "hp": 95,
+            "atk": 65,
+            "def": 65,
+            "spa": 110,
+            "spd": 130,
+            "spe": 60
+          }
+        },
+        {
+          "id": 823,
+          "name": "Corviknight",
+          "types": [
+            "Flying",
+            "Steel"
+          ],
+          "stats": {
+            "hp": 98,
+            "atk": 87,
+            "def": 105,
+            "spa": 53,
+            "spd": 85,
+            "spe": 67
+          }
+        },
+        {
+          "id": 10035,
+          "name": "Mega Charizard Y",
+          "types": [
+            "Fire",
+            "Flying"
+          ],
+          "stats": {
+            "hp": 78,
+            "atk": 104,
+            "def": 78,
+            "spa": 159,
+            "spd": 115,
+            "spe": 100
+          }
+        },
+        {
+          "id": 10038,
+          "name": "Mega Gengar",
+          "types": [
+            "Ghost",
+            "Poison"
+          ],
+          "stats": {
+            "hp": 60,
+            "atk": 65,
+            "def": 80,
+            "spa": 170,
+            "spd": 95,
+            "spe": 130
+          }
+        }
+      ]
+    },
+    {
+      "hash": "4e0fdceade49a179d80b387498683aab230dfeaf",
+      "species": [
+        59,
+        130,
+        448,
+        700,
+        724,
+        887
+      ],
+      "count": 1,
+      "weekCount": 1,
+      "lastSeen": "2026-04-27T16:05:40.645Z",
+      "team": [
+        {
+          "id": 59,
+          "name": "Arcanine",
+          "types": [
+            "Fire"
+          ],
+          "stats": {
+            "hp": 90,
+            "atk": 110,
+            "def": 80,
+            "spa": 100,
+            "spd": 80,
+            "spe": 95
+          }
+        },
+        {
+          "id": 130,
+          "name": "Gyarados",
+          "types": [
+            "Water",
+            "Flying"
+          ],
+          "stats": {
+            "hp": 95,
+            "atk": 125,
+            "def": 79,
+            "spa": 60,
+            "spd": 100,
+            "spe": 81
+          }
+        },
+        {
+          "id": 448,
+          "name": "Lucario",
+          "types": [
+            "Fighting",
+            "Steel"
+          ],
+          "stats": {
+            "hp": 70,
+            "atk": 110,
+            "def": 70,
+            "spa": 115,
+            "spd": 70,
+            "spe": 90
+          }
+        },
+        {
+          "id": 700,
+          "name": "Sylveon",
+          "types": [
+            "Fairy"
+          ],
+          "stats": {
+            "hp": 95,
+            "atk": 65,
+            "def": 65,
+            "spa": 110,
+            "spd": 130,
+            "spe": 60
+          }
+        },
+        {
+          "id": 724,
+          "name": "Decidueye",
+          "types": [
+            "Grass",
+            "Ghost"
+          ],
+          "stats": {
+            "hp": 78,
+            "atk": 107,
+            "def": 75,
+            "spa": 100,
+            "spd": 100,
+            "spe": 70
+          }
+        },
+        {
+          "id": 887,
+          "name": "Dragapult",
+          "types": [
+            "Dragon",
+            "Ghost"
+          ],
+          "stats": {
+            "hp": 88,
+            "atk": 120,
+            "def": 75,
+            "spa": 100,
+            "spd": 75,
+            "spe": 142
+          }
+        }
+      ]
+    },
+    {
+      "hash": "3103c744312552dffae49ace43b20cab7e32ccd2",
+      "species": [
+        445,
+        700,
+        778,
+        939,
+        10039,
+        10059
+      ],
+      "count": 1,
+      "weekCount": 1,
+      "lastSeen": "2026-04-27T16:11:58.908Z",
+      "team": [
+        {
+          "id": 445,
+          "name": "Garchomp",
+          "types": [
+            "Dragon",
+            "Ground"
+          ],
+          "stats": {
+            "hp": 108,
+            "atk": 130,
+            "def": 95,
+            "spa": 80,
+            "spd": 85,
+            "spe": 102
+          }
+        },
+        {
+          "id": 700,
+          "name": "Sylveon",
+          "types": [
+            "Fairy"
+          ],
+          "stats": {
+            "hp": 95,
+            "atk": 65,
+            "def": 65,
+            "spa": 110,
+            "spd": 130,
+            "spe": 60
+          }
+        },
+        {
+          "id": 778,
+          "name": "Mimikyu",
+          "types": [
+            "Ghost",
+            "Fairy"
+          ],
+          "stats": {
+            "hp": 55,
+            "atk": 90,
+            "def": 80,
+            "spa": 50,
+            "spd": 105,
+            "spe": 96
+          }
+        },
+        {
+          "id": 939,
+          "name": "Bellibolt",
+          "types": [
+            "Electric"
+          ],
+          "stats": {
+            "hp": 109,
+            "atk": 64,
+            "def": 91,
+            "spa": 103,
+            "spd": 83,
+            "spe": 45
+          }
+        },
+        {
+          "id": 10039,
+          "name": "Mega Kangaskhan",
+          "types": [
+            "Normal"
+          ],
+          "stats": {
+            "hp": 105,
+            "atk": 125,
+            "def": 100,
+            "spa": 60,
+            "spd": 100,
+            "spe": 100
+          }
+        },
+        {
+          "id": 10059,
+          "name": "Mega Lucario",
+          "types": [
+            "Fighting",
+            "Steel"
+          ],
+          "stats": {
+            "hp": 70,
+            "atk": 145,
+            "def": 88,
+            "spa": 140,
+            "spd": 70,
+            "spe": 112
+          }
+        }
+      ]
+    },
+    {
+      "hash": "9d6aec10a1fe2d3a8b4dd94603e68cebe08c69ec",
+      "species": [
+        142,
+        902,
+        903,
+        10035,
+        10059,
+        10103
+      ],
+      "count": 1,
+      "weekCount": 1,
+      "lastSeen": "2026-04-27T16:14:23.962Z",
+      "team": [
+        {
+          "id": 142,
+          "name": "Aerodactyl",
+          "types": [
+            "Rock",
+            "Flying"
+          ],
+          "stats": {
+            "hp": 80,
+            "atk": 105,
+            "def": 65,
+            "spa": 60,
+            "spd": 75,
+            "spe": 130
+          }
+        },
+        {
+          "id": 902,
+          "name": "Basculegion",
+          "types": [
+            "Water",
+            "Ghost"
+          ],
+          "stats": {
+            "hp": 120,
+            "atk": 112,
+            "def": 65,
+            "spa": 80,
+            "spd": 75,
+            "spe": 78
+          }
+        },
+        {
+          "id": 903,
+          "name": "Sneasler",
+          "types": [
+            "Fighting",
+            "Poison"
+          ],
+          "stats": {
+            "hp": 80,
+            "atk": 130,
+            "def": 60,
+            "spa": 40,
+            "spd": 80,
+            "spe": 120
+          }
+        },
+        {
+          "id": 10035,
+          "name": "Mega Charizard Y",
+          "types": [
+            "Fire",
+            "Flying"
+          ],
+          "stats": {
+            "hp": 78,
+            "atk": 104,
+            "def": 78,
+            "spa": 159,
+            "spd": 115,
+            "spe": 100
+          }
+        },
+        {
+          "id": 10059,
+          "name": "Mega Lucario",
+          "types": [
+            "Fighting",
+            "Steel"
+          ],
+          "stats": {
+            "hp": 70,
+            "atk": 145,
+            "def": 88,
+            "spa": 140,
+            "spd": 70,
+            "spe": 112
+          }
+        },
+        {
+          "id": 10103,
+          "name": "Alolan Ninetales",
+          "types": [
+            "Ice",
+            "Fairy"
+          ],
+          "stats": {
+            "hp": 73,
+            "atk": 67,
+            "def": 75,
+            "spa": 81,
+            "spd": 100,
+            "spe": 109
+          }
+        }
+      ]
+    },
+    {
+      "hash": "8f923f610c2a5d60c242feb9ba0ef74c769f3964",
+      "species": [
+        143,
+        279,
+        302,
+        902,
+        1018,
+        10033
+      ],
+      "count": 1,
+      "weekCount": 1,
+      "lastSeen": "2026-04-27T16:20:29.645Z",
+      "team": [
+        {
+          "id": 143,
+          "name": "Snorlax",
+          "types": [
+            "Normal"
+          ],
+          "stats": {
+            "hp": 160,
+            "atk": 110,
+            "def": 65,
+            "spa": 65,
+            "spd": 110,
+            "spe": 30
+          }
+        },
+        {
+          "id": 279,
+          "name": "Pelipper",
+          "types": [
+            "Water",
+            "Flying"
+          ],
+          "stats": {
+            "hp": 60,
+            "atk": 50,
+            "def": 100,
+            "spa": 95,
+            "spd": 70,
+            "spe": 65
+          }
+        },
+        {
+          "id": 302,
+          "name": "Sableye",
+          "types": [
+            "Dark",
+            "Ghost"
+          ],
+          "stats": {
+            "hp": 50,
+            "atk": 75,
+            "def": 75,
+            "spa": 65,
+            "spd": 65,
+            "spe": 50
+          }
+        },
+        {
+          "id": 902,
+          "name": "Basculegion",
+          "types": [
+            "Water",
+            "Ghost"
+          ],
+          "stats": {
+            "hp": 120,
+            "atk": 112,
+            "def": 65,
+            "spa": 80,
+            "spd": 75,
+            "spe": 78
+          }
+        },
+        {
+          "id": 1018,
+          "name": "Archaludon",
+          "types": [
+            "Steel",
+            "Dragon"
+          ],
+          "stats": {
+            "hp": 90,
+            "atk": 105,
+            "def": 130,
+            "spa": 125,
+            "spd": 65,
+            "spe": 85
+          }
+        },
+        {
+          "id": 10033,
+          "name": "Mega Venusaur",
+          "types": [
+            "Grass",
+            "Poison"
+          ],
+          "stats": {
+            "hp": 80,
+            "atk": 100,
+            "def": 123,
+            "spa": 122,
+            "spd": 120,
+            "spe": 80
+          }
+        }
+      ]
+    },
+    {
+      "hash": "3a5dae36eff29738570582f584d0d9b8aae4f131",
+      "species": [
+        6,
+        149,
+        350,
+        445,
+        983,
+        1013
+      ],
+      "count": 1,
+      "weekCount": 1,
+      "lastSeen": "2026-04-27T16:28:02.825Z",
+      "team": [
+        {
+          "id": 6,
+          "name": "Charizard",
+          "types": [
+            "Fire",
+            "Flying"
+          ],
+          "stats": {
+            "hp": 78,
+            "atk": 84,
+            "def": 78,
+            "spa": 109,
+            "spd": 85,
+            "spe": 100
+          }
+        },
+        {
+          "id": 149,
+          "name": "Dragonite",
+          "types": [
+            "Dragon",
+            "Flying"
+          ],
+          "stats": {
+            "hp": 91,
+            "atk": 134,
+            "def": 95,
+            "spa": 100,
+            "spd": 100,
+            "spe": 80
+          }
+        },
+        {
+          "id": 350,
+          "name": "Milotic",
+          "types": [
+            "Water"
+          ],
+          "stats": {
+            "hp": 95,
+            "atk": 60,
+            "def": 79,
+            "spa": 100,
+            "spd": 125,
+            "spe": 81
+          }
+        },
+        {
+          "id": 445,
+          "name": "Garchomp",
+          "types": [
+            "Dragon",
+            "Ground"
+          ],
+          "stats": {
+            "hp": 108,
+            "atk": 130,
+            "def": 95,
+            "spa": 80,
+            "spd": 85,
+            "spe": 102
+          }
+        },
+        {
+          "id": 983,
+          "name": "Kingambit",
+          "types": [
+            "Dark",
+            "Steel"
+          ],
+          "stats": {
+            "hp": 100,
+            "atk": 135,
+            "def": 120,
+            "spa": 60,
+            "spd": 85,
+            "spe": 50
+          }
+        },
+        {
+          "id": 1013,
+          "name": "Sinistcha",
+          "types": [
+            "Grass",
+            "Ghost"
+          ],
+          "stats": {
+            "hp": 71,
+            "atk": 60,
+            "def": 106,
+            "spa": 121,
+            "spd": 80,
+            "spe": 70
+          }
+        }
+      ]
+    },
+    {
+      "hash": "2df8889b84ebaffdf9e9db07654bef4b825d7bad",
+      "species": [
+        149,
+        445,
+        478,
+        730,
+        902,
+        911
+      ],
+      "count": 1,
+      "weekCount": 1,
+      "lastSeen": "2026-04-27T16:46:13.399Z",
+      "team": [
+        {
+          "id": 149,
+          "name": "Dragonite",
+          "types": [
+            "Dragon",
+            "Flying"
+          ],
+          "stats": {
+            "hp": 91,
+            "atk": 134,
+            "def": 95,
+            "spa": 100,
+            "spd": 100,
+            "spe": 80
+          }
+        },
+        {
+          "id": 445,
+          "name": "Garchomp",
+          "types": [
+            "Dragon",
+            "Ground"
+          ],
+          "stats": {
+            "hp": 108,
+            "atk": 130,
+            "def": 95,
+            "spa": 80,
+            "spd": 85,
+            "spe": 102
+          }
+        },
+        {
+          "id": 478,
+          "name": "Froslass",
+          "types": [
+            "Ice",
+            "Ghost"
+          ],
+          "stats": {
+            "hp": 70,
+            "atk": 80,
+            "def": 70,
+            "spa": 80,
+            "spd": 70,
+            "spe": 110
+          }
+        },
+        {
+          "id": 730,
+          "name": "Primarina",
+          "types": [
+            "Water",
+            "Fairy"
+          ],
+          "stats": {
+            "hp": 80,
+            "atk": 74,
+            "def": 74,
+            "spa": 126,
+            "spd": 116,
+            "spe": 60
+          }
+        },
+        {
+          "id": 902,
+          "name": "Basculegion",
+          "types": [
+            "Water",
+            "Ghost"
+          ],
+          "stats": {
+            "hp": 120,
+            "atk": 112,
+            "def": 65,
+            "spa": 80,
+            "spd": 75,
+            "spe": 78
+          }
+        },
+        {
+          "id": 911,
+          "name": "Skeledirge",
+          "types": [
+            "Fire",
+            "Ghost"
+          ],
+          "stats": {
+            "hp": 104,
+            "atk": 75,
+            "def": 100,
+            "spa": 110,
+            "spd": 75,
+            "spe": 66
+          }
+        }
+      ]
+    },
+    {
+      "hash": "1f6c6dbd5e92af11054c0e8cfababeeb6cc48942",
+      "species": [
+        94,
+        149,
+        184,
+        208,
+        547,
+        780
+      ],
+      "count": 1,
+      "weekCount": 1,
+      "lastSeen": "2026-04-27T17:07:29.852Z",
+      "team": [
+        {
+          "id": 94,
+          "name": "Gengar",
+          "types": [
+            "Ghost",
+            "Poison"
+          ],
+          "stats": {
+            "hp": 60,
+            "atk": 65,
+            "def": 60,
+            "spa": 130,
+            "spd": 75,
+            "spe": 110
+          }
+        },
+        {
+          "id": 149,
+          "name": "Dragonite",
+          "types": [
+            "Dragon",
+            "Flying"
+          ],
+          "stats": {
+            "hp": 91,
+            "atk": 134,
+            "def": 95,
+            "spa": 100,
+            "spd": 100,
+            "spe": 80
+          }
+        },
+        {
+          "id": 184,
+          "name": "Azumarill",
+          "types": [
+            "Water",
+            "Fairy"
+          ],
+          "stats": {
+            "hp": 100,
+            "atk": 50,
+            "def": 80,
+            "spa": 60,
+            "spd": 80,
+            "spe": 50
+          }
+        },
+        {
+          "id": 208,
+          "name": "Steelix",
+          "types": [
+            "Steel",
+            "Ground"
+          ],
+          "stats": {
+            "hp": 75,
+            "atk": 85,
+            "def": 200,
+            "spa": 55,
+            "spd": 65,
+            "spe": 30
+          }
+        },
+        {
+          "id": 547,
+          "name": "Whimsicott",
+          "types": [
+            "Grass",
+            "Fairy"
+          ],
+          "stats": {
+            "hp": 60,
+            "atk": 67,
+            "def": 85,
+            "spa": 77,
+            "spd": 75,
+            "spe": 116
+          }
+        },
+        {
+          "id": 780,
+          "name": "Drampa",
+          "types": [
+            "Normal",
+            "Dragon"
+          ],
+          "stats": {
+            "hp": 78,
+            "atk": 60,
+            "def": 85,
+            "spa": 135,
+            "spd": 91,
+            "spe": 36
+          }
+        }
+      ]
+    },
+    {
+      "hash": "27bb9efafaeb444bfc126ee716858d3ac991a0a7",
+      "species": [
+        547,
+        727,
+        903,
+        956,
+        1013,
+        10039
+      ],
+      "count": 1,
+      "weekCount": 1,
+      "lastSeen": "2026-04-27T17:14:54.476Z",
+      "team": [
+        {
+          "id": 547,
+          "name": "Whimsicott",
+          "types": [
+            "Grass",
+            "Fairy"
+          ],
+          "stats": {
+            "hp": 60,
+            "atk": 67,
+            "def": 85,
+            "spa": 77,
+            "spd": 75,
+            "spe": 116
+          }
+        },
+        {
+          "id": 727,
+          "name": "Incineroar",
+          "types": [
+            "Fire",
+            "Dark"
+          ],
+          "stats": {
+            "hp": 95,
+            "atk": 115,
+            "def": 90,
+            "spa": 80,
+            "spd": 90,
+            "spe": 60
+          }
+        },
+        {
+          "id": 903,
+          "name": "Sneasler",
+          "types": [
+            "Fighting",
+            "Poison"
+          ],
+          "stats": {
+            "hp": 80,
+            "atk": 130,
+            "def": 60,
+            "spa": 40,
+            "spd": 80,
+            "spe": 120
+          }
+        },
+        {
+          "id": 956,
+          "name": "Espathra",
+          "types": [
+            "Psychic"
+          ],
+          "stats": {
+            "hp": 95,
+            "atk": 60,
+            "def": 60,
+            "spa": 101,
+            "spd": 60,
+            "spe": 105
+          }
+        },
+        {
+          "id": 1013,
+          "name": "Sinistcha",
+          "types": [
+            "Grass",
+            "Ghost"
+          ],
+          "stats": {
+            "hp": 71,
+            "atk": 60,
+            "def": 106,
+            "spa": 121,
+            "spd": 80,
+            "spe": 70
+          }
+        },
+        {
+          "id": 10039,
+          "name": "Mega Kangaskhan",
+          "types": [
+            "Normal"
+          ],
+          "stats": {
+            "hp": 105,
+            "atk": 125,
+            "def": 100,
+            "spa": 60,
+            "spd": 100,
+            "spe": 100
+          }
+        }
+      ]
+    },
+    {
+      "hash": "e870f12e0f8eb1ae55c577db76f93231dbc48785",
+      "species": [
+        149,
+        248,
+        530,
+        637,
+        1013,
+        1018
+      ],
+      "count": 1,
+      "weekCount": 1,
+      "lastSeen": "2026-04-27T17:25:53.016Z",
+      "team": [
+        {
+          "id": 149,
+          "name": "Dragonite",
+          "types": [
+            "Dragon",
+            "Flying"
+          ],
+          "stats": {
+            "hp": 91,
+            "atk": 134,
+            "def": 95,
+            "spa": 100,
+            "spd": 100,
+            "spe": 80
+          }
+        },
+        {
+          "id": 248,
+          "name": "Tyranitar",
+          "types": [
+            "Rock",
+            "Dark"
+          ],
+          "stats": {
+            "hp": 100,
+            "atk": 134,
+            "def": 110,
+            "spa": 95,
+            "spd": 100,
+            "spe": 61
+          }
+        },
+        {
+          "id": 530,
+          "name": "Excadrill",
+          "types": [
+            "Ground",
+            "Steel"
+          ],
+          "stats": {
+            "hp": 110,
+            "atk": 135,
+            "def": 60,
+            "spa": 50,
+            "spd": 65,
+            "spe": 88
+          }
+        },
+        {
+          "id": 637,
+          "name": "Volcarona",
+          "types": [
+            "Bug",
+            "Fire"
+          ],
+          "stats": {
+            "hp": 85,
+            "atk": 60,
+            "def": 65,
+            "spa": 135,
+            "spd": 105,
+            "spe": 100
+          }
+        },
+        {
+          "id": 1013,
+          "name": "Sinistcha",
+          "types": [
+            "Grass",
+            "Ghost"
+          ],
+          "stats": {
+            "hp": 71,
+            "atk": 60,
+            "def": 106,
+            "spa": 121,
+            "spd": 80,
+            "spe": 70
+          }
+        },
+        {
+          "id": 1018,
+          "name": "Archaludon",
+          "types": [
+            "Steel",
+            "Dragon"
+          ],
+          "stats": {
+            "hp": 90,
+            "atk": 105,
+            "def": 130,
+            "spa": 125,
+            "spd": 65,
+            "spe": 85
+          }
+        }
+      ]
+    },
+    {
+      "hash": "d1af0476c17a3fbd3a1de257b9e40ca1bfca8ab3",
+      "species": [
+        149,
+        282,
+        658,
+        701,
+        727,
+        887
+      ],
+      "count": 1,
+      "weekCount": 1,
+      "lastSeen": "2026-04-27T18:12:37.457Z",
+      "team": [
+        {
+          "id": 149,
+          "name": "Dragonite",
+          "types": [
+            "Dragon",
+            "Flying"
+          ],
+          "stats": {
+            "hp": 91,
+            "atk": 134,
+            "def": 95,
+            "spa": 100,
+            "spd": 100,
+            "spe": 80
+          }
+        },
+        {
+          "id": 282,
+          "name": "Gardevoir",
+          "types": [
+            "Psychic",
+            "Fairy"
+          ],
+          "stats": {
+            "hp": 68,
+            "atk": 65,
+            "def": 65,
+            "spa": 125,
+            "spd": 115,
+            "spe": 80
+          }
+        },
+        {
+          "id": 658,
+          "name": "Greninja",
+          "types": [
+            "Water",
+            "Dark"
+          ],
+          "stats": {
+            "hp": 72,
+            "atk": 95,
+            "def": 67,
+            "spa": 103,
+            "spd": 71,
+            "spe": 122
+          }
+        },
+        {
+          "id": 701,
+          "name": "Hawlucha",
+          "types": [
+            "Fighting",
+            "Flying"
+          ],
+          "stats": {
+            "hp": 78,
+            "atk": 92,
+            "def": 75,
+            "spa": 74,
+            "spd": 63,
+            "spe": 118
+          }
+        },
+        {
+          "id": 727,
+          "name": "Incineroar",
+          "types": [
+            "Fire",
+            "Dark"
+          ],
+          "stats": {
+            "hp": 95,
+            "atk": 115,
+            "def": 90,
+            "spa": 80,
+            "spd": 90,
+            "spe": 60
+          }
+        },
+        {
+          "id": 887,
+          "name": "Dragapult",
+          "types": [
+            "Dragon",
+            "Ghost"
+          ],
+          "stats": {
+            "hp": 88,
+            "atk": 120,
+            "def": 75,
+            "spa": 100,
+            "spd": 75,
+            "spe": 142
+          }
+        }
+      ]
+    },
+    {
+      "hash": "0134b65b144630c96e8d6c0bcc67c3fd8865fee6",
+      "species": [
+        149,
+        199,
+        214,
+        503,
+        970,
+        10340
+      ],
+      "count": 1,
+      "weekCount": 1,
+      "lastSeen": "2026-04-27T18:31:14.259Z",
+      "team": [
+        {
+          "id": 149,
+          "name": "Dragonite",
+          "types": [
+            "Dragon",
+            "Flying"
+          ],
+          "stats": {
+            "hp": 91,
+            "atk": 134,
+            "def": 95,
+            "spa": 100,
+            "spd": 100,
+            "spe": 80
+          }
+        },
+        {
+          "id": 199,
+          "name": "Slowking",
+          "types": [
+            "Water",
+            "Psychic"
+          ],
+          "stats": {
+            "hp": 95,
+            "atk": 75,
+            "def": 80,
+            "spa": 100,
+            "spd": 110,
+            "spe": 30
+          }
+        },
+        {
+          "id": 214,
+          "name": "Heracross",
+          "types": [
+            "Bug",
+            "Fighting"
+          ],
+          "stats": {
+            "hp": 80,
+            "atk": 125,
+            "def": 75,
+            "spa": 40,
+            "spd": 95,
+            "spe": 85
+          }
+        },
+        {
+          "id": 503,
+          "name": "Samurott",
+          "types": [
+            "Water"
+          ],
+          "stats": {
+            "hp": 95,
+            "atk": 100,
+            "def": 85,
+            "spa": 108,
+            "spd": 70,
+            "spe": 70
+          }
+        },
+        {
+          "id": 970,
+          "name": "Glimmora",
+          "types": [
+            "Rock",
+            "Poison"
+          ],
+          "stats": {
+            "hp": 83,
+            "atk": 55,
+            "def": 90,
+            "spa": 130,
+            "spd": 81,
+            "spe": 86
+          }
+        },
+        {
+          "id": 10340,
+          "name": "Hisuian Zoroark",
+          "types": [
+            "Normal",
+            "Ghost"
+          ],
+          "stats": {
+            "hp": 55,
+            "atk": 100,
+            "def": 60,
+            "spa": 125,
+            "spd": 60,
+            "spe": 110
+          }
+        }
+      ]
+    },
+    {
+      "hash": "6501137be64f160343ed1a5902a1c1d176134d79",
+      "species": [
+        212,
+        279,
+        302,
+        350,
+        1013,
+        1018
+      ],
+      "count": 1,
+      "weekCount": 1,
+      "lastSeen": "2026-04-27T18:38:24.856Z",
+      "team": [
+        {
+          "id": 212,
+          "name": "Scizor",
+          "types": [
+            "Bug",
+            "Steel"
+          ],
+          "stats": {
+            "hp": 70,
+            "atk": 130,
+            "def": 100,
+            "spa": 55,
+            "spd": 80,
+            "spe": 65
+          }
+        },
+        {
+          "id": 279,
+          "name": "Pelipper",
+          "types": [
+            "Water",
+            "Flying"
+          ],
+          "stats": {
+            "hp": 60,
+            "atk": 50,
+            "def": 100,
+            "spa": 95,
+            "spd": 70,
+            "spe": 65
+          }
+        },
+        {
+          "id": 302,
+          "name": "Sableye",
+          "types": [
+            "Dark",
+            "Ghost"
+          ],
+          "stats": {
+            "hp": 50,
+            "atk": 75,
+            "def": 75,
+            "spa": 65,
+            "spd": 65,
+            "spe": 50
+          }
+        },
+        {
+          "id": 350,
+          "name": "Milotic",
+          "types": [
+            "Water"
+          ],
+          "stats": {
+            "hp": 95,
+            "atk": 60,
+            "def": 79,
+            "spa": 100,
+            "spd": 125,
+            "spe": 81
+          }
+        },
+        {
+          "id": 1013,
+          "name": "Sinistcha",
+          "types": [
+            "Grass",
+            "Ghost"
+          ],
+          "stats": {
+            "hp": 71,
+            "atk": 60,
+            "def": 106,
+            "spa": 121,
+            "spd": 80,
+            "spe": 70
+          }
+        },
+        {
+          "id": 1018,
+          "name": "Archaludon",
+          "types": [
+            "Steel",
+            "Dragon"
+          ],
+          "stats": {
+            "hp": 90,
+            "atk": 105,
+            "def": 130,
+            "spa": 125,
+            "spd": 65,
+            "spe": 85
+          }
+        }
+      ]
+    },
+    {
+      "hash": "ab2aa7f536e3f9417464cc33cf353f2d8d402127",
+      "species": [
+        3,
+        142,
+        727,
+        902,
+        10035,
+        10062
+      ],
+      "count": 1,
+      "weekCount": 1,
+      "lastSeen": "2026-04-27T18:57:48.524Z",
+      "team": [
+        {
+          "id": 3,
+          "name": "Venusaur",
+          "types": [
+            "Grass",
+            "Poison"
+          ],
+          "stats": {
+            "hp": 80,
+            "atk": 82,
+            "def": 83,
+            "spa": 100,
+            "spd": 100,
+            "spe": 80
+          }
+        },
+        {
+          "id": 142,
+          "name": "Aerodactyl",
+          "types": [
+            "Rock",
+            "Flying"
+          ],
+          "stats": {
+            "hp": 80,
+            "atk": 105,
+            "def": 65,
+            "spa": 60,
+            "spd": 75,
+            "spe": 130
+          }
+        },
+        {
+          "id": 727,
+          "name": "Incineroar",
+          "types": [
+            "Fire",
+            "Dark"
+          ],
+          "stats": {
+            "hp": 95,
+            "atk": 115,
+            "def": 90,
+            "spa": 80,
+            "spd": 90,
+            "spe": 60
+          }
+        },
+        {
+          "id": 902,
+          "name": "Basculegion",
+          "types": [
+            "Water",
+            "Ghost"
+          ],
+          "stats": {
+            "hp": 120,
+            "atk": 112,
+            "def": 65,
+            "spa": 80,
+            "spd": 75,
+            "spe": 78
+          }
+        },
+        {
+          "id": 10035,
+          "name": "Mega Charizard Y",
+          "types": [
+            "Fire",
+            "Flying"
+          ],
+          "stats": {
+            "hp": 78,
+            "atk": 104,
+            "def": 78,
+            "spa": 159,
+            "spd": 115,
+            "spe": 100
+          }
+        },
+        {
+          "id": 10062,
+          "name": "Mega Floette",
+          "types": [
+            "Fairy"
+          ],
+          "stats": {
+            "hp": 74,
+            "atk": 85,
+            "def": 87,
+            "spa": 155,
+            "spd": 148,
+            "spe": 102
+          }
+        }
+      ]
+    },
+    {
+      "hash": "d8fff5db4baf379e1b179325a9167e7b610de40d",
+      "species": [
+        655,
+        681,
+        887,
+        908,
+        10020,
+        10039
+      ],
+      "count": 1,
+      "weekCount": 1,
+      "lastSeen": "2026-04-27T23:12:05.396Z",
+      "team": [
+        {
+          "id": 655,
+          "name": "Delphox",
+          "types": [
+            "Fire",
+            "Psychic"
+          ],
+          "stats": {
+            "hp": 75,
+            "atk": 69,
+            "def": 72,
+            "spa": 114,
+            "spd": 100,
+            "spe": 104
+          }
+        },
+        {
+          "id": 681,
+          "name": "Aegislash",
+          "types": [
+            "Steel",
+            "Ghost"
+          ],
+          "stats": {
+            "hp": 60,
+            "atk": 50,
+            "def": 140,
+            "spa": 50,
+            "spd": 140,
+            "spe": 60
+          }
+        },
+        {
+          "id": 887,
+          "name": "Dragapult",
+          "types": [
+            "Dragon",
+            "Ghost"
+          ],
+          "stats": {
+            "hp": 88,
+            "atk": 120,
+            "def": 75,
+            "spa": 100,
+            "spd": 75,
+            "spe": 142
+          }
+        },
+        {
+          "id": 908,
+          "name": "Meowscarada",
+          "types": [
+            "Grass",
+            "Dark"
+          ],
+          "stats": {
+            "hp": 76,
+            "atk": 110,
+            "def": 70,
+            "spa": 81,
+            "spd": 70,
+            "spe": 123
+          }
+        },
+        {
+          "id": 10020,
+          "name": "Mega Starmie",
+          "types": [
+            "Water",
+            "Psychic"
+          ],
+          "stats": {
+            "hp": 60,
+            "atk": 115,
+            "def": 95,
+            "spa": 130,
+            "spd": 100,
+            "spe": 120
+          }
+        },
+        {
+          "id": 10039,
+          "name": "Mega Kangaskhan",
+          "types": [
+            "Normal"
+          ],
+          "stats": {
+            "hp": 105,
+            "atk": 125,
+            "def": 100,
+            "spa": 60,
+            "spd": 100,
+            "spe": 100
+          }
+        }
+      ]
+    },
+    {
+      "hash": "77e5f5a345bb6d06b00a717a32a7866b6b4091fb",
+      "species": [
+        903,
+        908,
+        939,
+        983,
+        1018,
+        10036
+      ],
+      "count": 1,
+      "weekCount": 1,
+      "lastSeen": "2026-04-27T23:33:42.952Z",
+      "team": [
+        {
+          "id": 903,
+          "name": "Sneasler",
+          "types": [
+            "Fighting",
+            "Poison"
+          ],
+          "stats": {
+            "hp": 80,
+            "atk": 130,
+            "def": 60,
+            "spa": 40,
+            "spd": 80,
+            "spe": 120
+          }
+        },
+        {
+          "id": 908,
+          "name": "Meowscarada",
+          "types": [
+            "Grass",
+            "Dark"
+          ],
+          "stats": {
+            "hp": 76,
+            "atk": 110,
+            "def": 70,
+            "spa": 81,
+            "spd": 70,
+            "spe": 123
+          }
+        },
+        {
+          "id": 939,
+          "name": "Bellibolt",
+          "types": [
+            "Electric"
+          ],
+          "stats": {
+            "hp": 109,
+            "atk": 64,
+            "def": 91,
+            "spa": 103,
+            "spd": 83,
+            "spe": 45
+          }
+        },
+        {
+          "id": 983,
+          "name": "Kingambit",
+          "types": [
+            "Dark",
+            "Steel"
+          ],
+          "stats": {
+            "hp": 100,
+            "atk": 135,
+            "def": 120,
+            "spa": 60,
+            "spd": 85,
+            "spe": 50
+          }
+        },
+        {
+          "id": 1018,
+          "name": "Archaludon",
+          "types": [
+            "Steel",
+            "Dragon"
+          ],
+          "stats": {
+            "hp": 90,
+            "atk": 105,
+            "def": 130,
+            "spa": 125,
+            "spd": 65,
+            "spe": 85
+          }
+        },
+        {
+          "id": 10036,
+          "name": "Mega Blastoise",
+          "types": [
+            "Water"
+          ],
+          "stats": {
+            "hp": 79,
+            "atk": 103,
+            "def": 120,
+            "spa": 135,
+            "spd": 115,
+            "spe": 78
+          }
+        }
+      ]
+    },
+    {
+      "hash": "e3e7ae002530ad22cbe9698c9a9d947653d69e22",
+      "species": [
+        149,
+        587,
+        727,
+        903,
+        1013,
+        10041
+      ],
+      "count": 1,
+      "weekCount": 1,
+      "lastSeen": "2026-04-28T01:13:01.146Z",
+      "team": [
+        {
+          "id": 149,
+          "name": "Dragonite",
+          "types": [
+            "Dragon",
+            "Flying"
+          ],
+          "stats": {
+            "hp": 91,
+            "atk": 134,
+            "def": 95,
+            "spa": 100,
+            "spd": 100,
+            "spe": 80
+          }
+        },
+        {
+          "id": 587,
+          "name": "Emolga",
+          "types": [
+            "Electric",
+            "Flying"
+          ],
+          "stats": {
+            "hp": 55,
+            "atk": 75,
+            "def": 60,
+            "spa": 75,
+            "spd": 60,
+            "spe": 103
+          }
+        },
+        {
+          "id": 727,
+          "name": "Incineroar",
+          "types": [
+            "Fire",
+            "Dark"
+          ],
+          "stats": {
+            "hp": 95,
+            "atk": 115,
+            "def": 90,
+            "spa": 80,
+            "spd": 90,
+            "spe": 60
+          }
+        },
+        {
+          "id": 903,
+          "name": "Sneasler",
+          "types": [
+            "Fighting",
+            "Poison"
+          ],
+          "stats": {
+            "hp": 80,
+            "atk": 130,
+            "def": 60,
+            "spa": 40,
+            "spd": 80,
+            "spe": 120
+          }
+        },
+        {
+          "id": 1013,
+          "name": "Sinistcha",
+          "types": [
+            "Grass",
+            "Ghost"
+          ],
+          "stats": {
+            "hp": 71,
+            "atk": 60,
+            "def": 106,
+            "spa": 121,
+            "spd": 80,
+            "spe": 70
+          }
+        },
+        {
+          "id": 10041,
+          "name": "Mega Gyarados",
+          "types": [
+            "Water",
+            "Dark"
+          ],
+          "stats": {
+            "hp": 95,
+            "atk": 155,
+            "def": 109,
+            "spa": 70,
+            "spd": 130,
+            "spe": 81
+          }
+        }
+      ]
+    },
+    {
+      "hash": "8f57622edef8c3477cd394e5ac3c3c921cbdfb3a",
+      "species": [
+        902,
+        903,
+        981,
+        983,
+        1013,
+        10036
+      ],
+      "count": 1,
+      "weekCount": 1,
+      "lastSeen": "2026-04-28T12:30:43.737Z",
+      "team": [
+        {
+          "id": 902,
+          "name": "Basculegion",
+          "types": [
+            "Water",
+            "Ghost"
+          ],
+          "stats": {
+            "hp": 120,
+            "atk": 112,
+            "def": 65,
+            "spa": 80,
+            "spd": 75,
+            "spe": 78
+          }
+        },
+        {
+          "id": 903,
+          "name": "Sneasler",
+          "types": [
+            "Fighting",
+            "Poison"
+          ],
+          "stats": {
+            "hp": 80,
+            "atk": 130,
+            "def": 60,
+            "spa": 40,
+            "spd": 80,
+            "spe": 120
+          }
+        },
+        {
+          "id": 981,
+          "name": "Farigiraf",
+          "types": [
+            "Normal",
+            "Psychic"
+          ],
+          "stats": {
+            "hp": 120,
+            "atk": 90,
+            "def": 70,
+            "spa": 110,
+            "spd": 70,
+            "spe": 60
+          }
+        },
+        {
+          "id": 983,
+          "name": "Kingambit",
+          "types": [
+            "Dark",
+            "Steel"
+          ],
+          "stats": {
+            "hp": 100,
+            "atk": 135,
+            "def": 120,
+            "spa": 60,
+            "spd": 85,
+            "spe": 50
+          }
+        },
+        {
+          "id": 1013,
+          "name": "Sinistcha",
+          "types": [
+            "Grass",
+            "Ghost"
+          ],
+          "stats": {
+            "hp": 71,
+            "atk": 60,
+            "def": 106,
+            "spa": 121,
+            "spd": 80,
+            "spe": 70
+          }
+        },
+        {
+          "id": 10036,
+          "name": "Mega Blastoise",
+          "types": [
+            "Water"
+          ],
+          "stats": {
+            "hp": 79,
+            "atk": 103,
+            "def": 120,
+            "spa": 135,
+            "spd": 115,
+            "spe": 78
+          }
+        }
+      ]
+    }
+  ],
+  "usage": [
+    {
+      "id": 445,
+      "name": "Garchomp",
+      "types": [
+        "Dragon",
+        "Ground"
+      ],
+      "count": 21,
+      "usage": 41.18
+    },
+    {
+      "id": 903,
+      "name": "Sneasler",
+      "types": [
+        "Fighting",
+        "Poison"
+      ],
+      "count": 17,
+      "usage": 33.33
+    },
+    {
+      "id": 902,
+      "name": "Basculegion",
+      "types": [
+        "Water",
+        "Ghost"
+      ],
+      "count": 13,
+      "usage": 25.49
+    },
+    {
+      "id": 727,
+      "name": "Incineroar",
+      "types": [
+        "Fire",
+        "Dark"
+      ],
+      "count": 13,
+      "usage": 25.49
+    },
+    {
+      "id": 939,
+      "name": "Bellibolt",
+      "types": [
+        "Electric"
+      ],
+      "count": 12,
+      "usage": 23.53
+    },
+    {
+      "id": 778,
+      "name": "Mimikyu",
+      "types": [
+        "Ghost",
+        "Fairy"
+      ],
+      "count": 12,
+      "usage": 23.53
+    },
+    {
+      "id": 1018,
+      "name": "Archaludon",
+      "types": [
+        "Steel",
+        "Dragon"
+      ],
+      "count": 11,
+      "usage": 21.57
+    },
+    {
+      "id": 983,
+      "name": "Kingambit",
+      "types": [
+        "Dark",
+        "Steel"
+      ],
+      "count": 9,
+      "usage": 17.65
+    },
+    {
+      "id": 700,
+      "name": "Sylveon",
+      "types": [
+        "Fairy"
+      ],
+      "count": 9,
+      "usage": 17.65
+    },
+    {
+      "id": 149,
+      "name": "Dragonite",
+      "types": [
+        "Dragon",
+        "Flying"
+      ],
+      "count": 8,
+      "usage": 15.69
+    },
+    {
+      "id": 823,
+      "name": "Corviknight",
+      "types": [
+        "Flying",
+        "Steel"
+      ],
+      "count": 7,
+      "usage": 13.73
+    },
+    {
+      "id": 10039,
+      "name": "Mega Kangaskhan",
+      "types": [
+        "Normal"
+      ],
+      "count": 6,
+      "usage": 11.76
+    },
+    {
+      "id": 10059,
+      "name": "Mega Lucario",
+      "types": [
+        "Fighting",
+        "Steel"
+      ],
+      "count": 6,
+      "usage": 11.76
+    },
+    {
+      "id": 908,
+      "name": "Meowscarada",
+      "types": [
+        "Grass",
+        "Dark"
+      ],
+      "count": 6,
+      "usage": 11.76
+    },
+    {
+      "id": 1013,
+      "name": "Sinistcha",
+      "types": [
+        "Grass",
+        "Ghost"
+      ],
+      "count": 6,
+      "usage": 11.76
+    },
+    {
+      "id": 637,
+      "name": "Volcarona",
+      "types": [
+        "Bug",
+        "Fire"
+      ],
+      "count": 6,
+      "usage": 11.76
+    },
+    {
+      "id": 547,
+      "name": "Whimsicott",
+      "types": [
+        "Grass",
+        "Fairy"
+      ],
+      "count": 6,
+      "usage": 11.76
+    },
+    {
+      "id": 282,
+      "name": "Gardevoir",
+      "types": [
+        "Psychic",
+        "Fairy"
+      ],
+      "count": 5,
+      "usage": 9.8
+    },
+    {
+      "id": 10020,
+      "name": "Mega Starmie",
+      "types": [
+        "Water",
+        "Psychic"
+      ],
+      "count": 5,
+      "usage": 9.8
+    },
+    {
+      "id": 154,
+      "name": "Meganium",
+      "types": [
+        "Grass"
+      ],
+      "count": 5,
+      "usage": 9.8
+    },
+    {
+      "id": 142,
+      "name": "Aerodactyl",
+      "types": [
+        "Rock",
+        "Flying"
+      ],
+      "count": 4,
+      "usage": 7.84
+    },
+    {
+      "id": 6,
+      "name": "Charizard",
+      "types": [
+        "Fire",
+        "Flying"
+      ],
+      "count": 4,
+      "usage": 7.84
+    },
+    {
+      "id": 887,
+      "name": "Dragapult",
+      "types": [
+        "Dragon",
+        "Ghost"
+      ],
+      "count": 4,
+      "usage": 7.84
+    },
+    {
+      "id": 448,
+      "name": "Lucario",
+      "types": [
+        "Fighting",
+        "Steel"
+      ],
+      "count": 4,
+      "usage": 7.84
+    },
+    {
+      "id": 10034,
+      "name": "Mega Charizard X",
+      "types": [
+        "Fire",
+        "Dragon"
+      ],
+      "count": 4,
+      "usage": 7.84
+    },
+    {
+      "id": 10035,
+      "name": "Mega Charizard Y",
+      "types": [
+        "Fire",
+        "Flying"
+      ],
+      "count": 4,
+      "usage": 7.84
+    },
+    {
+      "id": 10014,
+      "name": "Mega Clefable",
+      "types": [
+        "Fairy",
+        "Flying"
+      ],
+      "count": 4,
+      "usage": 7.84
+    },
+    {
+      "id": 701,
+      "name": "Hawlucha",
+      "types": [
+        "Fighting",
+        "Flying"
+      ],
+      "count": 3,
+      "usage": 5.88
+    },
+    {
+      "id": 10340,
+      "name": "Hisuian Zoroark",
+      "types": [
+        "Normal",
+        "Ghost"
+      ],
+      "count": 3,
+      "usage": 5.88
+    },
+    {
+      "id": 635,
+      "name": "Hydreigon",
+      "types": [
+        "Dark",
+        "Dragon"
+      ],
+      "count": 3,
+      "usage": 5.88
+    },
+    {
+      "id": 310,
+      "name": "Manectric",
+      "types": [
+        "Electric"
+      ],
+      "count": 3,
+      "usage": 5.88
+    },
+    {
+      "id": 10024,
+      "name": "Mega Dragonite",
+      "types": [
+        "Dragon",
+        "Flying"
+      ],
+      "count": 3,
+      "usage": 5.88
+    },
+    {
+      "id": 10038,
+      "name": "Mega Gengar",
+      "types": [
+        "Ghost",
+        "Poison"
+      ],
+      "count": 3,
+      "usage": 5.88
+    },
+    {
+      "id": 279,
+      "name": "Pelipper",
+      "types": [
+        "Water",
+        "Flying"
+      ],
+      "count": 3,
+      "usage": 5.88
+    },
+    {
+      "id": 730,
+      "name": "Primarina",
+      "types": [
+        "Water",
+        "Fairy"
+      ],
+      "count": 3,
+      "usage": 5.88
+    },
+    {
+      "id": 157,
+      "name": "Typhlosion",
+      "types": [
+        "Fire"
+      ],
+      "count": 3,
+      "usage": 5.88
+    },
+    {
+      "id": 248,
+      "name": "Tyranitar",
+      "types": [
+        "Rock",
+        "Dark"
+      ],
+      "count": 3,
+      "usage": 5.88
+    },
+    {
+      "id": 3,
+      "name": "Venusaur",
+      "types": [
+        "Grass",
+        "Poison"
+      ],
+      "count": 3,
+      "usage": 5.88
+    },
+    {
+      "id": 460,
+      "name": "Abomasnow",
+      "types": [
+        "Grass",
+        "Ice"
+      ],
+      "count": 2,
+      "usage": 3.92
+    },
+    {
+      "id": 59,
+      "name": "Arcanine",
+      "types": [
+        "Fire"
+      ],
+      "count": 2,
+      "usage": 3.92
+    },
+    {
+      "id": 184,
+      "name": "Azumarill",
+      "types": [
+        "Water",
+        "Fairy"
+      ],
+      "count": 2,
+      "usage": 3.92
+    },
+    {
+      "id": 780,
+      "name": "Drampa",
+      "types": [
+        "Normal",
+        "Dragon"
+      ],
+      "count": 2,
+      "usage": 3.92
+    },
+    {
+      "id": 530,
+      "name": "Excadrill",
+      "types": [
+        "Ground",
+        "Steel"
+      ],
+      "count": 2,
+      "usage": 3.92
+    },
+    {
+      "id": 478,
+      "name": "Froslass",
+      "types": [
+        "Ice",
+        "Ghost"
+      ],
+      "count": 2,
+      "usage": 3.92
+    },
+    {
+      "id": 94,
+      "name": "Gengar",
+      "types": [
+        "Ghost",
+        "Poison"
+      ],
+      "count": 2,
+      "usage": 3.92
+    },
+    {
+      "id": 130,
+      "name": "Gyarados",
+      "types": [
+        "Water",
+        "Flying"
+      ],
+      "count": 2,
+      "usage": 3.92
+    },
+    {
+      "id": 214,
+      "name": "Heracross",
+      "types": [
+        "Bug",
+        "Fighting"
+      ],
+      "count": 2,
+      "usage": 3.92
+    },
+    {
+      "id": 510,
+      "name": "Liepard",
+      "types": [
+        "Dark"
+      ],
+      "count": 2,
+      "usage": 3.92
+    },
+    {
+      "id": 10036,
+      "name": "Mega Blastoise",
+      "types": [
+        "Water"
+      ],
+      "count": 2,
+      "usage": 3.92
+    },
+    {
+      "id": 10041,
+      "name": "Mega Gyarados",
+      "types": [
+        "Water",
+        "Dark"
+      ],
+      "count": 2,
+      "usage": 3.92
+    },
+    {
+      "id": 10055,
+      "name": "Mega Meowstic",
+      "types": [
+        "Psychic"
+      ],
+      "count": 2,
+      "usage": 3.92
+    },
+    {
+      "id": 350,
+      "name": "Milotic",
+      "types": [
+        "Water"
+      ],
+      "count": 2,
+      "usage": 3.92
+    },
+    {
+      "id": 302,
+      "name": "Sableye",
+      "types": [
+        "Dark",
+        "Ghost"
+      ],
+      "count": 2,
+      "usage": 3.92
+    },
+    {
+      "id": 143,
+      "name": "Snorlax",
+      "types": [
+        "Normal"
+      ],
+      "count": 2,
+      "usage": 3.92
+    },
+    {
+      "id": 208,
+      "name": "Steelix",
+      "types": [
+        "Steel",
+        "Ground"
+      ],
+      "count": 2,
+      "usage": 3.92
+    },
+    {
+      "id": 71,
+      "name": "Victreebel",
+      "types": [
+        "Grass",
+        "Poison"
+      ],
+      "count": 2,
+      "usage": 3.92
+    },
+    {
+      "id": 681,
+      "name": "Aegislash",
+      "types": [
+        "Steel",
+        "Ghost"
+      ],
+      "count": 1,
+      "usage": 1.96
+    },
+    {
+      "id": 10103,
+      "name": "Alolan Ninetales",
+      "types": [
+        "Ice",
+        "Fairy"
+      ],
+      "count": 1,
+      "usage": 1.96
+    },
+    {
+      "id": 936,
+      "name": "Armarouge",
+      "types": [
+        "Fire",
+        "Psychic"
+      ],
+      "count": 1,
+      "usage": 1.96
+    },
+    {
+      "id": 15,
+      "name": "Beedrill",
+      "types": [
+        "Bug",
+        "Poison"
+      ],
+      "count": 1,
+      "usage": 1.96
+    },
+    {
+      "id": 937,
+      "name": "Ceruledge",
+      "types": [
+        "Fire",
+        "Ghost"
+      ],
+      "count": 1,
+      "usage": 1.96
+    },
+    {
+      "id": 724,
+      "name": "Decidueye",
+      "types": [
+        "Grass",
+        "Ghost"
+      ],
+      "count": 1,
+      "usage": 1.96
+    },
+    {
+      "id": 655,
+      "name": "Delphox",
+      "types": [
+        "Fire",
+        "Psychic"
+      ],
+      "count": 1,
+      "usage": 1.96
+    },
+    {
+      "id": 587,
+      "name": "Emolga",
+      "types": [
+        "Electric",
+        "Flying"
+      ],
+      "count": 1,
+      "usage": 1.96
+    },
+    {
+      "id": 956,
+      "name": "Espathra",
+      "types": [
+        "Psychic"
+      ],
+      "count": 1,
+      "usage": 1.96
+    },
+    {
+      "id": 196,
+      "name": "Espeon",
+      "types": [
+        "Psychic"
+      ],
+      "count": 1,
+      "usage": 1.96
+    },
+    {
+      "id": 981,
+      "name": "Farigiraf",
+      "types": [
+        "Normal",
+        "Psychic"
+      ],
+      "count": 1,
+      "usage": 1.96
+    },
+    {
+      "id": 970,
+      "name": "Glimmora",
+      "types": [
+        "Rock",
+        "Poison"
+      ],
+      "count": 1,
+      "usage": 1.96
+    },
+    {
+      "id": 658,
+      "name": "Greninja",
+      "types": [
+        "Water",
+        "Dark"
+      ],
+      "count": 1,
+      "usage": 1.96
+    },
+    {
+      "id": 10233,
+      "name": "Hisuian Typhlosion",
+      "types": [
+        "Fire",
+        "Ghost"
+      ],
+      "count": 1,
+      "usage": 1.96
+    },
+    {
+      "id": 392,
+      "name": "Infernape",
+      "types": [
+        "Fire",
+        "Fighting"
+      ],
+      "count": 1,
+      "usage": 1.96
+    },
+    {
+      "id": 10062,
+      "name": "Mega Floette",
+      "types": [
+        "Fairy"
+      ],
+      "count": 1,
+      "usage": 1.96
+    },
+    {
+      "id": 10008,
+      "name": "Mega Manectric",
+      "types": [
+        "Electric"
+      ],
+      "count": 1,
+      "usage": 1.96
+    },
+    {
+      "id": 10025,
+      "name": "Mega Meganium",
+      "types": [
+        "Grass",
+        "Fairy"
+      ],
+      "count": 1,
+      "usage": 1.96
+    },
+    {
+      "id": 10033,
+      "name": "Mega Venusaur",
+      "types": [
+        "Grass",
+        "Poison"
+      ],
+      "count": 1,
+      "usage": 1.96
+    },
+    {
+      "id": 964,
+      "name": "Palafin",
+      "types": [
+        "Water"
+      ],
+      "count": 1,
+      "usage": 1.96
+    },
+    {
+      "id": 10252,
+      "name": "Paldean Tauros (Aqua)",
+      "types": [
+        "Fighting",
+        "Water"
+      ],
+      "count": 1,
+      "usage": 1.96
+    },
+    {
+      "id": 503,
+      "name": "Samurott",
+      "types": [
+        "Water"
+      ],
+      "count": 1,
+      "usage": 1.96
+    },
+    {
+      "id": 212,
+      "name": "Scizor",
+      "types": [
+        "Bug",
+        "Steel"
+      ],
+      "count": 1,
+      "usage": 1.96
+    },
+    {
+      "id": 911,
+      "name": "Skeledirge",
+      "types": [
+        "Fire",
+        "Ghost"
+      ],
+      "count": 1,
+      "usage": 1.96
+    },
+    {
+      "id": 80,
+      "name": "Slowbro",
+      "types": [
+        "Water",
+        "Psychic"
+      ],
+      "count": 1,
+      "usage": 1.96
+    },
+    {
+      "id": 199,
+      "name": "Slowking",
+      "types": [
+        "Water",
+        "Psychic"
+      ],
+      "count": 1,
+      "usage": 1.96
+    }
+  ],
+  "topTypes": [
+    {
+      "type": "Dragon",
+      "count": 56,
+      "usage": 109.8
+    },
+    {
+      "type": "Ghost",
+      "count": 52,
+      "usage": 101.96
+    },
+    {
+      "type": "Fairy",
+      "count": 44,
+      "usage": 86.27
+    },
+    {
+      "type": "Steel",
+      "count": 43,
+      "usage": 84.31
+    },
+    {
+      "type": "Flying",
+      "count": 43,
+      "usage": 84.31
+    },
+    {
+      "type": "Fire",
+      "count": 42,
+      "usage": 82.35
+    },
+    {
+      "type": "Dark",
+      "count": 41,
+      "usage": 80.39
+    },
+    {
+      "type": "Water",
+      "count": 40,
+      "usage": 78.43
+    },
+    {
+      "type": "Fighting",
+      "count": 34,
+      "usage": 66.67
+    },
+    {
+      "type": "Grass",
+      "count": 33,
+      "usage": 64.71
+    },
+    {
+      "type": "Poison",
+      "count": 30,
+      "usage": 58.82
+    },
+    {
+      "type": "Ground",
+      "count": 25,
+      "usage": 49.02
+    },
+    {
+      "type": "Psychic",
+      "count": 19,
+      "usage": 37.25
+    },
+    {
+      "type": "Electric",
+      "count": 17,
+      "usage": 33.33
+    },
+    {
+      "type": "Normal",
+      "count": 14,
+      "usage": 27.45
+    },
+    {
+      "type": "Bug",
+      "count": 10,
+      "usage": 19.61
+    },
+    {
+      "type": "Rock",
+      "count": 8,
+      "usage": 15.69
+    },
+    {
+      "type": "Ice",
+      "count": 5,
+      "usage": 9.8
+    }
+  ],
+  "trending": {
+    "currentWeek": "2026-W18",
+    "previousWeek": "2026-W17",
+    "rising": [
+      {
+        "speciesId": 510,
+        "currWeek": 2,
+        "prevWeek": 0,
+        "delta": 2,
+        "name": "Liepard",
+        "types": [
+          "Dark"
+        ]
+      },
+      {
+        "speciesId": 460,
+        "currWeek": 2,
+        "prevWeek": 0,
+        "delta": 2,
+        "name": "Abomasnow",
+        "types": [
+          "Grass",
+          "Ice"
+        ]
+      },
+      {
+        "speciesId": 10055,
+        "currWeek": 2,
+        "prevWeek": 0,
+        "delta": 2,
+        "name": "Mega Meowstic",
+        "types": [
+          "Psychic"
+        ]
+      },
+      {
+        "speciesId": 310,
+        "currWeek": 3,
+        "prevWeek": 1,
+        "delta": 2,
+        "name": "Manectric",
+        "types": [
+          "Electric"
+        ]
+      },
+      {
+        "speciesId": 10036,
+        "currWeek": 2,
+        "prevWeek": 0,
+        "delta": 2,
+        "name": "Mega Blastoise",
+        "types": [
+          "Water"
+        ]
+      },
+      {
+        "speciesId": 503,
+        "currWeek": 1,
+        "prevWeek": 0,
+        "delta": 1,
+        "name": "Samurott",
+        "types": [
+          "Water"
+        ]
+      },
+      {
+        "speciesId": 157,
+        "currWeek": 3,
+        "prevWeek": 2,
+        "delta": 1,
+        "name": "Typhlosion",
+        "types": [
+          "Fire"
+        ]
+      },
+      {
+        "speciesId": 10008,
+        "currWeek": 1,
+        "prevWeek": 0,
+        "delta": 1,
+        "name": "Mega Manectric",
+        "types": [
+          "Electric"
+        ]
+      },
+      {
+        "speciesId": 780,
+        "currWeek": 2,
+        "prevWeek": 1,
+        "delta": 1,
+        "name": "Drampa",
+        "types": [
+          "Normal",
+          "Dragon"
+        ]
+      },
+      {
+        "speciesId": 587,
+        "currWeek": 1,
+        "prevWeek": 0,
+        "delta": 1,
+        "name": "Emolga",
+        "types": [
+          "Electric",
+          "Flying"
+        ]
+      }
+    ],
+    "falling": [
+      {
+        "speciesId": 445,
+        "currWeek": 21,
+        "prevWeek": 167,
+        "delta": -146,
+        "name": "Garchomp",
+        "types": [
+          "Dragon",
+          "Ground"
+        ]
+      },
+      {
+        "speciesId": 727,
+        "currWeek": 13,
+        "prevWeek": 95,
+        "delta": -82,
+        "name": "Incineroar",
+        "types": [
+          "Fire",
+          "Dark"
+        ]
+      },
+      {
+        "speciesId": 730,
+        "currWeek": 3,
+        "prevWeek": 82,
+        "delta": -79,
+        "name": "Primarina",
+        "types": [
+          "Water",
+          "Fairy"
+        ]
+      },
+      {
+        "speciesId": 778,
+        "currWeek": 12,
+        "prevWeek": 89,
+        "delta": -77,
+        "name": "Mimikyu",
+        "types": [
+          "Ghost",
+          "Fairy"
+        ]
+      },
+      {
+        "speciesId": 903,
+        "currWeek": 17,
+        "prevWeek": 92,
+        "delta": -75,
+        "name": "Sneasler",
+        "types": [
+          "Fighting",
+          "Poison"
+        ]
+      }
+    ]
+  }
+}
