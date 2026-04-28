@@ -49,9 +49,16 @@
     tournaments: "https://www.pikalytics.com/pokedex/championstournaments",
     preview: "https://www.pikalytics.com/pokedex/championspreview"
   };
-  const META_REFRESH_INTERVAL_MS = 12 * 60 * 60 * 1000;
-  const META_CACHE_KEY = "champions-meta-cache-v2";
-  const META_CACHE_TS_KEY = "champions-meta-cache-ts-v2";
+  const POKECOUNTER_META_SOURCES = {
+    rankings: "https://pokecounter.app/api/rankings/weekly?limit=40&scope=weekly",
+    trending: "https://pokecounter.app/api/stats/trending",
+    pokemonIndex: "https://raw.githubusercontent.com/EricTron-FR/PokeCounter.app/main/src/data/pokemon.json",
+    snapshot: "./data/pokecounter_meta_snapshot.json"
+  };
+  const META_REFRESH_INTERVAL_MS = 30 * 60 * 1000;
+  const META_SNAPSHOT_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000;
+  const META_CACHE_KEY = "champions-pokecounter-meta-v1";
+  const META_CACHE_TS_KEY = "champions-pokecounter-meta-ts-v1";
   const HOSTED_DAMAGE_CALC_URL = "https://damage-calc.onrender.com/calculate";
   const MOVE_POLICY_PATH = "./pokemon_move_discourage_policy.json";
   const DEFAULT_MIN_MEGAS = 1;
@@ -1215,6 +1222,7 @@
   const verifiedAbilityIndex = window.CHAMPIONS_ABILITIES || {};
   let metaThreats = buildMetaThreatsFromSeed(pikalyticsMetaSeed);
   let metaStatus = { source: "seed", updatedAt: null };
+  let metaSourceTruth = buildEmergencyMetaSourceTruth();
   const rawMegaDefinitions = [
     { name: "Mega Venusaur", calcName: "Venusaur-Mega", apiName: "venusaur-mega", baseName: "Venusaur", ability: "Thick Fat", baseStats: [80, 100, 123, 122, 120, 80] },
     { name: "Mega Charizard X", calcName: "Charizard-Mega-X", apiName: "charizard-mega-x", baseName: "Charizard", types: ["Fire", "Dragon"], ability: "Tough Claws", baseStats: [78, 130, 111, 130, 85, 100] },
@@ -2231,109 +2239,322 @@
       .filter(Boolean);
   }
 
-  async function initializeMetaThreats() {
-    const cached = loadCachedMetaThreats();
-    if (cached.length) {
-      metaThreats = cached;
-      const cachedAt = Number(localStorage.getItem(META_CACHE_TS_KEY)) || null;
-      const stale = cachedAt && (Date.now() - cachedAt) > META_REFRESH_INTERVAL_MS * 2;
-      metaStatus = {
-        source: "cached",
-        updatedAt: cachedAt,
-        stale
-      };
-    }
-    const lastUpdated = Number(localStorage.getItem(META_CACHE_TS_KEY)) || 0;
-    const shouldRefresh = !lastUpdated || (Date.now() - lastUpdated) >= META_REFRESH_INTERVAL_MS;
-    if (!shouldRefresh) return;
-    try {
-      const refreshed = await refreshMetaThreatsFromWeb();
-      if (!refreshed.length) return;
-      metaThreats = refreshed;
-      metaStatus = { source: "live", updatedAt: Date.now() };
-      localStorage.setItem(META_CACHE_KEY, JSON.stringify(refreshed));
-      localStorage.setItem(META_CACHE_TS_KEY, String(metaStatus.updatedAt));
-      renderMetaTab();
-    } catch (error) {
-      console.warn("Meta refresh skipped, using cached/seed data.", error);
-    }
-  }
-
-  function loadCachedMetaThreats() {
-    try {
-      const raw = localStorage.getItem(META_CACHE_KEY);
-      if (!raw) return [];
-      const parsed = JSON.parse(raw);
-      if (!Array.isArray(parsed)) return [];
-      return parsed
-        .map((threat) => {
-          const info = legalPokemonData[threat.name];
-          return info ? { ...threat, types: threat.types || info.types || ["Normal"] } : null;
-        })
-        .filter(Boolean);
-    } catch (error) {
-      return [];
-    }
-  }
-
-  async function refreshMetaThreatsFromWeb() {
-    const endpoints = [
-      `https://r.jina.ai/http://${PIKALYTICS_SOURCES.tournaments.replace(/^https?:\/\//, "")}`,
-      `https://r.jina.ai/http://${PIKALYTICS_SOURCES.preview.replace(/^https?:\/\//, "")}`
-    ];
-    const texts = await Promise.all(endpoints.map(async (url) => {
-      const response = await fetch(url);
-      if (!response.ok) throw new Error(`Meta fetch failed: ${url}`);
-      return response.text();
+  function buildEmergencyMetaSourceTruth() {
+    const usage = buildMetaThreatsFromSeed(pikalyticsMetaSeed).map((row, index) => ({
+      id: null,
+      rank: index + 1,
+      name: row.name,
+      types: row.types || [],
+      count: Number(row.weight) || 0,
+      usage: Number(row.weight) || 0,
+      sourceName: row.sourceName || META_SEED_SNAPSHOT_LABEL,
+      sourceType: "emergency_seed",
+      sourceUrl: row.sourceUrl || "",
+      confidence: "low"
     }));
-    const combined = texts.join("\n");
-    const discovered = new Map();
-    const usageRegex = /#\d+\s+([A-Za-z0-9 .'\-()]+)\s+(\d+(?:\.\d+)?)%/g;
-    for (const match of combined.matchAll(usageRegex)) {
-      const name = normalizeThreatName(match[1]);
-      const usage = Number(match[2]);
-      const info = legalPokemonData[name];
-      if (!info) continue;
-      discovered.set(name, {
+    const topTypes = computeTopTypesFromUsage(usage);
+    return {
+      source: "emergency_seed",
+      sourceName: META_SEED_SNAPSHOT_LABEL,
+      sourceUrl: "",
+      fetchedAt: null,
+      week: "emergency seed",
+      totalPlays: usage.reduce((sum, row) => sum + row.count, 0),
+      usage,
+      topTeams: [],
+      trending: { currentWeek: "", previousWeek: "", rising: [], falling: [] },
+      topTypes,
+      commonCores: []
+    };
+  }
+
+  function normalizePokeCounterName(name) {
+    return String(name || "")
+      .replace(/^Mega Charizard X$/i, "Mega Charizard X")
+      .replace(/^Mega Charizard Y$/i, "Mega Charizard Y")
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+
+  function normalizePokeCounterPokemonIndex(rows = []) {
+    const byId = new Map();
+    (Array.isArray(rows) ? rows : []).forEach((row) => {
+      const id = Number(row?.id);
+      const name = normalizePokeCounterName(row?.names?.en || row?.name || "");
+      if (!id || !name) return;
+      byId.set(id, {
+        id,
         name,
-        weight: usage,
-        tags: [],
-        types: info.types || ["Normal"],
-        sourceType: "Pikalytics",
-        sourceName: "Pikalytics Champions live pull",
-        matchType: "exact",
-        confidence: "high",
-        sourceUrl: PIKALYTICS_SOURCES.tournaments
+        types: Array.isArray(row.types) ? row.types : [],
+        stats: row.stats || {}
       });
-    }
-    if (discovered.size < 6) {
-      return buildMetaThreatsFromSeed(pikalyticsMetaSeed);
-    }
-    pikalyticsMetaSeed.forEach((seed) => {
-      if (discovered.has(seed.name)) {
-        discovered.get(seed.name).tags = seed.tags;
+    });
+    return byId;
+  }
+
+  function mapPokeCounterTeamIds(speciesIds = [], pokemonIndex = new Map()) {
+    return (Array.isArray(speciesIds) ? speciesIds : [])
+      .map((id) => {
+        const pokemon = pokemonIndex.get(Number(id));
+        if (!pokemon) return null;
+        return { ...pokemon, name: normalizePokeCounterName(pokemon.name) };
+      })
+      .filter(Boolean);
+  }
+
+  function computeTopTypesFromUsage(usage = []) {
+    const typeCounts = new Map();
+    let total = 0;
+    usage.forEach((row) => {
+      const count = Number(row.count ?? row.usage) || 0;
+      total += count;
+      (row.types || []).forEach((type) => {
+        typeCounts.set(type, (typeCounts.get(type) || 0) + count);
+      });
+    });
+    return [...typeCounts.entries()]
+      .map(([type, count]) => ({ type, count, usage: total ? (count / total) * 100 : 0 }))
+      .sort((a, b) => b.usage - a.usage)
+      .slice(0, 12);
+  }
+
+  function computeCommonCoresFromTopTeams(topTeams = [], totalPlays = 0) {
+    const pairCounts = new Map();
+    topTeams.forEach((team) => {
+      const plays = Number(team.weekCount ?? team.count) || 1;
+      const names = [...new Set((team.team || []).map((mon) => normalizePokeCounterName(mon.name)).filter(Boolean))];
+      for (let i = 0; i < names.length; i += 1) {
+        for (let j = i + 1; j < names.length; j += 1) {
+          const pair = [names[i], names[j]].sort((a, b) => a.localeCompare(b));
+          const key = pair.join(" + ");
+          pairCounts.set(key, (pairCounts.get(key) || 0) + plays);
+        }
       }
     });
-    return [...discovered.values()]
-      .sort((a, b) => b.weight - a.weight);
+    return [...pairCounts.entries()]
+      .map(([core, count]) => ({ core, names: core.split(" + "), count, usage: totalPlays ? (count / totalPlays) * 100 : 0 }))
+      .sort((a, b) => b.count - a.count || a.core.localeCompare(b.core))
+      .slice(0, 12);
   }
 
-  function normalizeThreatName(name) {
-    return name
-      .replace(/\s+/g, " ")
-      .replace(/\s+\(.+\)$/, "")
-      .trim();
+  function transformPokeCounterMeta({ rankings, trending, pokemonIndex, source, fetchedAt }) {
+    const entries = Array.isArray(rankings?.entries) ? rankings.entries : [];
+    const topTeams = entries.map((entry, index) => {
+      const team = Array.isArray(entry.team)
+        ? entry.team.map((mon) => ({ ...mon, name: normalizePokeCounterName(mon.name), types: mon.types || [] }))
+        : mapPokeCounterTeamIds(entry.species, pokemonIndex);
+      return {
+        rank: index + 1,
+        hash: entry.hash || `pokecounter-team-${index + 1}`,
+        count: Number(entry.count) || 0,
+        weekCount: Number(entry.weekCount ?? entry.count) || 0,
+        lastSeen: entry.lastSeen || "",
+        team
+      };
+    }).filter((row) => row.team.length);
+    const totalPlays = topTeams.reduce((sum, row) => sum + (Number(row.weekCount) || Number(row.count) || 0), 0) || Number(rankings?.total) || 0;
+    const usageCounts = new Map();
+    topTeams.forEach((team) => {
+      const plays = Number(team.weekCount) || Number(team.count) || 1;
+      team.team.forEach((pokemon) => {
+        const key = normalizeNameKey(pokemon.name);
+        if (!key) return;
+        const previous = usageCounts.get(key) || { ...pokemon, count: 0 };
+        previous.count += plays;
+        usageCounts.set(key, previous);
+      });
+    });
+    const usage = [...usageCounts.values()]
+      .map((row) => ({
+        id: row.id || null,
+        name: normalizePokeCounterName(row.name),
+        types: row.types || [],
+        count: row.count,
+        usage: totalPlays ? (row.count / totalPlays) * 100 : 0,
+        sourceName: "PokeCounter live rankings",
+        sourceType: "PokeCounter API",
+        sourceUrl: POKECOUNTER_META_SOURCES.rankings,
+        confidence: source === "live" ? "high" : "medium"
+      }))
+      .sort((a, b) => b.usage - a.usage || a.name.localeCompare(b.name))
+      .map((row, index) => ({ ...row, rank: index + 1 }));
+    const mapTrend = (row) => {
+      const pokemon = pokemonIndex.get(Number(row?.speciesId)) || { id: row?.speciesId, name: row?.name || String(row?.speciesId || ""), types: row?.types || [] };
+      return {
+        speciesId: Number(row?.speciesId || pokemon.id) || null,
+        name: normalizePokeCounterName(pokemon.name),
+        types: pokemon.types || [],
+        currWeek: Number(row?.currWeek) || 0,
+        prevWeek: Number(row?.prevWeek) || 0,
+        delta: Number(row?.delta) || 0
+      };
+    };
+    return {
+      source,
+      sourceName: source === "live" ? "PokeCounter live API" : "PokeCounter local snapshot",
+      sourceUrl: source === "live" ? POKECOUNTER_META_SOURCES.rankings : POKECOUNTER_META_SOURCES.snapshot,
+      fetchedAt,
+      week: rankings?.week || trending?.currentWeek || "",
+      totalPlays,
+      usage,
+      topTeams,
+      trending: {
+        currentWeek: trending?.currentWeek || rankings?.week || "",
+        previousWeek: trending?.previousWeek || "",
+        rising: (trending?.rising || []).map(mapTrend).filter((row) => row.name),
+        falling: (trending?.falling || []).map(mapTrend).filter((row) => row.name)
+      },
+      topTypes: computeTopTypesFromUsage(usage),
+      commonCores: computeCommonCoresFromTopTeams(topTeams, totalPlays)
+    };
+  }
+
+  function metaThreatsFromSourceTruth(sourceTruth) {
+    return (sourceTruth?.usage || [])
+      .map((row) => {
+        const info = getRosterEntry(row.name) || legalPokemonData[row.name];
+        if (!info) return null;
+        return {
+          name: info.name || row.name,
+          weight: Number(row.usage) || 0,
+          count: Number(row.count) || 0,
+          rank: row.rank,
+          tags: [],
+          types: info.types || row.types || ["Normal"],
+          sourceType: row.sourceType || sourceTruth.sourceName,
+          sourceName: row.sourceName || sourceTruth.sourceName,
+          sourceUrl: row.sourceUrl || sourceTruth.sourceUrl,
+          matchType: sourceTruth.source === "live" ? "exact" : "snapshot",
+          confidence: row.confidence || (sourceTruth.source === "live" ? "high" : "medium")
+        };
+      })
+      .filter(Boolean);
+  }
+
+  async function fetchJsonWithTimeout(url, options = {}, timeoutMs = 9000) {
+    const controller = new AbortController();
+    const timer = window.setTimeout(() => controller.abort(), timeoutMs);
+    try {
+      const response = await fetch(url, { ...options, signal: controller.signal });
+      if (!response.ok) throw new Error(`HTTP ${response.status}: ${url}`);
+      return await response.json();
+    } finally {
+      window.clearTimeout(timer);
+    }
+  }
+
+  async function fetchJsonTextWithTimeout(url, options = {}, timeoutMs = 9000) {
+    const controller = new AbortController();
+    const timer = window.setTimeout(() => controller.abort(), timeoutMs);
+    try {
+      const response = await fetch(url, { ...options, signal: controller.signal });
+      if (!response.ok) throw new Error(`HTTP ${response.status}: ${url}`);
+      return await response.text();
+    } finally {
+      window.clearTimeout(timer);
+    }
+  }
+
+  async function fetchPokeCounterApiJson(url) {
+    try {
+      const jinaUrl = `https://r.jina.ai/http://${url.replace(/^https?:\/\//, "")}`;
+      const text = await fetchJsonTextWithTimeout(jinaUrl, { cache: "no-store" }, 12000);
+      const jsonStart = text.indexOf("{");
+      const jsonEnd = text.lastIndexOf("}");
+      if (jsonStart < 0 || jsonEnd <= jsonStart) throw new Error(`PokeCounter proxy did not return JSON: ${url}`);
+      return JSON.parse(text.slice(jsonStart, jsonEnd + 1));
+    } catch (proxyError) {
+      return await fetchJsonWithTimeout(url, { cache: "no-store" }, 9000);
+    }
+  }
+
+  async function fetchLivePokeCounterMeta() {
+    const [rankings, trending, pokemonRows] = await Promise.all([
+      fetchPokeCounterApiJson(POKECOUNTER_META_SOURCES.rankings),
+      fetchPokeCounterApiJson(POKECOUNTER_META_SOURCES.trending),
+      fetchJsonWithTimeout(POKECOUNTER_META_SOURCES.pokemonIndex, { cache: "reload" })
+    ]);
+    return transformPokeCounterMeta({
+      rankings,
+      trending,
+      pokemonIndex: normalizePokeCounterPokemonIndex(pokemonRows),
+      source: "live",
+      fetchedAt: new Date().toISOString()
+    });
+  }
+
+  async function fetchSnapshotPokeCounterMeta() {
+    const snapshot = await fetchJsonWithTimeout(POKECOUNTER_META_SOURCES.snapshot, { cache: "no-store" }, 5000);
+    if (Array.isArray(snapshot?.usage) && Array.isArray(snapshot?.topTeams)) {
+      const fetchedAt = snapshot.snapshotFetchedAt || snapshot.fetchedAt || null;
+      const age = fetchedAt ? Date.now() - new Date(fetchedAt).getTime() : Infinity;
+      if (age > META_SNAPSHOT_MAX_AGE_MS) throw new Error("PokeCounter snapshot is stale");
+      const pokemonIndex = normalizePokeCounterPokemonIndex((snapshot.usage || []).map((row) => ({ id: row.id, names: { en: row.name }, types: row.types || [] })));
+      const transformed = transformPokeCounterMeta({
+        rankings: {
+          week: snapshot.week,
+          total: snapshot.total,
+          entries: (snapshot.topTeams || []).map((row) => ({ ...row, species: (row.team || []).map((mon) => mon.id).filter(Boolean) }))
+        },
+        trending: snapshot.trending || {},
+        pokemonIndex,
+        source: "snapshot",
+        fetchedAt
+      });
+      transformed.usage = snapshot.usage.map((row, index) => ({
+        ...row,
+        rank: index + 1,
+        sourceName: "PokeCounter timestamped snapshot",
+        sourceType: "PokeCounter snapshot",
+        sourceUrl: POKECOUNTER_META_SOURCES.snapshot,
+        confidence: "medium"
+      }));
+      transformed.topTypes = snapshot.topTypes || computeTopTypesFromUsage(transformed.usage);
+      transformed.commonCores = computeCommonCoresFromTopTeams(transformed.topTeams, transformed.totalPlays);
+      return transformed;
+    }
+    throw new Error("Invalid PokeCounter snapshot");
+  }
+
+  async function initializeMetaThreats() {
+    try {
+      metaSourceTruth = await fetchLivePokeCounterMeta();
+      metaThreats = metaThreatsFromSourceTruth(metaSourceTruth);
+      metaStatus = { source: "live", updatedAt: Date.now(), stale: false };
+      localStorage.setItem(META_CACHE_KEY, JSON.stringify(metaSourceTruth));
+      localStorage.setItem(META_CACHE_TS_KEY, String(metaStatus.updatedAt));
+      renderMetaTab();
+      return;
+    } catch (error) {
+      console.warn("PokeCounter live meta unavailable, trying timestamped snapshot.", error);
+    }
+    try {
+      metaSourceTruth = await fetchSnapshotPokeCounterMeta();
+      metaThreats = metaThreatsFromSourceTruth(metaSourceTruth);
+      metaStatus = {
+        source: "snapshot",
+        updatedAt: metaSourceTruth.fetchedAt ? new Date(metaSourceTruth.fetchedAt).getTime() : null,
+        stale: false
+      };
+      renderMetaTab();
+      return;
+    } catch (error) {
+      console.warn("PokeCounter snapshot unavailable, using emergency seed.", error);
+    }
+    metaSourceTruth = buildEmergencyMetaSourceTruth();
+    metaThreats = metaThreatsFromSourceTruth(metaSourceTruth);
+    metaStatus = { source: "seed", updatedAt: null, stale: true };
   }
 
   function formatMetaStatusCopy() {
     const updated = metaStatus.updatedAt ? new Date(metaStatus.updatedAt).toLocaleString() : "seed snapshot in use";
     if (metaStatus.source === "live") {
-      return `Meta refreshed from Pikalytics and cached locally on ${updated}. It retries every 12 hours.`;
+      return `Meta source: PokeCounter live API. Fresh pull completed ${updated}; week ${metaSourceTruth.week || "unknown"}.`;
     }
-    if (metaStatus.source === "cached") {
-      return `${metaStatus.stale ? "Using stale cached" : "Using cached"} Pikalytics meta from ${updated}. The app retries a live refresh every 12 hours.`;
+    if (metaStatus.source === "snapshot") {
+      return `Meta source: timestamped PokeCounter snapshot from ${updated}; week ${metaSourceTruth.week || "unknown"}.`;
     }
-    return `Using the built-in ${META_SEED_SNAPSHOT_LABEL}. The app retries a live refresh every 12 hours when network fetch is available.`;
+    return `Meta source: emergency seed only. No PokeCounter live source or valid timestamped snapshot was available.`;
   }
 
   function formatMetaCountdownCopy() {
@@ -2349,7 +2570,7 @@
     const days = Math.floor(totalMinutes / (60 * 24));
     const hours = Math.floor((totalMinutes % (60 * 24)) / 60);
     const minutes = totalMinutes % 60;
-    return `Next live refresh: ${days}d ${hours}h ${minutes}m (${new Date(nextRefresh).toLocaleString()}).`;
+    return `Next PokeCounter live refresh: ${days}d ${hours}h ${minutes}m (${new Date(nextRefresh).toLocaleString()}).`;
   }
 
   function updateMetaStatusPanel() {
@@ -2365,16 +2586,16 @@
 
   function renderMetaTab() {
     if (!metaUsageBoard || !metaStatusPanel) return;
-    const usageMap = new Map(metaThreats.map((threat) => [normalizeNameKey(threat.name), threat.weight]));
-    const rows = championsRoster
-      .filter((entry) => !isMegaEntry(entry))
-      .map((entry) => ({
-        name: entry.name,
-        usage: usageMap.get(normalizeNameKey(entry.name)) || 0,
-        role: entry.metaRole,
-        types: entry.types
-      }))
-      .sort((a, b) => (b.usage - a.usage) || a.name.localeCompare(b.name))
+    const rows = (metaSourceTruth.usage || [])
+      .map((row) => {
+        const entry = getRosterEntry(row.name);
+        return {
+          ...row,
+          name: entry?.name || row.name,
+          role: entry?.metaRole || "PokeCounter meta",
+          types: entry?.types || row.types || []
+        };
+      })
       .slice(0, 14);
     if (!rows.length) {
       metaStatusPanel.textContent = "Meta snapshot fallback is active, but the roster did not finish loading.";
@@ -2382,30 +2603,18 @@
       return;
     }
     const maxUsage = Math.max(...rows.map((row) => row.usage), 1);
-    const currentKeys = new Set(metaThreats.slice(0, 12).map((row) => normalizeNameKey(row.name)));
-    const seedKeys = new Set(pikalyticsMetaSeed.slice(0, 12).map((row) => normalizeNameKey(row.name)));
-    const rising = metaThreats
-      .filter((row, index) => index < 12 && !seedKeys.has(normalizeNameKey(row.name)))
-      .slice(0, 6);
-    const falling = pikalyticsMetaSeed
-      .filter((row) => !currentKeys.has(normalizeNameKey(row.name)))
-      .slice(0, 6);
-    const typeUsage = TYPE_ORDER.map((type) => ({
-      type,
-      usage: metaThreats.reduce((sum, threat) => sum + ((threat.types || []).includes(type) ? Number(threat.weight) || 0 : 0), 0)
-    })).filter((row) => row.usage > 0).sort((a, b) => b.usage - a.usage).slice(0, 10);
-    const teamRows = getRetainedSourceRows()
-      .filter((row) => Array.isArray(row.team) && row.team.length >= 4 && !isSelfplaySourceRow(row))
-      .map((row) => ({
-        label: row.label || row.archetype || row.sourceName || "source-backed shell",
-        team: row.team.map((slot) => getSlotSpeciesName(slot)).filter(Boolean).slice(0, 6),
-        sourceName: row.matchedCreator || row.sourceName || "source metadata",
-        sourceType: row.sourceType || "archive",
-        confidence: Number(row.confidence) || 0.5,
-        sourceUrl: row.sourceUrl || row.source_url || ""
-      }))
-      .sort((a, b) => b.confidence - a.confidence)
-      .slice(0, 5);
+    const rising = metaSourceTruth.trending?.rising || [];
+    const falling = metaSourceTruth.trending?.falling || [];
+    const typeUsage = metaSourceTruth.topTypes || [];
+    const teamRows = (metaSourceTruth.topTeams || []).slice(0, 8).map((row) => ({
+      label: `#${row.rank || "?"} PokeCounter team`,
+      team: (row.team || []).map((mon) => mon.name).filter(Boolean).slice(0, 6),
+      sourceName: metaSourceTruth.sourceName,
+      sourceType: metaSourceTruth.source === "live" ? "PokeCounter API" : "PokeCounter snapshot",
+      confidence: metaSourceTruth.source === "live" ? 0.95 : 0.75,
+      sourceUrl: metaSourceTruth.sourceUrl,
+      plays: row.weekCount || row.count || 0
+    }));
     updateMetaStatusPanel();
     metaUsageBoard.innerHTML = `
       <div class="analysis-stack">
@@ -2413,7 +2622,7 @@
         ${rows.map((row, index) => `
           <div class="speed-bar">
             <div class="speed-bar__label">
-              <span>#${index + 1} ${row.name}</span>
+              <span>#${row.rank || index + 1} ${row.name}</span>
               <span>${row.usage.toFixed(2)}%</span>
             </div>
             <div class="speed-bar__meta">${row.types.join(" / ")} | ${row.role}</div>
@@ -2429,7 +2638,7 @@
           ${teamRows.length ? teamRows.map((row) => `
             <div class="fix-list__item">
               <strong>${escapeHtml(row.label)}:</strong> ${row.team.map(escapeHtml).join(" / ")}
-              <br><span class="result-copy">Source: ${escapeHtml(row.sourceName)} (${escapeHtml(row.sourceType)}), shell match, confidence ${Math.round(row.confidence * 100)}%${row.sourceUrl ? `, <a href="${escapeAttribute(row.sourceUrl)}" target="_blank" rel="noreferrer">URL</a>` : ""}</span>
+              <br><span class="result-copy">Plays: ${escapeHtml(String(row.plays || 0))} | Source: ${escapeHtml(row.sourceName)} (${escapeHtml(row.sourceType)}), exact team snapshot, confidence ${Math.round(row.confidence * 100)}%${row.sourceUrl ? `, <a href="${escapeAttribute(row.sourceUrl)}" target="_blank" rel="noreferrer">URL</a>` : ""}</span>
             </div>
           `).join("") : `<div class="fix-list__item">No high-confidence external source found.</div>`}
         </div>
@@ -2437,15 +2646,15 @@
       <div class="analysis-stack">
         <p class="result-title">Trending</p>
         <div class="analysis-row">
-          ${(rising.length ? rising : metaThreats.slice(0, 4)).map((row) => `<span class="analysis-chip severity-good">Rising: ${escapeHtml(row.name)} ${Number(row.weight || 0).toFixed(1)}%</span>`).join("")}
-          ${(falling.length ? falling : pikalyticsMetaSeed.slice(-3)).map((row) => `<span class="analysis-chip severity-medium">Falling: ${escapeHtml(row.name)} ${Number(row.weight || 0).toFixed(1)}%</span>`).join("")}
+          ${(rising.length ? rising : []).slice(0, 6).map((row) => `<span class="analysis-chip severity-good">Rising: ${escapeHtml(row.name)} ${row.delta > 0 ? "+" : ""}${Number(row.delta || 0)}</span>`).join("") || `<span class="analysis-chip severity-neutral">No rising trend available in this snapshot.</span>`}
+          ${(falling.length ? falling : []).slice(0, 6).map((row) => `<span class="analysis-chip severity-medium">Falling: ${escapeHtml(row.name)} ${Number(row.delta || 0)}</span>`).join("") || `<span class="analysis-chip severity-neutral">No falling trend available in this snapshot.</span>`}
         </div>
       </div>
       <div class="analysis-stack">
         <p class="result-title">Top Type Usage</p>
         ${typeUsage.map((row) => `
           <div class="speed-bar">
-            <div class="speed-bar__label"><span>${escapeHtml(row.type)}</span><span>${row.usage.toFixed(1)}</span></div>
+            <div class="speed-bar__label"><span>${escapeHtml(row.type)}</span><span>${Number(row.usage || 0).toFixed(1)}%</span></div>
             <div class="speed-bar__track"><div class="speed-bar__fill" style="width:${((row.usage / Math.max(1, typeUsage[0]?.usage || 1)) * 100).toFixed(1)}%; background:${getTypeColor(row.type)}"></div></div>
           </div>
         `).join("")}
@@ -2453,7 +2662,7 @@
       <div class="analysis-stack">
         <p class="result-title">Source Transparency</p>
         <div class="fix-list">
-          ${metaThreats.slice(0, 8).map((row) => `<div class="fix-list__item"><strong>${escapeHtml(row.name)}:</strong> ${escapeHtml(row.sourceName || "Pikalytics")} | ${escapeHtml(row.sourceType || "Pikalytics")} | ${escapeHtml(row.matchType || "snapshot")} | confidence ${escapeHtml(row.confidence || "medium")}${row.sourceUrl ? ` | <a href="${escapeAttribute(row.sourceUrl)}" target="_blank" rel="noreferrer">URL</a>` : ""}</div>`).join("")}
+          ${(metaSourceTruth.usage || []).slice(0, 8).map((row) => `<div class="fix-list__item"><strong>${escapeHtml(row.name)}:</strong> ${escapeHtml(row.sourceName || metaSourceTruth.sourceName)} | ${escapeHtml(row.sourceType || "PokeCounter")} | exact usage aggregate | confidence ${escapeHtml(row.confidence || "high")}${row.sourceUrl ? ` | <a href="${escapeAttribute(row.sourceUrl)}" target="_blank" rel="noreferrer">URL</a>` : ""}</div>`).join("")}
         </div>
       </div>
     `;
@@ -6282,6 +6491,219 @@
     `).join("");
   }
 
+  function bestStabMultiplierForEntry(attacker, defender) {
+    if (!attacker || !defender) return 1;
+    return Math.max(...(attacker.types || ["Normal"]).map((type) => getTypeEffectiveness(type, defender.types || ["Normal"])), 1);
+  }
+
+  function pokeCounterStylePickScore(attacker, opposing = []) {
+    let score = 0;
+    opposing.forEach((defender) => {
+      const offensive = bestStabMultiplierForEntry(attacker, defender);
+      const incoming = bestStabMultiplierForEntry(defender, attacker);
+      if (offensive >= 2) score += 1;
+      if (offensive >= 4) score += 1;
+      if (incoming === 0) score += 1;
+      else if (incoming >= 4) score -= 2;
+      else if (incoming >= 2) score -= 1;
+      if (offensive >= 2 && incoming < 2) score += 0.5;
+    });
+    return score;
+  }
+
+  function getCombinations(list, size) {
+    const result = [];
+    const walk = (start, combo) => {
+      if (combo.length === size) {
+        result.push(combo.slice());
+        return;
+      }
+      for (let index = start; index < list.length; index += 1) {
+        combo.push(list[index]);
+        walk(index + 1, combo);
+        combo.pop();
+      }
+    };
+    walk(0, []);
+    return result;
+  }
+
+  function optimalPokeCounterSubset(myEntries = [], opposingEntries = [], size = 4) {
+    const combos = getCombinations(myEntries, Math.min(size, myEntries.length));
+    let best = { subset: myEntries.slice(0, size), covered: 0, uncovered: opposingEntries, totalScore: -Infinity };
+    combos.forEach((combo) => {
+      const uncovered = opposingEntries.filter((defender) => !combo.some((attacker) => bestStabMultiplierForEntry(attacker, defender) >= 2));
+      const covered = opposingEntries.length - uncovered.length;
+      const totalScore = combo.reduce((sum, attacker) => sum + pokeCounterStylePickScore(attacker, opposingEntries), 0);
+      if (totalScore > best.totalScore || (totalScore === best.totalScore && covered > best.covered)) {
+        best = { subset: combo, covered, uncovered, totalScore };
+      }
+    });
+    return best;
+  }
+
+  function getMetaOpponentTeamsForSimulation() {
+    return (metaSourceTruth.topTeams || [])
+      .map((team) => ({
+        ...team,
+        entries: (team.team || []).map((mon) => getRosterEntry(mon.name)).filter(Boolean)
+      }))
+      .filter((team) => team.entries.length >= 4)
+      .slice(0, 12);
+  }
+
+  function simulatePokeCounterMetaMatchups(teamState = []) {
+    const myEntries = getLiveWarRoomOccupiedRows(teamState).map((row) => row.entry).filter(Boolean);
+    const opponents = getMetaOpponentTeamsForSimulation();
+    const matchups = opponents.map((opponent) => {
+      const mine = optimalPokeCounterSubset(myEntries, opponent.entries, 4);
+      const theirs = optimalPokeCounterSubset(opponent.entries, myEntries, 4);
+      const avgSpeed = (list) => list.length ? list.reduce((sum, entry) => sum + (entry.baseSpeed || 0), 0) / list.length : 0;
+      const coverageRatio = opponent.entries.length ? mine.covered / opponent.entries.length : 0;
+      const speedAdvantage = avgSpeed(mine.subset) - avgSpeed(theirs.subset);
+      const threatsAgainstYou = mine.subset.filter((entry) => theirs.subset.some((opp) => bestStabMultiplierForEntry(opp, entry) >= 2)).length;
+      let winRate = 15 + coverageRatio * 60;
+      if (speedAdvantage > 15) winRate += 8;
+      else if (speedAdvantage > 0) winRate += 4;
+      else if (speedAdvantage < -15) winRate -= 8;
+      else if (speedAdvantage < 0) winRate -= 4;
+      winRate -= threatsAgainstYou * 4;
+      return {
+        opponent,
+        yourPicks: mine.subset,
+        theirPicks: theirs.subset,
+        winRate: Math.max(5, Math.min(95, Math.round(winRate))),
+        coverageRatio,
+        speedAdvantage,
+        threatsAgainstYou
+      };
+    }).sort((a, b) => a.winRate - b.winRate);
+    const overall = matchups.length ? Math.round(matchups.reduce((sum, row) => sum + row.winRate, 0) / matchups.length) : 0;
+    return { matchups, overall };
+  }
+
+  function scoreLeadPairAgainstMeta(pairRows, teamState, mode = "best") {
+    const entries = pairRows.map((row) => row.entry);
+    const moveKeys = pairRows.flatMap((row) => getSetMoveKeys(row.slot));
+    const topOpponents = getMetaOpponentTeamsForSimulation().slice(0, 5).flatMap((team) => team.entries.slice(0, 2));
+    let score = entries.reduce((sum, entry) => sum + pokeCounterStylePickScore(entry, topOpponents), 0) * 10;
+    const avgSpeed = entries.reduce((sum, entry) => sum + (entry.baseSpeed || 0), 0) / Math.max(1, entries.length);
+    const hasFakeOut = moveKeys.includes("fake out");
+    const hasTr = moveKeys.includes("trick room");
+    const hasTailwind = moveKeys.includes("tailwind");
+    const hasRedirection = moveKeys.some((move) => ["follow me", "rage powder"].includes(move));
+    const hasSpread = moveKeys.some((move) => SPREAD_PRESSURE_MOVE_KEYS.has(move));
+    if (hasFakeOut) score += 14;
+    if (hasRedirection) score += 10;
+    if (hasTailwind && avgSpeed >= 80) score += 12;
+    if (hasTr && avgSpeed <= 75) score += 12;
+    if (hasSpread) score += getTeamSynergyReport(entries[0], teamState, {}).score > 0 || getTeamSynergyReport(entries[1], teamState, {}).score > 0 ? 8 : 2;
+    if (mode === "safe") score += entries.reduce((sum, entry) => sum + ((entry.baseStats?.[0] || 0) + (entry.baseStats?.[2] || 0) + (entry.baseStats?.[4] || 0)), 0) / 35;
+    if (mode === "aggressive") score += entries.reduce((sum, entry) => sum + Math.max(entry.baseStats?.[1] || 0, entry.baseStats?.[3] || 0), 0) / 14;
+    if (mode === "anti-tr") score += hasFakeOut || moveKeys.some((move) => ["taunt", "encore", "trick room"].includes(move)) ? 22 : -8;
+    if (mode === "anti-tailwind") score += hasFakeOut || moveKeys.some((move) => ["taunt", "encore", "tailwind", "icy wind", "electroweb"].includes(move)) ? 20 : -6;
+    if (mode === "anti-weather") score += moveKeys.some((move) => ["tailwind", "wide guard", "parting shot", "fake out"].includes(move)) ? 16 : 0;
+    return score;
+  }
+
+  function getPokeCounterLeadPlans(teamState = []) {
+    const rows = getLiveWarRoomOccupiedRows(teamState);
+    const pairs = getCombinations(rows, 2).map((pair) => ({ pair, names: pair.map((row) => row.entry.name) }));
+    const pick = (mode) => pairs
+      .map((row) => ({ ...row, score: scoreLeadPairAgainstMeta(row.pair, teamState, mode) }))
+      .sort((a, b) => b.score - a.score)[0] || null;
+    return {
+      best: pick("best"),
+      safe: pick("safe"),
+      aggressive: pick("aggressive"),
+      antiTr: pick("anti-tr"),
+      antiTailwind: pick("anti-tailwind"),
+      antiWeather: pick("anti-weather")
+    };
+  }
+
+  function getPokeCounterSuggestedSwaps(teamState = [], threatRows = []) {
+    const currentKeys = new Set(getLiveWarRoomOccupiedRows(teamState).map((row) => normalizeNameKey(row.entry.name)));
+    const targetThreats = (threatRows || []).slice(0, 3).map((row) => row.threat).filter(Boolean);
+    if (!targetThreats.length) return [];
+    return championsRoster
+      .filter((entry) => !currentKeys.has(normalizeNameKey(entry.name)))
+      .filter((entry) => isEntryAllowedInActiveRuleset(entry))
+      .map((entry) => ({
+        entry,
+        score: targetThreats.reduce((sum, threat) => sum + pokeCounterStylePickScore(entry, [getRosterEntry(threat.name) || threat]), 0)
+      }))
+      .filter((row) => row.score > 0)
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 3)
+      .map((row) => `${row.entry.name} improves PokeCounter-style safety/coverage into ${targetThreats.map((threat) => threat.name).join(", ")}.`);
+  }
+
+  function buildPokeCounterTeamBuilderPanel(teamState = [], evaluation = null) {
+    const filled = getLiveWarRoomFilledSlots(teamState).length;
+    if (filled < 6) {
+      return `
+        <section class="live-war-room-section">
+          <p class="live-war-room-section__label">Team Builder Simulation</p>
+          <p class="live-war-room-section__body">Build your team first to see which Pokemon to bring.</p>
+        </section>
+      `;
+    }
+    const leadPlans = getPokeCounterLeadPlans(teamState);
+    const simulation = simulatePokeCounterMetaMatchups(teamState);
+    const worst = simulation.matchups.slice(0, 3);
+    const best = simulation.matchups.slice(-2).reverse();
+    const cores = metaSourceTruth.commonCores || [];
+    const threatRows = evaluation?.threatRows || buildMetaThreatRows(teamState, evaluation?.offenseReport?.attackTypes || []);
+    const suggestions = getPokeCounterSuggestedSwaps(teamState, threatRows);
+    const missingCoverage = evaluation?.offenseReport?.uncoveredTypes?.slice(0, 4) || [];
+    const confidence = metaSourceTruth.source === "live" ? "High" : metaSourceTruth.source === "snapshot" ? "Medium" : "Low";
+    const formatLead = (label, row) => row ? `<div class="live-war-room-list__item"><strong>${escapeHtml(label)}:</strong> ${row.names.map(escapeHtml).join(" + ")} <small>score ${Math.round(row.score)}</small></div>` : "";
+    return `
+      <section class="live-war-room-section">
+        <p class="live-war-room-section__label">Best Leads</p>
+        <div class="live-war-room-list">
+          ${formatLead("Best 2", leadPlans.best)}
+          ${formatLead("Safest", leadPlans.safe)}
+          ${formatLead("Aggressive", leadPlans.aggressive)}
+          ${formatLead("Anti-TR", leadPlans.antiTr)}
+          ${formatLead("Anti-Tailwind", leadPlans.antiTailwind)}
+          ${formatLead("Anti-weather", leadPlans.antiWeather)}
+        </div>
+      </section>
+      <section class="live-war-room-section">
+        <p class="live-war-room-section__label">Bring Plan</p>
+        <div class="live-war-room-list">
+          ${best.map((row) => `<div class="live-war-room-list__item"><strong>${row.winRate}% vs ${escapeHtml((row.opponent.team || []).map((mon) => mon.name).slice(0, 3).join(" / "))}</strong><small>Bring ${row.yourPicks.map((entry) => entry.name).join(" / ")}.</small></div>`).join("") || `<div class="live-war-room-list__item">No PokeCounter top-team matchup available.</div>`}
+        </div>
+      </section>
+      <section class="live-war-room-section">
+        <p class="live-war-room-section__label">Threats</p>
+        <div class="live-war-room-list">
+          ${worst.map((row) => `<div class="live-war-room-list__item live-war-room-severity--${row.winRate < 45 ? "danger" : "warn"}"><strong>${row.winRate}% into ${escapeHtml((row.opponent.team || []).map((mon) => mon.name).slice(0, 3).join(" / "))}</strong><small>${row.threatsAgainstYou} brought Pokemon are threatened; coverage ${(row.coverageRatio * 100).toFixed(0)}%.</small></div>`).join("") || `<div class="live-war-room-list__item">No major top-team threat surfaced.</div>`}
+        </div>
+      </section>
+      <section class="live-war-room-section">
+        <p class="live-war-room-section__label">Common Cores Tested</p>
+        <div class="live-war-room-list">
+          ${cores.slice(0, 6).map((core) => `<div class="live-war-room-list__item">${escapeHtml(core.core)} <small>${Number(core.usage || 0).toFixed(1)}% of top-team plays</small></div>`).join("") || `<div class="live-war-room-list__item">No common cores available from current meta data.</div>`}
+        </div>
+      </section>
+      <section class="live-war-room-section">
+        <p class="live-war-room-section__label">Suggested Changes</p>
+        <div class="live-war-room-list">
+          ${suggestions.map((text) => `<div class="live-war-room-list__item">${escapeHtml(text)}</div>`).join("")}
+          ${missingCoverage.length ? `<div class="live-war-room-list__item">Missing coverage into: ${missingCoverage.map(escapeHtml).join(", ")}.</div>` : ""}
+          ${(!suggestions.length && !missingCoverage.length) ? `<div class="live-war-room-list__item">No immediate swap required by PokeCounter-style simulation.</div>` : ""}
+        </div>
+      </section>
+      <section class="live-war-room-section">
+        <p class="live-war-room-section__label">Confidence</p>
+        <p class="live-war-room-section__body">${confidence}: ${escapeHtml(metaSourceTruth.sourceName)}${metaSourceTruth.week ? `, ${escapeHtml(metaSourceTruth.week)}` : ""}; average simulated win rate ${simulation.overall || 0}%.</p>
+      </section>
+    `;
+  }
+
   function renderLiveWarRoomIntel() {
     if (!liveWarRoomIntel) return;
     const fast = liveWarRoomIntelState.fast;
@@ -6300,6 +6722,8 @@
     const speedSummary = fast?.speedSummary || "Waiting for more speed information.";
     const matchupPreview = slow?.matchups || ["Add more Pokemon to reveal matchup pressure."];
     const scores = medium?.scores || fast?.scores || getMiniTeamScores([], { weaknessRows: [], structureReport: { score: 0 }, metaPressure: { fakeOut: { score: 0 }, intimidate: { score: 0 } }, roleCounts: {}, weatherMode: "" });
+    const teamState = getTeamBuilderState();
+    const simulationPanel = buildPokeCounterTeamBuilderPanel(teamState, medium?.evaluation || null);
     liveWarRoomIntel.classList.toggle("is-loading", anyLoading);
     setBusyState(liveWarRoomIntel, anyLoading, "Refreshing Intel");
     liveWarRoomIntel.innerHTML = `
@@ -6343,6 +6767,7 @@
           }).join("")}
         </div>
       </section>
+      ${simulationPanel}
     `;
   }
 
