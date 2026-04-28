@@ -1308,6 +1308,7 @@ def main():
     rewrite_source_meta_snapshot(current_entries, diversity_pressure)
 
     debug_payload = {
+        "persistent_memory_updated": True,
         "prior_runs_reused": len(training_history.get("runs", [])),
         "persistent_shells_retained": len(shell_memory.get("shells", [])),
         "mega_identities": list(mega_memory.get("mega_identities", {}).keys())[:20],
@@ -1331,6 +1332,7 @@ def main():
         "\n".join([
             "# Persistent Training Memory Report",
             "",
+            "- persistent_memory_updated: true",
             f"- Prior runs reused: {debug_payload['prior_runs_reused']}",
             f"- Persistent shells retained: {debug_payload['persistent_shells_retained']}",
             f"- Rain diversity penalty: {diversity_pressure['rain_penalty']}",
