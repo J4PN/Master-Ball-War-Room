@@ -5832,6 +5832,400 @@
     window.__MBWR_RECOMMENDATION_REJECTIONS = store.slice(-30);
   }
 
+  function getTeamIntentDebugStore() {
+    if (typeof window === "undefined") return null;
+    window.__MBWR_TEAM_INTENT_DEBUG = window.__MBWR_TEAM_INTENT_DEBUG || {
+      detectedArchetype: "",
+      primaryWinCondition: "",
+      supportEngine: [],
+      intentionalSynergies: [],
+      rejectedBadSuggestions: [],
+      acceptedSuggestions: [],
+      validatorResults: []
+    };
+    return window.__MBWR_TEAM_INTENT_DEBUG;
+  }
+
+  function resetTeamIntentDebug(intent) {
+    const debug = getTeamIntentDebugStore();
+    if (!debug) return;
+    debug.detectedArchetype = intent.detectedArchetype;
+    debug.primaryWinCondition = intent.primaryWinCondition;
+    debug.supportEngine = [...intent.supportEngine];
+    debug.intentionalSynergies = intent.intentionalSynergies.map((row) => ({ ...row }));
+    debug.rejectedBadSuggestions = [];
+    debug.acceptedSuggestions = [];
+    debug.validatorResults = [];
+  }
+
+  function recordRecommendationValidationResult(result) {
+    const debug = getTeamIntentDebugStore();
+    if (!debug) return;
+    const payload = {
+      kind: result.kind,
+      label: result.label,
+      ok: !!result.ok,
+      reasons: result.reasons || [],
+      at: new Date().toISOString()
+    };
+    debug.validatorResults.push(payload);
+    debug.validatorResults = debug.validatorResults.slice(-40);
+    if (payload.ok) {
+      debug.acceptedSuggestions.push(payload);
+      debug.acceptedSuggestions = debug.acceptedSuggestions.slice(-20);
+    } else {
+      debug.rejectedBadSuggestions.push(payload);
+      debug.rejectedBadSuggestions = debug.rejectedBadSuggestions.slice(-30);
+    }
+  }
+
+  function slotLabel(slot, entry) {
+    return entry?.name || slot?.name || "";
+  }
+
+  function slotHasMoveKey(slot, key) {
+    return getSetMoveKeys(slot).includes(normalizeNameKey(key));
+  }
+
+  function displayMoveName(moveKey) {
+    const known = {
+      "rage powder": "Rage Powder",
+      "follow me": "Follow Me",
+      "wide guard": "Wide Guard",
+      "quick guard": "Quick Guard",
+      "rain dance": "Rain Dance",
+      "sunny day": "Sunny Day",
+      "thunder wave": "Thunder Wave",
+      "beat up": "Beat Up",
+      "helping hand": "Helping Hand",
+      "fake out": "Fake Out",
+      "trick room": "Trick Room"
+    };
+    const key = normalizeNameKey(moveKey);
+    return known[key] || prettyMoveName(moveKey);
+  }
+
+  function slotAbilityKey(slot, entry) {
+    return normalizeNameKey(slot?.ability || entry?.abilities?.[0] || "");
+  }
+
+  function slotItemKey(slot) {
+    return normalizeNameKey(slot?.item || "");
+  }
+
+  function getFilledTeamRows(teamState = []) {
+    return getFilledTeamSlots(teamState)
+      .map((slot) => ({ slot, entry: resolveBattleEntry(slot) || getRosterEntry(slot.name) }))
+      .filter((row) => row.entry);
+  }
+
+  function isPhysicalPartner(row) {
+    return row?.entry && (getOffenseProfile(row.slot, row.entry) === "physical" || (row.entry.baseStats?.[1] || 0) >= 110);
+  }
+
+  function isSpecialPartner(row) {
+    return row?.entry && (getOffenseProfile(row.slot, row.entry) === "special" || (row.entry.baseStats?.[3] || 0) >= 110);
+  }
+
+  function isSetupOrRoomPartner(row) {
+    const keys = getSetMoveKeys(row?.slot);
+    return keys.some((move) => ["trick room", "swords dance", "nasty plot", "dragon dance", "shell smash", "calm mind", "bulk up", "substitute"].includes(move));
+  }
+
+  function getIntentSynergyMoveKeys(synergies = [], slotName = "") {
+    const key = normalizeNameKey(slotName);
+    const preserved = new Set();
+    synergies.forEach((row) => {
+      if (normalizeNameKey(row.source || "") !== key) return;
+      (row.preserveMoves || []).forEach((move) => preserved.add(normalizeNameKey(move)));
+    });
+    return preserved;
+  }
+
+  function getIntentSynergyRolesForSlot(synergies = [], slotName = "") {
+    const key = normalizeNameKey(slotName);
+    return synergies.filter((row) => normalizeNameKey(row.source || "") === key || normalizeNameKey(row.partner || "") === key);
+  }
+
+  function pushIntentSynergy(intent, synergy) {
+    const signature = `${synergy.type}|${synergy.source}|${synergy.partner}|${(synergy.preserveMoves || []).join("/")}`;
+    if (intent._seenSynergies.has(signature)) return;
+    intent._seenSynergies.add(signature);
+    intent.intentionalSynergies.push(synergy);
+  }
+
+  function detectTeamIntent(teamState = [], evaluation = null) {
+    const rows = getFilledTeamRows(teamState);
+    const structure = evaluation?.structureReport || evaluateTeamStructure(teamState);
+    const weather = inferTeamWeatherProfile(teamState);
+    const moveKeys = rows.flatMap(({ slot }) => getSetMoveKeys(slot));
+    const trCount = structure.trickRoomCount || moveKeys.filter((move) => move === "trick room").length;
+    const tailwindCount = moveKeys.filter((move) => move === "tailwind").length;
+    const slowCount = structure.slowCount || rows.filter(({ entry }) => (entry.baseSpeed || 0) <= 65).length;
+    const fastCount = structure.fastCount || rows.filter(({ entry }) => (entry.baseSpeed || 0) >= 100).length;
+    const supportCount = rows.filter(({ slot }) => isMeaningfulSupportSet(slot)).length;
+    const attackerCount = rows.filter(({ slot }) => isRealAttackerSet(slot)).length;
+    const megaCount = rows.filter(({ entry }) => isMegaEntry(entry)).length;
+    const intent = {
+      detectedArchetype: "Balance",
+      primaryWinCondition: "position support around the strongest breaker and trade efficiently",
+      supportEngine: [],
+      riskPoints: [],
+      higherEfficiencyOptions: [],
+      intentionalSynergies: [],
+      _seenSynergies: new Set()
+    };
+
+    if (megaCount >= 2) intent.detectedArchetype = "Double Mega";
+    if (trCount && slowCount >= 2 && !tailwindCount) intent.detectedArchetype = "Hard TR";
+    else if (trCount) intent.detectedArchetype = "TR Hybrid";
+    else if (weather.primary === "rain") intent.detectedArchetype = "Rain";
+    else if (weather.primary === "sun") intent.detectedArchetype = "Sun";
+    else if (tailwindCount) intent.detectedArchetype = "Tailwind";
+    else if (attackerCount >= 4 && fastCount >= 3 && supportCount <= 1) intent.detectedArchetype = "HO";
+    else if (supportCount >= 3 && attackerCount <= 2) intent.detectedArchetype = "Stall/Fat";
+    else if ((evaluation?.metaMatchupScore || 0) >= 75 && rows.length >= 4) intent.detectedArchetype = "Anti-meta";
+
+    if (intent.detectedArchetype === "Hard TR") {
+      intent.primaryWinCondition = "set Trick Room safely, then let slow breakers attack before faster teams can move";
+      intent.supportEngine.push("Trick Room setup protection", "slow breaker pressure");
+    } else if (intent.detectedArchetype === "TR Hybrid") {
+      intent.primaryWinCondition = "force flexible speed control, using Trick Room for slow modes and standard pacing when TR is not ideal";
+      intent.supportEngine.push("secondary speed mode", "positioning support");
+    } else if (intent.detectedArchetype === "Rain") {
+      intent.primaryWinCondition = "use rain-boosted Water pressure to overload neutral matchups";
+      intent.supportEngine.push("rain support", "Water spread pressure");
+    } else if (intent.detectedArchetype === "Sun") {
+      intent.primaryWinCondition = "use sun-boosted Fire or Chlorophyll pressure to win the tempo race";
+      intent.supportEngine.push("sun support", "weather pressure");
+    } else if (intent.detectedArchetype === "Tailwind") {
+      intent.primaryWinCondition = "set Tailwind and convert the speed window into immediate KOs";
+      intent.supportEngine.push("Tailwind speed control", "fast breaker pressure");
+    } else if (intent.detectedArchetype === "HO") {
+      intent.primaryWinCondition = "lead aggressively, deny setup, and turn early damage into a fast endgame";
+      intent.supportEngine.push("tempo pressure", "priority or disruption support");
+    }
+
+    rows.forEach((row) => {
+      const source = slotLabel(row.slot, row.entry);
+      const keys = getSetMoveKeys(row.slot);
+      const ability = slotAbilityKey(row.slot, row.entry);
+      const item = slotItemKey(row.slot);
+      const partners = rows.filter((other) => other !== row);
+      if (keys.includes("trick room")) {
+        partners.filter((partner) => isTrickRoomBreakerRow(partner)).slice(0, 3).forEach((partner) => {
+          pushIntentSynergy(intent, {
+            type: "trick_room_setup",
+            source,
+            partner: slotLabel(partner.slot, partner.entry),
+            preserveMoves: ["Trick Room"],
+            explanation: `${source} sets Trick Room so ${slotLabel(partner.slot, partner.entry)} can move first as a slow breaker.`
+          });
+        });
+      }
+      if (keys.includes("tailwind")) {
+        partners.filter((partner) => (partner.entry.baseSpeed || 0) >= 85 || isRealAttackerSet(partner.slot)).slice(0, 3).forEach((partner) => {
+          pushIntentSynergy(intent, {
+            type: "tailwind_pressure",
+            source,
+            partner: slotLabel(partner.slot, partner.entry),
+            preserveMoves: ["Tailwind"],
+            explanation: `${source} creates a Tailwind window for ${slotLabel(partner.slot, partner.entry)}.`
+          });
+        });
+      }
+      ["rage powder", "follow me"].forEach((move) => {
+        if (!keys.includes(move)) return;
+        partners.filter(isSetupOrRoomPartner).slice(0, 3).forEach((partner) => {
+          pushIntentSynergy(intent, {
+            type: "redirection_setup",
+            source,
+            partner: slotLabel(partner.slot, partner.entry),
+            preserveMoves: [displayMoveName(move)],
+            explanation: `${displayMoveName(move)} protects ${slotLabel(partner.slot, partner.entry)} while it sets the team plan.`
+          });
+        });
+      });
+      if (keys.includes("fake out")) {
+        partners.filter(isSetupOrRoomPartner).slice(0, 3).forEach((partner) => {
+          pushIntentSynergy(intent, {
+            type: "fake_out_setup",
+            source,
+            partner: slotLabel(partner.slot, partner.entry),
+            preserveMoves: ["Fake Out"],
+            explanation: `${source} can Fake Out threats so ${slotLabel(partner.slot, partner.entry)} gets a setup turn.`
+          });
+        });
+      }
+      if (ability === "armor tail") {
+        if (isSetupOrRoomPartner(row)) {
+          pushIntentSynergy(intent, {
+            type: "priority_denial_setup",
+            source,
+            partner: source,
+            preserveAbilities: ["Armor Tail"],
+            explanation: `${source}'s Armor Tail protects its own setup from priority disruption.`
+          });
+        }
+        partners.filter(isSetupOrRoomPartner).slice(0, 3).forEach((partner) => {
+          pushIntentSynergy(intent, {
+            type: "priority_denial_setup",
+            source,
+            partner: slotLabel(partner.slot, partner.entry),
+            preserveAbilities: ["Armor Tail"],
+            explanation: `${source}'s Armor Tail protects ${slotLabel(partner.slot, partner.entry)} from priority disruption.`
+          });
+        });
+      }
+      if (keys.includes("coaching")) {
+        partners.filter(isPhysicalPartner).slice(0, 3).forEach((partner) => {
+          pushIntentSynergy(intent, {
+            type: "coaching_physical_breaker",
+            source,
+            partner: slotLabel(partner.slot, partner.entry),
+            preserveMoves: ["Coaching"],
+            explanation: `${source} uses Coaching to scale ${slotLabel(partner.slot, partner.entry)}'s physical pressure.`
+          });
+        });
+      }
+      if (keys.includes("decorate")) {
+        partners.filter((partner) => isPhysicalPartner(partner) || isSpecialPartner(partner)).slice(0, 3).forEach((partner) => {
+          pushIntentSynergy(intent, {
+            type: "decorate_breaker",
+            source,
+            partner: slotLabel(partner.slot, partner.entry),
+            preserveMoves: ["Decorate"],
+            explanation: `${source} uses Decorate to turn ${slotLabel(partner.slot, partner.entry)} into the immediate win condition.`
+          });
+        });
+      }
+      if (keys.includes("helping hand")) {
+        partners.filter((partner) => isRealAttackerSet(partner.slot)).slice(0, 3).forEach((partner) => {
+          pushIntentSynergy(intent, {
+            type: "helping_hand_ko_math",
+            source,
+            partner: slotLabel(partner.slot, partner.entry),
+            preserveMoves: ["Helping Hand"],
+            explanation: `${source} can push ${slotLabel(partner.slot, partner.entry)} over KO thresholds with Helping Hand.`
+          });
+        });
+      }
+      ["wide guard", "quick guard"].forEach((move) => {
+        if (!keys.includes(move)) return;
+        partners.slice(0, 3).forEach((partner) => {
+          pushIntentSynergy(intent, {
+            type: move === "wide guard" ? "spread_protection" : "priority_protection",
+            source,
+            partner: slotLabel(partner.slot, partner.entry),
+            preserveMoves: [displayMoveName(move)],
+            explanation: `${source} uses ${displayMoveName(move)} to keep ${slotLabel(partner.slot, partner.entry)} active through common 2v2 pressure.`
+          });
+        });
+      });
+      if (keys.includes("rain dance")) {
+        partners.filter((partner) => partner.entry.types.includes("Water") || getSetMoveKeys(partner.slot).some((move) => ["water spout", "muddy water", "wave crash", "water pulse"].includes(move))).forEach((partner) => {
+          pushIntentSynergy(intent, {
+            type: "manual_rain_pressure",
+            source,
+            partner: slotLabel(partner.slot, partner.entry),
+            preserveMoves: ["Rain Dance"],
+            explanation: `${source}'s Rain Dance supports ${slotLabel(partner.slot, partner.entry)}'s Water pressure.`
+          });
+        });
+      }
+      if (keys.includes("sunny day")) {
+        partners.filter((partner) => partner.entry.types.includes("Fire") || ["chlorophyll", "solar power"].includes(slotAbilityKey(partner.slot, partner.entry))).forEach((partner) => {
+          pushIntentSynergy(intent, {
+            type: "manual_sun_pressure",
+            source,
+            partner: slotLabel(partner.slot, partner.entry),
+            preserveMoves: ["Sunny Day"],
+            explanation: `${source}'s Sunny Day supports ${slotLabel(partner.slot, partner.entry)}'s sun mode.`
+          });
+        });
+      }
+      if (keys.includes("thunder wave")) {
+        partners.filter((partner) => ["guts", "quick feet", "marvel scale"].includes(slotAbilityKey(partner.slot, partner.entry))).forEach((partner) => {
+          pushIntentSynergy(intent, {
+            type: "intentional_status_activation",
+            source,
+            partner: slotLabel(partner.slot, partner.entry),
+            preserveMoves: ["Thunder Wave"],
+            explanation: `${source}'s Thunder Wave may intentionally activate ${slotLabel(partner.slot, partner.entry)} instead of only slowing opponents.`
+          });
+        });
+      }
+      if (keys.includes("beat up")) {
+        partners.filter((partner) => slotAbilityKey(partner.slot, partner.entry) === "justified").forEach((partner) => {
+          pushIntentSynergy(intent, {
+            type: "beat_up_justified",
+            source,
+            partner: slotLabel(partner.slot, partner.entry),
+            preserveMoves: ["Beat Up"],
+            explanation: `${source} enables Beat Up + Justified pressure with ${slotLabel(partner.slot, partner.entry)}.`
+          });
+        });
+      }
+      if (["hospitality"].includes(ability) || keys.some((move) => ["heal pulse", "life dew"].includes(move))) {
+        partners.filter((partner) => isRealAttackerSet(partner.slot) || isSetupOrRoomPartner(partner)).slice(0, 3).forEach((partner) => {
+          pushIntentSynergy(intent, {
+            type: "healing_loop",
+            source,
+            partner: slotLabel(partner.slot, partner.entry),
+            preserveMoves: keys.includes("life dew") ? ["Life Dew"] : keys.includes("heal pulse") ? ["Heal Pulse"] : [],
+            preserveAbilities: ability === "hospitality" ? ["Hospitality"] : [],
+            explanation: `${source} keeps ${slotLabel(partner.slot, partner.entry)} healthy enough to keep executing the plan.`
+          });
+        });
+      }
+      ["surf", "discharge", "earthquake"].forEach((move) => {
+        if (!keys.includes(move)) return;
+        partners.filter((partner) => {
+          const partnerAbility = slotAbilityKey(partner.slot, partner.entry);
+          if (move === "earthquake") return getEffectiveTypeEffectiveness("Ground", partner.slot, partner.entry) === 0;
+          if (move === "discharge") return partner.entry.types.includes("Ground") || ["lightning rod", "motor drive", "volt absorb"].includes(partnerAbility);
+          if (move === "surf") return ["water absorb", "storm drain", "dry skin"].includes(partnerAbility) || partner.entry.types.includes("Water");
+          return false;
+        }).forEach((partner) => {
+          pushIntentSynergy(intent, {
+            type: "spread_move_partner_safe",
+            source,
+            partner: slotLabel(partner.slot, partner.entry),
+            preserveMoves: [displayMoveName(move)],
+            explanation: `${source}'s ${displayMoveName(move)} has a partner-safe spread line next to ${slotLabel(partner.slot, partner.entry)}.`
+          });
+        });
+      });
+      if (item === "weakness policy") {
+        partners.filter((partner) => getSetMoveKeys(partner.slot).some((move) => ["surf", "discharge", "earthquake", "bullet seed", "beat up", "rock blast"].includes(move))).forEach((partner) => {
+          pushIntentSynergy(intent, {
+            type: "weakness_policy_activation",
+            source: slotLabel(partner.slot, partner.entry),
+            partner: source,
+            preserveItems: ["Weakness Policy"],
+            explanation: `${slotLabel(partner.slot, partner.entry)} may help activate ${source}'s Weakness Policy line.`
+          });
+        });
+      }
+    });
+
+    if (intent.intentionalSynergies.some((row) => row.type.includes("redirection"))) intent.supportEngine.push("redirection");
+    if (intent.intentionalSynergies.some((row) => row.type.includes("guard") || row.type.includes("protection"))) intent.supportEngine.push("protection moves");
+    if (intent.intentionalSynergies.some((row) => row.type.includes("coaching") || row.type.includes("decorate") || row.type.includes("helping_hand"))) intent.supportEngine.push("partner damage amplification");
+    if (intent.intentionalSynergies.some((row) => row.type.includes("healing"))) intent.supportEngine.push("healing loop");
+    if (!intent.supportEngine.length) intent.supportEngine.push("basic positioning and type pivots");
+    if (trCount && !rows.some(isTrickRoomEnablerRow)) intent.riskPoints.push("Trick Room can be denied if the setter is pressured immediately.");
+    if ((weather.primary === "rain" || weather.primary === "sun") && weather.modes.length === 1) intent.riskPoints.push("Weather denial can lower the main damage plan.");
+    if (attackerCount <= 1 && rows.length >= 4) intent.riskPoints.push("Too few finishers may make the support engine run out of damage.");
+    if (!intent.riskPoints.length) intent.riskPoints.push("The main risk is losing the positioning turn that enables the win condition.");
+    intent.higherEfficiencyOptions = [
+      "Only change slots that improve the detected plan.",
+      "Prefer upgrades that keep the same support job while improving matchup math."
+    ];
+    delete intent._seenSynergies;
+    return intent;
+  }
+
   function isHardTrickRoomContext(teamState = [], structureReport = null) {
     const rows = getLiveWarRoomOccupiedRows(teamState);
     const trCount = structureReport?.trickRoomCount ?? rows.filter(({ slot }) => getSetMoveKeys(slot).includes("trick room")).length;
@@ -5850,6 +6244,10 @@
     if (key === "sinistcha") return { movesAny: [["matcha gotcha"], ["strength sap", "life dew", "rage powder"]], abilities: ["hospitality"], role: "support" };
     if (key === "farigiraf") return { moves: ["trick room"], abilities: ["armor tail"], role: "support" };
     return null;
+  }
+
+  function hasCoherentCoreRequirement(entry) {
+    return !!getCoherentCoreRequirement(entry);
   }
 
   function setSatisfiesCoherentCore(set, entry) {
@@ -5919,12 +6317,71 @@
     return true;
   }
 
-  async function validateFinalRecommendation({ kind, teamState, evaluation, currentSlot = null, candidateEntry, candidateSet, swapTarget = "" }) {
+  function preservesPartnerSynergy(beforeSet, afterSet, slotName, teamIntent) {
+    const synergies = (teamIntent?.intentionalSynergies || []).filter((row) => normalizeNameKey(row.source || "") === normalizeNameKey(slotName));
+    const protectedMoveKeys = getIntentSynergyMoveKeys(synergies, slotName);
+    const beforeKeys = new Set(getSetMoveKeys(beforeSet));
+    const afterKeys = new Set(getSetMoveKeys(afterSet));
+    for (const move of protectedMoveKeys) {
+      if (beforeKeys.has(move) && !afterKeys.has(move)) return false;
+    }
+    const beforeAbility = slotAbilityKey(beforeSet, getRosterEntry(beforeSet?.name || ""));
+    const afterAbility = slotAbilityKey(afterSet, getRosterEntry(afterSet?.name || ""));
+    const beforeItem = slotItemKey(beforeSet);
+    const afterItem = slotItemKey(afterSet);
+    for (const row of synergies) {
+      if ((row.preserveAbilities || []).some((ability) => beforeAbility === normalizeNameKey(ability) && afterAbility !== normalizeNameKey(ability))) return false;
+      if ((row.preserveItems || []).some((item) => beforeItem === normalizeNameKey(item) && afterItem !== normalizeNameKey(item))) return false;
+    }
+    return true;
+  }
+
+  function candidateProvidesEquivalentSynergy(candidateSet, candidateEntry, targetSlotName, teamIntent) {
+    const targetSynergies = getIntentSynergyRolesForSlot(teamIntent?.intentionalSynergies || [], targetSlotName)
+      .filter((row) => normalizeNameKey(row.source || "") === normalizeNameKey(targetSlotName));
+    if (!targetSynergies.length) return true;
+    const candidateMoves = new Set(getSetMoveKeys(candidateSet));
+    const candidateAbility = slotAbilityKey(candidateSet, candidateEntry);
+    const candidateItem = slotItemKey(candidateSet);
+    return targetSynergies.every((row) => {
+      const movesOk = !(row.preserveMoves || []).length || row.preserveMoves.some((move) => candidateMoves.has(normalizeNameKey(move)));
+      const abilitiesOk = !(row.preserveAbilities || []).length || row.preserveAbilities.some((ability) => candidateAbility === normalizeNameKey(ability));
+      const itemsOk = !(row.preserveItems || []).length || row.preserveItems.some((item) => candidateItem === normalizeNameKey(item));
+      return movesOk && abilitiesOk && itemsOk;
+    });
+  }
+
+  function createsSpeedModeConflict(teamState, afterTeam, teamIntent, evaluation) {
+    const beforeHardTr = teamIntent?.detectedArchetype === "Hard TR" || isHardTrickRoomContext(teamState, evaluation?.structureReport);
+    const afterStructure = evaluateTeamStructure(afterTeam);
+    const afterMoves = afterTeam.flatMap((slot) => getSetMoveKeys(slot));
+    if (beforeHardTr && afterMoves.some((move) => HARD_TR_ANTI_SPEED_CONTROL_KEYS.has(move))) return true;
+    if (beforeHardTr && (afterStructure.trickRoomCount || 0) <= 0) return true;
+    if (teamIntent?.detectedArchetype === "Tailwind" && !afterMoves.includes("tailwind")) return true;
+    return false;
+  }
+
+  function createsSelfSabotage(afterTeam, teamIntent) {
+    const rows = getFilledTeamRows(afterTeam);
+    if (teamIntent?.detectedArchetype === "Hard TR") {
+      const fastChoiceScarf = rows.some(({ slot, entry }) => slotItemKey(slot) === "choice scarf" && (entry.baseSpeed || 0) >= 80);
+      if (fastChoiceScarf) return true;
+    }
+    return rows.some(({ slot }) => {
+      const keys = getSetMoveKeys(slot);
+      const choiceItem = ["choice scarf", "choice band", "choice specs"].includes(slotItemKey(slot));
+      const utilityHeavy = keys.filter((move) => getSupportMoveKeySet().has(move) && move !== "fake out").length >= 2;
+      return choiceItem && utilityHeavy;
+    });
+  }
+
+  async function validateFinalRecommendation({ kind, teamState, evaluation, teamIntent, currentSlot = null, candidateEntry, candidateSet, swapTarget = "" }) {
     const reasons = [];
     const currentMetaScore = evaluation?.metaMatchupScore ?? computeMetaMatchupScore(evaluation?.threatRows || []);
     const currentEntry = currentSlot ? resolveBattleEntry(currentSlot) : null;
     const beforeSet = currentSlot ? { ...currentSlot, name: currentSlot.name } : null;
     const afterSet = { ...candidateSet, name: candidateEntry?.name || candidateSet?.name || "" };
+    const label = kind === "swap" ? `${swapTarget} -> ${candidateEntry?.name || ""}` : currentSlot?.name || candidateEntry?.name || "";
     if (!await isRecommendationLegal(afterSet, candidateEntry)) reasons.push("legal");
     if (setHasAntiHardTrSpeedControl(afterSet) && isHardTrickRoomContext(teamState, evaluation?.structureReport)) reasons.push("archetype preserved");
     if (!setSatisfiesCoherentCore(afterSet, candidateEntry)) reasons.push("no core synergy broken");
@@ -5938,6 +6395,7 @@
       const afterRole = getRecommendationRoleFamily(afterSet, candidateEntry, { currentDraft: afterTeam });
       if (beforeRole && afterRole && beforeRole !== afterRole) reasons.push("role preserved");
       if (!setSatisfiesCoherentCore(afterSet, candidateEntry)) reasons.push("no core synergy broken");
+      if (!preservesPartnerSynergy(beforeSet, afterSet, currentSlot?.name || "", teamIntent)) reasons.push("partner synergy preserved");
     } else {
       const targetKey = normalizeNameKey(swapTarget || "");
       const targetIndex = afterTeam.findIndex((slot) => normalizeNameKey(slot.name || "") === targetKey);
@@ -5947,26 +6405,31 @@
         const beforeRole = getRecommendationRoleFamily(afterTeam[targetIndex], targetEntry, { currentDraft: teamState });
         const afterRole = getRecommendationRoleFamily(afterSet, candidateEntry, { currentDraft: afterTeam });
         if (beforeRole && afterRole && beforeRole !== afterRole) reasons.push("role preserved");
-        if (targetEntry && setSatisfiesCoherentCore(afterTeam[targetIndex], targetEntry)) reasons.push("no core synergy broken");
+        if (targetEntry && hasCoherentCoreRequirement(targetEntry) && setSatisfiesCoherentCore(afterTeam[targetIndex], targetEntry)) reasons.push("no core synergy broken");
+        if (!candidateProvidesEquivalentSynergy(afterSet, candidateEntry, afterTeam[targetIndex].name, teamIntent)) reasons.push("partner synergy preserved");
         afterTeam[targetIndex] = { ...afterSet, name: candidateEntry.name };
       }
     }
 
     if (!preservesTeamArchetype(teamState, afterTeam, evaluation)) reasons.push("archetype preserved");
+    if (createsSpeedModeConflict(teamState, afterTeam, teamIntent, evaluation)) reasons.push("no speed-mode conflict created");
+    if (createsSelfSabotage(afterTeam, teamIntent)) reasons.push("no self-sabotage");
     const afterEvaluation = reasons.length ? null : await evaluateTeamState(afterTeam);
     if (!afterEvaluation || (afterEvaluation.metaMatchupScore ?? 0) <= currentMetaScore) reasons.push("matchup score improves");
     const uniqueReasons = [...new Set(reasons)];
     if (uniqueReasons.length) {
-      rememberRejectedRecommendation(kind, kind === "swap" ? `${swapTarget} -> ${candidateEntry?.name || ""}` : currentSlot?.name || candidateEntry?.name || "", uniqueReasons);
+      rememberRejectedRecommendation(kind, label, uniqueReasons);
+      recordRecommendationValidationResult({ kind, label, ok: false, reasons: uniqueReasons });
       return { ok: false, reasons: uniqueReasons };
     }
+    recordRecommendationValidationResult({ kind, label, ok: true, reasons: [] });
     return { ok: true, afterEvaluation };
   }
 
-  async function buildRecommendationCards(teamState, evaluation, swapRecommendations, recommendationSets) {
+  async function buildRecommendationCards(teamState, evaluation, swapRecommendations, recommendationSets, teamIntent = detectTeamIntent(teamState, evaluation)) {
     const occupiedNameKeys = new Set(teamState.map((slot) => normalizeNameKey(slot.name || "")).filter(Boolean));
     const occupiedFamilyKeys = new Set(teamState.map((slot) => getSpeciesClauseKey(slot.name || "")).filter(Boolean));
-    const tuneUps = await buildPokemonTuneUps(teamState, evaluation);
+    const tuneUps = await buildPokemonTuneUps(teamState, evaluation, teamIntent);
     const threatNames = evaluation.threatRows.slice(0, 2).map((row) => row.threat.name).filter(Boolean);
     const tuneUpCards = (await Promise.all(tuneUps.map(async (row) => {
       const currentEntry = getRosterEntry(row.name);
@@ -5978,6 +6441,7 @@
         kind: "tune",
         teamState,
         evaluation,
+        teamIntent,
         currentSlot,
         candidateEntry: currentEntry,
         candidateSet: row.suggested
@@ -6009,6 +6473,7 @@
         kind: "swap",
         teamState,
         evaluation,
+        teamIntent,
         candidateEntry: item.entry,
         candidateSet: set,
         swapTarget: item.swapTarget
@@ -7062,7 +7527,26 @@
     renderLiveWarRoomIntel();
   }
 
-  async function buildPokemonTuneUps(teamState, evaluation) {
+  function getRequestedModesFromTeamIntent(teamIntent) {
+    const archetype = normalizeNameKey(teamIntent?.detectedArchetype || "");
+    return {
+      trickRoom: archetype.includes("tr") || archetype.includes("trick room"),
+      tailwind: archetype.includes("tailwind"),
+      rain: archetype.includes("rain"),
+      sun: archetype.includes("sun")
+    };
+  }
+
+  function getIntentLockFromTeamIntent(teamIntent) {
+    const archetype = normalizeNameKey(teamIntent?.detectedArchetype || "");
+    if (archetype === "hard tr" || archetype === "hard trick room") return "hard_tr";
+    if (archetype.includes("tr hybrid")) return "soft_tr";
+    if (archetype.includes("tailwind")) return "tailwind";
+    if (archetype.includes("ho")) return "fast_offense";
+    return "unknown";
+  }
+
+  async function buildPokemonTuneUps(teamState, evaluation, teamIntent = detectTeamIntent(teamState, evaluation)) {
     const teamEntries = teamState.map((slot) => resolveBattleEntry(slot)).filter(Boolean);
     const tuneUps = [];
     const reservedSuggestedItems = new Set();
@@ -7090,15 +7574,17 @@
         continue;
       }
       const preserveSupport = isSupportStyledSlot(slot, entry);
+      const protectedMoveKeys = getIntentSynergyMoveKeys(teamIntent.intentionalSynergies, slot.name);
       const suggested = await getOptimizedDraftSetCached(entry, {
         mode: preserveSupport ? "archetype" : "pokemon",
         focus: entry.name,
-        notes: `${preserveSupport ? "preserve this as a support / utility set with speed control, disruption, fake out pressure, or positioning tools." : "optimize this set for current weaknesses, matchup holes, and role compression."} ${evaluation.offenseReport.uncoveredTypes.join(", ")}`,
+        notes: `${preserveSupport ? "preserve this as a support / utility set with speed control, disruption, fake out pressure, or positioning tools." : "optimize this set for current weaknesses, matchup holes, and role compression."} Team intent: ${teamIntent.detectedArchetype}; ${teamIntent.primaryWinCondition}. Preserve partner-synergy moves: ${[...protectedMoveKeys].join(", ") || "none"}. ${evaluation.offenseReport.uncoveredTypes.join(", ")}`,
         enemyNames: [],
         chosen: teamEntries,
         currentDraft: teamState,
-        requestedModes: {},
+        requestedModes: getRequestedModesFromTeamIntent(teamIntent),
         requestedPressure: {},
+        intentLock: getIntentLockFromTeamIntent(teamIntent),
         forceSupport: preserveSupport
       });
       const usedItemKeys = new Set([
@@ -7252,6 +7738,8 @@
       weaknessRows
     } = evaluation;
     const averagedScores = evaluation.averagedScores || computeAveragedTeamScore(teamState, evaluation).averaged;
+    const teamIntent = detectTeamIntent(teamState, evaluation);
+    resetTeamIntentDebug(teamIntent);
     const leadRecommendations = await buildLeadRecommendation(teamState, threatRows);
     const damageScoutRows = await buildDamageScoutRows(teamState, threatRows);
 
@@ -7262,19 +7750,20 @@
       .filter((entry) => !occupiedFamilyKeys.has(getSpeciesClauseKey(entry.name)))
       .filter((entry) => !violatesSpeciesClause(team, entry))
       .filter((entry) => !team.some((t) => normalizeNameKey(t.name) === normalizeNameKey(entry.name)))
-      .map((entry) => scoreCandidate(entry, weaknessRows, threatRows.slice(0, 6), offenseReport, structureReport, teamState))
+      .map((entry) => scoreCandidate(entry, weaknessRows, threatRows.slice(0, 6), offenseReport, structureReport, teamState, teamIntent))
       .filter((item) => normalizeNameKey(item.swapTarget || "") !== normalizeNameKey(item.entry.name))
       .sort((a, b) => b.score - a.score)
       .slice(0, 3);
     const recommendationSets = await Promise.all(recommendations.map((item) => getOptimizedDraftSetCached(item.entry, {
       mode: "archetype",
       focus: "",
-      notes: "",
+      notes: `Team intent: ${teamIntent.detectedArchetype}; ${teamIntent.primaryWinCondition}. Suggested set must preserve this 2v2 partner plan.`,
       enemyNames: [],
       chosen: team,
       currentDraft: teamState,
-      requestedModes: {},
-      requestedPressure: {}
+      requestedModes: getRequestedModesFromTeamIntent(teamIntent),
+      requestedPressure: {},
+      intentLock: getIntentLockFromTeamIntent(teamIntent)
     })));
     recommendationSets.forEach((set) => {
       if (teamItemKeys.has(normalizeNameKey(set.item || ""))) {
@@ -7282,7 +7771,7 @@
       }
       if (set.item) teamItemKeys.add(normalizeNameKey(set.item));
     });
-    const recommendationCards = await buildRecommendationCards(teamState, evaluation, recommendations, recommendationSets);
+    const recommendationCards = await buildRecommendationCards(teamState, evaluation, recommendations, recommendationSets, teamIntent);
 
     const weaknessMarkup = weaknessRows.length
       ? weaknessRows.map((row) => `<span class="analysis-chip ${severityClassForWeakness(row.weakCount)}">${row.attackType}: ${row.weakCount} weak</span>`).join("")
@@ -7321,6 +7810,11 @@
     const qualityStatus = exportGate.blockers.length ? "Critical issue" : exportGate.issues.length ? "Needs fixes" : "Valid";
     const sourceDebug = window.__MBWR_SOURCE_DEBUG || {};
     const sourceEvidence = formatSourceEvidenceLines();
+    const supportEngineMarkup = teamIntent.supportEngine.map((item) => `<span class="analysis-chip severity-neutral">${escapeHtml(item)}</span>`).join("");
+    const synergyMarkup = teamIntent.intentionalSynergies.length
+      ? teamIntent.intentionalSynergies.slice(0, 6).map((row) => `<div class="fix-list__item">${escapeHtml(row.explanation)}</div>`).join("")
+      : `<div class="fix-list__item">No specific partner engine detected yet; recommendations will avoid broad role-breaking swaps.</div>`;
+    const riskMarkup = teamIntent.riskPoints.map((item) => `<div class="fix-list__item">${escapeHtml(item)}</div>`).join("");
 
     teamAnalysis.innerHTML = `
       <div class="analysis-grid">
@@ -7339,6 +7833,26 @@
             ${(exportGate.blockers.length ? exportGate.blockers : exportGate.issues).slice(0, 4).map((issue) => `<div class="fix-list__item"><strong>${escapeHtml(issue.severity || "warning")}:</strong> ${escapeHtml(issue.text || issue.code)}</div>`).join("") || `<div class="fix-list__item">No final-export blockers detected.</div>`}
           </div>
           <p class="result-copy"><strong>Source Evidence:</strong> Matched Creator: ${escapeHtml(sourceEvidence.matchedCreator)} | Matched Shell: ${escapeHtml(sourceEvidence.matchedShell)} | YouTube ${sourceDebug.youtubeCount || 0} | high-level ${sourceDebug.highLevelCount || 0} | selfplay ${sourceDebug.selfplayCount || 0}</p>
+        </div>
+        <div class="analysis-stack">
+          <p class="result-title">Team Identity</p>
+          <div class="analysis-row">
+            <span class="analysis-chip severity-neutral">${escapeHtml(teamIntent.detectedArchetype)}</span>
+          </div>
+          <p class="result-copy"><strong>What this team wants to do:</strong> ${escapeHtml(teamIntent.primaryWinCondition)}</p>
+        </div>
+        <div class="analysis-stack">
+          <p class="result-title">Win Condition</p>
+          <p class="result-copy">${escapeHtml(teamIntent.primaryWinCondition)}</p>
+        </div>
+        <div class="analysis-stack">
+          <p class="result-title">Support Engine</p>
+          <div class="analysis-row">${supportEngineMarkup}</div>
+          <div class="fix-list">${synergyMarkup}</div>
+        </div>
+        <div class="analysis-stack">
+          <p class="result-title">Risk Points</p>
+          <div class="fix-list">${riskMarkup}</div>
         </div>
         <div class="analysis-stack">
           <p class="result-title">Overall Team Score</p>
@@ -7435,7 +7949,7 @@
           <p class="result-copy"><strong>Sources:</strong> <a href="${PIKALYTICS_SOURCES.tournaments}" target="_blank" rel="noreferrer">Champions Tournaments</a> and <a href="${PIKALYTICS_SOURCES.preview}" target="_blank" rel="noreferrer">Champions Preview</a>.</p>
         </div>
         <div class="analysis-stack">
-          <p class="result-title">Recommended Fixes</p>
+          <p class="result-title">Higher-Efficiency Options</p>
           <div class="fix-list">
             ${recommendationCards.length ? recommendationCards.map((card) => `
               <div class="import-card-item import-card-item--recommend">
@@ -7512,6 +8026,7 @@
       roleCounts: getLiveWarRoomRoleCounts(teamState),
       weatherMode: inferTeamWeatherProfile(teamState).primary
     }).averaged;
+    const teamIntent = detectTeamIntent(teamState, { structureReport, metaMatchupScore });
     return {
       team,
       weaknessRows,
@@ -7525,11 +8040,12 @@
       metaMatchupScore,
       rawOverallScore,
       overallScore: averagedScores.overall,
-      averagedScores
+      averagedScores,
+      teamIntent
     };
   }
 
-  function scoreCandidate(entry, weaknesses, threats, offenseReport, structureReport = {}, teamState = []) {
+  function scoreCandidate(entry, weaknesses, threats, offenseReport, structureReport = {}, teamState = [], teamIntent = detectTeamIntent(teamState, { structureReport })) {
     let score = 0;
     const reasons = [];
     const metaWeight = metaThreats.find((threat) => normalizeNameKey(threat.name) === normalizeNameKey(entry.name))?.weight || 0;
@@ -7582,6 +8098,7 @@
     const hasSpeedControl = (structureReport.speedControlCount || 0) > 0;
     const hasTrickRoom = (structureReport.trickRoomCount || 0) > 0;
     const hardTrickRoom = isHardTrickRoomContext(teamState, structureReport);
+    const detectedArchetype = normalizeNameKey(teamIntent?.detectedArchetype || "");
     const disruptionLead = ["fake out", "encore", "taunt", "electroweb", "icy wind", "nuzzle", "parting shot"];
     const hasLeadDisruption = entryLegalMoves.some((move) => disruptionLead.includes(normalizeNameKey(move)));
     if (hardTrickRoom && entryLegalMoves.some((move) => HARD_TR_ANTI_SPEED_CONTROL_KEYS.has(normalizeNameKey(move)))) {
@@ -7610,6 +8127,17 @@
       score += 4;
       reasons.push(`Fits the team's existing ${candidateWeatherMode} plan.`);
     }
+    if (detectedArchetype.includes("rain")) {
+      if (entry.types.includes("Water") || candidateWeatherMode === "rain") score += 6;
+      if (candidateWeatherMode && candidateWeatherMode !== "rain") score -= 18;
+    }
+    if (detectedArchetype.includes("sun")) {
+      if (entry.types.includes("Fire") || candidateWeatherMode === "sun" || hasAnyAbility(entry.abilities || [], ["chlorophyll", "solar power"])) score += 6;
+      if (candidateWeatherMode && candidateWeatherMode !== "sun") score -= 18;
+    }
+    if (detectedArchetype.includes("tailwind") && entry.baseSpeed < 55 && !entryLegalMoves.some((move) => normalizeNameKey(move) === "tailwind")) {
+      score -= 8;
+    }
     if (normalizeNameKey(entry.name) === "mega charizard y" && teamWeatherProfile.modes.some((mode) => mode && mode !== "sun")) {
       score -= 28;
     }
@@ -7630,7 +8158,7 @@
     const duplicateItemRisk = teamState.some((slot) => normalizeNameKey(slot.item || "") === normalizeNameKey(getSuggestedItem(entry, { mode: "archetype" }, [])));
     if (duplicateItemRisk) score -= 3;
     if (!reasons.length) reasons.push("Adds a different defensive profile.");
-    const swapTarget = recommendSwapCandidate(entry, weaknesses, offenseReport);
+    const swapTarget = recommendSwapCandidate(entry, weaknesses, offenseReport, teamIntent);
     return {
       entry,
       score,
@@ -7642,13 +8170,15 @@
     };
   }
 
-  function recommendSwapCandidate(entry, weaknesses, offenseReport) {
+  function recommendSwapCandidate(entry, weaknesses, offenseReport, teamIntent = null) {
     return getTeamBuilderState()
       .filter((slot) => slot.name)
       .map((slot) => {
         const current = getRosterEntry(slot.name);
         if (!current) return null;
         let score = 0;
+        const protectedSynergies = getIntentSynergyRolesForSlot(teamIntent?.intentionalSynergies || [], slot.name);
+        if (protectedSynergies.length) score -= 100;
         const majorWeakness = weaknesses.find((weakness) => getTypeEffectiveness(weakness.attackType, current.types) > 1);
         if (majorWeakness) score += majorWeakness.weakCount * 4;
         if (offenseReport.uncoveredTypes.some((type) => !current.types.some((stab) => getSingleTypeEffectiveness(stab, type) > 1))) score += 4;
