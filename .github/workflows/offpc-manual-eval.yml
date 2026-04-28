@@ -41,6 +41,7 @@ jobs:
           RUNNER_ENVIRONMENT: "github-hosted"
           TRAIN_ITERATIONS: ${{ github.event.inputs.iterations || '10' }}
         run: |
+          echo "candidate_iterations=${TRAIN_ITERATIONS}"
           python scripts/offpc_training/train.py --iterations "${TRAIN_ITERATIONS}"
           python scripts/offpc_training/persistent_memory.py
 
