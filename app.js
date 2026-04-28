@@ -47,7 +47,8 @@
   };
   const PIKALYTICS_SOURCES = {
     tournaments: "https://www.pikalytics.com/pokedex/championstournaments",
-    preview: "https://www.pikalytics.com/pokedex/championspreview"
+    preview: "https://www.pikalytics.com/pokedex/championspreview",
+    national: "https://pikalytics.com/pokedex"
   };
   const POKECOUNTER_META_SOURCES = {
     rankings: "https://pokecounter.app/api/rankings/weekly?limit=40&scope=weekly",
@@ -2410,7 +2411,13 @@
   }
 
   function metaThreatsFromSourceTruth(sourceTruth) {
-    return (sourceTruth?.usage || [])
+    const combinedRanks = buildCombinedMetaRankings(sourceTruth);
+    return (combinedRanks.length ? combinedRanks : (sourceTruth?.usage || []).map((row) => ({
+      ...row,
+      combinedRank: row.rank,
+      combinedPosition: row.rank,
+      sourceBreakdown: [{ sourceName: row.sourceName || sourceTruth?.sourceName || "meta source", rank: row.rank, sourceUrl: row.sourceUrl || sourceTruth?.sourceUrl || "", weight: 1 }]
+    })))
       .map((row) => {
         const info = getRosterEntry(row.name) || legalPokemonData[row.name];
         if (!info) return null;
@@ -2418,7 +2425,10 @@
           name: info.name || row.name,
           weight: Number(row.usage) || 0,
           count: Number(row.count) || 0,
-          rank: row.rank,
+          rank: row.combinedRank || row.rank,
+          combinedRank: row.combinedRank || row.rank,
+          combinedPosition: row.combinedPosition || row.rank,
+          sourceBreakdown: row.sourceBreakdown || [],
           tags: [],
           types: info.types || row.types || ["Normal"],
           sourceType: row.sourceType || sourceTruth.sourceName,
@@ -2429,6 +2439,59 @@
         };
       })
       .filter(Boolean);
+  }
+
+  function buildCombinedMetaRankings(sourceTruth = null) {
+    const sourceRows = [];
+    const addSource = (sourceName, sourceUrl, rows = [], weight = 1) => {
+      (Array.isArray(rows) ? rows : []).forEach((row, index) => {
+        const name = row?.name || row?.pokemon || row?.species;
+        const entry = getRosterEntry(name);
+        if (!name || !entry) return;
+        sourceRows.push({
+          key: normalizeNameKey(entry.name),
+          name: entry.name,
+          rank: Number(row.rank || row.position || index + 1),
+          usage: Number(row.usage ?? row.weight ?? row.count ?? 0),
+          count: Number(row.count || 0),
+          sourceName,
+          sourceUrl,
+          weight
+        });
+      });
+    };
+    addSource("Pikalytics Champions Tournaments", PIKALYTICS_SOURCES.tournaments, pikalyticsMetaSeed, 1.15);
+    addSource("Pikalytics Champions Preview", PIKALYTICS_SOURCES.preview, (getLearnedBuilderData().pikalyticsImports?.pokemon || getLearnedBuilderData().sourceMetaSnapshot?.threats || []), 0.95);
+    addSource("Pikalytics National Dex", PIKALYTICS_SOURCES.national, getLearnedBuilderData().sourceMetaSnapshot?.threats || [], 0.7);
+    addSource(sourceTruth?.sourceName || "Live meta source", sourceTruth?.sourceUrl || "", sourceTruth?.usage || [], sourceTruth?.source === "live" ? 1.1 : 0.8);
+
+    const grouped = new Map();
+    sourceRows.forEach((row) => {
+      const current = grouped.get(row.key) || { name: row.name, weightedRank: 0, totalWeight: 0, usage: 0, count: 0, sourceBreakdown: [] };
+      current.weightedRank += Math.max(1, row.rank) * row.weight;
+      current.totalWeight += row.weight;
+      current.usage = Math.max(current.usage, row.usage || 0);
+      current.count += row.count || 0;
+      current.sourceBreakdown.push({
+        sourceName: row.sourceName,
+        sourceUrl: row.sourceUrl,
+        rank: row.rank,
+        weight: row.weight
+      });
+      grouped.set(row.key, current);
+    });
+    return [...grouped.values()]
+      .map((row) => ({
+        ...row,
+        combinedPosition: row.totalWeight ? row.weightedRank / row.totalWeight : 999,
+        usage: row.usage || Math.max(1, 30 - (row.totalWeight ? row.weightedRank / row.totalWeight : 30)),
+        sourceName: "Combined Pikalytics meta rank",
+        sourceType: "combined_meta_rank",
+        sourceUrl: PIKALYTICS_SOURCES.tournaments,
+        confidence: row.sourceBreakdown.length >= 2 ? "high" : "medium"
+      }))
+      .sort((a, b) => a.combinedPosition - b.combinedPosition)
+      .map((row, index) => ({ ...row, rank: index + 1, combinedRank: index + 1 }));
   }
 
   async function fetchJsonWithTimeout(url, options = {}, timeoutMs = 9000) {
@@ -2549,12 +2612,12 @@
   function formatMetaStatusCopy() {
     const updated = metaStatus.updatedAt ? new Date(metaStatus.updatedAt).toLocaleString() : "seed snapshot in use";
     if (metaStatus.source === "live") {
-      return `Meta source: PokeCounter live API. Fresh pull completed ${updated}; week ${metaSourceTruth.week || "unknown"}.`;
+      return `Meta source: combined Pikalytics ranking plus PokeCounter live API. Fresh pull completed ${updated}; week ${metaSourceTruth.week || "unknown"}.`;
     }
     if (metaStatus.source === "snapshot") {
-      return `Meta source: timestamped PokeCounter snapshot from ${updated}; week ${metaSourceTruth.week || "unknown"}.`;
+      return `Meta source: combined Pikalytics ranking plus timestamped PokeCounter snapshot from ${updated}; week ${metaSourceTruth.week || "unknown"}.`;
     }
-    return `Meta source: emergency seed only. No PokeCounter live source or valid timestamped snapshot was available.`;
+    return `Meta source: combined Pikalytics emergency seed. No PokeCounter live source or valid timestamped snapshot was available.`;
   }
 
   function formatMetaCountdownCopy() {
@@ -5849,8 +5912,10 @@
   function resetTeamIntentDebug(intent) {
     const debug = getTeamIntentDebugStore();
     if (!debug) return;
-    debug.detectedArchetype = intent.detectedArchetype;
-    debug.primaryWinCondition = intent.primaryWinCondition;
+      debug.detectedArchetype = intent.detectedArchetype;
+      debug.primaryWinCondition = intent.primaryWinCondition;
+      debug.primaryPlan = intent.detectedArchetype;
+      debug.secondaryEngine = intent.secondaryEngine || "";
     debug.supportEngine = [...intent.supportEngine];
     debug.intentionalSynergies = intent.intentionalSynergies.map((row) => ({ ...row }));
     debug.rejectedBadSuggestions = [];
@@ -5969,6 +6034,7 @@
     const intent = {
       detectedArchetype: "Balance",
       primaryWinCondition: "position support around the strongest breaker and trade efficiently",
+      secondaryEngine: "",
       supportEngine: [],
       riskPoints: [],
       higherEfficiencyOptions: [],
@@ -6124,23 +6190,27 @@
       });
       if (keys.includes("rain dance")) {
         partners.filter((partner) => partner.entry.types.includes("Water") || getSetMoveKeys(partner.slot).some((move) => ["water spout", "muddy water", "wave crash", "water pulse"].includes(move))).forEach((partner) => {
+          const waterSpout = getSetMoveKeys(partner.slot).includes("water spout");
           pushIntentSynergy(intent, {
-            type: "manual_rain_pressure",
+            type: waterSpout ? "manual_rain_water_spout" : "manual_rain_pressure",
             source,
             partner: slotLabel(partner.slot, partner.entry),
             preserveMoves: ["Rain Dance"],
-            explanation: `${source}'s Rain Dance supports ${slotLabel(partner.slot, partner.entry)}'s Water pressure.`
+            explanation: `${source}'s Rain Dance supports ${slotLabel(partner.slot, partner.entry)}${waterSpout ? " Water Spout" : "'s Water"} pressure.`
           });
         });
       }
       if (keys.includes("sunny day")) {
         partners.filter((partner) => partner.entry.types.includes("Fire") || ["chlorophyll", "solar power"].includes(slotAbilityKey(partner.slot, partner.entry))).forEach((partner) => {
+          const partnerKeys = getSetMoveKeys(partner.slot);
+          const eruption = partnerKeys.includes("eruption");
+          const chlorophyllSleep = slotAbilityKey(partner.slot, partner.entry) === "chlorophyll" && partnerKeys.includes("sleep powder");
           pushIntentSynergy(intent, {
-            type: "manual_sun_pressure",
+            type: eruption ? "manual_sun_eruption" : chlorophyllSleep ? "sun_chlorophyll_sleep" : "manual_sun_pressure",
             source,
             partner: slotLabel(partner.slot, partner.entry),
             preserveMoves: ["Sunny Day"],
-            explanation: `${source}'s Sunny Day supports ${slotLabel(partner.slot, partner.entry)}'s sun mode.`
+            explanation: `${source}'s Sunny Day supports ${slotLabel(partner.slot, partner.entry)}${eruption ? " Eruption" : chlorophyllSleep ? " Chlorophyll + Sleep Powder" : "'s sun"} mode.`
           });
         });
       }
@@ -6213,6 +6283,32 @@
     if (intent.intentionalSynergies.some((row) => row.type.includes("guard") || row.type.includes("protection"))) intent.supportEngine.push("protection moves");
     if (intent.intentionalSynergies.some((row) => row.type.includes("coaching") || row.type.includes("decorate") || row.type.includes("helping_hand"))) intent.supportEngine.push("partner damage amplification");
     if (intent.intentionalSynergies.some((row) => row.type.includes("healing"))) intent.supportEngine.push("healing loop");
+    const secondary = intent.intentionalSynergies.find((row) => [
+      "manual_rain_water_spout",
+      "manual_sun_eruption",
+      "sun_chlorophyll_sleep",
+      "beat_up_justified",
+      "weakness_policy_activation",
+      "spread_move_partner_safe"
+    ].includes(row.type)) || intent.intentionalSynergies.find((row) => !["trick_room_setup", "tailwind_pressure"].includes(row.type));
+    if (secondary) {
+      const labels = {
+        manual_rain_water_spout: "Rain support into Water Spout pressure",
+        manual_sun_eruption: "Sun support into Eruption pressure",
+        sun_chlorophyll_sleep: "Sun support into Chlorophyll + Sleep Powder control",
+        beat_up_justified: "Beat Up + Justified pressure",
+        weakness_policy_activation: "Weakness Policy activation line",
+        spread_move_partner_safe: "partner-safe spread move pressure",
+        coaching_physical_breaker: "Coaching support into physical breaker pressure",
+        helping_hand_ko_math: "Helping Hand KO-threshold support",
+        redirection_setup: "redirection-enabled setup",
+        fake_out_setup: "Fake Out-enabled setup",
+        healing_loop: "sustain loop"
+      };
+      intent.secondaryEngine = labels[secondary.type] || secondary.explanation;
+    } else {
+      intent.secondaryEngine = "No distinct secondary combo engine detected yet.";
+    }
     if (!intent.supportEngine.length) intent.supportEngine.push("basic positioning and type pivots");
     if (trCount && !rows.some(isTrickRoomEnablerRow)) intent.riskPoints.push("Trick Room can be denied if the setter is pressured immediately.");
     if ((weather.primary === "rain" || weather.primary === "sun") && weather.modes.length === 1) intent.riskPoints.push("Weather denial can lower the main damage plan.");
@@ -6224,6 +6320,44 @@
     ];
     delete intent._seenSynergies;
     return intent;
+  }
+
+  function compressIntentSynergyLines(synergies = []) {
+    const groups = new Map();
+    synergies.forEach((row) => {
+      const key = row.type;
+      const current = groups.get(key) || { type: row.type, sources: new Set(), partners: new Set(), examples: [] };
+      if (row.source) current.sources.add(row.source);
+      if (row.partner) current.partners.add(row.partner);
+      if (row.explanation) current.examples.push(row.explanation);
+      groups.set(key, current);
+    });
+    const labelFor = (type) => ({
+      trick_room_setup: "Trick Room support",
+      redirection_setup: "Redirection support",
+      fake_out_setup: "Fake Out support",
+      priority_denial_setup: "Armor Tail / priority denial",
+      coaching_physical_breaker: "Coaching support",
+      helping_hand_ko_math: "Helping Hand support",
+      healing_loop: "Sustain support",
+      manual_rain_water_spout: "Rain + Water Spout engine",
+      manual_rain_pressure: "Rain pressure",
+      manual_sun_eruption: "Sun + Eruption engine",
+      sun_chlorophyll_sleep: "Sun + Chlorophyll control",
+      beat_up_justified: "Beat Up + Justified engine",
+      weakness_policy_activation: "Weakness Policy activation",
+      spread_move_partner_safe: "Partner-safe spread pressure"
+    }[type] || "Partner synergy");
+    return [...groups.values()].map((group) => {
+      const sources = [...group.sources].slice(0, 3).join(" / ");
+      const partners = [...group.partners].slice(0, 4).join(" / ");
+      if (group.type === "trick_room_setup") return `${labelFor(group.type)} from ${sources} enables ${partners} under the slow mode.`;
+      if (group.type === "fake_out_setup") return `${labelFor(group.type)} from ${sources} helps ${partners} set up safely.`;
+      if (group.type === "redirection_setup") return `${labelFor(group.type)} from ${sources} protects ${partners}.`;
+      if (group.type === "coaching_physical_breaker") return `${labelFor(group.type)} from ${sources} scales ${partners}.`;
+      if (group.type === "helping_hand_ko_math") return `${labelFor(group.type)} from ${sources} improves KO math for ${partners}.`;
+      return group.examples[0] || `${labelFor(group.type)}: ${sources} supports ${partners}.`;
+    }).slice(0, 7);
   }
 
   function isHardTrickRoomContext(teamState = [], structureReport = null) {
@@ -6420,6 +6554,11 @@
     if (uniqueReasons.length) {
       rememberRejectedRecommendation(kind, label, uniqueReasons);
       recordRecommendationValidationResult({ kind, label, ok: false, reasons: uniqueReasons });
+      const realDebug = getRealMatchupDebugStore();
+      if (realDebug && kind === "swap") {
+        realDebug.rejectedPokemonSwaps.push({ label, reasons: uniqueReasons });
+        realDebug.rejectedPokemonSwaps = realDebug.rejectedPokemonSwaps.slice(-30);
+      }
       return { ok: false, reasons: uniqueReasons };
     }
     recordRecommendationValidationResult({ kind, label, ok: true, reasons: [] });
@@ -6503,7 +6642,52 @@
         addName: item.entry.name
       };
     }))).filter(Boolean);
-    return [...tuneUpCards, ...swapCards];
+    const spCards = buildSpOptimizationCards(teamState, evaluation, teamIntent);
+    const combined = [...spCards, ...tuneUpCards, ...swapCards];
+    return combined.length ? combined : [{
+      type: "sp",
+      title: "SP benchmark tune",
+      sprite: POKEBALL_PLACEHOLDER,
+      subtitle: "Cleaner defensive benchmark",
+      summary: "Problem: no severe matchup leak is obvious. Fix: keep the team intact and shift 4-8 spare SP from unused Speed/offense into bulk on the slot most exposed to the top meta hit. Matchup change: improves lead consistency without breaking the detected plan.",
+      badges: renderChangeBadge({ kind: "sp", label: "SP", from: "current spread", to: "+4-8 bulk benchmark" })
+    }];
+  }
+
+  function buildSpOptimizationCards(teamState, evaluation, teamIntent) {
+    const rows = getFilledTeamRows(teamState);
+    if (!rows.length) return [];
+    const topThreat = evaluation?.threatRows?.[0];
+    const weakRow = rows.find(({ slot, entry }) => topThreat?.threat?.types?.some((type) => getEffectiveTypeEffectiveness(type, slot, entry) > 1))
+      || rows.find(({ slot }) => isRealAttackerSet(slot))
+      || rows[0];
+    const slot = weakRow.slot;
+    const entry = weakRow.entry;
+    const moveFrom = teamIntent?.detectedArchetype === "Hard TR" ? "Spe" : (getOffenseProfile(slot, entry) === "physical" ? "SpA" : "Atk");
+    const moveTo = topThreat?.threat?.types?.some((type) => ["Fire", "Water", "Electric", "Grass", "Ice", "Psychic", "Dragon", "Dark", "Fairy"].includes(type)) ? "SpD" : "Def";
+    const fromKey = statOrder.find((stat) => statLabels[stat] === moveFrom.toUpperCase() || statLabels[stat] === moveFrom) || (moveFrom === "Spe" ? "spe" : moveFrom === "SpA" ? "spa" : "atk");
+    const toKey = moveTo === "SpD" ? "spd" : "def";
+    const available = Number(slot.sps?.[fromKey] || 0);
+    const shift = Math.max(4, Math.min(8, available || 8));
+    const threatName = topThreat?.threat?.name || "top meta pressure";
+    const benchmark = {
+      pokemon: slot.name,
+      from: moveFrom,
+      to: moveTo,
+      shift,
+      threat: threatName,
+      primaryPlan: teamIntent?.detectedArchetype || ""
+    };
+    const debug = getRealMatchupDebugStore();
+    if (debug) debug.recommendedSPBenchmarks.push(benchmark);
+    return [{
+      type: "sp",
+      title: slot.name,
+      sprite: getSpriteUrl(entry.apiName || toApiSpeciesName(entry.name)) || POKEBALL_PLACEHOLDER,
+      subtitle: "SP benchmark optimization",
+      summary: `Problem: ${threatName} is the clearest current pressure point. Fix: test shifting ${shift} SP from ${moveFrom} into ${moveTo} on ${slot.name}. Matchup change: this improves the defensive benchmark while preserving ${teamIntent?.detectedArchetype || "the current"} plan before considering any Pokemon swap.`,
+      badges: renderChangeBadge({ kind: "sp", label: "SP", from: `${shift} ${moveFrom}`, to: `${shift} ${moveTo}` })
+    }];
   }
 
   async function calculateBestResponsePercent(attackerSet, attackerEntry, defenderEntry) {
@@ -7725,7 +7909,7 @@
     }
 
     const evaluation = await evaluateTeamState(teamState);
-    const {
+    let {
       offenseReport,
       threatRows,
       metaPressure,
@@ -7739,6 +7923,9 @@
     } = evaluation;
     const averagedScores = evaluation.averagedScores || computeAveragedTeamScore(teamState, evaluation).averaged;
     const teamIntent = detectTeamIntent(teamState, evaluation);
+    resetRealMatchupDebug(teamIntent);
+    threatRows = buildMetaThreatRows(teamState, offenseReport.attackTypes);
+    evaluation.threatRows = threatRows;
     resetTeamIntentDebug(teamIntent);
     const leadRecommendations = await buildLeadRecommendation(teamState, threatRows);
     const damageScoutRows = await buildDamageScoutRows(teamState, threatRows);
@@ -7777,10 +7964,13 @@
       ? weaknessRows.map((row) => `<span class="analysis-chip ${severityClassForWeakness(row.weakCount)}">${row.attackType}: ${row.weakCount} weak</span>`).join("")
       : `<span class="analysis-chip severity-good">No major weakness stack detected.</span>`;
 
-    const threatMarkup = threatRows.slice(0, 5).map((item) => {
-      const severity = severityClassForScore(item.matchupScore);
-      return `<span class="analysis-chip ${severity}">${item.threat.name}: ${item.matchupScore}/100 matchup${item.offenseReady ? " | can hit back" : " | poor pressure back"}</span>`;
-    }).join("");
+    const realThreatRows = threatRows.filter((item) => (item.threatSeverityScore || 0) >= 42);
+    const threatMarkup = realThreatRows.length
+      ? realThreatRows.slice(0, 5).map((item) => {
+        const band = item.threatBand || getThreatBand(item);
+        return `<span class="analysis-chip ${band.css}">${item.threat.name}: ${band.label} | ${escapeHtml(item.concreteReason || "Positioning decides this matchup.")}</span>`;
+      }).join("")
+      : `<span class="analysis-chip severity-good">No major meta threat detected</span>`;
     const offensiveMarkup = offenseReport.uncoveredTypes.length
       ? offenseReport.uncoveredTypes.slice(0, 6).map((type) => `<span class="analysis-chip severity-high">${type}: no strong hits</span>`).join("")
       : `<span class="analysis-chip severity-good">No major offensive type holes detected.</span>`;
@@ -7812,7 +8002,7 @@
     const sourceEvidence = formatSourceEvidenceLines();
     const supportEngineMarkup = teamIntent.supportEngine.map((item) => `<span class="analysis-chip severity-neutral">${escapeHtml(item)}</span>`).join("");
     const synergyMarkup = teamIntent.intentionalSynergies.length
-      ? teamIntent.intentionalSynergies.slice(0, 6).map((row) => `<div class="fix-list__item">${escapeHtml(row.explanation)}</div>`).join("")
+      ? compressIntentSynergyLines(teamIntent.intentionalSynergies).map((line) => `<div class="fix-list__item">${escapeHtml(line)}</div>`).join("")
       : `<div class="fix-list__item">No specific partner engine detected yet; recommendations will avoid broad role-breaking swaps.</div>`;
     const riskMarkup = teamIntent.riskPoints.map((item) => `<div class="fix-list__item">${escapeHtml(item)}</div>`).join("");
 
@@ -7839,6 +8029,8 @@
           <div class="analysis-row">
             <span class="analysis-chip severity-neutral">${escapeHtml(teamIntent.detectedArchetype)}</span>
           </div>
+          <p class="result-copy"><strong>Primary plan:</strong> ${escapeHtml(teamIntent.detectedArchetype)}</p>
+          <p class="result-copy"><strong>Secondary combo engine:</strong> ${escapeHtml(teamIntent.secondaryEngine || "No distinct secondary combo engine detected yet.")}</p>
           <p class="result-copy"><strong>What this team wants to do:</strong> ${escapeHtml(teamIntent.primaryWinCondition)}</p>
         </div>
         <div class="analysis-stack">
@@ -8820,6 +9012,63 @@
     };
   }
 
+  function getRealMatchupDebugStore() {
+    if (typeof window === "undefined") return null;
+    window.__MBWR_REAL_MATCHUP_DEBUG = window.__MBWR_REAL_MATCHUP_DEBUG || {
+      primaryPlan: "",
+      secondaryEngine: "",
+      threatReasoning: [],
+      ohkoChecks: [],
+      speedModeChecks: [],
+      combinedMetaRank: [],
+      sourceBreakdown: [],
+      threatColorReason: [],
+      recommendedSPBenchmarks: [],
+      rejectedPokemonSwaps: []
+    };
+    return window.__MBWR_REAL_MATCHUP_DEBUG;
+  }
+
+  function resetRealMatchupDebug(teamIntent = null) {
+    const debug = getRealMatchupDebugStore();
+    if (!debug) return;
+    debug.primaryPlan = teamIntent?.detectedArchetype || "";
+    debug.secondaryEngine = teamIntent?.secondaryEngine || "";
+    debug.threatReasoning = [];
+    debug.ohkoChecks = [];
+    debug.speedModeChecks = [];
+    debug.combinedMetaRank = (metaThreats || []).slice(0, 20).map((row) => ({
+      name: row.name,
+      combinedRank: row.combinedRank || row.rank || null,
+      combinedPosition: row.combinedPosition || row.rank || null
+    }));
+    debug.sourceBreakdown = (metaThreats || []).slice(0, 12).map((row) => ({
+      name: row.name,
+      sources: row.sourceBreakdown || []
+    }));
+    debug.threatColorReason = [];
+    debug.recommendedSPBenchmarks = [];
+    debug.rejectedPokemonSwaps = [];
+  }
+
+  function getThreatBand(row) {
+    if (row.threatSeverityScore >= 72) return { band: "red", label: "Very dangerous", css: "severity-high" };
+    if (row.threatSeverityScore >= 42) return { band: "yellow", label: "Skill matchup", css: "severity-medium" };
+    if (row.threatSeverityScore >= 16) return { band: "green", label: "Manageable", css: "severity-good" };
+    return { band: "dark-green", label: "Safe", css: "severity-good" };
+  }
+
+  function buildThreatConcreteReason({ threat, speedRisk, offenseReady, safeSwitchCount, bestPressure, worstIncoming, trContext, canStopSpeedMode, archetypeFavored }) {
+    if (canStopSpeedMode) return `Can deny ${trContext ? "Trick Room" : "your speed mode"} if lead position is bad.`;
+    if (worstIncoming >= 100 && safeSwitchCount <= 0 && bestPressure < 80) return `Threatens an OHKO line while you lack a safe pivot or immediate punish.`;
+    if (speedRisk && bestPressure < 80) return `Outspeeds outside your preferred mode and forces careful positioning before you can punish.`;
+    if (bestPressure >= 100) return `You have a direct OHKO pressure line into ${threat.name}.`;
+    if (archetypeFavored) return `Your primary archetype naturally pressures ${threat.name} when the mode is active.`;
+    if (safeSwitchCount >= 2 && offenseReady) return `You have safe pivots and super-effective pressure available.`;
+    if (offenseReady) return `You can pressure it, but positioning decides whether the hit lands first.`;
+    return `Requires positioning because your current attacks do not punish it cleanly.`;
+  }
+
   function buildMetaThreatRows(teamState, attackTypes) {
     const occupiedRows = (teamState || [])
       .map((slot) => ({ slot, entry: resolveBattleEntry(slot) }))
@@ -8831,6 +9080,8 @@
     const threatScores = [];
     const answerScores = [];
     const ohkoOrPressureNotes = [];
+    const teamIntent = detectTeamIntent(teamState, { structureReport: evaluateTeamStructure(teamState) });
+    const realDebug = getRealMatchupDebugStore();
     return metaThreats.map((threat) => {
       const pressure = Math.max(...threat.types.map((type) => team.filter((entry) => getTypeEffectiveness(type, entry.types) > 1).length));
       const resistCount = threat.types.reduce((count, type) => count + team.filter((entry) => getTypeEffectiveness(type, entry.types) < 1).length, 0);
@@ -8857,30 +9108,49 @@
       const threatPenaltyMultiplier = getLearnedThreatPenaltyMultiplier(threat.name);
       const usageRelevance = Math.min(22, Number(threat.weight || 0));
       const disruptionDanger = getThreatDisruptionDanger(threat, teamState, trContext);
+      const bestPressure = superEffectivePressure
+        ? Math.min(130, 45 + superEffectivePressure * 28 + (trContext && trOutspeedCount ? 18 : 0))
+        : (offenseReady ? 65 : 25);
+      const worstIncoming = Math.min(130, pressure * 38 + (speedRisk ? 12 : 0) + disruptionDanger);
+      const canStopSpeedMode = trContext && ["incineroar", "sneasler", "whimsicott", "taunt", "fake out"].some((key) => normalizeNameKey(threat.name).includes(key)) && !occupiedRows.some(({ slot, entry }) => slotAbilityKey(slot, entry) === "armor tail");
+      const archetypeFavored = trContext && trOutspeedCount > 0 && (superEffectivePressure > 0 || threatSpeed > 95);
       const damageDanger = Math.min(40, pressure * 14 + (safeSwitchCount <= 0 ? 10 : 0));
       const answerScore = Math.min(45, safeSwitchCount * 8 + resistCount * 4 + superEffectivePressure * 10 + (offenseReady ? 6 : 0) + (trContext && trOutspeedCount ? 8 : 0));
       const switchPenalty = safeSwitchCount <= 0 ? 32 : safeSwitchCount === 1 ? 18 : 0;
       const offensePenalty = offenseReady ? 0 : 16;
       const speedPenalty = speedRisk ? 18 : 0;
       const resistRelief = Math.min(resistCount, 3) * 5;
+      const combinedRank = Number(threat.combinedRank || threat.rank || 999);
+      const rankRelevance = combinedRank <= 1 ? 18 : combinedRank <= 3 ? 14 : combinedRank <= 8 ? 9 : combinedRank <= 15 ? 5 : 1;
       const threatSeverityScore = Math.max(0, (
-        usageRelevance
-        + disruptionDanger
-        + damageDanger
-        + switchPenalty * 0.25
-        + speedPenalty * 0.35
-        + intimidatePressure * 9
-        + offensePenalty * 0.5
+        rankRelevance
+        + disruptionDanger * (canStopSpeedMode ? 1.2 : 0.65)
+        + damageDanger * 0.75
+        + switchPenalty * 0.35
+        + speedPenalty * 0.45
+        + intimidatePressure * (damageProfilePhysicalSpecial.mostlySpecial ? 2 : 7)
+        + offensePenalty * 0.45
+        + (worstIncoming >= 100 ? 12 : 0)
+        - (bestPressure >= 100 ? 24 : bestPressure >= 80 ? 14 : 0)
+        - (archetypeFavored ? 16 : 0)
         - resistRelief
-        - answerScore
+        - answerScore * 0.85
       ) * threatPenaltyMultiplier);
       const matchupScore = clampScore(95 - threatSeverityScore);
-      threatScores.push({ name: threat.name, usageRelevance, disruptionDanger, damageDanger, answerScore, threatSeverityScore, matchupScore });
+      const concreteReason = buildThreatConcreteReason({ threat, speedRisk, offenseReady, safeSwitchCount, bestPressure, worstIncoming, trContext, canStopSpeedMode, archetypeFavored });
+      const band = getThreatBand({ threatSeverityScore });
+      threatScores.push({ name: threat.name, combinedRank, rankRelevance, disruptionDanger, damageDanger, answerScore, bestPressure, worstIncoming, threatSeverityScore, matchupScore, band: band.band, concreteReason });
       answerScores.push({ name: threat.name, safeSwitchCount, resistCount, superEffectivePressure, fasterCount, trOutspeedCount });
       if (superEffectivePressure || (trContext && trOutspeedCount)) {
         ohkoOrPressureNotes.push(`${threat.name}: ${superEffectivePressure ? `${superEffectivePressure} super-effective pressure source${superEffectivePressure === 1 ? "" : "s"}` : "checked by Trick Room speed order"}.`);
       }
-      return { threat, pressure, resistCount, safeSwitchCount, offenseReady, fasterCount, speedRisk, intimidatePressure, threatSeverityScore, matchupScore };
+      if (realDebug) {
+        realDebug.threatReasoning.push({ name: threat.name, reason: concreteReason, band: band.band, matchupScore });
+        realDebug.ohkoChecks.push({ name: threat.name, bestPressure, worstIncoming });
+        realDebug.speedModeChecks.push({ name: threat.name, speedRisk, canStopSpeedMode, archetypeFavored });
+        realDebug.threatColorReason.push({ name: threat.name, color: band.band, reason: concreteReason });
+      }
+      return { threat, pressure, resistCount, safeSwitchCount, offenseReady, fasterCount, speedRisk, intimidatePressure, threatSeverityScore, matchupScore, threatBand: band, concreteReason, bestPressure, worstIncoming };
     }).sort((a, b) => (b.threatSeverityScore - a.threatSeverityScore) || (b.threat.weight - a.threat.weight)).map((row, index, sortedRows) => {
       if (index === sortedRows.length - 1 && typeof window !== "undefined") {
         window.__MBWR_MATCHUP_SIM_DEBUG = {
