@@ -6109,6 +6109,36 @@
     return "live-war-room-severity--danger";
   }
 
+  function isTrickRoomTeamContext(teamState = [], structureReport = null) {
+    const rows = getLiveWarRoomOccupiedRows(teamState);
+    const trCount = structureReport?.trickRoomCount ?? rows.filter(({ slot }) => getSetMoveKeys(slot).includes("trick room")).length;
+    const slowCount = structureReport?.slowCount ?? rows.filter(({ entry }) => (entry.baseSpeed || 0) <= 65).length;
+    const names = new Set(rows.map(({ entry }) => normalizeNameKey(entry.name)));
+    return trCount > 0 && (slowCount >= 2 || names.has("farigiraf") || names.has("oranguru") || names.has("sinistcha"));
+  }
+
+  function isTrickRoomSetterRow(row) {
+    return !!row && getSetMoveKeys(row.slot).includes("trick room");
+  }
+
+  function isTrickRoomBreakerRow(row) {
+    if (!row?.entry) return false;
+    const key = normalizeNameKey(row.entry.name);
+    const moveKeys = getSetMoveKeys(row.slot);
+    return (row.entry.baseSpeed || 0) <= 70
+      || ["mega blastoise", "blastoise", "kingambit", "hatterene", "mega camerupt", "conkeldurr", "basculegion"].includes(key)
+      || moveKeys.some((move) => ["water spout", "eruption", "hyper voice", "muddy water", "earthquake", "rock slide", "wave crash", "last respects"].includes(move));
+  }
+
+  function isTrickRoomEnablerRow(row) {
+    if (!row?.entry) return false;
+    const moveKeys = getSetMoveKeys(row.slot);
+    const ability = normalizeNameKey(row.slot?.ability || row.entry.abilities?.[0] || "");
+    return ability === "armor tail"
+      || moveKeys.some((move) => ["fake out", "follow me", "rage powder", "quick guard", "wide guard", "helping hand", "parting shot", "protect"].includes(move))
+      || row.entry.types.includes("Ghost");
+  }
+
   function getCriticalTeamIssue(teamState, fastData) {
     const filled = getLiveWarRoomFilledSlots(teamState).length;
     if (!filled) {
@@ -6151,7 +6181,21 @@
         });
       }
     });
-    if (!fastData.structureReport.speedControlCount && filled >= 3) {
+    const isTrTeam = isTrickRoomTeamContext(teamState, fastData.structureReport);
+    if (isTrTeam && filled >= 3) {
+      const rows = getLiveWarRoomOccupiedRows(teamState);
+      const hasSetter = rows.some(isTrickRoomSetterRow);
+      const hasBreaker = rows.some(isTrickRoomBreakerRow);
+      const hasEnabler = rows.some(isTrickRoomEnablerRow);
+      if (!hasSetter || !hasBreaker || !hasEnabler) {
+        candidates.push({
+          priority: 74,
+          severity: "warn",
+          title: "Trick Room plan needs cleaner setup.",
+          hint: "Team relies on Trick Room. Check whether TR can be set reliably and whether breakers pressure immediately after TR."
+        });
+      }
+    } else if (!fastData.structureReport.speedControlCount && filled >= 3) {
       candidates.push({
         priority: 70,
         severity: "warn",
@@ -6188,10 +6232,10 @@
       return `Mixed speed plan is unstable.${priorityNote}`;
     }
     if (counts.trickRoomCount && counts.slowCount >= 2) {
-      return `Hard Trick Room pace looks good.${priorityNote}`;
+      return `Team relies on Trick Room; judge speed by whether TR goes up and slow breakers attack immediately.${priorityNote}`;
     }
     if (counts.trickRoomCount) {
-      return `Trick Room is present, but the slow-mode shell is incomplete.${priorityNote}`;
+      return `Trick Room is present, but it needs either safer setup or stronger slow breakers.${priorityNote}`;
     }
     if (counts.tailwindCount && counts.fastCount >= 2) {
       return `Strong speed control. Tailwind gives the offense real tempo.${priorityNote}`;
@@ -6593,9 +6637,14 @@
     const hasTailwind = moveKeys.includes("tailwind");
     const hasRedirection = moveKeys.some((move) => ["follow me", "rage powder"].includes(move));
     const hasSpread = moveKeys.some((move) => SPREAD_PRESSURE_MOVE_KEYS.has(move));
+    const trContext = isTrickRoomTeamContext(teamState);
+    const hasTrSetter = pairRows.some(isTrickRoomSetterRow);
+    const hasTrBreaker = pairRows.some(isTrickRoomBreakerRow);
+    const hasTrEnabler = pairRows.some(isTrickRoomEnablerRow);
+    const pairNames = new Set(entries.map((entry) => normalizeNameKey(entry.name)));
     if (hasFakeOut) score += 14;
     if (hasRedirection) score += 10;
-    if (hasTailwind && avgSpeed >= 80) score += 12;
+    if (hasTailwind && avgSpeed >= 80 && !trContext) score += 12;
     if (hasTr && avgSpeed <= 75) score += 12;
     if (hasSpread) score += getTeamSynergyReport(entries[0], teamState, {}).score > 0 || getTeamSynergyReport(entries[1], teamState, {}).score > 0 ? 8 : 2;
     if (mode === "safe") score += entries.reduce((sum, entry) => sum + ((entry.baseStats?.[0] || 0) + (entry.baseStats?.[2] || 0) + (entry.baseStats?.[4] || 0)), 0) / 35;
@@ -6603,6 +6652,15 @@
     if (mode === "anti-tr") score += hasFakeOut || moveKeys.some((move) => ["taunt", "encore", "trick room"].includes(move)) ? 22 : -8;
     if (mode === "anti-tailwind") score += hasFakeOut || moveKeys.some((move) => ["taunt", "encore", "tailwind", "icy wind", "electroweb"].includes(move)) ? 20 : -6;
     if (mode === "anti-weather") score += moveKeys.some((move) => ["tailwind", "wide guard", "parting shot", "fake out"].includes(move)) ? 16 : 0;
+    if (trContext) {
+      if (hasTrSetter && (hasTrBreaker || hasTrEnabler)) score += 34;
+      if (hasTrSetter && hasTrBreaker) score += 12;
+      if (pairNames.has("farigiraf") && (pairNames.has("mega blastoise") || pairNames.has("blastoise"))) score += 22;
+      if (!hasTrSetter && mode !== "aggressive") score -= 24;
+      if (hasTailwind && !hasTr) score -= 16;
+      if (mode === "anti-tailwind" && hasTrSetter) score += 14;
+      if (mode === "safe" && hasTrSetter && hasTrEnabler) score += 12;
+    }
     return score;
   }
 
@@ -6636,7 +6694,7 @@
       .filter((row) => row.score > 0)
       .sort((a, b) => b.score - a.score)
       .slice(0, 3)
-      .map((row) => `${row.entry.name} improves PokeCounter-style safety/coverage into ${targetThreats.map((threat) => threat.name).join(", ")}.`);
+      .map((row) => `${row.entry.name} improves defensive safety or coverage into ${targetThreats.map((threat) => threat.name).join(", ")}.`);
   }
 
   function buildPokeCounterTeamBuilderPanel(teamState = [], evaluation = null) {
@@ -6694,7 +6752,7 @@
         <div class="live-war-room-list">
           ${suggestions.map((text) => `<div class="live-war-room-list__item">${escapeHtml(text)}</div>`).join("")}
           ${missingCoverage.length ? `<div class="live-war-room-list__item">Missing coverage into: ${missingCoverage.map(escapeHtml).join(", ")}.</div>` : ""}
-          ${(!suggestions.length && !missingCoverage.length) ? `<div class="live-war-room-list__item">No immediate swap required by PokeCounter-style simulation.</div>` : ""}
+          ${(!suggestions.length && !missingCoverage.length) ? `<div class="live-war-room-list__item">No immediate swap required by the current matchup simulation.</div>` : ""}
         </div>
       </section>
       <section class="live-war-room-section">
@@ -6946,9 +7004,24 @@
         && slotHasAllMoves(slot, ["hyper voice", "sparkling aria", "moonblast", "protect"]);
     }
     if (key === "sinistcha") {
-      return itemKey === "leftovers"
-        && abilityKey === "hospitality"
-        && slotHasAllMoves(slot, ["matcha gotcha", "strength sap", "protect", "rage powder"]);
+      return ["leftovers", "sitrus berry", "rocky helmet", "covert cloak", "mental herb"].includes(itemKey)
+        && (!abilityKey || abilityKey === "hospitality")
+        && slotHasAllMoves(slot, ["matcha gotcha", "protect"])
+        && (slotHasAllMoves(slot, ["strength sap"]) || slotHasAllMoves(slot, ["life dew"]) || slotHasAllMoves(slot, ["rage powder"]));
+    }
+    if (key === "mega blastoise" || key === "blastoise") {
+      const launcherMoves = ["dark pulse", "aura sphere", "dragon pulse", "water pulse"];
+      const strongWater = ["water spout", "hydro pump", "muddy water", "water pulse"];
+      const moveKeys = getSetMoveKeys(slot);
+      return (abilityKey === "mega launcher" || itemKey === "blastoisinite")
+        && launcherMoves.filter((move) => moveKeys.includes(move)).length >= 2
+        && strongWater.some((move) => moveKeys.includes(move));
+    }
+    if (key === "basculegion") {
+      return ["adaptability", "swift swim"].includes(abilityKey)
+        && ["choice scarf", "choice band", "mystic water", "life orb", "clear amulet"].includes(itemKey)
+        && slotHasAllMoves(slot, ["last respects", "wave crash"])
+        && (slotHasAllMoves(slot, ["flip turn"]) || slotHasAllMoves(slot, ["aqua jet"]) || slotHasAllMoves(slot, ["protect"]));
     }
     return false;
   }
@@ -6961,6 +7034,8 @@
     if (key === "aerodactyl" || key === "mega aerodactyl") return "Focus Sash Unnerve Tailwind Aerodactyl is already a coherent speed-control lead.";
     if (key === "primarina") return "Kebia Berry Liquid Voice Primarina is already tuned to survive the key Poison pressure and keep back with strong Fairy/Water sound damage.";
     if (key === "sinistcha") return "Leftovers Hospitality Sinistcha with Matcha Gotcha / Strength Sap / Rage Powder / Protect is already doing the bulky redirector job it should.";
+    if (key === "mega blastoise" || key === "blastoise") return "Mega Launcher Blastoise already has the boosted coverage and Water pressure this role wants.";
+    if (key === "basculegion") return "Basculegion already has its core attacker package, so suggestions should preserve Last Respects and Wave Crash pressure.";
     return "This current set already matches a coherent role.";
   }
 
@@ -7645,7 +7720,7 @@
     const tierScore = getMegaPreferenceScore(entry);
     score += tierScore;
     if (["S", "A", "B"].includes(tier)) {
-      reasons.push(`${entry.name} is a ${tier}-tier Mega preference after legality, archetype, and matchup fit.`);
+      reasons.push(`${entry.name} is a ${tier}-tier Mega preference after legality, archetype, and the current threat list.`);
     } else if (["D", "F"].includes(tier)) {
       reasons.push(`${entry.name} is ${tier}-tier, so it needs a specific archetype or matchup reason to justify the Mega slot.`);
     }
@@ -7996,13 +8071,49 @@
       }
     }
     const uniqueAttackTypes = [...new Set(attackTypes)];
-    const uncoveredTypes = Object.keys(TYPE_CHART).filter((defenderType) => !uniqueAttackTypes.some((attackType) => getSingleTypeEffectiveness(attackType, defenderType) > 1));
-    const lightlyCoveredTypes = Object.keys(TYPE_CHART).filter((defenderType) => uniqueAttackTypes.filter((attackType) => getSingleTypeEffectiveness(attackType, defenderType) > 1).length === 1);
-    const score = clampScore(100 - uncoveredTypes.length * 9 - lightlyCoveredTypes.length * 2);
+    const uncoveredTypes = Object.keys(TYPE_CHART)
+      .filter((defenderType) => !uniqueAttackTypes.some((attackType) => getSingleTypeEffectiveness(attackType, defenderType) > 1))
+      .sort((a, b) => getMetaTypeUsageWeight(b) - getMetaTypeUsageWeight(a));
+    const lightlyCoveredTypes = Object.keys(TYPE_CHART)
+      .filter((defenderType) => uniqueAttackTypes.filter((attackType) => getSingleTypeEffectiveness(attackType, defenderType) > 1).length === 1)
+      .sort((a, b) => getMetaTypeUsageWeight(b) - getMetaTypeUsageWeight(a));
+    const uncoveredPenalty = uncoveredTypes.reduce((sum, type) => sum + 9 * getMetaTypeUsageWeight(type), 0);
+    const lightPenalty = lightlyCoveredTypes.reduce((sum, type) => sum + 2 * getMetaTypeUsageWeight(type), 0);
+    const score = clampScore(100 - uncoveredPenalty - lightPenalty);
     const summary = uncoveredTypes.length
       ? `Your current move pool struggles to threaten ${uncoveredTypes.slice(0, 6).join(", ")} super effectively.`
       : `Your selected moves give you broad offensive reach across the current legal pool.`;
     return { attackTypes: uniqueAttackTypes, uncoveredTypes, lightlyCoveredTypes, score, summary };
+  }
+
+  function getMetaTypeUsageWeight(typeName) {
+    const type = canonicalizeTypeName(typeName);
+    const topTypes = Array.isArray(metaSourceTruth?.topTypes) ? metaSourceTruth.topTypes : [];
+    const row = topTypes.find((item) => canonicalizeTypeName(item.type || item.name || item.label) === type);
+    const usage = Number(row?.usage ?? row?.usagePercent ?? row?.percent ?? 0);
+    if (usage > 0) return Math.max(0.25, Math.min(1.75, usage / 18));
+    const threatTypeUsage = (metaThreats || [])
+      .filter((threat) => (threat.types || []).includes(type))
+      .reduce((sum, threat) => sum + Number(threat.weight || 0), 0);
+    if (threatTypeUsage > 0) return Math.max(0.3, Math.min(1.5, threatTypeUsage / 22));
+    return 0.3;
+  }
+
+  function getTeamDamageProfilePhysicalSpecial(teamState = []) {
+    const rows = (teamState || [])
+      .filter((slot) => slot.name)
+      .map((slot) => ({ slot, entry: resolveBattleEntry(slot) }))
+      .filter((row) => row.entry);
+    const physical = rows.filter(({ slot, entry }) => getOffenseProfile(slot, entry) === "physical").length;
+    const special = rows.filter(({ slot, entry }) => getOffenseProfile(slot, entry) === "special").length;
+    const mixed = Math.max(0, rows.length - physical - special);
+    return {
+      physical,
+      special,
+      mixed,
+      mostlySpecial: special >= 3 && physical <= 2,
+      mostlyPhysical: physical >= 3 && special <= 2
+    };
   }
 
   function buildMetaThreatRows(teamState, attackTypes) {
@@ -8010,34 +8121,109 @@
       .map((slot) => ({ slot, entry: resolveBattleEntry(slot) }))
       .filter((row) => row.entry);
     const team = occupiedRows.map((row) => row.entry);
+    const trContext = isTrickRoomTeamContext(teamState);
+    const damageProfilePhysicalSpecial = getTeamDamageProfilePhysicalSpecial(teamState);
+    const speedModeContext = trContext ? "trick-room" : "standard";
+    const threatScores = [];
+    const answerScores = [];
+    const ohkoOrPressureNotes = [];
     return metaThreats.map((threat) => {
       const pressure = Math.max(...threat.types.map((type) => team.filter((entry) => getTypeEffectiveness(type, entry.types) > 1).length));
       const resistCount = threat.types.reduce((count, type) => count + team.filter((entry) => getTypeEffectiveness(type, entry.types) < 1).length, 0);
       const safeSwitchCount = occupiedRows.filter(({ slot, entry }) => threat.types.every((type) => getEffectiveTypeEffectiveness(type, slot, entry) < 1)).length;
       const offenseReady = attackTypes.some((attackType) => threat.types.some((targetType) => getSingleTypeEffectiveness(attackType, targetType) > 1));
+      const superEffectivePressure = occupiedRows.filter(({ slot, entry }) => {
+        const moves = getSetMoveKeys(slot);
+        if (!moves.length) return (entry.types || []).some((attackType) => threat.types.some((targetType) => getSingleTypeEffectiveness(attackType, targetType) > 1));
+        return moves.some((moveKey) => {
+          const moveType = inferMoveTypeFromKey(moveKey, entry) || "";
+          return moveType && threat.types.some((targetType) => getSingleTypeEffectiveness(moveType, targetType) > 1);
+        });
+      }).length;
       const speedBenchmark = META_SPEED_BENCHMARKS.find((row) => normalizeNameKey(row.name) === normalizeNameKey(threat.name));
       const threatSpeed = speedBenchmark ? calculateLv50SpeedWithSpread(getRosterEntry(threat.name)?.baseSpeed || 0, speedBenchmark.speedSp, speedBenchmark.nature, speedBenchmark.item) : 0;
       const fasterCount = occupiedRows.filter(({ slot, entry }) => calculateLv50SpeedWithSpread(entry.baseSpeed || 0, slot?.sps?.spe || 0, slot?.nature || "Serious", slot?.item || "") >= threatSpeed).length;
-      const speedRisk = threatSpeed > 0 && fasterCount === 0;
+      const trOutspeedCount = occupiedRows.filter(({ entry }) => (entry.baseSpeed || 0) <= (getRosterEntry(threat.name)?.baseSpeed || threatSpeed || 100)).length;
+      const speedRisk = trContext
+        ? threatSpeed > 0 && trOutspeedCount === 0
+        : threatSpeed > 0 && fasterCount === 0;
       const intimidatePressure = normalizeNameKey(threat.name) === "incineroar"
-        ? occupiedRows.filter(({ slot, entry }) => getOffenseProfile(slot, entry) === "physical" && isIntimidateWeak(slot, entry)).length
+        ? occupiedRows.filter(({ slot, entry }) => getOffenseProfile(slot, entry) === "physical" && isIntimidateWeak(slot, entry)).length * (damageProfilePhysicalSpecial.mostlySpecial ? 0.35 : 1)
         : 0;
       const threatPenaltyMultiplier = getLearnedThreatPenaltyMultiplier(threat.name);
+      const usageRelevance = Math.min(22, Number(threat.weight || 0));
+      const disruptionDanger = getThreatDisruptionDanger(threat, teamState, trContext);
+      const damageDanger = Math.min(40, pressure * 14 + (safeSwitchCount <= 0 ? 10 : 0));
+      const answerScore = Math.min(45, safeSwitchCount * 8 + resistCount * 4 + superEffectivePressure * 10 + (offenseReady ? 6 : 0) + (trContext && trOutspeedCount ? 8 : 0));
       const switchPenalty = safeSwitchCount <= 0 ? 32 : safeSwitchCount === 1 ? 18 : 0;
       const offensePenalty = offenseReady ? 0 : 16;
       const speedPenalty = speedRisk ? 18 : 0;
       const resistRelief = Math.min(resistCount, 3) * 5;
-      const threatSeverityScore = (
-        pressure * 20
-        + switchPenalty
-        + speedPenalty
-        + intimidatePressure * 12
-        + offensePenalty
+      const threatSeverityScore = Math.max(0, (
+        usageRelevance
+        + disruptionDanger
+        + damageDanger
+        + switchPenalty * 0.25
+        + speedPenalty * 0.35
+        + intimidatePressure * 9
+        + offensePenalty * 0.5
         - resistRelief
-      ) * threatPenaltyMultiplier;
+        - answerScore
+      ) * threatPenaltyMultiplier);
       const matchupScore = clampScore(95 - threatSeverityScore);
+      threatScores.push({ name: threat.name, usageRelevance, disruptionDanger, damageDanger, answerScore, threatSeverityScore, matchupScore });
+      answerScores.push({ name: threat.name, safeSwitchCount, resistCount, superEffectivePressure, fasterCount, trOutspeedCount });
+      if (superEffectivePressure || (trContext && trOutspeedCount)) {
+        ohkoOrPressureNotes.push(`${threat.name}: ${superEffectivePressure ? `${superEffectivePressure} super-effective pressure source${superEffectivePressure === 1 ? "" : "s"}` : "checked by Trick Room speed order"}.`);
+      }
       return { threat, pressure, resistCount, safeSwitchCount, offenseReady, fasterCount, speedRisk, intimidatePressure, threatSeverityScore, matchupScore };
-    }).sort((a, b) => (b.threatSeverityScore - a.threatSeverityScore) || (b.threat.weight - a.threat.weight));
+    }).sort((a, b) => (b.threatSeverityScore - a.threatSeverityScore) || (b.threat.weight - a.threat.weight)).map((row, index, sortedRows) => {
+      if (index === sortedRows.length - 1 && typeof window !== "undefined") {
+        window.__MBWR_MATCHUP_SIM_DEBUG = {
+          ...(window.__MBWR_MATCHUP_SIM_DEBUG || {}),
+          damageProfilePhysicalSpecial,
+          threatScores,
+          answerScores,
+          speedModeContext,
+          ohkoOrPressureNotes
+        };
+      }
+      return row;
+    });
+  }
+
+  function inferMoveTypeFromKey(moveKey, entry) {
+    const key = normalizeNameKey(moveKey);
+    const known = {
+      earthquake: "Ground", "stomping tantrum": "Ground", "earth power": "Ground",
+      "wave crash": "Water", "water spout": "Water", "hydro pump": "Water", "muddy water": "Water", "aqua jet": "Water", "water pulse": "Water", "flip turn": "Water",
+      "last respects": "Ghost", "shadow ball": "Ghost", "phantom force": "Ghost",
+      "dark pulse": "Dark", "kowtow cleave": "Dark", "throat chop": "Dark", "knock off": "Dark", crunch: "Dark",
+      "aura sphere": "Fighting", "close combat": "Fighting", "low kick": "Fighting",
+      "dragon pulse": "Dragon", "dragon claw": "Dragon", "dragon darts": "Dragon", "draco meteor": "Dragon",
+      "sludge wave": "Poison", "dire claw": "Poison", "sludge bomb": "Poison",
+      "matcha gotcha": "Grass", "energy ball": "Grass", "flower trick": "Grass",
+      "heat wave": "Fire", "flare blitz": "Fire", eruption: "Fire", flamethrower: "Fire",
+      "rock slide": "Rock", "stone edge": "Rock", "stone axe": "Rock",
+      "hyper voice": "Normal", "dazzling gleam": "Fairy", moonblast: "Fairy",
+      thunderbolt: "Electric", thunder: "Electric", "wild charge": "Electric",
+      psychic: "Psychic", "ice beam": "Ice", hurricane: "Flying", "air slash": "Flying", "dual wingbeat": "Flying",
+      "iron head": "Steel", "flash cannon": "Steel"
+    };
+    if (known[key]) return known[key];
+    return (entry?.types || []).find((type) => key.includes(type.toLowerCase())) || "";
+  }
+
+  function getThreatDisruptionDanger(threat, teamState, trContext) {
+    const key = normalizeNameKey(threat?.name || "");
+    const teamRows = getLiveWarRoomOccupiedRows(teamState);
+    const armorTail = teamRows.some(({ slot, entry }) => normalizeNameKey(slot.ability || entry.abilities?.[0] || "") === "armor tail");
+    const ghosts = teamRows.filter(({ entry }) => entry.types.includes("Ghost")).length;
+    if (key === "incineroar") return getTeamDamageProfilePhysicalSpecial(teamState).mostlySpecial ? 5 : 18;
+    if (key === "whimsicott") return trContext ? 6 : 18;
+    if (["sneasler", "rillaboom", "raichu", "hariyama"].includes(key)) return armorTail || ghosts >= 2 ? 5 : 16;
+    if (["farigiraf", "hatterene", "oranguru"].includes(key)) return trContext ? 8 : 14;
+    return 8;
   }
 
   async function buildLeadRecommendation(teamState, threatRows) {
@@ -8071,12 +8257,16 @@
     let score = 42;
     const reasons = [];
     const combinedMoves = pair.flatMap(({ slot }) => slot.moves.map((move) => normalizeNameKey(move)).filter(Boolean));
+    const trContext = isTrickRoomTeamContext(teamState);
+    const hasTrSetterLead = pair.some(isTrickRoomSetterRow);
+    const hasTrBreakerLead = pair.some(isTrickRoomBreakerRow);
+    const hasTrEnablerLead = pair.some(isTrickRoomEnablerRow);
     const averageRolePrior = pair.length
       ? pair.reduce((sum, { entry }) => sum + getLearnedRolePriorWeight(entry.name), 0) / pair.length
       : 0;
     const learnedMoveBias = combinedMoves.reduce((sum, move) => sum + getLearnedMoveWeight(move), 0);
     const speedAvg = pair.reduce((sum, row) => sum + row.entry.baseSpeed, 0) / pair.length;
-    score += Math.min(18, Math.round(speedAvg / 10));
+    score += trContext ? Math.min(18, Math.round((120 - Math.min(120, speedAvg)) / 8)) : Math.min(18, Math.round(speedAvg / 10));
     score += Math.round(averageRolePrior * (getLearnedBuilderData().learnedWeights?.candidateScoreWeights?.rolePrior || 6));
     score += Math.max(-6, Math.min(6, Math.round(learnedMoveBias * (getLearnedBuilderData().learnedWeights?.candidateScoreWeights?.moveWeight || 4))));
     if (combinedMoves.includes("fake out")) {
@@ -8086,6 +8276,20 @@
     if (combinedMoves.some((move) => ["tailwind", "trick room", "icy wind", "electroweb"].includes(move))) {
       score += 10;
       reasons.push("has speed control");
+    }
+    if (trContext) {
+      if (hasTrSetterLead && (hasTrBreakerLead || hasTrEnablerLead)) {
+        score += 26;
+        reasons.push("opens by setting Trick Room with immediate support or pressure");
+      }
+      if (!hasTrSetterLead && pair.length >= 2) {
+        score -= 22;
+        reasons.push("delays the team's main Trick Room plan");
+      }
+      if (combinedMoves.includes("tailwind") && !combinedMoves.includes("trick room")) {
+        score -= 14;
+        reasons.push("pulls the lead away from the Trick Room plan");
+      }
     }
     if (pair.some(({ slot, entry }) => hasFakeOutCounterplay(slot, entry))) {
       score += 8;
@@ -8120,6 +8324,10 @@
     const hasSpeedControl = hasTrickRoom || hasTailwind || moveKeys.some((move) => ["icy wind", "electroweb", "thunder wave"].includes(move));
     const hasSpreadPressure = moveKeys.some((move) => SPREAD_PRESSURE_MOVE_KEYS.has(move));
     const avgSpeed = entries.reduce((sum, entry) => sum + (entry.baseSpeed || 0), 0) / Math.max(1, entries.length);
+    const trContext = isTrickRoomTeamContext(teamState);
+    const hasTrSetterLead = pair.some(isTrickRoomSetterRow);
+    const hasTrBreakerLead = pair.some(isTrickRoomBreakerRow);
+    const hasTrEnablerLead = pair.some(isTrickRoomEnablerRow);
     const teamSlots = getFilledTeamSlots(teamState);
     const teamPhysical = teamSlots.filter((slot) => {
       const entry = getRosterEntry(slot.name);
@@ -8137,6 +8345,18 @@
     if (hasTrickRoom && avgSpeed <= 75 && !hasTailwind) {
       scoreDelta += 12;
       reasons.push("keeps the opening speed plan coherent for Trick Room");
+    }
+    if (trContext && hasTrSetterLead && (hasTrBreakerLead || hasTrEnablerLead)) {
+      scoreDelta += 18;
+      reasons.push("sets Trick Room while protecting the setup turn or threatening immediate damage");
+    }
+    if (trContext && !hasTrSetterLead && pair.length >= 2) {
+      scoreDelta -= 18;
+      reasons.push("leaves the Trick Room setter off the opening board");
+    }
+    if (trContext && hasTailwind && !hasTrickRoom) {
+      scoreDelta -= 14;
+      reasons.push("adds a speed plan that conflicts with the slow mode");
     }
     if (hasTailwind && avgSpeed >= 80 && !hasTrickRoom) {
       scoreDelta += 10;
@@ -8181,6 +8401,9 @@
   function buildLeadSummary(names, reasons, topThreats, simulation = {}) {
     const worst = simulation.worstEnemyLeads?.length ? ` Watch for ${simulation.worstEnemyLeads.join(" or ")}.` : "";
     const swap = simulation.recommendedSwap ? ` Pivot toward ${simulation.recommendedSwap} if the opening pressure is unfavorable.` : "";
+    if (reasons.some((reason) => reason.includes("Trick Room"))) {
+      return `${names.join(" + ")} is the cleaner Trick Room opener because it can set room while keeping pressure on turn one.${worst}${swap}`;
+    }
     if (!reasons.length) {
       return `${names.join(" + ")} is the cleaner generic opener when you want a stable start into the current snapshot.${worst}${swap}`;
     }
@@ -8224,6 +8447,7 @@
 
   function buildFixList({ weaknessRows, offenseReport, metaPressure, threatRows, itemClause, speciesClause, structureReport }) {
     const fixes = [];
+    const committedTrickRoom = (structureReport?.trickRoomCount || 0) > 0 && (structureReport?.slowCount || 0) >= 2;
     if (itemClause.duplicates.length) {
       fixes.push(`Fix item clause first by replacing duplicate ${itemClause.duplicates[0].name} copies.`);
     }
@@ -8243,7 +8467,9 @@
       fixes.push("Add stronger Intimidate insurance like Defiant, Competitive, better positioning, or more special pressure.");
     }
     if (structureReport.issues.length) {
-      fixes.push(structureReport.issues[0]);
+      const issue = structureReport.issues.find((text) => !committedTrickRoom || !/tailwind|icy wind|electroweb|thunder wave|fast pressure|from behind/i.test(text));
+      if (issue) fixes.push(issue);
+      else fixes.push("Keep the Trick Room identity intact: improve setup protection or immediate slow-breaker pressure.");
     }
     if (threatRows[0]) {
       fixes.push(`Respect ${threatRows[0].threat.name} more in builder choices and lead planning.`);
@@ -8538,6 +8764,7 @@
     let speedControlCount = 0;
     let trickRoomCount = 0;
     let fakeOutCount = 0;
+    let setupProtectionCount = 0;
     occupied.forEach(({ slot, entry }) => {
       const profile = getOffenseProfile(slot, entry);
       if (profile === "physical") physicalCount += 1;
@@ -8548,16 +8775,23 @@
       if (moveKeys.some((move) => ["tailwind", "icy wind", "electroweb", "thunder wave", "bulldoze"].includes(move))) speedControlCount += 1;
       if (moveKeys.includes("trick room")) trickRoomCount += 1;
       if (moveKeys.includes("fake out")) fakeOutCount += 1;
+      if (moveKeys.some((move) => ["fake out", "follow me", "rage powder", "quick guard", "wide guard", "protect", "parting shot"].includes(move))
+        || normalizeNameKey(slot.ability || entry.abilities?.[0] || "") === "armor tail"
+        || entry.types.includes("Ghost")) setupProtectionCount += 1;
     });
     const issues = [];
+    const committedTrickRoom = trickRoomCount > 0 && slowCount >= 2;
     if (Math.abs(physicalCount - specialCount) >= 3) {
       issues.push(`Rebalance offense. You're too skewed ${physicalCount > specialCount ? "physical" : "special"} right now.`);
     }
-    if (!speedControlCount) {
-      issues.push("Add real speed control like Tailwind, Icy Wind, Electroweb, or Thunder Wave.");
+    if (!speedControlCount && !committedTrickRoom) {
+      issues.push("Add a clear non-TR speed plan such as Tailwind, Icy Wind, Electroweb, or Thunder Wave.");
     }
-    if (fastCount < 2) {
-      issues.push("Add more fast pressure so you are not forced to play every game from behind.");
+    if (committedTrickRoom && setupProtectionCount < 2) {
+      issues.push("Protect the Trick Room turn with Armor Tail, redirection, Fake Out pressure, Quick Guard, or safer pivots.");
+    }
+    if (fastCount < 2 && !committedTrickRoom) {
+      issues.push("Add more fast pressure or a clearer tempo tool for non-TR matchups.");
     }
     if (!trickRoomCount && slowCount < 2) {
       issues.push("Add more speed control - Tailwind, Icy Wind, Electroweb, or a Trick Room mode if the team is built slow.");
@@ -8566,15 +8800,18 @@
       issues.push("Consider adding Fake Out or stronger anti-lead tools to improve openings.");
     }
     const mixPenalty = Math.abs(physicalCount - specialCount) * 8;
-    const fastPenalty = fastCount >= 2 ? 0 : (2 - fastCount) * 10;
+    const fastPenalty = committedTrickRoom ? 0 : (fastCount >= 2 ? 0 : (2 - fastCount) * 10);
     const slowPenalty = ((trickRoomCount >= 1 && slowCount >= 2) || slowCount >= 3) ? 0 : 10;
-    const speedPenalty = speedControlCount ? 0 : 16;
+    const speedPenalty = (speedControlCount || committedTrickRoom) ? 0 : 16;
     const fakeOutPenalty = fakeOutCount ? 0 : 4;
-    const score = clampScore(100 - mixPenalty - fastPenalty - slowPenalty - speedPenalty - fakeOutPenalty);
+    const trSetupBonus = committedTrickRoom ? Math.min(12, setupProtectionCount * 4) : 0;
+    const score = clampScore(100 - mixPenalty - fastPenalty - slowPenalty - speedPenalty - fakeOutPenalty + trSetupBonus);
     const summary = issues.length
       ? `Structure is ${describeGradeBand(score).toLowerCase()}. ${issues.slice(0, 2).join(" ")}`
-      : "The team has a healthy physical-special mix, enough speed pressure, and a backup slow mode.";
-    return { score, physicalCount, specialCount, fastCount, slowCount, speedControlCount, trickRoomCount, summary, issues };
+      : committedTrickRoom
+        ? "The team is judged as a Trick Room shell: setters, slow breakers, and setup protection matter more than raw Speed."
+        : "The team has a healthy physical-special mix, enough speed pressure, and a backup slow mode.";
+    return { score, physicalCount, specialCount, fastCount, slowCount, speedControlCount, trickRoomCount, setupProtectionCount, summary, issues };
   }
 
   function getOffenseProfile(slot, entry) {
@@ -12545,7 +12782,7 @@
       notes.push(currentIntent === "hard_tr" || currentIntent === "soft_tr" ? "adds a Trick Room mode" : "offers alternate speed control");
     }
     if (moveKeys.includes("parting shot") || moveKeys.includes("u-turn")) notes.push("keeps momentum moving");
-    if (moveKeys.includes("protect")) notes.push("has a safe positioning button");
+    if (moveKeys.includes("protect")) notes.push("can use Protect to scout attacks and preserve board position");
     if (set.item) notes.push(`uses ${set.item} to support its role`);
     if (set.ability) notes.push(`${set.ability} is the preferred ability here`);
     const entry = getRosterEntry(set.name);
@@ -12559,7 +12796,7 @@
       notes.unshift(`${set.name} skips Protect because ${protectReason}`);
     }
     const megaTier = entry && isMegaEntry(entry) ? getMegaPreferenceTier(entry) : "";
-    if (["D", "F"].includes(megaTier)) notes.unshift(`${set.name} is ${megaTier}-tier, so it is only justified here by specific speed-mode, role, or matchup fit`);
+    if (["D", "F"].includes(megaTier)) notes.unshift(`${set.name} is ${megaTier}-tier, so it needs a clear speed plan, role, or target threat to justify the slot`);
     return notes.length ? notes.slice(0, 3).join(". ") + "." : "Fills a general role slot in the current draft.";
   }
 
@@ -12967,7 +13204,7 @@
     const stabAttackPriority = getStabPriorityMoves(entry, offenseProfile);
     getRoleAwareSpeciesMovePriority(entry, roleProfile).forEach(addMove);
     if (normalizeNameKey(entry.name) === "sneasler") {
-      ["Dire Claw", "Close Combat", "Fake Out", "Protect", "Coaching", "Rock Tomb", "Throat Chop", "Rock Slide"].forEach(addMove);
+      ["Dire Claw", "Close Combat", "Fake Out", "Protect", "Coaching", "Throat Chop", "Rock Slide"].forEach(addMove);
     }
     if (normalizeNameKey(entry.name) === "raichu") {
       ["Electroweb", "Thunderbolt", "Volt Switch", "Fake Out", "Protect", "Nuzzle"].forEach(addMove);
@@ -13283,6 +13520,55 @@
       if (result.length < 4 && !result.some((move) => ["helping hand", "foul play", "psychic"].includes(normalizeNameKey(move)))) {
         const utility = ["Helping Hand", "Foul Play", "Psychic"].find((move) => !result.includes(move) && (damagingMovePool.includes(move) || keep.includes(move)));
         if (utility) result.push(utility);
+      }
+    }
+    if (key === "mega blastoise" || key === "blastoise") {
+      const preferred = ["Water Spout", "Muddy Water", "Hydro Pump", "Water Pulse", "Dark Pulse", "Aura Sphere", "Dragon Pulse", "Protect"];
+      const boosted = ["Dark Pulse", "Aura Sphere", "Dragon Pulse", "Water Pulse"];
+      const strongWater = ["Water Spout", "Muddy Water", "Hydro Pump", "Water Pulse"];
+      const legalPreferred = preferred.filter((move) => move === "Protect" || damagingMovePool.includes(move) || result.includes(move));
+      result = result.filter((move) => !["charge beam", "eerie impulse"].includes(normalizeNameKey(move)));
+      if (!result.some((move) => strongWater.includes(move))) {
+        const waterMove = strongWater.find((move) => damagingMovePool.includes(move) || result.includes(move));
+        const replaceIndex = result.findIndex((move) => normalizeNameKey(move) !== "protect" && !boosted.includes(move));
+        if (waterMove && replaceIndex >= 0) result.splice(replaceIndex, 1, waterMove);
+        else if (waterMove && result.length < 4) result.push(waterMove);
+      }
+      while (result.filter((move) => boosted.includes(move)).length < 2) {
+        const nextBoosted = boosted.find((move) => !result.includes(move) && damagingMovePool.includes(move));
+        if (!nextBoosted) break;
+        const replaceIndex = result.findIndex((move) => !strongWater.includes(move) && normalizeNameKey(move) !== "protect");
+        if (replaceIndex >= 0) result.splice(replaceIndex, 1, nextBoosted);
+        else if (result.length < 4) result.push(nextBoosted);
+        else break;
+      }
+      legalPreferred.forEach((move) => {
+        if (result.length < 4 && !result.includes(move)) result.push(move);
+      });
+    }
+    if (key === "basculegion") {
+      const preferred = ["Last Respects", "Wave Crash", "Flip Turn", "Aqua Jet", "Protect"];
+      preferred.forEach((move) => {
+        if (result.length < 4 && !result.includes(move) && (damagingMovePool.includes(move) || move === "Protect")) result.push(move);
+      });
+      ["Last Respects", "Wave Crash"].forEach((move) => {
+        if (!result.includes(move) && damagingMovePool.includes(move)) {
+          const replaceIndex = result.findIndex((candidate) => !["flip turn", "aqua jet", "protect"].includes(normalizeNameKey(candidate)));
+          if (replaceIndex >= 0) result.splice(replaceIndex, 1, move);
+        }
+      });
+    }
+    if (key === "sinistcha") {
+      const keep = ["Matcha Gotcha", "Life Dew", "Strength Sap", "Rage Powder", "Protect", "Trick Room", "Shadow Ball"];
+      const supportCore = ["Matcha Gotcha", "Protect", "Life Dew", "Strength Sap", "Rage Powder", "Trick Room"];
+      result = result.filter((move) => keep.includes(move));
+      supportCore.forEach((move) => {
+        if (result.length < 4 && !result.includes(move) && (damagingMovePool.includes(move) || keep.includes(move))) result.push(move);
+      });
+    }
+    if (key === "sneasler") {
+      if (result.some((move) => normalizeNameKey(move) === "rock tomb") && !result.some((move) => ["coaching", "taunt", "fake out"].includes(normalizeNameKey(move)))) {
+        replaceMove(["rock tomb"], ["Protect", "Throat Chop", "Rock Slide"]);
       }
     }
     if (["mega camerupt", "charizard", "mega charizard y", "whimsicott"].includes(key)) {
@@ -13803,11 +14089,13 @@
 
   function computeDefensiveTypeScore(weaknessRows, teamSize) {
     const totalPenalty = weaknessRows.reduce((sum, row) => {
-      if (row.weakCount >= 3) return sum + row.weakCount * 1.5;
-      if (row.weakCount === 2) return sum + (row.answerCount ? 0.5 : 1);
-      return sum + row.weakCount;
+      const metaWeight = getMetaTypeUsageWeight(row.attackType);
+      if (row.weakCount >= 3) return sum + row.weakCount * 1.5 * metaWeight;
+      if (row.weakCount === 2) return sum + (row.answerCount ? 0.5 : 1) * metaWeight;
+      return sum + row.weakCount * metaWeight;
     }, 0);
-    return clampScore(100 - totalPenalty * 8 - Math.max(0, weaknessRows.length - Math.ceil(teamSize / 2)) * 6);
+    const lowImpactOverflow = weaknessRows.reduce((sum, row) => sum + (getMetaTypeUsageWeight(row.attackType) < 0.5 ? 0.35 : 1), 0);
+    return clampScore(100 - totalPenalty * 8 - Math.max(0, lowImpactOverflow - Math.ceil(teamSize / 2)) * 6);
   }
 
   function computeMetaMatchupScore(threatRows) {
@@ -13853,12 +14141,17 @@
       };
     }
 
-    const fakeOutProtected = occupiedSlots.filter(({ slot, entry }) => hasFakeOutCounterplay(slot, entry));
-    const fakeOutWeak = occupiedSlots.filter(({ slot, entry }) => !hasFakeOutCounterplay(slot, entry));
+    const hasArmorTail = occupiedSlots.some(({ slot, entry }) => normalizeNameKey(slot.ability || entry.abilities?.[0] || "") === "armor tail");
+    const ghostCount = occupiedSlots.filter(({ entry }) => entry.types.includes("Ghost")).length;
+    const damageProfilePhysicalSpecial = getTeamDamageProfilePhysicalSpecial(teamState);
+    const fakeOutProtected = occupiedSlots.filter(({ slot, entry }) => hasFakeOutCounterplay(slot, entry) || hasArmorTail);
+    const fakeOutWeak = hasArmorTail ? [] : occupiedSlots.filter(({ slot, entry }) => !hasFakeOutCounterplay(slot, entry));
     const fakeOutSpeedReliant = occupiedSlots.filter(({ entry }) => entry.baseSpeed >= 95).length;
     const fakeOutScore = clampScore(
       40
       + fakeOutProtected.length * 14
+      + (hasArmorTail ? 18 : 0)
+      + ghostCount * 6
       - fakeOutWeak.length * 9
       - Math.max(0, fakeOutSpeedReliant - fakeOutProtected.length) * 4
     );
@@ -13867,39 +14160,61 @@
     const intimidatePunish = occupiedSlots.filter(({ slot }) => punishesIntimidate(slot));
     const intimidateLowConcern = occupiedSlots.filter(({ slot, entry }) => isIntimidateLowConcern(slot, entry));
     const intimidateWeak = occupiedSlots.filter(({ slot, entry }) => isIntimidateWeak(slot, entry));
+    const intimidateImpactScore = clampScore(
+      intimidateWeak.length * (damageProfilePhysicalSpecial.mostlySpecial ? 9 : 18)
+      - intimidatePunish.length * 16
+      - intimidateImmune.length * 8
+      - intimidateLowConcern.length * 5
+    );
     const intimidateScore = clampScore(
       38
       + intimidateImmune.length * 14
       + intimidatePunish.length * 12
       + intimidateLowConcern.length * 8
-      - intimidateWeak.length * 10
+      + (damageProfilePhysicalSpecial.mostlySpecial ? 16 : 0)
+      - intimidateWeak.length * (damageProfilePhysicalSpecial.mostlySpecial ? 4 : 10)
     );
+
+    if (typeof window !== "undefined") {
+      window.__MBWR_MATCHUP_SIM_DEBUG = {
+        ...(window.__MBWR_MATCHUP_SIM_DEBUG || {}),
+        damageProfilePhysicalSpecial,
+        fakeOutMitigation: {
+          armorTail: hasArmorTail,
+          ghostCount,
+          protected: fakeOutProtected.map(({ entry }) => entry.name),
+          exposed: fakeOutWeak.map(({ entry }) => entry.name),
+          score: fakeOutScore
+        },
+        intimidateImpactScore
+      };
+    }
 
     return {
       fakeOut: {
         score: fakeOutScore,
-        summary: buildFakeOutSummary(fakeOutProtected, fakeOutWeak)
+        summary: buildFakeOutSummary(fakeOutProtected, fakeOutWeak, { hasArmorTail, ghostCount })
       },
       intimidate: {
         score: intimidateScore,
-        summary: buildIntimidateSummary(intimidateImmune, intimidatePunish, intimidateLowConcern, intimidateWeak)
+        summary: buildIntimidateSummary(intimidateImmune, intimidatePunish, intimidateLowConcern, intimidateWeak, damageProfilePhysicalSpecial)
       },
       summary: describeMetaSummary(Math.round((fakeOutScore + intimidateScore) / 2))
     };
   }
 
   function hasFakeOutCounterplay(slot, entry) {
-    const ability = normalizeNameKey(slot.ability || "");
+    const ability = normalizeNameKey(slot.ability || entry?.abilities?.[0] || "");
     const item = normalizeNameKey(slot.item || "");
     const moves = slot.moves.map((move) => normalizeNameKey(move));
     return entry.types.includes("Ghost")
-      || ["inner focus", "shield dust"].includes(ability)
+      || ["inner focus", "shield dust", "armor tail"].includes(ability)
       || item === "covert cloak"
       || moves.some((move) => ["protect", "detect", "quick guard"].includes(move));
   }
 
   function hasIntimidateImmunity(slot, entry) {
-    const ability = normalizeNameKey(slot.ability || "");
+    const ability = normalizeNameKey(slot.ability || entry?.abilities?.[0] || "");
     const item = normalizeNameKey(slot.item || "");
     const abilityImmunities = ["clear body", "white smoke", "full metal body", "mirror armor", "inner focus", "own tempo", "oblivious", "scrappy", "guard dog", "hyper cutter"];
     return item === "clear amulet" || abilityImmunities.includes(ability) || punishesIntimidate(slot);
@@ -13966,7 +14281,7 @@
     const atk = stats[1] || 0;
     const spa = stats[3] || 0;
     const moves = slot.moves.map((move) => normalizeNameKey(move));
-    return spa >= atk + 10 || moves.includes("body press");
+    return getMoveCategoryLean(slot.moves || [], entry) === "special" || spa >= atk + 10 || moves.includes("body press");
   }
 
   function isIntimidateWeak(slot, entry) {
@@ -13977,9 +14292,12 @@
     return atk >= spa;
   }
 
-  function buildFakeOutSummary(protectedSlots, weakSlots) {
+  function buildFakeOutSummary(protectedSlots, weakSlots, context = {}) {
     const protectedNames = protectedSlots.map(({ entry }) => entry.name);
     const weakNames = weakSlots.map(({ entry }) => entry.name);
+    if (context.hasArmorTail) {
+      return "Strong into Fake Out. Armor Tail blocks priority while Ghosts, Protect, Quick Guard, or Covert Cloak cover individual slots.";
+    }
     if (!weakSlots.length) {
       return "Very solid into Fake Out. The whole team has either immunity, shielding, or safe button coverage.";
     }
@@ -13989,13 +14307,16 @@
     return `${protectedNames.join(", ")} give you real counterplay, but ${weakNames.join(", ")} can still get pinned by common Fake Out leads.`;
   }
 
-  function buildIntimidateSummary(immuneSlots, punishSlots, lowConcernSlots, weakSlots) {
+  function buildIntimidateSummary(immuneSlots, punishSlots, lowConcernSlots, weakSlots, damageProfile = {}) {
     const immuneNames = immuneSlots.map(({ entry }) => entry.name);
     const punishNames = punishSlots.map(({ entry }) => entry.name);
     const weakNames = weakSlots.map(({ entry }) => entry.name);
     const lowConcernNames = lowConcernSlots.map(({ entry }) => entry.name);
     if (!weakSlots.length) {
       return "Good Intimidate matchup. Your team is mostly special, protected, or actively benefits from the drop.";
+    }
+    if (damageProfile.mostlySpecial) {
+      return `Intimidate is a low-to-medium concern because most damage is special. ${weakNames.join(", ")} are the main physical slots to position carefully.`;
     }
     const positiveBits = [
       punishNames.length ? `${punishNames.join(", ")} can punish Intimidate` : "",
@@ -14986,6 +15307,24 @@ const MOVESET_QUALITY_PROFILES = {
       discouragedItems: ["Leftovers"],
     },
   },
+  "mega blastoise": {
+    attacker: {
+      coreMoves: ["Dark Pulse", "Aura Sphere"],
+      archetypeRequiredMoves: { "trick-room": ["Water Spout"] },
+      preferredMoves: ["Water Pulse", "Dragon Pulse", "Muddy Water", "Hydro Pump", "Protect"],
+      discouragedMoves: { default: ["Charge Beam", "Eerie Impulse"] },
+      preferredItems: ["Blastoisinite"],
+    },
+  },
+  blastoise: {
+    attacker: {
+      coreMoves: ["Dark Pulse", "Aura Sphere"],
+      archetypeRequiredMoves: { "trick-room": ["Water Spout"] },
+      preferredMoves: ["Water Pulse", "Dragon Pulse", "Muddy Water", "Hydro Pump", "Protect"],
+      discouragedMoves: { default: ["Charge Beam", "Eerie Impulse"] },
+      preferredItems: ["Blastoisinite"],
+    },
+  },
   pelipper: {
     support: {
       coreMoves: ["Hurricane"],
@@ -15022,7 +15361,7 @@ const MOVESET_QUALITY_PROFILES = {
   sinistcha: {
     support: {
       coreMoves: ["Matcha Gotcha"],
-      preferredMoves: ["Trick Room", "Rage Powder", "Strength Sap", "Protect", "Shadow Ball"],
+      preferredMoves: ["Trick Room", "Rage Powder", "Strength Sap", "Life Dew", "Protect"],
       preferredItems: ["Sitrus Berry", "Rocky Helmet", "Covert Cloak", "Mental Herb"],
     },
   },
@@ -15326,6 +15665,8 @@ function getBadMovePenalty(species, move, context = {}) {
   }
   const speciesKey = normalizeMovesetSpeciesKey(species);
   if (speciesKey === "basculegion" && archetype === "rain" && ["Head Smash", "Psychic Fangs"].includes(move)) penalty += 40;
+  if (speciesKey === "sneasler" && move === "Rock Tomb" && role !== "support") penalty += 30;
+  if (speciesKey === "sneasler" && move === "Rock Tomb" && role === "support" && archetype !== "tailwind") penalty += 18;
   if (speciesKey === "mega ampharos" && ["charge beam", "eerie impulse"].includes(normalizeNameKey(move))) penalty += 42;
   if (speciesKey === "incineroar" && role === "support" && move === "Close Combat") penalty += 28;
   if (role === "support" && ["Head Smash", "Outrage", "Giga Impact"].includes(move)) penalty += 24;
