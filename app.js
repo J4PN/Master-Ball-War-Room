@@ -7854,6 +7854,8 @@
   function scoreLeadPairAgainstMeta(pairRows, teamState, mode = "best") {
     const entries = pairRows.map((row) => row.entry);
     const moveKeys = pairRows.flatMap((row) => getSetMoveKeys(row.slot));
+    const teamIntent = detectTeamIntent(teamState, { structureReport: evaluateTeamStructure(teamState) });
+    const archetype = teamIntent?.detectedArchetype || "";
     const topOpponents = getMetaOpponentTeamsForSimulation().slice(0, 5).flatMap((team) => team.entries.slice(0, 2));
     let score = entries.reduce((sum, entry) => sum + pokeCounterStylePickScore(entry, topOpponents), 0) * 10;
     const avgSpeed = entries.reduce((sum, entry) => sum + (entry.baseSpeed || 0), 0) / Math.max(1, entries.length);
@@ -7867,6 +7869,31 @@
     const hasTrBreaker = pairRows.some(isTrickRoomBreakerRow);
     const hasTrEnabler = pairRows.some(isTrickRoomEnablerRow);
     const pairNames = new Set(entries.map((entry) => normalizeNameKey(entry.name)));
+    const hasRainSupport = pairRows.some((row) => getWeatherSetterMode(row.entry) === "rain" || getSetMoveKeys(row.slot).includes("rain dance"));
+    const hasSunSupport = pairRows.some((row) => getWeatherSetterMode(row.entry) === "sun" || getSetMoveKeys(row.slot).includes("sunny day"));
+    const isRainAbuser = (row) => {
+      const keys = getSetMoveKeys(row.slot);
+      return row.entry.types.includes("Water") || keys.some((move) => ["water spout", "muddy water", "surf", "hydro pump", "water pulse", "wave crash"].includes(move));
+    };
+    const isSunAbuser = (row) => {
+      const keys = getSetMoveKeys(row.slot);
+      const ability = slotAbilityKey(row.slot, row.entry);
+      return row.entry.types.includes("Fire") || ability === "chlorophyll" || keys.some((move) => ["eruption", "heat wave", "weather ball", "sleep powder"].includes(move));
+    };
+    const hasRainAbuser = pairRows.some(isRainAbuser);
+    const hasSunAbuser = pairRows.some(isSunAbuser);
+    const hasDistinctRainEngine = pairRows.some((support) => (getWeatherSetterMode(support.entry) === "rain" || getSetMoveKeys(support.slot).includes("rain dance"))
+      && pairRows.some((abuser) => abuser !== support && isRainAbuser(abuser)));
+    const hasDistinctSunEngine = pairRows.some((support) => (getWeatherSetterMode(support.entry) === "sun" || getSetMoveKeys(support.slot).includes("sunny day"))
+      && pairRows.some((abuser) => abuser !== support && isSunAbuser(abuser)));
+    const hasWaterSpoutRainEngine = pairRows.some((support) => (getWeatherSetterMode(support.entry) === "rain" || getSetMoveKeys(support.slot).includes("rain dance"))
+      && pairRows.some((abuser) => abuser !== support && getSetMoveKeys(abuser.slot).includes("water spout")));
+    const hasPremiumSunEngine = pairRows.some((support) => (getWeatherSetterMode(support.entry) === "sun" || getSetMoveKeys(support.slot).includes("sunny day"))
+      && pairRows.some((abuser) => {
+        const keys = getSetMoveKeys(abuser.slot);
+        const ability = slotAbilityKey(abuser.slot, abuser.entry);
+        return abuser !== support && (keys.includes("eruption") || keys.includes("weather ball") || (ability === "chlorophyll" && keys.includes("sleep powder")));
+      }));
     if (hasFakeOut) score += 14;
     if (hasRedirection) score += 10;
     if (hasTailwind && avgSpeed >= 80 && !trContext) score += 12;
@@ -7886,24 +7913,109 @@
       if (mode === "anti-tailwind" && hasTrSetter) score += 14;
       if (mode === "safe" && hasTrSetter && hasTrEnabler) score += 12;
     }
+    if (archetype === "Tailwind") {
+      if (hasTailwind && entries.some((entry) => (entry.baseSpeed || 0) >= 85 || isRealAttackerSet(pairRows.find((row) => row.entry === entry)?.slot))) score += 34;
+      if (!hasTailwind && mode !== "aggressive") score -= 30;
+    } else if (archetype === "Hard TR") {
+      if (hasTrSetter && (hasTrBreaker || hasTrEnabler)) score += 38;
+      if (!hasTrSetter && mode !== "aggressive") score -= 34;
+      if (hasTailwind && !hasTrSetter) score -= 18;
+    } else if (archetype === "Rain") {
+      if (hasRainSupport && hasRainAbuser) score += 30;
+      if (hasDistinctRainEngine) score += 22;
+      if (hasWaterSpoutRainEngine) score += 32;
+      if (mode === "best" && !hasRainSupport) score -= 16;
+    } else if (archetype === "Sun") {
+      if (hasSunSupport && hasSunAbuser) score += 30;
+      if (hasDistinctSunEngine) score += 22;
+      if (hasPremiumSunEngine) score += 36;
+      if (mode === "best" && !hasSunSupport) score -= 16;
+    }
     return score;
   }
 
   function getPokeCounterLeadPlans(teamState = []) {
     const rows = getLiveWarRoomOccupiedRows(teamState);
     const pairs = getCombinations(rows, 2).map((pair) => ({ pair, names: pair.map((row) => row.entry.name) }));
+    const teamIntent = detectTeamIntent(teamState, { structureReport: evaluateTeamStructure(teamState) });
+    const archetype = teamIntent?.detectedArchetype || "Balance";
     const used = new Set();
     const pairKey = (row) => row ? row.names.map(normalizeNameKey).sort().join("|") : "";
+    const rowMoveKeys = (row) => row.pair.flatMap((pairRow) => getSetMoveKeys(pairRow.slot));
+    const hasWeatherSupport = (row, weather) => row.pair.some((pairRow) => {
+      const moves = getSetMoveKeys(pairRow.slot);
+      return getWeatherSetterMode(pairRow.entry) === weather || moves.includes(weather === "rain" ? "rain dance" : "sunny day");
+    });
+    const isWeatherAbuser = (pairRow, weather) => {
+      const moves = getSetMoveKeys(pairRow.slot);
+      const ability = slotAbilityKey(pairRow.slot, pairRow.entry);
+      if (weather === "rain") {
+        return pairRow.entry.types.includes("Water") || moves.some((move) => ["water spout", "muddy water", "surf", "hydro pump", "water pulse", "wave crash"].includes(move));
+      }
+      return pairRow.entry.types.includes("Fire") || ability === "chlorophyll" || moves.some((move) => ["eruption", "heat wave", "weather ball", "sleep powder"].includes(move));
+    };
+    const hasWeatherAbuser = (row, weather) => row.pair.some((pairRow) => isWeatherAbuser(pairRow, weather));
+    const describeWeatherPressure = (pairRow, weather) => {
+      const moves = getSetMoveKeys(pairRow?.slot);
+      const ability = slotAbilityKey(pairRow?.slot, pairRow?.entry);
+      if (weather === "rain") {
+        if (moves.includes("water spout")) return "Water Spout pressure";
+        if (moves.some((move) => ["muddy water", "surf"].includes(move))) return "Water spread pressure";
+        return "Water pressure";
+      }
+      if (ability === "chlorophyll" && moves.includes("sleep powder")) return "Chlorophyll Sleep Powder control";
+      if (moves.includes("eruption")) return "Eruption pressure";
+      if (moves.includes("weather ball")) return "Weather Ball pressure";
+      if (moves.some((move) => ["heat wave", "flare blitz"].includes(move))) return "sun-boosted Fire pressure";
+      return "sun pressure";
+    };
+    const hasDistinctWeatherEngine = (row, weather) => row.pair.some((support) => {
+      const moves = getSetMoveKeys(support.slot);
+      const supportsWeather = getWeatherSetterMode(support.entry) === weather || moves.includes(weather === "rain" ? "rain dance" : "sunny day");
+      return supportsWeather && row.pair.some((abuser) => abuser !== support && isWeatherAbuser(abuser, weather));
+    });
+    const teamHasDistinctRainEngine = pairs.some((row) => hasDistinctWeatherEngine(row, "rain"));
+    const teamHasDistinctSunEngine = pairs.some((row) => hasDistinctWeatherEngine(row, "sun"));
+    const archetypeRequirement = (mode, row) => {
+      if (!row || mode !== "best") return true;
+      const moves = rowMoveKeys(row);
+      if (archetype === "Tailwind") return moves.includes("tailwind");
+      if (archetype === "Hard TR") return row.pair.some(isTrickRoomSetterRow);
+      if (archetype === "Rain") return teamHasDistinctRainEngine ? hasDistinctWeatherEngine(row, "rain") : (hasWeatherSupport(row, "rain") && hasWeatherAbuser(row, "rain"));
+      if (archetype === "Sun") return teamHasDistinctSunEngine ? hasDistinctWeatherEngine(row, "sun") : (hasWeatherSupport(row, "sun") && hasWeatherAbuser(row, "sun"));
+      return true;
+    };
     const modeRequirement = (mode, row) => {
-      const moveKeys = row.pair.flatMap((pairRow) => getSetMoveKeys(pairRow.slot));
+      const moveKeys = rowMoveKeys(row);
+      if (!archetypeRequirement(mode, row)) return false;
       if (mode === "anti-tr") return moveKeys.some((move) => ["fake out", "taunt", "encore", "trick room"].includes(move));
       if (mode === "anti-tailwind") return moveKeys.some((move) => ["fake out", "taunt", "encore", "tailwind", "icy wind", "electroweb"].includes(move));
       if (mode === "anti-weather") return moveKeys.some((move) => ["wide guard", "tailwind", "fake out", "parting shot", "rain dance", "sunny day"].includes(move));
       return true;
     };
     const reasonForMode = (mode, row, repeated = false) => {
-      const moveKeys = row.pair.flatMap((pairRow) => getSetMoveKeys(pairRow.slot));
+      const moveKeys = rowMoveKeys(row);
       const prefix = repeated ? "Repeated because no distinct pair satisfies this category. " : "";
+      const setter = row.pair.find((pairRow) => getSetMoveKeys(pairRow.slot).includes("tailwind") || getSetMoveKeys(pairRow.slot).includes("trick room") || getSetMoveKeys(pairRow.slot).includes("rain dance") || getSetMoveKeys(pairRow.slot).includes("sunny day"));
+      const setterName = setter ? slotLabel(setter.slot, setter.entry) : row.names[0];
+      const partner = setter ? row.pair.find((pairRow) => pairRow !== setter) : row.pair[1];
+      const partnerName = partner ? slotLabel(partner.slot, partner.entry) : row.names[1];
+      if (mode === "best" && archetype === "Tailwind" && moveKeys.includes("tailwind")) {
+        return `${prefix}${setterName} sets Tailwind so ${partnerName} can attack or support during the speed window.`;
+      }
+      if (mode === "best" && archetype === "Hard TR" && row.pair.some(isTrickRoomSetterRow)) {
+        return `${prefix}${setterName} sets Trick Room while ${partnerName} pressures, protects, or enables the setup turn.`;
+      }
+      if (mode === "best" && archetype === "Rain" && hasWeatherSupport(row, "rain")) {
+        const weatherSetter = row.pair.find((pairRow) => getWeatherSetterMode(pairRow.entry) === "rain" || getSetMoveKeys(pairRow.slot).includes("rain dance")) || setter;
+        const abuser = row.pair.find((pairRow) => pairRow !== weatherSetter && isWeatherAbuser(pairRow, "rain")) || partner;
+        return `${prefix}${slotLabel(weatherSetter?.slot, weatherSetter?.entry)} establishes rain while ${slotLabel(abuser?.slot, abuser?.entry)} converts it into ${describeWeatherPressure(abuser, "rain")}.`;
+      }
+      if (mode === "best" && archetype === "Sun" && hasWeatherSupport(row, "sun")) {
+        const weatherSetter = row.pair.find((pairRow) => getWeatherSetterMode(pairRow.entry) === "sun" || getSetMoveKeys(pairRow.slot).includes("sunny day")) || setter;
+        const abuser = row.pair.find((pairRow) => pairRow !== weatherSetter && isWeatherAbuser(pairRow, "sun")) || partner;
+        return `${prefix}${slotLabel(weatherSetter?.slot, weatherSetter?.entry)} establishes sun while ${slotLabel(abuser?.slot, abuser?.entry)} converts it into ${describeWeatherPressure(abuser, "sun")}.`;
+      }
       if (mode === "safe") return `${prefix}Bulk, Fake Out, redirection, or defensive typing gives the safest turn-one board.`;
       if (mode === "aggressive") return `${prefix}Highest immediate attacking pressure among legal lead pairs.`;
       if (mode === "anti-tr") return `${prefix}${moveKeys.includes("trick room") ? "Can reverse or contest Trick Room." : "Has Fake Out/Taunt/Encore-style pressure into Trick Room setup."}`;
@@ -7912,14 +8024,16 @@
       return `${prefix}Best overall lead score into the current meta sample.`;
     };
     const pick = (mode) => {
-      const ranked = pairs
+      const rankedAll = pairs
         .map((row) => ({ ...row, score: scoreLeadPairAgainstMeta(row.pair, teamState, mode) }))
-        .filter((row) => modeRequirement(mode, row))
         .sort((a, b) => b.score - a.score);
-      const distinct = ranked.find((row) => !used.has(pairKey(row)));
-      const selected = distinct || ranked[0] || null;
+      const ranked = rankedAll.filter((row) => modeRequirement(mode, row));
+      const fallbackRanked = ranked.length ? ranked : rankedAll;
+      const fallbackUsed = !ranked.length;
+      const distinct = fallbackRanked.find((row) => !used.has(pairKey(row)));
+      const selected = distinct || fallbackRanked[0] || null;
       if (!selected) return null;
-      const repeated = used.has(pairKey(selected));
+      const repeated = used.has(pairKey(selected)) || fallbackUsed;
       used.add(pairKey(selected));
       return { ...selected, reason: reasonForMode(mode, selected, repeated) };
     };
@@ -12739,15 +12853,15 @@
   }
 
   function getSupportMoveKeySet() {
-    return new Set(["protect", "tailwind", "trick room", "helping hand", "quick guard", "parting shot", "taunt", "will-o-wisp", "fake out", "substitute", "swords dance", "nasty plot", "agility", "thunder wave", "icy wind", "electroweb", "coaching", "encore", "disable", "follow me", "rage powder"]);
+    return new Set(["protect", "tailwind", "trick room", "helping hand", "quick guard", "wide guard", "feint", "parting shot", "taunt", "will-o-wisp", "fake out", "substitute", "swords dance", "nasty plot", "agility", "thunder wave", "icy wind", "electroweb", "coaching", "decorate", "encore", "disable", "follow me", "rage powder", "rain dance", "sunny day", "life dew", "heal pulse"]);
   }
 
   const PIVOT_MOVE_KEYS = new Set(["u-turn", "volt switch", "flip turn", "parting shot"]);
   const SPREAD_PRESSURE_MOVE_KEYS = new Set(["heat wave", "rock slide", "dazzling gleam", "hyper voice", "sparkling aria", "muddy water", "discharge", "blizzard", "eruption", "sludge wave", "surf", "earthquake"]);
   const SELF_DROP_MOVE_KEYS = new Set(["close combat", "superpower", "draco meteor", "overheat", "make it rain", "v-create", "armor cannon", "leaf storm"]);
-  const POSITIONING_MOVE_KEYS = new Set(["protect", "fake out", "parting shot", "u-turn", "volt switch", "flip turn", "follow me", "rage powder", "helping hand", "tailwind", "trick room", "quick guard", "wide guard", "taunt", "encore", "disable"]);
+  const POSITIONING_MOVE_KEYS = new Set(["protect", "fake out", "parting shot", "u-turn", "volt switch", "flip turn", "follow me", "rage powder", "helping hand", "tailwind", "trick room", "quick guard", "wide guard", "feint", "taunt", "encore", "disable", "rain dance", "sunny day"]);
   const SETUP_MOVE_KEYS = new Set(["swords dance", "dragon dance", "nasty plot", "calm mind", "bulk up", "shell smash", "quiver dance", "agility", "curse"]);
-  const SUPPORT_STYLE_MOVE_KEYS = new Set(["fake out", "parting shot", "taunt", "will-o-wisp", "helping hand", "encore", "disable", "follow me", "rage powder", "tailwind", "trick room", "icy wind", "electroweb", "thunder wave", "quick guard", "wide guard"]);
+  const SUPPORT_STYLE_MOVE_KEYS = new Set(["fake out", "parting shot", "taunt", "will-o-wisp", "helping hand", "encore", "disable", "follow me", "rage powder", "tailwind", "trick room", "icy wind", "electroweb", "thunder wave", "quick guard", "wide guard", "feint", "coaching", "decorate", "rain dance", "sunny day", "life dew", "heal pulse"]);
 
   function getEntryBulkStat(entry) {
     return (entry?.baseStats?.[0] || 0) + (entry?.baseStats?.[2] || 0) + (entry?.baseStats?.[4] || 0);
