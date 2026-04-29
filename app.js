@@ -4246,8 +4246,12 @@
 
   function isMoveContextuallyInvalid(entry, moveName, context = {}, legalMoves = []) {
     const key = normalizeNameKey(moveName);
+    const entryKey = normalizeNameKey(entry?.name || "");
     const weatherContext = inferMoveRequirementContext(entry, context, legalMoves);
     const buildRules = getCompetitiveBuildRules(context);
+    if ((entryKey === "mega lucario" || entryKey === "lucario") && ["blaze kick", "body slam", "bone rush"].includes(key)) {
+      return true;
+    }
     if (isTwoTurnMoveInvalid(moveName, entry, context, legalMoves)) {
       return true;
     }
@@ -7735,9 +7739,37 @@
   function getPokeCounterLeadPlans(teamState = []) {
     const rows = getLiveWarRoomOccupiedRows(teamState);
     const pairs = getCombinations(rows, 2).map((pair) => ({ pair, names: pair.map((row) => row.entry.name) }));
-    const pick = (mode) => pairs
-      .map((row) => ({ ...row, score: scoreLeadPairAgainstMeta(row.pair, teamState, mode) }))
-      .sort((a, b) => b.score - a.score)[0] || null;
+    const used = new Set();
+    const pairKey = (row) => row ? row.names.map(normalizeNameKey).sort().join("|") : "";
+    const modeRequirement = (mode, row) => {
+      const moveKeys = row.pair.flatMap((pairRow) => getSetMoveKeys(pairRow.slot));
+      if (mode === "anti-tr") return moveKeys.some((move) => ["fake out", "taunt", "encore", "trick room"].includes(move));
+      if (mode === "anti-tailwind") return moveKeys.some((move) => ["fake out", "taunt", "encore", "tailwind", "icy wind", "electroweb"].includes(move));
+      if (mode === "anti-weather") return moveKeys.some((move) => ["wide guard", "tailwind", "fake out", "parting shot", "rain dance", "sunny day"].includes(move));
+      return true;
+    };
+    const reasonForMode = (mode, row, repeated = false) => {
+      const moveKeys = row.pair.flatMap((pairRow) => getSetMoveKeys(pairRow.slot));
+      const prefix = repeated ? "Repeated because no distinct pair satisfies this category. " : "";
+      if (mode === "safe") return `${prefix}Bulk, Fake Out, redirection, or defensive typing gives the safest turn-one board.`;
+      if (mode === "aggressive") return `${prefix}Highest immediate attacking pressure among legal lead pairs.`;
+      if (mode === "anti-tr") return `${prefix}${moveKeys.includes("trick room") ? "Can reverse or contest Trick Room." : "Has Fake Out/Taunt/Encore-style pressure into Trick Room setup."}`;
+      if (mode === "anti-tailwind") return `${prefix}${moveKeys.includes("tailwind") ? "Can match Tailwind speed control." : "Has denial or tempo pressure into Tailwind setup."}`;
+      if (mode === "anti-weather") return `${prefix}Has Wide Guard, speed control, Fake Out, pivoting, or weather interaction into weather leads.`;
+      return `${prefix}Best overall lead score into the current meta sample.`;
+    };
+    const pick = (mode) => {
+      const ranked = pairs
+        .map((row) => ({ ...row, score: scoreLeadPairAgainstMeta(row.pair, teamState, mode) }))
+        .filter((row) => modeRequirement(mode, row))
+        .sort((a, b) => b.score - a.score);
+      const distinct = ranked.find((row) => !used.has(pairKey(row)));
+      const selected = distinct || ranked[0] || null;
+      if (!selected) return null;
+      const repeated = used.has(pairKey(selected));
+      used.add(pairKey(selected));
+      return { ...selected, reason: reasonForMode(mode, selected, repeated) };
+    };
     return {
       best: pick("best"),
       safe: pick("safe"),
@@ -7784,12 +7816,12 @@
     const suggestions = getPokeCounterSuggestedSwaps(teamState, threatRows);
     const missingCoverage = evaluation?.offenseReport?.uncoveredTypes?.slice(0, 4) || [];
     const confidence = metaSourceTruth.source === "live" ? "High" : metaSourceTruth.source === "snapshot" ? "Medium" : "Low";
-    const formatLead = (label, row) => row ? `<div class="live-war-room-list__item"><strong>${escapeHtml(label)}:</strong> ${row.names.map(escapeHtml).join(" + ")} <small>score ${Math.round(row.score)}</small></div>` : "";
+    const formatLead = (label, row) => row ? `<div class="live-war-room-list__item"><strong>${escapeHtml(label)}:</strong> ${row.names.map(escapeHtml).join(" + ")} <small>score ${Math.round(row.score)} | ${escapeHtml(row.reason || "Real matchup reason available.")}</small></div>` : "";
     return `
       <section class="live-war-room-section">
         <p class="live-war-room-section__label">Best Leads</p>
         <div class="live-war-room-list">
-          ${formatLead("Best 2", leadPlans.best)}
+          ${formatLead("Best", leadPlans.best)}
           ${formatLead("Safest", leadPlans.safe)}
           ${formatLead("Aggressive", leadPlans.aggressive)}
           ${formatLead("Anti-TR", leadPlans.antiTr)}
@@ -9555,6 +9587,10 @@
         reasons.push("Tailwind setter plus attacker matches the speed plan");
       }
       if (hasTailwind && (hasFakeOut || hasRedirection)) score += 12;
+      if (!hasTailwind && pair.length >= 2) {
+        score -= 54;
+        reasons.push("does not lead actual Tailwind setup");
+      }
     } else if (archetype === "Rain") {
       if (rainSupport && rainAbuser) {
         score += 44;
@@ -9659,6 +9695,17 @@
         const key = pair.names.join("|");
         if (!unique.some((item) => item.names.join("|") === key) && unique.length < 2) unique.push(pair);
       });
+    const requiredMove = teamIntent?.detectedArchetype === "Tailwind"
+      ? "tailwind"
+      : teamIntent?.detectedArchetype === "Hard TR"
+        ? "trick room"
+        : "";
+    if (requiredMove && !unique[0]?.names?.some(Boolean)) {
+      // Leave the normal fallback below to handle empty teams.
+    } else if (requiredMove && !unique[0]?.reasons?.some((reason) => normalizeNameKey(reason).includes(requiredMove.replace(" ", ""))) && !unique[0]?.simulation?.pressureFlags?.[requiredMove === "tailwind" ? "tailwind" : "trickRoom"]) {
+      const setupLead = scoredPairs.find((pair) => pair.simulation?.pressureFlags?.[requiredMove === "tailwind" ? "tailwind" : "trickRoom"]);
+      if (setupLead) unique[0] = setupLead;
+    }
     const debug = getLeadDebugStore();
     if (debug) {
       debug.leadCandidates = scoredPairs.map((row) => ({ names: row.names, score: row.score, reasons: row.reasons || [], turnOnePlan: row.turnOnePlan, turnTwoPlan: row.turnTwoPlan })).slice(0, 12);
@@ -9713,6 +9760,10 @@
         score -= 14;
         reasons.push("pulls the lead away from the Trick Room plan");
       }
+    }
+    if (teamIntent?.detectedArchetype === "Tailwind" && !combinedMoves.includes("tailwind") && pair.length >= 2) {
+      score -= 40;
+      reasons.push("does not lead actual Tailwind setup");
     }
     if (pair.some(({ slot, entry }) => hasFakeOutCounterplay(slot, entry))) {
       score += 8;
@@ -14276,7 +14327,12 @@
     const item = sanitizeSuggestedItem(entry, context, rawMoves, rawItem);
     const itemSafeMoves = await sanitizeMovesForItem(entry, rawMoves, item, context, legalMoves);
     const damagingMoves = await rankDamagingMoves(entry, legalMoves, getEntryOffenseProfile(entry), inferCoverageTargetsFromContext(context), context.requestedPressure || {}, context);
-    const moves = await sanitizeFinalMoveSet(entry, itemSafeMoves, damagingMoves.map((move) => move.name), context);
+    const moves = preferCompetitiveMoveSet(
+      entry,
+      await sanitizeFinalMoveSet(entry, itemSafeMoves, damagingMoves.map((move) => move.name), context),
+      legalMoves,
+      context
+    );
     const ability = getSuggestedAbility(entry, abilities, context, moves);
     const nature = getSuggestedNature(entry, moves, context);
     const sps = getSuggestedSpSpread(entry, moves, context);
@@ -14288,6 +14344,38 @@
       sps,
       moves
     };
+  }
+
+  function preferCompetitiveMoveSet(entry, moves, legalMoves, context = {}) {
+    const key = normalizeNameKey(entry?.name || "");
+    const legalByKey = new Map((legalMoves || []).map((move) => [normalizeNameKey(move), move]));
+    const overrides = {
+      "mega lucario": ["Close Combat", "Meteor Mash", "Bullet Punch", "Protect", "Aura Sphere", "Flash Cannon", "Extreme Speed"],
+      lucario: ["Close Combat", "Meteor Mash", "Bullet Punch", "Protect", "Aura Sphere", "Flash Cannon", "Extreme Speed"]
+    };
+    const override = overrides[key];
+    if (!override) return moves;
+    const currentKeys = new Set((moves || []).map(normalizeNameKey));
+    const badCurrent = ["blaze kick", "body slam", "bone rush"].some((move) => currentKeys.has(move));
+    const missingCore = key.includes("lucario") && !currentKeys.has("close combat") && !currentKeys.has("aura sphere");
+    if (!badCurrent && !missingCore) return moves;
+    const preferred = override
+      .map((move) => legalByKey.get(normalizeNameKey(move)))
+      .filter(Boolean);
+    if (preferred.length < 3) return moves;
+    const protectedMoves = (moves || []).filter((move) => {
+      const moveKey = normalizeNameKey(move);
+      if (context?.requestedModes?.tailwind && moveKey === "tailwind") return true;
+      if (context?.requestedModes?.trickRoom && moveKey === "trick room") return true;
+      return false;
+    });
+    const next = [...protectedMoves];
+    preferred.forEach((move) => {
+      if (next.length < 4 && !next.some((picked) => normalizeNameKey(picked) === normalizeNameKey(move))) {
+        next.push(move);
+      }
+    });
+    return next.slice(0, 4);
   }
 
   async function getOptimizedDraftSetCached(entry, context) {
@@ -14636,6 +14724,9 @@
     getRoleAwareSpeciesMovePriority(entry, roleProfile).forEach(addMove);
     if (normalizeNameKey(entry.name) === "sneasler") {
       ["Dire Claw", "Close Combat", "Fake Out", "Protect", "Coaching", "Throat Chop", "Rock Slide"].forEach(addMove);
+    }
+    if (normalizeNameKey(entry.name) === "mega lucario" || normalizeNameKey(entry.name) === "lucario") {
+      ["Close Combat", "Meteor Mash", "Bullet Punch", "Extreme Speed", "Protect", "Aura Sphere", "Flash Cannon"].forEach(addMove);
     }
     if (normalizeNameKey(entry.name) === "raichu") {
       ["Electroweb", "Thunderbolt", "Volt Switch", "Fake Out", "Protect", "Nuzzle"].forEach(addMove);
