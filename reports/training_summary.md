@@ -1,57 +1,61 @@
 # Off-PC Training Summary
 
-- Timestamp: 2026-04-28T09:33:57+00:00
-- Candidate iterations: 32
-- Evaluated candidates: 75
+- Timestamp: 2026-04-29T09:25:11+00:00
+- Candidate iterations: 3000
+- candidate_iterations: 3000
+- Evaluated candidates: 1240
+- evaluated_candidates: 1240
 - Retained learning candidates: 24
-- Battle log: `data/battle_logs/training-20260428T093357Z.jsonl`
+- retained_candidates: 24
+- persistent_memory_updated: pending persistent_memory.py step
+- Battle log: `data/battle_logs/training-20260429T092511Z.jsonl`
 - High-level debug: `reports/high_level_debug.json`
 
 ## Source Counts
 
 - `meta`: 0
 - `pikalytics`: 2
-- `pikalytics_variant`: 5
+- `pikalytics_variant`: 107
 - `high_level`: 4
-- `high_level_variant`: 6
+- `high_level_variant`: 132
 - `reddit`: 0
-- `reddit_variant`: 3
+- `reddit_variant`: 4
 - `youtube`: 0
-- `youtube_variant`: 5
-- `archive`: 37
-- `archive_variant`: 5
+- `youtube_variant`: 78
+- `archive`: 33
+- `archive_variant`: 375
 - `random`: 0
-- `selfplay`: 8
+- `selfplay`: 505
 
 ## Source Share
 
 - `meta`: 0.0%
-- `pikalytics`: 2.7%
-- `pikalytics_variant`: 6.7%
-- `high_level`: 5.3%
-- `high_level_variant`: 8.0%
+- `pikalytics`: 0.2%
+- `pikalytics_variant`: 8.6%
+- `high_level`: 0.3%
+- `high_level_variant`: 10.6%
 - `reddit`: 0.0%
-- `reddit_variant`: 4.0%
+- `reddit_variant`: 0.3%
 - `youtube`: 0.0%
-- `youtube_variant`: 6.7%
-- `archive`: 49.3%
-- `archive_variant`: 6.7%
+- `youtube_variant`: 6.3%
+- `archive`: 2.7%
+- `archive_variant`: 30.2%
 - `random`: 0.0%
-- `selfplay`: 10.7%
+- `selfplay`: 40.7%
 
-WARNING: evaluation pool below expected size (75 < 137)
+WARNING: evaluation pool below expected size (1240 < 1293)
 
 ## Retained Source Counts
 
 - `meta`: 0
 - `pikalytics`: 2
-- `pikalytics_variant`: 5
+- `pikalytics_variant`: 8
 - `high_level`: 4
-- `high_level_variant`: 3
+- `high_level_variant`: 1
 - `reddit`: 0
 - `reddit_variant`: 0
 - `youtube`: 0
-- `youtube_variant`: 1
+- `youtube_variant`: 0
 - `archive`: 9
 - `archive_variant`: 0
 - `random`: 0
@@ -61,13 +65,13 @@ WARNING: evaluation pool below expected size (75 < 137)
 
 - `meta`: 0.0%
 - `pikalytics`: 8.3%
-- `pikalytics_variant`: 20.8%
+- `pikalytics_variant`: 33.3%
 - `high_level`: 16.7%
-- `high_level_variant`: 12.5%
+- `high_level_variant`: 4.2%
 - `reddit`: 0.0%
 - `reddit_variant`: 0.0%
 - `youtube`: 0.0%
-- `youtube_variant`: 4.2%
+- `youtube_variant`: 0.0%
 - `archive`: 37.5%
 - `archive_variant`: 0.0%
 - `random`: 0.0%
@@ -75,36 +79,36 @@ WARNING: evaluation pool below expected size (75 < 137)
 
 ## Top Teams
 
-- [archive] score `0.736` confidence `0.74`
-  `Incineroar, Whimsicott, Dragonite, Garchomp, Kingambit, Pelipper`
-  meta `0.860` | pikalytics `0.988` | high_level `0.707` | reddit `0.701` | youtube `0.591` | archive `0.644` | random `0.279` | selfplay `0.299`
-  creator match `PokeaimMD` | shell `0.83` | core `1.00` | archetype `0.00` | final `0.707`
-- [archive] score `0.738` confidence `0.73`
-  `Incineroar, Starmie, Tyranitar, Whimsicott, Kingambit, Pelipper`
-  meta `0.881` | pikalytics `0.998` | high_level `0.686` | reddit `0.700` | youtube `0.595` | archive `0.641` | random `0.275` | selfplay `0.301`
-  creator match `PokeaimMD` | shell `0.83` | core `1.00` | archetype `0.00` | final `0.686`
-- [archive] score `0.744` confidence `0.70`
-  `Incineroar, Starmie, Rotom-Wash, Whimsicott, Garchomp, Pelipper`
-  meta `0.872` | pikalytics `0.999` | high_level `0.735` | reddit `0.701` | youtube `0.577` | archive `0.642` | random `0.278` | selfplay `0.299`
-  creator match `PokeaimMD` | shell `0.83` | core `1.00` | archetype `0.00` | final `0.735`
-- [archive] score `0.744` confidence `0.68`
-  `Incineroar, Whimsicott, Garchomp, Kingambit, Starmie, Pelipper`
-  meta `0.864` | pikalytics `0.990` | high_level `0.746` | reddit `0.697` | youtube `0.585` | archive `0.645` | random `0.279` | selfplay `0.300`
-  creator match `PokeaimMD` | shell `1.00` | core `1.00` | archetype `0.00` | final `0.746`
-- [archive] score `0.742` confidence `0.68`
+- [archive] score `0.742` confidence `0.64`
   `Incineroar, Whimsicott, Garchomp, Starmie, Kingambit, Pelipper`
-  meta `0.861` | pikalytics `0.989` | high_level `0.748` | reddit `0.695` | youtube `0.583` | archive `0.643` | random `0.279` | selfplay `0.299`
+  meta `0.861` | pikalytics `0.989` | high_level `0.748` | reddit `0.695` | youtube `0.584` | archive `0.639` | random `0.279` | selfplay `0.300`
   creator match `PokeaimMD` | shell `1.00` | core `1.00` | archetype `0.00` | final `0.748`
-- [archive] score `0.712` confidence `0.69`
-  `Pelipper, Basculegion, Incineroar, Whimsicott, Starmie, Archaludon`
-  meta `0.831` | pikalytics `0.955` | high_level `0.699` | reddit `0.669` | youtube `0.575` | archive `0.607` | random `0.273` | selfplay `0.293`
-  creator match `Moxie Boosted` | shell `1.00` | core `1.00` | archetype `0.00` | final `0.699`
+- [archive] score `0.744` confidence `0.56`
+  `Pelipper, Basculegion, Incineroar, Whimsicott, Kingambit`
+  meta `0.859` | pikalytics `0.993` | high_level `0.750` | reddit `0.691` | youtube `0.605` | archive `0.640` | random `0.279` | selfplay `0.299`
+  creator match `Moxie Boosted` | shell `1.00` | core `1.00` | archetype `0.00` | final `0.750`
+- [archive] score `0.710` confidence `0.65`
+  `Incineroar, Starmie, Rotom-Wash, Whimsicott, Garchomp, Pelipper`
+  meta `0.831` | pikalytics `0.955` | high_level `0.702` | reddit `0.672` | youtube `0.557` | archive `0.603` | random `0.271` | selfplay `0.291`
+  creator match `PokeaimMD` | shell `0.83` | core `1.00` | archetype `0.00` | final `0.702`
+- [archive] score `0.711` confidence `0.46`
+  `Pelipper, Basculegion, Incineroar, Whimsicott, Starmie, Charizard`
+  meta `0.842` | pikalytics `0.965` | high_level `0.677` | reddit `0.668` | youtube `0.575` | archive `0.604` | random `0.270` | selfplay `0.293`
+  creator match `Moxie Boosted` | shell `1.00` | core `1.00` | archetype `0.00` | final `0.677`
+- [archive] score `0.702` confidence `0.47`
+  `Pelipper, Gengar, Incineroar, Whimsicott, Archaludon, Garchomp`
+  meta `0.818` | pikalytics `0.942` | high_level `0.668` | reddit `0.678` | youtube `0.575` | archive `0.609` | random `0.273` | selfplay `0.296`
+  creator match `Curated Pikalytics import` | shell `0.83` | core `1.00` | archetype `0.00` | final `0.668`
+- [archive] score `0.698` confidence `0.44`
+  `Tyranitar, Garchomp, Farigiraf, Starmie, Dragonite, Kingambit`
+  meta `0.865` | pikalytics `0.985` | high_level `0.540` | reddit `0.701` | youtube `0.581` | archive `0.599` | random `0.269` | selfplay `0.293`
+  creator match `PokeaimMD` | shell `0.50` | core `1.00` | archetype `0.00` | final `0.540`
 
 ## Creator Matches
 
-- `archivepikalyticsvariant7pikalyticschampionssnapshot`: matched `PokeaimMD` from `reddit` with similarity `0.718` (shell `0.83`, core `1.00`, archetype `0.00`)
-- `archivehighlevelvariant6pokeaimmd`: matched `PokeaimMD` from `reddit` with similarity `0.743` (shell `0.83`, core `1.00`, archetype `0.00`)
-- `archiveredditvariant22curatedredditbalanceteam`: matched `PokeaimMD` from `reddit` with similarity `0.727` (shell `0.83`, core `1.00`, archetype `0.00`)
-- `archivepikalyticsvariant763pikalyticschampionssnapshot`: matched `PokeaimMD` from `reddit` with similarity `0.802` (shell `1.00`, core `1.00`, archetype `0.00`)
 - `archivepikalyticsvariant234pikalyticschampionssnapshot`: matched `PokeaimMD` from `reddit` with similarity `0.817` (shell `1.00`, core `1.00`, archetype `0.00`)
+- `archivehighlevelvariant15moxieboosted`: matched `Moxie Boosted` from `reddit` with similarity `0.850` (shell `1.00`, core `1.00`, archetype `0.00`)
+- `archiveincineroarstarmie`: matched `PokeaimMD` from `reddit` with similarity `0.658` (shell `0.83`, core `1.00`, archetype `0.00`)
 - `archivepelipperbasculegion`: matched `Moxie Boosted` from `reddit` with similarity `0.750` (shell `1.00`, core `1.00`, archetype `0.00`)
+- `archivepelippergengar`: matched `Curated Pikalytics import` from `pikalytics` with similarity `0.658` (shell `0.83`, core `1.00`, archetype `0.00`)
+- `archivetyranitargarchomp`: matched `PokeaimMD` from `reddit` with similarity `0.475` (shell `0.50`, core `1.00`, archetype `0.00`)
