@@ -6958,7 +6958,7 @@
       const megaSwapWarning = (isMegaEntry(item.entry) || isMegaEntry(swapResolvedEntry))
         ? " This is a bigger structural change because it changes your mega slot, so only do it if the matchup gain matters more than your current mega game plan."
         : "";
-      const threatSummary = buildSwapThreatJustification(item.entry, item.swapTarget, item.threatContext || threatContext, set);
+      const threatSummary = await buildSwapThreatJustificationWithBenchmark(item.entry, item.swapTarget, item.threatContext || threatContext, set);
       const setChanges = [
         { kind: "pokemon", label: "Pokemon", from: item.swapTarget, to: item.entry.name },
         { kind: "item", label: "Item", from: "", to: set.item || "none" },
@@ -6976,7 +6976,7 @@
         addName: item.entry.name
       };
     }))).filter(Boolean);
-    const spCards = buildSpOptimizationCards(teamState, evaluation, teamIntent);
+    const spCards = await buildSpOptimizationCards(teamState, evaluation, teamIntent);
     const combined = [...spCards, ...tuneUpCards, ...swapCards];
     return combined.length ? combined : [{
       type: "check",
@@ -6988,7 +6988,71 @@
     }];
   }
 
-  function buildSpOptimizationCards(teamState, evaluation, teamIntent) {
+  function classifyCalcFailure(error, attackerState = {}, defenderState = {}) {
+    const message = String(error?.message || error || "").trim();
+    const lower = message.toLowerCase();
+    const abilityText = [attackerState.ability, defenderState.ability].filter(Boolean).join(" / ");
+    const itemText = [attackerState.item, defenderState.item].filter(Boolean).join(" / ");
+    if (lower.includes("ability") && abilityText) return `unsupported ability (${abilityText})`;
+    if (lower.includes("item") && itemText) return `unsupported item (${itemText})`;
+    if (lower.includes("species") || lower.includes("pokemon")) return "missing or unsupported attacker/defender species data";
+    if (lower.includes("move")) return "missing or unsupported move data";
+    return message || "damage calculation failed";
+  }
+
+  async function calculateBenchmarkWithReason(attackerEntry, defenderEntry, moveName, attackerState = {}, defenderState = {}, fieldState = {}) {
+    if (!attackerEntry) return { result: null, reason: "missing attacker data" };
+    if (!defenderEntry) return { result: null, reason: "missing defender data" };
+    if (!moveName || /^likely\b/i.test(moveName) || /\bSTAB$/i.test(moveName)) return { result: null, reason: "missing move" };
+    if (!attackerEntry.baseStats?.length || !defenderEntry.baseStats?.length) return { result: null, reason: "missing stats" };
+    const moveDetail = await getMoveDetail(moveName);
+    if (!moveDetail) return { result: null, reason: "missing move data" };
+    if (normalizeNameKey(moveDetail?.damage_class?.name || "") === "status") return { result: null, reason: "selected move is status-only" };
+    let exactFailure = "";
+    if (gen && window.calc) {
+      try {
+        const attackerPokemon = buildCalcPokemonFromState(attackerEntry, attackerState);
+        const defenderPokemon = buildCalcPokemonFromState(defenderEntry, defenderState);
+        const move = buildCalcMoveFromState(moveName, attackerState);
+        const field = buildCalcFieldFromState(fieldState);
+        const calcResult = calc.calculate(gen, attackerPokemon, defenderPokemon, move, field);
+        const rolls = Array.isArray(calcResult.damage) ? calcResult.damage : [calcResult.damage];
+        const hp = Number(defenderPokemon.rawStats?.hp || 0);
+        if (!rolls.length || !hp) return { result: null, reason: "calc result discarded: missing damage rolls or HP" };
+        const min = Math.min(...rolls);
+        const max = Math.max(...rolls);
+        return {
+          result: {
+            source: "verified browser calc",
+            rolls,
+            min,
+            max,
+            minPercent: Number(((min / hp) * 100).toFixed(1)),
+            maxPercent: Number(((max / hp) * 100).toFixed(1))
+          },
+          reason: ""
+        };
+      } catch (error) {
+        exactFailure = classifyCalcFailure(error, attackerState, defenderState);
+      }
+    } else {
+      exactFailure = "calc library unavailable";
+    }
+    try {
+      const fallback = calculateDamageEstimateFromDetail(attackerEntry, defenderEntry, moveName, moveDetail, attackerState, defenderState, fieldState);
+      if (fallback) {
+        return {
+          result: { ...fallback, source: "local estimate" },
+          reason: exactFailure ? `exact calc unavailable: ${exactFailure}` : "exact calc unavailable"
+        };
+      }
+      return { result: null, reason: `result discarded: local estimate could not resolve move power/type${exactFailure ? `; exact calc unavailable: ${exactFailure}` : ""}` };
+    } catch (error) {
+      return { result: null, reason: `${classifyCalcFailure(error, attackerState, defenderState)}${exactFailure ? `; exact calc unavailable: ${exactFailure}` : ""}` };
+    }
+  }
+
+  async function buildSpOptimizationCards(teamState, evaluation, teamIntent) {
     const rows = getFilledTeamRows(teamState);
     if (!rows.length) return [];
     const threatContext = buildUnifiedThreatContext(teamState, evaluation, teamIntent);
@@ -7023,6 +7087,24 @@
     proposed[toKey] = Number(proposed[toKey] || 0) + shift;
     const threatName = threatContext?.attacker || topThreat?.threat?.name || "top meta pressure";
     const movedText = `${shift} SP from ${statLabels[fromKey]} to ${statLabels[toKey]}`;
+    const threatEntry = getRosterEntry(threatName || "");
+    const threatSet = threatEntry ? getThreatBenchmarkSet(threatEntry) : null;
+    const attackerState = threatSet ? buildSimulatedStateFromSet(threatSet) : {};
+    const currentDefenderState = buildSimulatedStateFromSet(slot);
+    const proposedDefenderState = { ...currentDefenderState, sps: proposed };
+    const fieldState = normalizeNameKey(threatEntry?.name || "") === "mega charizard y" ? { weather: "Sun" } : {};
+    let currentBenchmark = { result: null, reason: "no target set selected" };
+    let proposedBenchmark = { result: null, reason: "no target set selected" };
+    if (threatEntry && threatSet) {
+      currentBenchmark = await calculateBenchmarkWithReason(threatEntry, entry, targetInfo.move, attackerState, currentDefenderState, fieldState);
+      proposedBenchmark = await calculateBenchmarkWithReason(threatEntry, entry, targetInfo.move, attackerState, proposedDefenderState, fieldState);
+    } else if (!threatEntry) {
+      currentBenchmark = { result: null, reason: "missing attacker data" };
+      proposedBenchmark = currentBenchmark;
+    }
+    const benchmarkText = currentBenchmark.result && proposedBenchmark.result
+      ? `Benchmark: ${currentBenchmark.result.source}${currentBenchmark.reason ? ` (${currentBenchmark.reason})` : ""}; current ${currentBenchmark.result.minPercent.toFixed(1)}%-${currentBenchmark.result.maxPercent.toFixed(1)}%, proposed ${proposedBenchmark.result.minPercent.toFixed(1)}%-${proposedBenchmark.result.maxPercent.toFixed(1)}%.`
+      : `Benchmark not verified: ${proposedBenchmark.reason || currentBenchmark.reason || "unknown calculation failure"}.`;
     const benchmark = {
       pokemon: slot.name,
       from: statLabels[fromKey],
@@ -7030,7 +7112,8 @@
       shift,
       threat: threatName,
       targetMove: targetInfo.move,
-      benchmark: "Benchmark not verified",
+      benchmark: benchmarkText,
+      calculationReason: proposedBenchmark.reason || currentBenchmark.reason || "",
       primaryPlan: teamIntent?.detectedArchetype || ""
     };
     const debug = getRealMatchupDebugStore();
@@ -7040,7 +7123,7 @@
       title: slot.name,
       sprite: getSpriteUrl(entry.apiName || toApiSpeciesName(entry.name)) || POKEBALL_PLACEHOLDER,
       subtitle: "SP benchmark optimization",
-      summary: `Current: ${formatSpSummary(slot.sps)}. Proposed: ${formatSpSummary(proposed)}. Exact SP moved: ${movedText}. Reason: check whether extra ${statLabels[toKey]} improves ${slot.name}'s defensive benchmark without changing the team plan. Target: ${threatName} using ${targetInfo.move}. ${itemText} Benchmark: Benchmark not verified.`,
+      summary: `Current: ${formatSpSummary(slot.sps)}. Proposed: ${formatSpSummary(proposed)}. Exact SP moved: ${movedText}. Reason: check whether extra ${statLabels[toKey]} improves ${slot.name}'s defensive benchmark without changing the team plan. Target: ${threatName} using ${targetInfo.move}. ${itemText} ${benchmarkText}`,
       badges: renderChangeBadge({ kind: "sp", label: "SP", from: `${shift} ${statLabels[fromKey]}`, to: `${shift} ${statLabels[toKey]}` })
     }];
   }
@@ -7146,6 +7229,28 @@
         ? `${pressureType} STAB threatens ${threatContext.attacker}`
         : `its set must be checked manually for direct pressure into ${threatContext.attacker}`;
     return `Current issue: ${threatContext.currentIssue} Replacement: ${mitigationText}. Result: ${pressureText}, preserving the ${threatContext.primaryPlan || "team"} plan while changing that exact ${threatContext.targetMove} interaction.`;
+  }
+
+  async function buildSwapThreatJustificationWithBenchmark(candidateEntry, swapTargetName, threatContext, candidateSet = null) {
+    const base = buildSwapThreatJustification(candidateEntry, swapTargetName, threatContext, candidateSet);
+    if (!base || !candidateEntry || !threatContext) return base;
+    const threatEntry = getRosterEntry(threatContext.attacker || "");
+    const threatSet = threatEntry ? getThreatBenchmarkSet(threatEntry) : null;
+    if (!threatEntry) return `${base} Incoming benchmark not verified: missing attacker data.`;
+    if (!threatSet) return `${base} Incoming benchmark not verified: no target set selected.`;
+    const attackerState = buildSimulatedStateFromSet(threatSet);
+    const defenderState = candidateSet ? buildSimulatedStateFromSet(candidateSet) : { nature: "Serious", sps: defaultSpSpreadForEntry(candidateEntry) };
+    const fieldState = normalizeNameKey(threatEntry.name || "") === "mega charizard y" ? { weather: "Sun" } : {};
+    const benchmark = await calculateBenchmarkWithReason(threatEntry, candidateEntry, threatContext.targetMove, attackerState, defenderState, fieldState);
+    if (benchmark.result) {
+      const verdict = benchmark.result.maxPercent >= 100
+        ? "still risks an OHKO"
+        : benchmark.result.maxPercent >= 50
+          ? "moves the hit into likely 2HKO territory"
+          : "keeps the hit below likely 2HKO range";
+      return `${base} Incoming benchmark: ${benchmark.result.source}${benchmark.reason ? ` (${benchmark.reason})` : ""}; ${threatContext.attacker} ${threatContext.targetMove} does ${benchmark.result.minPercent.toFixed(1)}%-${benchmark.result.maxPercent.toFixed(1)}% to ${candidateEntry.name}, so it ${verdict}.`;
+    }
+    return `${base} Incoming benchmark not verified: ${benchmark.reason || "unknown calculation failure"}.`;
   }
 
   function getSpecificThreatMoveInfo(threat, defenderSlot, defenderEntry) {
