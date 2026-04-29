@@ -1932,6 +1932,9 @@
       await refreshAllSprites();
       renderSpeedChart();
       runSpeedCalculatorSelfTests();
+      runDamageCalcRegressionTests().catch((error) => {
+        if (typeof window !== "undefined") window.__MBWR_DAMAGE_CALC_TESTS = [{ label: "damage regression boot", ok: false, error: String(error?.message || error) }];
+      });
       refreshSourceDebug();
     } catch (error) {
       console.error("App init failed.", error);
@@ -5362,19 +5365,16 @@
       const hp = defenderPokemon.rawStats.hp;
       const minPercent = (min / hp) * 100;
       const maxPercent = (max / hp) * 100;
-      const koMin = Math.max(1, Math.ceil(100 / Math.max(maxPercent, 0.1)));
-      const koMax = Math.max(1, Math.ceil(100 / Math.max(minPercent, 0.1)));
+      const koText = describeKoOutcome(minPercent, maxPercent);
       damageResult.innerHTML = `
         <p class="result-title">${attacker.name} used ${prettyMoveName(moveName)} into ${defender.name}</p>
         <div class="analysis-row"><span class="analysis-chip severity-good">Verified calc</span></div>
-        <p class="result-copy">${result.desc()}</p>
         <div class="damage-result-grid">
           <div><span>Damage</span><strong>${min} - ${max}</strong></div>
           <div><span>Percent</span><strong>${minPercent.toFixed(1)}% - ${maxPercent.toFixed(1)}%</strong></div>
-          <div><span>Hits to KO</span><strong>${koMin === koMax ? `${koMin}HKO` : `${koMin}-${koMax}HKO`}</strong></div>
+          <div><span>KO Result</span><strong>${koText}</strong></div>
           <div><span>Mode</span><strong>${document.body.dataset.calcMode === "team" ? "Team vs Team" : "Single"}</strong></div>
         </div>
-        <p class="result-copy">Damage uses Champions-style SP mapped onto calc EVs for the browser engine.</p>
         <div class="damage-rolls">${rolls.slice(0, 16).map((value) => `<span class="damage-roll">${value}</span>`).join("")}</div>
       `;
     } catch (error) {
@@ -5453,7 +5453,8 @@
         if (!defenderEntry) continue;
         const defenderState = buildSimulatedStateFromSet(defenderSlot);
         for (const move of (attackerSlot.moves || []).filter(Boolean)) {
-          const estimate = await calculateDamageEstimate(attackerEntry, defenderEntry, move, attackerState, defenderState, fieldState);
+          const benchmark = await calculateBenchmarkWithReason(attackerEntry, defenderEntry, move, attackerState, defenderState, fieldState);
+          const estimate = benchmark.result;
           if (!estimate) continue;
           rows.push({
             attacker: attackerEntry.name,
@@ -5461,8 +5462,11 @@
             move,
             minPercent: Number(estimate.minPercent || 0),
             maxPercent: Number(estimate.maxPercent || 0),
+            min: Number(estimate.min || 0),
+            max: Number(estimate.max || 0),
             typeEffectiveness: Number(estimate.typeEffectiveness ?? estimate.effectiveness ?? 1),
-            source: estimate.source || "local estimate"
+            source: estimate.source === "verified browser calc" ? "Verified calc" : "Estimated calc",
+            confidence: estimate.source === "verified browser calc" ? "verified" : "estimated"
           });
         }
       }
@@ -5478,12 +5482,12 @@
     const immuneRows = rows.filter((row) => row.typeEffectiveness === 0 || row.maxPercent === 0).slice(0, 5);
     const dangerRows = sorted.slice(0, 6);
     const formatRows = (list, empty) => list.length
-      ? list.map((row) => `<div class="fix-list__item"><strong>${escapeHtml(row.attacker)} ${escapeHtml(prettyMoveName(row.move))} -> ${escapeHtml(row.defender)}</strong><br><span class="result-copy">${row.minPercent.toFixed(1)}% - ${row.maxPercent.toFixed(1)}% | ${escapeHtml(row.source)}</span></div>`).join("")
+      ? list.map((row) => `<div class="fix-list__item"><strong>${escapeHtml(row.attacker)} ${escapeHtml(prettyMoveName(row.move))} -> ${escapeHtml(row.defender)}</strong><br><span class="result-copy">${row.min} - ${row.max} damage | ${row.minPercent.toFixed(1)}% - ${row.maxPercent.toFixed(1)}% | ${escapeHtml(describeKoOutcome(row.minPercent, row.maxPercent))} | ${escapeHtml(row.source)}</span></div>`).join("")
       : `<div class="fix-list__item">${empty}</div>`;
+    const allVerified = rows.length > 0 && rows.every((row) => row.confidence === "verified");
     damageResult.innerHTML = `
       <p class="result-title">Team vs Team Damage Overview</p>
-      <div class="analysis-row"><span class="analysis-chip severity-medium">${gen && window.calc ? "Estimated calc" : "Type-only estimate"}</span></div>
-      <p class="result-copy">Exact team-wide calc is not claimed here. This overview uses local Champions data for STAB, type effectiveness, immunities, stats, SP spreads, moves, items, abilities, and Mega forms when available.</p>
+      <div class="analysis-row"><span class="analysis-chip ${allVerified ? "severity-good" : "severity-medium"}">${allVerified ? "Verified calc" : "Estimated calc"}</span></div>
       <div class="analysis-stack">
         <p class="result-title">Best Offensive Hits</p>
         <div class="fix-list">${formatRows(dangerRows, "No offensive hits resolved.")}</div>
@@ -5569,7 +5573,7 @@
   function buildCalcField() {
     const weather = document.getElementById("calc-weather")?.value || "";
     const terrain = document.getElementById("calc-terrain")?.value || "";
-    const fieldConfig = {};
+    const fieldConfig = { gameType: "Doubles" };
     if (weather) fieldConfig.weather = weather;
     if (terrain) fieldConfig.terrain = terrain;
     return new calc.Field(fieldConfig);
@@ -5598,15 +5602,12 @@
 
   function buildCalcPokemon(side, entry) {
     let lastError = null;
-    const baseConfig = buildPokemonConfig(side);
-    const configVariants = buildCalcConfigVariants(baseConfig);
+    const config = buildPokemonConfig(side);
     for (const speciesName of resolveCalcSpeciesCandidates(entry)) {
-      for (const config of configVariants) {
-        try {
-          return new calc.Pokemon(gen, speciesName, config);
-        } catch (error) {
-          lastError = error;
-        }
+      try {
+        return new calc.Pokemon(gen, speciesName, config);
+      } catch (error) {
+        lastError = error;
       }
     }
     throw lastError || new Error("No calc species candidate could be resolved.");
@@ -5642,6 +5643,19 @@
     variants.push(minimal);
 
     return variants.filter((variant, index, array) => index === array.findIndex((item) => JSON.stringify(item) === JSON.stringify(variant)));
+  }
+
+  function describeKoOutcome(minPercent, maxPercent) {
+    const min = Number(minPercent || 0);
+    const max = Number(maxPercent || 0);
+    if (min >= 100) return "Guaranteed OHKO";
+    if (max >= 100) return "Possible OHKO";
+    if (min >= 50) return "Guaranteed 2HKO";
+    if (max >= 50) return "Possible 2HKO";
+    if (min >= 33.34) return "Guaranteed 3HKO";
+    if (max >= 33.34) return "Possible 3HKO";
+    if (max <= 0) return "No damage";
+    return "Chip damage";
   }
 
   function resolveCalcSpeciesCandidates(entry) {
@@ -5859,15 +5873,12 @@
 
   function buildCalcPokemonFromState(entry, state = {}) {
     let lastError = null;
-    const baseConfig = buildCalcConfigFromState(state);
-    const configVariants = buildCalcConfigVariants(baseConfig);
+    const config = buildCalcConfigFromState(state);
     for (const speciesName of resolveCalcSpeciesCandidates(entry)) {
-      for (const config of configVariants) {
-        try {
-          return new calc.Pokemon(gen, speciesName, config);
-        } catch (error) {
-          lastError = error;
-        }
+      try {
+        return new calc.Pokemon(gen, speciesName, config);
+      } catch (error) {
+        lastError = error;
       }
     }
     throw lastError || new Error("No calc species candidate could be resolved.");
@@ -5895,7 +5906,7 @@
   }
 
   function buildCalcFieldFromState(fieldState = {}) {
-    const config = {};
+    const config = { gameType: "Doubles" };
     if (fieldState.weather) config.weather = fieldState.weather;
     if (fieldState.terrain) config.terrain = fieldState.terrain;
     return new calc.Field(config);
@@ -5930,7 +5941,7 @@
         const max = Math.max(...rolls);
         const hp = defenderPokemon.rawStats.hp;
         result = {
-          source: "browser",
+          source: "verified browser calc",
           rolls,
           min,
           max,
@@ -5943,7 +5954,7 @@
     }
     if (!result) {
       result = calculateDamageEstimateFromDetail(attackerEntry, defenderEntry, moveName, moveDetail, attackerState, defenderState, fieldState);
-      if (result) result.source = "fallback";
+      if (result) result.source = "local estimate";
     }
     liveDamageCalcCache.set(cacheKey, result);
     return result;
@@ -7050,6 +7061,49 @@
     } catch (error) {
       return { result: null, reason: `${classifyCalcFailure(error, attackerState, defenderState)}${exactFailure ? `; exact calc unavailable: ${exactFailure}` : ""}` };
     }
+  }
+
+  async function runDamageCalcRegressionTests() {
+    const cases = [
+      { label: "physical neutral", attacker: "Dragonite", defender: "Incineroar", move: "Ice Spinner", a: { nature: "Adamant", item: "Lum Berry", ability: "Multiscale", sps: { atk: 32, spd: 2, spe: 32 } }, d: { nature: "Careful", item: "Sitrus Berry", ability: "Intimidate", sps: { hp: 28, def: 4, spd: 32, atk: 2 } } },
+      { label: "special neutral", attacker: "Primarina", defender: "Garchomp", move: "Hyper Voice", a: { nature: "Modest", item: "Throat Spray", ability: "Liquid Voice", sps: { hp: 28, spa: 32, spd: 6 } }, d: { nature: "Jolly", item: "Clear Amulet", ability: "Rough Skin", sps: { atk: 32, spd: 2, spe: 32 } } },
+      { label: "super effective", attacker: "Mega Lucario", defender: "Kingambit", move: "Close Combat", a: { nature: "Jolly", item: "Lucarionite", ability: "Adaptability", sps: { atk: 32, spd: 2, spe: 32 } }, d: { nature: "Adamant", item: "Black Glasses", ability: "Defiant", sps: { hp: 28, atk: 32, spd: 6 } } },
+      { label: "resisted", attacker: "Incineroar", defender: "Pelipper", move: "Flare Blitz", a: { nature: "Careful", item: "Sitrus Berry", ability: "Intimidate", sps: { hp: 28, atk: 2, def: 4, spd: 32 } }, d: { nature: "Timid", item: "Damp Rock", ability: "Drizzle", sps: { hp: 4, spa: 30, spe: 32 } } },
+      { label: "immunity", attacker: "Garchomp", defender: "Rotom-Fan", move: "Earthquake", a: { nature: "Jolly", item: "Clear Amulet", ability: "Rough Skin", sps: { atk: 32, spd: 2, spe: 32 } }, d: { nature: "Calm", item: "Leftovers", ability: "Levitate", sps: { hp: 28, def: 6, spd: 32 } } },
+      { label: "spread move", attacker: "Garchomp", defender: "Incineroar", move: "Earthquake", a: { nature: "Jolly", item: "Clear Amulet", ability: "Rough Skin", sps: { atk: 32, spd: 2, spe: 32 } }, d: { nature: "Careful", item: "Sitrus Berry", ability: "Intimidate", sps: { hp: 28, atk: 2, def: 4, spd: 32 } } },
+      { label: "mega form", attacker: "Mega Charizard Y", defender: "Kingambit", move: "Heat Wave", a: { nature: "Timid", item: "Charizardite Y", ability: "Drought", sps: { hp: 2, spa: 32, spe: 32 } }, d: { nature: "Adamant", item: "Black Glasses", ability: "Defiant", sps: { hp: 28, atk: 32, spd: 6 } }, field: { weather: "Sun" } },
+      { label: "water pressure", attacker: "Mega Blastoise", defender: "Garchomp", move: "Water Pulse", a: { nature: "Modest", item: "Blastoisinite", ability: "Mega Launcher", sps: { hp: 2, spa: 32, spe: 32 } }, d: { nature: "Jolly", item: "Clear Amulet", ability: "Rough Skin", sps: { atk: 32, spd: 2, spe: 32 } } }
+    ];
+    const tolerance = 0.01;
+    const results = [];
+    for (const item of cases) {
+      const attackerEntry = getRosterEntry(item.attacker);
+      const defenderEntry = getRosterEntry(item.defender);
+      try {
+        const attackerPokemon = buildCalcPokemonFromState(attackerEntry, item.a);
+        const defenderPokemon = buildCalcPokemonFromState(defenderEntry, item.d);
+        const move = buildCalcMoveFromState(item.move, item.a);
+        const field = buildCalcFieldFromState(item.field || {});
+        const reference = calc.calculate(gen, attackerPokemon, defenderPokemon, move, field);
+        const rolls = Array.isArray(reference.damage) ? reference.damage : [reference.damage];
+        const min = Math.min(...rolls);
+        const max = Math.max(...rolls);
+        const hp = defenderPokemon.rawStats.hp;
+        const expectedMin = Number(((min / hp) * 100).toFixed(1));
+        const expectedMax = Number(((max / hp) * 100).toFixed(1));
+        const actual = await calculateBenchmarkWithReason(attackerEntry, defenderEntry, item.move, item.a, item.d, item.field || {});
+        const actualMin = Number(actual.result?.minPercent);
+        const actualMax = Number(actual.result?.maxPercent);
+        const ok = actual.result?.source === "verified browser calc"
+          && Math.abs(actualMin - expectedMin) <= tolerance
+          && Math.abs(actualMax - expectedMax) <= tolerance;
+        results.push({ label: item.label, ok, expected: `${expectedMin}-${expectedMax}`, actual: actual.result ? `${actualMin}-${actualMax}` : "", source: actual.result?.source || "", reason: actual.reason || "" });
+      } catch (error) {
+        results.push({ label: item.label, ok: false, error: String(error?.message || error) });
+      }
+    }
+    if (typeof window !== "undefined") window.__MBWR_DAMAGE_CALC_TESTS = results;
+    return results;
   }
 
   async function buildSpOptimizationCards(teamState, evaluation, teamIntent) {
