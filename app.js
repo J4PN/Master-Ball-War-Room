@@ -6903,7 +6903,7 @@
     const occupiedNameKeys = new Set(teamState.map((slot) => normalizeNameKey(slot.name || "")).filter(Boolean));
     const occupiedFamilyKeys = new Set(teamState.map((slot) => getSpeciesClauseKey(slot.name || "")).filter(Boolean));
     const tuneUps = await buildPokemonTuneUps(teamState, evaluation, teamIntent);
-    const threatNames = evaluation.threatRows.slice(0, 2).map((row) => row.threat.name).filter(Boolean);
+    const threatContext = buildUnifiedThreatContext(teamState, evaluation, teamIntent);
     const tuneUpCards = (await Promise.all(tuneUps.map(async (row) => {
       const currentEntry = getRosterEntry(row.name);
       const currentSlot = teamState.find((slot) => normalizeNameKey(slot.name) === normalizeNameKey(row.name));
@@ -6953,12 +6953,12 @@
       });
       if (!validation.ok) return null;
       const sprite = getSpriteUrl(item.entry.apiName || toApiSpeciesName(item.entry.name)) || POKEBALL_PLACEHOLDER;
-      const coverageNote = threatNames.length ? `Helps the team hit back into ${threatNames.join(" and ")}.` : "Improves the current matchup spread.";
       const swapSlot = teamState.find((slot) => normalizeNameKey(slot.name || "") === normalizeNameKey(item.swapTarget || ""));
       const swapResolvedEntry = swapSlot ? resolveBattleEntry(swapSlot) : getRosterEntry(item.swapTarget || "");
       const megaSwapWarning = (isMegaEntry(item.entry) || isMegaEntry(swapResolvedEntry))
         ? " This is a bigger structural change because it changes your mega slot, so only do it if the matchup gain matters more than your current mega game plan."
         : "";
+      const threatSummary = buildSwapThreatJustification(item.entry, item.swapTarget, item.threatContext || threatContext, set);
       const setChanges = [
         { kind: "pokemon", label: "Pokemon", from: item.swapTarget, to: item.entry.name },
         { kind: "item", label: "Item", from: "", to: set.item || "none" },
@@ -6971,7 +6971,7 @@
         title: item.entry.name,
         sprite,
         subtitle: `${item.entry.types.join(" / ")} | ${item.entry.metaRole}`,
-        summary: `${item.reasons.join(" ")} ${item.swapSummary} ${coverageNote}${megaSwapWarning}`,
+        summary: `${threatSummary || item.swapSummary}${megaSwapWarning}`,
         badges: setChanges.map(renderChangeBadge).join(""),
         addName: item.entry.name
       };
@@ -6991,14 +6991,16 @@
   function buildSpOptimizationCards(teamState, evaluation, teamIntent) {
     const rows = getFilledTeamRows(teamState);
     if (!rows.length) return [];
+    const threatContext = buildUnifiedThreatContext(teamState, evaluation, teamIntent);
     const topThreat = evaluation?.threatRows?.[0];
-    const weakRow = rows.find(({ slot, entry }) => topThreat?.threat?.types?.some((type) => getEffectiveTypeEffectiveness(type, slot, entry) > 1))
+    const weakRow = rows.find(({ slot }) => normalizeNameKey(slot.name || "") === normalizeNameKey(threatContext?.target || ""))
+      || rows.find(({ slot, entry }) => topThreat?.threat?.types?.some((type) => getEffectiveTypeEffectiveness(type, slot, entry) > 1))
       || rows.find(({ slot }) => isRealAttackerSet(slot))
       || rows[0];
     const slot = weakRow.slot;
     const entry = weakRow.entry;
-    const targetInfo = getSpecificThreatMoveInfo(topThreat?.threat, slot, entry);
-    const targetType = targetInfo.type || topThreat?.threat?.types?.[0] || "";
+    const targetInfo = { move: threatContext?.targetMove || "likely STAB attack", type: threatContext?.damageType || "" };
+    const targetType = threatContext?.damageType || targetInfo.type || topThreat?.threat?.types?.[0] || "";
     const itemText = describeItemHelpAgainstMove(slot.item || "", targetType);
     const preferredDumpStats = teamIntent?.detectedArchetype === "Hard TR"
       ? ["spe", "atk", "spa"]
@@ -7019,7 +7021,7 @@
     const proposed = { ...(slot.sps || {}) };
     proposed[fromKey] = Math.max(0, Number(proposed[fromKey] || 0) - shift);
     proposed[toKey] = Number(proposed[toKey] || 0) + shift;
-    const threatName = topThreat?.threat?.name || "top meta pressure";
+    const threatName = threatContext?.attacker || topThreat?.threat?.name || "top meta pressure";
     const movedText = `${shift} SP from ${statLabels[fromKey]} to ${statLabels[toKey]}`;
     const benchmark = {
       pokemon: slot.name,
@@ -7076,6 +7078,74 @@
     if (itemKey === "mental herb") return "Current item Mental Herb helps versus disruption, not this attack's damage.";
     if (itemKey === "blastoisinite" || itemKey.endsWith("ite")) return `Current item ${item} is the Mega item, not a damage-reduction item.`;
     return `Current item ${item || "none"} does not directly reduce ${moveType || "the target move"} damage.`;
+  }
+
+  function buildUnifiedThreatContext(teamState = [], evaluation = null, teamIntent = null) {
+    const rows = getFilledTeamRows(teamState);
+    const topThreat = evaluation?.threatRows?.[0];
+    if (!rows.length || !topThreat?.threat) return null;
+    const weakRow = rows.find(({ slot, entry }) => topThreat.threat.types?.some((type) => getEffectiveTypeEffectiveness(type, slot, entry) > 1))
+      || rows.find(({ slot }) => isRealAttackerSet(slot))
+      || rows[0];
+    if (!weakRow?.slot || !weakRow?.entry) return null;
+    const targetInfo = getSpecificThreatMoveInfo(topThreat.threat, weakRow.slot, weakRow.entry);
+    const damageType = targetInfo.type || topThreat.threat.types?.[0] || "";
+    const currentEffect = damageType ? getEffectiveTypeEffectiveness(damageType, weakRow.slot, weakRow.entry) : 1;
+    const interaction = currentEffect >= 4
+      ? "4x super-effective OHKO risk"
+      : currentEffect >= 2
+        ? "super-effective KO or 2HKO risk"
+        : currentEffect === 0
+          ? "immune to the listed attack"
+          : currentEffect < 1
+            ? "resists the listed attack"
+            : "neutral damage pressure";
+    const itemAssessment = describeItemHelpAgainstMove(weakRow.slot.item || "", damageType);
+    return {
+      attacker: topThreat.threat.name,
+      attackerTypes: topThreat.threat.types || [],
+      target: weakRow.slot.name || weakRow.entry.name,
+      targetTypes: weakRow.entry.types || [],
+      targetMove: targetInfo.move,
+      damageType,
+      interaction,
+      currentIssue: `${weakRow.slot.name || weakRow.entry.name} faces ${interaction} from ${topThreat.threat.name}'s ${targetInfo.move}. ${itemAssessment}`,
+      itemAssessment,
+      primaryPlan: teamIntent?.detectedArchetype || ""
+    };
+  }
+
+  function describeTypeMitigation(effect) {
+    if (effect === 0) return "is immune";
+    if (effect < 1) return "resists";
+    if (effect >= 4) return "is 4x weak";
+    if (effect >= 2) return "is weak";
+    return "takes neutral damage";
+  }
+
+  function buildSwapThreatJustification(candidateEntry, swapTargetName, threatContext, candidateSet = null) {
+    if (!candidateEntry || !threatContext) return "";
+    const currentEntry = getRosterEntry(swapTargetName || "") || null;
+    const damageType = threatContext.damageType || "";
+    const threatEntry = getRosterEntry(threatContext.attacker || "") || { types: threatContext.attackerTypes || [] };
+    const currentEffect = currentEntry && damageType ? getTypeEffectiveness(damageType, currentEntry.types || []) : 1;
+    const replacementEffect = damageType ? getTypeEffectiveness(damageType, candidateEntry.types || []) : 1;
+    const pressureMove = (candidateSet?.moves || []).find((move) => {
+      const moveType = inferMoveTypeFromKey(normalizeNameKey(move), candidateEntry) || "";
+      return moveType && (threatEntry.types || []).some((type) => getSingleTypeEffectiveness(moveType, type) > 1);
+    });
+    const pressureType = pressureMove
+      ? inferMoveTypeFromKey(normalizeNameKey(pressureMove), candidateEntry)
+      : (candidateEntry.types || []).find((type) => (threatEntry.types || []).some((targetType) => getSingleTypeEffectiveness(type, targetType) > 1));
+    const mitigationText = replacementEffect < currentEffect
+      ? `${candidateEntry.name} ${describeTypeMitigation(replacementEffect)} ${damageType}-type damage instead of ${currentEntry?.name || swapTargetName || "the current slot"}, which ${describeTypeMitigation(currentEffect)}`
+      : `${candidateEntry.name} does not improve the ${damageType}-type resistance profile, so this swap is only valid if its pressure line is decisive`;
+    const pressureText = pressureMove
+      ? `${pressureMove} gives direct pressure into ${threatContext.attacker}`
+      : pressureType
+        ? `${pressureType} STAB threatens ${threatContext.attacker}`
+        : `its set must be checked manually for direct pressure into ${threatContext.attacker}`;
+    return `Current issue: ${threatContext.currentIssue} Replacement: ${mitigationText}. Result: ${pressureText}, preserving the ${threatContext.primaryPlan || "team"} plan while changing that exact ${threatContext.targetMove} interaction.`;
   }
 
   function getSpecificThreatMoveInfo(threat, defenderSlot, defenderEntry) {
@@ -8047,21 +8117,30 @@
     };
   }
 
-  function getPokeCounterSuggestedSwaps(teamState = [], threatRows = []) {
+  function getPokeCounterSuggestedSwaps(teamState = [], threatRows = [], evaluation = null) {
     const currentKeys = new Set(getLiveWarRoomOccupiedRows(teamState).map((row) => normalizeNameKey(row.entry.name)));
     const targetThreats = (threatRows || []).slice(0, 3).map((row) => row.threat).filter(Boolean);
     if (!targetThreats.length) return [];
+    const teamIntent = detectTeamIntent(teamState, evaluation || {});
+    const threatContext = buildUnifiedThreatContext(teamState, evaluation || { threatRows }, teamIntent);
+    const scoringThreats = threatContext?.attacker
+      ? [getRosterEntry(threatContext.attacker) || targetThreats.find((threat) => normalizeNameKey(threat.name) === normalizeNameKey(threatContext.attacker))].filter(Boolean)
+      : targetThreats.slice(0, 1);
     return championsRoster
       .filter((entry) => !currentKeys.has(normalizeNameKey(entry.name)))
       .filter((entry) => isEntryAllowedInActiveRuleset(entry))
-      .map((entry) => ({
-        entry,
-        score: targetThreats.reduce((sum, threat) => sum + pokeCounterStylePickScore(entry, [getRosterEntry(threat.name) || threat]), 0)
-      }))
+      .map((entry) => {
+        const damageType = threatContext?.damageType || "";
+        const mitigation = damageType ? Math.max(0, 2 - getTypeEffectiveness(damageType, entry.types || [])) * 18 : 0;
+        return {
+          entry,
+          score: scoringThreats.reduce((sum, threat) => sum + pokeCounterStylePickScore(entry, [getRosterEntry(threat.name) || threat]), 0) + mitigation
+        };
+      })
       .filter((row) => row.score > 0)
       .sort((a, b) => b.score - a.score)
       .slice(0, 3)
-      .map((row) => `${row.entry.name} improves defensive safety or coverage into ${targetThreats.map((threat) => threat.name).join(", ")}.`);
+      .map((row) => buildSwapThreatJustification(row.entry, threatContext?.target || "", threatContext) || `${row.entry.name} requires a verified interaction against ${targetThreats[0]?.name || "the top threat"} before swapping.`);
   }
 
   function buildPokeCounterTeamBuilderPanel(teamState = [], evaluation = null) {
@@ -8080,8 +8159,8 @@
     const best = simulation.matchups.slice(-2).reverse();
     const cores = metaSourceTruth.commonCores || [];
     const threatRows = evaluation?.threatRows || buildMetaThreatRows(teamState, evaluation?.offenseReport?.attackTypes || []);
-    const suggestions = getPokeCounterSuggestedSwaps(teamState, threatRows);
-    const missingCoverage = evaluation?.offenseReport?.uncoveredTypes?.slice(0, 4) || [];
+    const suggestions = getPokeCounterSuggestedSwaps(teamState, threatRows, evaluation);
+    const missingCoverage = (evaluation?.offenseReport?.uncoveredTypes || []).filter((type) => canonicalizeTypeName(type) !== "Normal").slice(0, 4);
     const confidence = metaSourceTruth.source === "live" ? "High" : metaSourceTruth.source === "snapshot" ? "Medium" : "Low";
     const formatLead = (label, row) => row ? `<div class="live-war-room-list__item"><strong>${escapeHtml(label)}:</strong> ${row.names.map(escapeHtml).join(" + ")} <small>score ${Math.round(row.score)} | ${escapeHtml(row.reason || "Real matchup reason available.")}</small></div>` : "";
     return `
@@ -8482,13 +8561,14 @@
     const damageScoutRows = await buildDamageScoutRows(teamState, threatRows);
 
     const teamItemKeys = new Set(teamState.filter((slot) => slot.name).map((slot) => normalizeNameKey(slot.item || "")).filter(Boolean));
+    const unifiedThreatContext = buildUnifiedThreatContext(teamState, evaluation, teamIntent);
     const recommendations = getActiveRosterPool()
       .filter((entry) => !uniqueNames.includes(entry.name))
       .filter((entry) => !occupiedNameKeys.has(normalizeNameKey(entry.name)))
       .filter((entry) => !occupiedFamilyKeys.has(getSpeciesClauseKey(entry.name)))
       .filter((entry) => !violatesSpeciesClause(team, entry))
       .filter((entry) => !team.some((t) => normalizeNameKey(t.name) === normalizeNameKey(entry.name)))
-      .map((entry) => scoreCandidate(entry, weaknessRows, threatRows.slice(0, 6), offenseReport, structureReport, teamState, teamIntent))
+      .map((entry) => scoreCandidate(entry, weaknessRows, threatRows.slice(0, 6), offenseReport, structureReport, teamState, teamIntent, unifiedThreatContext))
       .filter((item) => normalizeNameKey(item.swapTarget || "") !== normalizeNameKey(item.entry.name))
       .sort((a, b) => b.score - a.score)
       .slice(0, 3);
@@ -8800,13 +8880,22 @@
     };
   }
 
-  function scoreCandidate(entry, weaknesses, threats, offenseReport, structureReport = {}, teamState = [], teamIntent = detectTeamIntent(teamState, { structureReport })) {
+  function scoreCandidate(entry, weaknesses, threats, offenseReport, structureReport = {}, teamState = [], teamIntent = detectTeamIntent(teamState, { structureReport }), threatContext = null) {
     let score = 0;
     const reasons = [];
     const metaWeight = metaThreats.find((threat) => normalizeNameKey(threat.name) === normalizeNameKey(entry.name))?.weight || 0;
     const teamWeatherProfile = inferTeamWeatherProfile(teamState);
     const candidateWeatherMode = getWeatherSetterMode(entry);
     const entryLegalMoves = legalPokemonData[entry.name]?.legalMoves || [];
+    if (threatContext?.attacker) {
+      const threatEntry = getRosterEntry(threatContext.attacker) || { types: threatContext.attackerTypes || [] };
+      const effect = threatContext.damageType ? getTypeEffectiveness(threatContext.damageType, entry.types || []) : 1;
+      if (effect === 0) score += 42;
+      else if (effect < 1) score += 30;
+      else if (effect >= 2) score -= 20;
+      const stabPressure = entry.types.some((stab) => (threatEntry.types || []).some((targetType) => getSingleTypeEffectiveness(stab, targetType) > 1));
+      if (stabPressure) score += 14;
+    }
     weaknesses.forEach((weakness) => {
       const effect = getTypeEffectiveness(weakness.attackType, entry.types);
       if (effect < 1) {
@@ -8918,9 +9007,10 @@
       entry,
       score,
       reasons: [...new Set(reasons)].slice(0, 3),
+      threatContext,
       swapTarget: swapTarget?.name || "lowest-impact piece",
       swapSummary: swapTarget
-        ? `Best swap: replace ${swapTarget.name}. ${swapTarget.reason}`
+        ? buildSwapThreatJustification(entry, swapTarget.name, threatContext) || `Best swap: replace ${swapTarget.name}. ${swapTarget.reason}`
         : "Best swap: open slot or lowest-impact piece."
     };
   }
@@ -9593,10 +9683,11 @@
       }
     }
     const uniqueAttackTypes = [...new Set(attackTypes)];
-    const uncoveredTypes = Object.keys(TYPE_CHART)
+    const meaningfulCoverageTypes = Object.keys(TYPE_CHART).filter((type) => canonicalizeTypeName(type) !== "Normal");
+    const uncoveredTypes = meaningfulCoverageTypes
       .filter((defenderType) => !uniqueAttackTypes.some((attackType) => getSingleTypeEffectiveness(attackType, defenderType) > 1))
       .sort((a, b) => getMetaTypeUsageWeight(b) - getMetaTypeUsageWeight(a));
-    const lightlyCoveredTypes = Object.keys(TYPE_CHART)
+    const lightlyCoveredTypes = meaningfulCoverageTypes
       .filter((defenderType) => uniqueAttackTypes.filter((attackType) => getSingleTypeEffectiveness(attackType, defenderType) > 1).length === 1)
       .sort((a, b) => getMetaTypeUsageWeight(b) - getMetaTypeUsageWeight(a));
     const uncoveredPenalty = uncoveredTypes.reduce((sum, type) => sum + 9 * getMetaTypeUsageWeight(type), 0);
