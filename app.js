@@ -1466,7 +1466,7 @@
     slowTimer: null,
     mediumPromise: null
   };
-  let speedCalcSp = 0;
+  let speedCalcSp = 32;
   document.addEventListener("DOMContentLoaded", init);
 
   function ensureFreezeDebug() {
@@ -1931,6 +1931,7 @@
       await refreshAllTeamBuilderOptions();
       await refreshAllSprites();
       renderSpeedChart();
+      runSpeedCalculatorSelfTests();
       refreshSourceDebug();
     } catch (error) {
       console.error("App init failed.", error);
@@ -3886,6 +3887,11 @@
       if (input) input.value = clampSp(spread?.[stat] || 0);
     });
     updateSpDisplay(side);
+    if (side === "attacker" && document.getElementById("speed-sp")) {
+      speedCalcSp = clampSp(spread?.spe || 0);
+      document.getElementById("speed-sp").value = String(speedCalcSp);
+      updateSpeedResult();
+    }
   }
 
   function setupDatabaseFilters() {
@@ -3964,19 +3970,25 @@
   }
 
   function setupSpeedTools() {
-    ["speed-base", "speed-iv", "speed-nature-mode", "speed-stage", "speed-tailwind", "speed-scarf", "speed-weather", "speed-ability-mod"].forEach((id) => {
+    ["speed-base", "speed-iv", "speed-sp", "speed-nature-mode", "speed-stage", "speed-tailwind", "speed-scarf", "speed-weather", "speed-ability-mod"].forEach((id) => {
       const el = document.getElementById(id);
+      if (!el) return;
       el.addEventListener("input", updateSpeedResult);
       el.addEventListener("change", updateSpeedResult);
     });
+    const speedSpInput = document.getElementById("speed-sp");
+    if (speedSpInput) speedSpInput.value = String(speedCalcSp);
     updateSpeedResult();
   }
 
   function updateSpeedResult() {
     const base = Number(document.getElementById("speed-base").value) || 100;
     const level = 50;
-    const sp = Number(speedCalcSp) || 0;
-    const iv = Number(document.getElementById("speed-iv").value) || 31;
+    const spInput = document.getElementById("speed-sp");
+    const sp = clampSp(Number(spInput?.value ?? speedCalcSp) || 0);
+    speedCalcSp = sp;
+    if (spInput && spInput.value !== String(sp)) spInput.value = String(sp);
+    const iv = Math.max(0, Math.min(31, Number(document.getElementById("speed-iv").value) || 31));
     const natureMode = document.getElementById("speed-nature-mode").value;
     const stage = Number(document.getElementById("speed-stage").value) || 0;
     const tailwind = document.getElementById("speed-tailwind").checked;
@@ -3984,19 +3996,27 @@
     const weather = document.getElementById("speed-weather").value || "";
     const abilityMod = document.getElementById("speed-ability-mod").value || "";
     const selected = getRosterEntry(document.getElementById("speed-pokemon").value);
-    const ev = spToEv(sp);
     const natureMultiplier = natureMode === "boost" ? 1.1 : natureMode === "drop" ? 0.9 : 1;
-    const raw = Math.floor(((((2 * base + iv + Math.floor(ev / 4)) * level) / 100) + 5) * natureMultiplier);
+    const ev = spToEv(sp);
+    const raw = calculateLv50SpeedStat(base, sp, natureMultiplier, iv);
     const weatherAbilityMultiplier = getSpeedAbilityMultiplier(abilityMod, weather);
-    const modified = applyStage(raw, stage) * (tailwind ? 2 : 1) * (scarf ? 1.5 : 1) * weatherAbilityMultiplier;
+    const staged = applyStage(raw, stage);
+    const modified = staged * (tailwind ? 2 : 1) * (scarf ? 1.5 : 1) * weatherAbilityMultiplier;
 
     speedResult.innerHTML = `
       <p class="result-title">Speed Result</p>
+      <div class="analysis-row"><span class="analysis-chip severity-good">Champions SP-based exact</span></div>
       <p class="result-copy">Final Speed: <strong>${Math.floor(modified)}</strong></p>
       <p class="result-copy">Base stat result before modifiers: ${raw}</p>
+      <p class="result-copy">Investment: ${sp} Speed SP = ${ev} EV-equivalent for this level-50 stat calculation. IV: ${iv}. Nature modifier: ${natureMultiplier}x.</p>
       <p class="result-copy">${selected ? `${selected.name} base Speed ${selected.baseSpeed} at level 50.` : "Choose a roster Pokemon or enter a custom base Speed."}</p>
       <p class="result-copy">Active modifiers: ${[tailwind ? "Tailwind" : null, scarf ? "Choice Scarf" : null, stage !== 0 ? `Stage ${stage > 0 ? `+${stage}` : stage}` : null, weather ? `Weather: ${weather}` : null, formatSpeedAbilityModLabel(abilityMod, weatherAbilityMultiplier)].filter(Boolean).join(", ") || "None"}</p>
     `;
+  }
+
+  function calculateLv50SpeedStat(baseSpeed, speedSp = 0, natureMultiplier = 1, iv = 31) {
+    const ev = spToEv(clampSp(speedSp || 0));
+    return Math.floor(((((2 * baseSpeed + iv + Math.floor(ev / 4)) * 50) / 100) + 5) * natureMultiplier);
   }
 
   function getSpeedAbilityMultiplier(abilityMod, weather = "") {
@@ -4047,16 +4067,37 @@
   }
 
   function calculateLv50Speed(baseSpeed) {
-    return Math.floor(((((2 * baseSpeed + 31 + Math.floor(spToEv(32) / 4)) * 50) / 100) + 5) * 1.1);
+    return calculateLv50SpeedStat(baseSpeed, 32, 1.1, 31);
   }
 
   function calculateLv50SpeedWithSpread(baseSpeed, speedSp, nature, item) {
     const boostedNatures = new Set(["Timid", "Hasty", "Jolly", "Naive"]);
     const loweredNatures = new Set(["Brave", "Relaxed", "Quiet", "Sassy"]);
-    const ev = spToEv(speedSp || 0);
     const natureMultiplier = boostedNatures.has(nature) ? 1.1 : loweredNatures.has(nature) ? 0.9 : 1;
-    const raw = Math.floor(((((2 * baseSpeed + 31 + Math.floor(ev / 4)) * 50) / 100) + 5) * natureMultiplier);
+    const raw = calculateLv50SpeedStat(baseSpeed, speedSp || 0, natureMultiplier, 31);
     return Math.floor(raw * (normalizeNameKey(item || "") === "choice scarf" ? 1.5 : 1));
+  }
+
+  function runSpeedCalculatorSelfTests() {
+    const approx = (actual, expected, tolerance = 0) => Math.abs(actual - expected) <= tolerance;
+    const baseMaxBoost = calculateLv50SpeedStat(100, 32, 1.1, 31);
+    const baseNoInvestNeutral = calculateLv50SpeedStat(100, 0, 1, 31);
+    const tailwind = Math.floor(baseMaxBoost * 2);
+    const scarf = Math.floor(baseMaxBoost * 1.5);
+    const plusOne = applyStage(baseMaxBoost, 1);
+    const minusOne = applyStage(baseMaxBoost, -1);
+    const cases = [
+      { name: "base100 max SP positive nature", actual: baseMaxBoost, expected: 167, pass: approx(baseMaxBoost, 167) },
+      { name: "base100 no SP neutral nature", actual: baseNoInvestNeutral, expected: 120, pass: approx(baseNoInvestNeutral, 120) },
+      { name: "Tailwind doubles final speed", actual: tailwind, expected: 334, pass: approx(tailwind, 334) },
+      { name: "Choice Scarf multiplies by 1.5", actual: scarf, expected: 250, pass: approx(scarf, 250) },
+      { name: "+1 stage multiplier", actual: plusOne, expected: 250, pass: approx(plusOne, 250) },
+      { name: "-1 stage multiplier", actual: minusOne, expected: 111, pass: approx(minusOne, 111) }
+    ];
+    if (typeof window !== "undefined") {
+      window.__MBWR_SPEED_CALC_TESTS = cases;
+    }
+    return cases;
   }
 
   function setSelectOptions(select, options, placeholder) {
@@ -5246,8 +5287,8 @@
 
   async function calculateDamage() {
     damageResult.innerHTML = `<div class="status-note" style="display:flex;align-items:center;gap:10px;"><span style="display:inline-block;width:18px;height:18px;border:3px solid var(--accent-vivid);border-top-color:transparent;border-radius:50%;animation:spin 0.7s linear infinite;"></span> Calculating...</div>`;
-    if (!gen || !window.calc) {
-      damageResult.innerHTML = `<div class="status-note">The Smogon calculator library did not load. Refresh the page with internet access and try again.</div>`;
+    if (document.body.dataset.calcMode === "team") {
+      await renderTeamVsTeamDamageOverview();
       return;
     }
     const attacker = getRosterEntry(document.getElementById("attacker-name").value);
@@ -5261,6 +5302,14 @@
     const moveDetail = await getMoveDetail(moveName);
     if (!moveDetail) {
       damageResult.innerHTML = `<div class="status-note">That move could not be resolved from the current data source.</div>`;
+      return;
+    }
+
+    if (!gen || !window.calc) {
+      await renderHostedOrFallbackDamage(attacker, defender, moveName, moveDetail, {
+        status: "Exact calc unavailable. Showing the best available fallback estimate.",
+        calcStatus: "Fallback Estimate"
+      });
       return;
     }
 
@@ -5317,6 +5366,7 @@
       const koMax = Math.max(1, Math.ceil(100 / Math.max(minPercent, 0.1)));
       damageResult.innerHTML = `
         <p class="result-title">${attacker.name} used ${prettyMoveName(moveName)} into ${defender.name}</p>
+        <div class="analysis-row"><span class="analysis-chip severity-good">Verified calc</span></div>
         <p class="result-copy">${result.desc()}</p>
         <div class="damage-result-grid">
           <div><span>Damage</span><strong>${min} - ${max}</strong></div>
@@ -5344,9 +5394,10 @@
       const hosted = await calculateHostedDamage(attacker, defender, moveName);
       damageResult.innerHTML = `
         <p class="result-title">${attacker.name} used ${prettyMoveName(moveName)} into ${defender.name}</p>
+        <div class="analysis-row"><span class="analysis-chip severity-medium">${escapeHtml(context.calcStatus || "Fallback Estimate")}</span></div>
         <p class="result-copy"><strong>${hosted.min} - ${hosted.max}</strong> damage (${hosted.minPercent}% - ${hosted.maxPercent}%)</p>
         <p class="result-copy">${hosted.summary}</p>
-        <p class="result-copy">Using hosted calc fallback because the browser bundle failed on this matchup.</p>
+        <p class="result-copy">Exact browser calc unavailable for this matchup. Hosted fallback shown.</p>
         <div class="damage-rolls">${hosted.rolls.slice(0, 16).map((value) => `<span class="damage-roll">${value}</span>`).join("")}</div>
       `;
       return;
@@ -5355,24 +5406,101 @@
         const fallback = calculateFallbackDamage(attacker, defender, moveName, moveDetail);
         damageResult.innerHTML = `
           <p class="result-title">${attacker.name} used ${prettyMoveName(moveName)} into ${defender.name}</p>
+          <div class="analysis-row"><span class="analysis-chip severity-medium">Estimated calc</span></div>
           <p class="result-copy"><strong>${fallback.min} - ${fallback.max}</strong> damage (${fallback.minPercent}% - ${fallback.maxPercent}%)</p>
           <p class="result-copy">${fallback.summary}</p>
-          <p class="result-copy">Using local fallback calc because the browser and hosted calcs both failed on this matchup.</p>
+          <p class="result-copy">Exact calc unavailable. This estimate uses local Champions type, STAB, stat, item, ability, and move data where available.</p>
           <div class="damage-rolls">${fallback.rolls.slice(0, 16).map((value) => `<span class="damage-roll">${value}</span>`).join("")}</div>
         `;
         return;
       } catch (fallbackError) {
         damageResult.innerHTML = `
-          <div class="status-note">${context.status || "Damage calc failed."}</div>
+          <div class="status-note">Calc Unavailable</div>
           ${context.attackerCandidates ? `<p class="result-copy"><strong>Attacker tried:</strong> ${context.attackerCandidates}</p>` : ""}
           ${context.defenderCandidates ? `<p class="result-copy"><strong>Defender tried:</strong> ${context.defenderCandidates}</p>` : ""}
           ${context.moveName ? `<p class="result-copy"><strong>Move:</strong> ${prettyMoveName(context.moveName)}</p>` : ""}
-          <p class="result-copy"><strong>Browser calc error:</strong> ${escapeHtml(context.error?.message || String(context.error || ""))}</p>
-          <p class="result-copy"><strong>Hosted calc error:</strong> ${escapeHtml(hostedError?.message || String(hostedError))}</p>
-          <p class="result-copy"><strong>Local fallback error:</strong> ${escapeHtml(fallbackError?.message || String(fallbackError))}</p>
+          <p class="result-copy">Exact calc unavailable and the local estimate could not resolve this matchup. No damage confidence is being claimed.</p>
         `;
       }
     }
+  }
+
+  async function renderTeamVsTeamDamageOverview() {
+    const fullTeam = getTeamBuilderState();
+    const team = fullTeam.filter((slot) => slot.name && getRosterEntry(slot.name));
+    if (team.length < 2) {
+      damageResult.innerHTML = `<div class="status-note">Team vs Team needs at least two filled team slots.</div>`;
+      return;
+    }
+    const attackerIndexRaw = document.getElementById("calc-team-attacker")?.value;
+    const defenderIndexRaw = document.getElementById("calc-team-defender")?.value;
+    const attackerIndex = attackerIndexRaw === "" ? NaN : Number(attackerIndexRaw);
+    const defenderIndex = defenderIndexRaw === "" ? NaN : Number(defenderIndexRaw);
+    const attackers = Number.isInteger(attackerIndex) && fullTeam[attackerIndex]?.name ? [fullTeam[attackerIndex]] : team;
+    const defenders = Number.isInteger(defenderIndex) && fullTeam[defenderIndex]?.name ? [fullTeam[defenderIndex]] : team;
+    const fieldState = {
+      weather: document.getElementById("calc-weather")?.value || "",
+      terrain: document.getElementById("calc-terrain")?.value || ""
+    };
+    const rows = [];
+    for (const attackerSlot of attackers) {
+      const attackerEntry = getRosterEntry(attackerSlot.name);
+      if (!attackerEntry) continue;
+      const attackerState = buildSimulatedStateFromSet(attackerSlot);
+      for (const defenderSlot of defenders) {
+        if (attackerSlot === defenderSlot) continue;
+        const defenderEntry = getRosterEntry(defenderSlot.name);
+        if (!defenderEntry) continue;
+        const defenderState = buildSimulatedStateFromSet(defenderSlot);
+        for (const move of (attackerSlot.moves || []).filter(Boolean)) {
+          const estimate = await calculateDamageEstimate(attackerEntry, defenderEntry, move, attackerState, defenderState, fieldState);
+          if (!estimate) continue;
+          rows.push({
+            attacker: attackerEntry.name,
+            defender: defenderEntry.name,
+            move,
+            minPercent: Number(estimate.minPercent || 0),
+            maxPercent: Number(estimate.maxPercent || 0),
+            typeEffectiveness: Number(estimate.typeEffectiveness ?? estimate.effectiveness ?? 1),
+            source: estimate.source || "local estimate"
+          });
+        }
+      }
+    }
+    if (!rows.length) {
+      damageResult.innerHTML = `<div class="status-note">Type-only estimate unavailable: add legal moves to at least two team slots.</div>`;
+      return;
+    }
+    const sorted = rows.slice().sort((a, b) => b.maxPercent - a.maxPercent);
+    const koRows = sorted.filter((row) => row.maxPercent >= 100).slice(0, 5);
+    const twoHkoRows = sorted.filter((row) => row.maxPercent >= 50 && row.maxPercent < 100).slice(0, 5);
+    const resistedRows = sorted.filter((row) => row.typeEffectiveness > 0 && row.typeEffectiveness < 1).slice(-5).reverse();
+    const immuneRows = rows.filter((row) => row.typeEffectiveness === 0 || row.maxPercent === 0).slice(0, 5);
+    const dangerRows = sorted.slice(0, 6);
+    const formatRows = (list, empty) => list.length
+      ? list.map((row) => `<div class="fix-list__item"><strong>${escapeHtml(row.attacker)} ${escapeHtml(prettyMoveName(row.move))} -> ${escapeHtml(row.defender)}</strong><br><span class="result-copy">${row.minPercent.toFixed(1)}% - ${row.maxPercent.toFixed(1)}% | ${escapeHtml(row.source)}</span></div>`).join("")
+      : `<div class="fix-list__item">${empty}</div>`;
+    damageResult.innerHTML = `
+      <p class="result-title">Team vs Team Damage Overview</p>
+      <div class="analysis-row"><span class="analysis-chip severity-medium">${gen && window.calc ? "Estimated calc" : "Type-only estimate"}</span></div>
+      <p class="result-copy">Exact team-wide calc is not claimed here. This overview uses local Champions data for STAB, type effectiveness, immunities, stats, SP spreads, moves, items, abilities, and Mega forms when available.</p>
+      <div class="analysis-stack">
+        <p class="result-title">Best Offensive Hits</p>
+        <div class="fix-list">${formatRows(dangerRows, "No offensive hits resolved.")}</div>
+      </div>
+      <div class="analysis-stack">
+        <p class="result-title">Likely OHKOs</p>
+        <div class="fix-list">${formatRows(koRows, "No likely OHKO found in the selected team view.")}</div>
+      </div>
+      <div class="analysis-stack">
+        <p class="result-title">Likely 2HKOs</p>
+        <div class="fix-list">${formatRows(twoHkoRows, "No likely 2HKO found in the selected team view.")}</div>
+      </div>
+      <div class="analysis-stack">
+        <p class="result-title">Resisted Hits / Immunities</p>
+        <div class="fix-list">${formatRows([...immuneRows, ...resistedRows].slice(0, 8), "No resisted or immune hits surfaced.")}</div>
+      </div>
+    `;
   }
 
   async function calculateHostedDamage(attackerEntry, defenderEntry, moveName) {
@@ -5542,6 +5670,16 @@
     if (!moveType || !power) {
       throw new Error("Missing move power or type for fallback calculation.");
     }
+    if (typeEffectiveness === 0) {
+      return {
+        rolls: Array.from({ length: 16 }, () => 0),
+        min: 0,
+        max: 0,
+        minPercent: "0.0",
+        maxPercent: "0.0",
+        summary: `${prettyMoveName(moveName)} has no effect on ${defenderEntry.name}.`
+      };
+    }
 
     const isPhysical = category === "physical";
     const attackStage = isPhysical
@@ -5639,6 +5777,19 @@
     const typeEffectiveness = getEffectiveTypeEffectiveness(moveType, defenderState, defenderEntry);
     const power = getAdjustedMovePower(moveName, moveDetail, attackerState);
     if (!moveType || !power) return null;
+    if (typeEffectiveness === 0) {
+      return {
+        rolls: Array.from({ length: 16 }, () => 0),
+        min: 0,
+        max: 0,
+        minPercent: 0,
+        maxPercent: 0,
+        moveType,
+        category,
+        typeEffectiveness,
+        source: "local estimate"
+      };
+    }
     const isPhysical = category === "physical";
     const attackStage = isPhysical ? Number(attackerState.boosts?.atk || 0) : Number(attackerState.boosts?.spa || 0);
     const defenseStage = isPhysical ? Number(defenderState.boosts?.def || 0) : Number(defenderState.boosts?.spd || 0);
@@ -5677,7 +5828,9 @@
       minPercent: Number(((min / hp) * 100).toFixed(1)),
       maxPercent: Number(((max / hp) * 100).toFixed(1)),
       moveType,
-      category
+      category,
+      typeEffectiveness,
+      source: "local estimate"
     };
   }
 
@@ -9006,19 +9159,24 @@
     const debug = ensureFreezeDebug();
     if (debug) debug.exportValidationPassCount += 1;
     const team = getFilledTeamSlots(teamState);
+    const legalityIssues = getExportLegalityIssues(teamState);
     const gcIllegalSlots = getGcIllegalTeamSlots(teamState);
-    if (gcIllegalSlots.length) {
+    if (gcIllegalSlots.length || legalityIssues.blockers.length) {
       const issue = {
         code: "gc_illegal_roster_member",
         severity: "blocker",
         text: `GC Legal Mode blocks non-roster Pokemon/forms: ${gcIllegalSlots.map((slot) => slot.name).join(", ")}.`
       };
+      const blockers = [
+        ...(gcIllegalSlots.length ? [issue] : []),
+        ...legalityIssues.blockers
+      ];
       completeFreezeScope("evaluateFinalExportCoherence", startedAt, { teamSize: team.length, isValid: false, gcIllegal: true });
       return {
         isValid: false,
         penalty: EXPORT_BLOCKED_SCORE_PENALTY,
-        issues: [issue],
-        blockers: [issue],
+        issues: blockers,
+        blockers,
         megaReport: { penalty: 0, bonus: 0, issues: [] },
         structureReport: evaluateTeamStructure(team),
         weatherProfile: inferTeamWeatherProfile(team),
@@ -9041,7 +9199,7 @@
     const structureReport = evaluateTeamStructure(team);
     const weatherProfile = inferTeamWeatherProfile(team);
     const megaReport = getMegaCompatibilityReport(team, structureReport);
-    const issues = [...megaReport.issues];
+    const issues = [...legalityIssues.issues, ...megaReport.issues];
     let penalty = (Number.isFinite(structureReport.penalty) ? structureReport.penalty : 0) + megaReport.penalty;
     const trSetterCount = structureReport.trSetterCount ?? structureReport.trickRoomCount ?? 0;
     const profiles = team.map((slot) => getCoherenceSlotProfile(slot)).filter((profile) => profile.entry);
@@ -9133,6 +9291,64 @@
     };
     completeFreezeScope("evaluateFinalExportCoherence", startedAt, { teamSize: team.length, isValid });
     return result;
+  }
+
+  function getExportLegalityIssues(teamState = []) {
+    const blockers = [];
+    const issues = [];
+    const getSlotNumber = (slot, index) => slot.originalSlotIndex != null ? slot.originalSlotIndex + 1 : index + 1;
+    const addBlocker = (slot, index, code, text) => blockers.push({
+      code,
+      severity: "blocker",
+      text: `Slot ${getSlotNumber(slot, index)}: ${text}`
+    });
+    getFilledTeamSlots(teamState).forEach((slot, index) => {
+      const entry = getRosterEntry(slot.name || "");
+      if (!entry || !isEntryAllowedInActiveRuleset(entry)) {
+        addBlocker(slot, index, "illegal_pokemon", `${slot.name || "empty"} is not legal in the active Champions ruleset.`);
+        return;
+      }
+      if (slot.item && !isLegalItem(slot.item)) {
+        addBlocker(slot, index, "illegal_item", `${slot.item} is not a legal held item.`);
+      }
+      if (isMegaEntry(entry)) {
+        const megaStone = getMegaStoneForEntry(entry);
+        if (megaStone && normalizeNameKey(slot.item || "") !== normalizeNameKey(megaStone)) {
+          addBlocker(slot, index, "illegal_mega_item", `${entry.name} must hold ${megaStone}.`);
+        }
+      }
+      const legalAbilities = [
+        ...(entry.abilities || []),
+        ...getLocalAbilitiesForName(entry.name),
+        ...getLocalAbilitiesForName(entry.baseName || "")
+      ].map(normalizeNameKey);
+      if (slot.ability && legalAbilities.length && !legalAbilities.includes(normalizeNameKey(slot.ability))) {
+        addBlocker(slot, index, "illegal_ability", `${slot.ability} is not legal for ${entry.name}.`);
+      }
+      if (slot.nature && !natures.includes(slot.nature)) {
+        addBlocker(slot, index, "illegal_nature", `${slot.nature} is not a recognized nature.`);
+      }
+      const spread = slot.sps || {};
+      const totalSp = statOrder.reduce((sum, stat) => sum + (Number(spread[stat]) || 0), 0);
+      if (totalSp > SP_MAX_TOTAL || statOrder.some((stat) => (Number(spread[stat]) || 0) > SP_MAX_PER_STAT || (Number(spread[stat]) || 0) < 0)) {
+        addBlocker(slot, index, "illegal_spread", `SP spread is illegal (${totalSp}/${SP_MAX_TOTAL}, max ${SP_MAX_PER_STAT} per stat).`);
+      }
+      const legalMoves = legalPokemonData[entry.name]?.legalMoves || legalPokemonData[entry.baseName || ""]?.legalMoves || [];
+      const legalMoveKeys = new Set(legalMoves.map(normalizeNameKey));
+      (slot.moves || []).filter(Boolean).forEach((move) => {
+        if (legalMoveKeys.size && !legalMoveKeys.has(normalizeNameKey(move))) {
+          addBlocker(slot, index, "illegal_move", `${move} is not legal for ${entry.name}.`);
+        }
+      });
+      if (!(slot.moves || []).filter(Boolean).length) {
+        issues.push({
+          code: "missing_moves",
+          severity: "warning",
+          text: `Slot ${getSlotNumber(slot, index)}: ${entry.name} has no moves selected.`
+        });
+      }
+    });
+    return { blockers, issues };
   }
 
   function getTeamExportGate(teamState) {
