@@ -1,12 +1,12 @@
 {
-  "updatedAt": "2026-04-30T09:25:45+00:00",
+  "updatedAt": "2026-05-01T09:08:06+00:00",
   "highLevelPoolSize": 5,
   "topTeams": [
     {
       "label": "pikalyticscuratedpikalyticsimportpelipperbasculegionincineroarwhimsicottarchaludongarchomp",
       "sourceType": "pikalytics",
       "confidence": 0.9925,
-      "overall": 0.7442,
+      "overall": 0.7439,
       "team": [
         "Pelipper",
         "Basculegion",
@@ -90,7 +90,7 @@
       "label": "pikalyticspikalyticschampionssnapshotincineroarwhimsicottgarchompsinistchakingambitpelipper",
       "sourceType": "pikalytics",
       "confidence": 0.97,
-      "overall": 0.7277,
+      "overall": 0.7274,
       "team": [
         "Incineroar",
         "Whimsicott",
@@ -174,7 +174,7 @@
       "label": "highlevelpokeaimmdincineroarstarmiegarchompwhimsicottkingambitpelipper",
       "sourceType": "high_level",
       "confidence": 0.9438,
-      "overall": 0.7472,
+      "overall": 0.7466,
       "team": [
         "Incineroar",
         "Starmie",
@@ -258,7 +258,7 @@
       "label": "highlevelcuratedyoutubeshowcaseteamincineroargarchompwhimsicottstarmiedragoniterotomwash",
       "sourceType": "high_level",
       "confidence": 0.9243,
-      "overall": 0.75,
+      "overall": 0.7503,
       "team": [
         "Incineroar",
         "Garchomp",
@@ -339,10 +339,10 @@
       }
     },
     {
-      "label": "pikalyticsvariant350curatedpikalyticsimport",
+      "label": "pikalyticsvariant600curatedpikalyticsimport",
       "sourceType": "pikalytics_variant",
       "confidence": 0.838,
-      "overall": 0.7479,
+      "overall": 0.7473,
       "team": [
         "Pelipper",
         "Basculegion",
@@ -426,7 +426,7 @@
       "label": "pikalyticsvariant3curatedpikalyticsimport",
       "sourceType": "pikalytics_variant",
       "confidence": 0.838,
-      "overall": 0.7476,
+      "overall": 0.7472,
       "team": [
         "Pelipper",
         "Basculegion",
@@ -510,7 +510,7 @@
       "label": "pikalyticsvariant21curatedpikalyticsimport",
       "sourceType": "pikalytics_variant",
       "confidence": 0.838,
-      "overall": 0.7472,
+      "overall": 0.7468,
       "team": [
         "Pelipper",
         "Basculegion",
@@ -591,94 +591,10 @@
       }
     },
     {
-      "label": "pikalyticsvariant206curatedpikalyticsimport",
-      "sourceType": "pikalytics_variant",
-      "confidence": 0.838,
-      "overall": 0.7469,
-      "team": [
-        "Pelipper",
-        "Basculegion",
-        "Incineroar",
-        "Whimsicott",
-        "Charizard",
-        "Archaludon"
-      ],
-      "highLevel": {
-        "poolSize": 5,
-        "fallbackUsed": false,
-        "reason": "creator shell similarity",
-        "matched": true,
-        "matchedSource": "curatedpikalyticsimport",
-        "matchedCreator": "Curated Pikalytics import",
-        "rawSourceName": "Curated Pikalytics import",
-        "originSourceType": "pikalytics",
-        "qualityClass": "original_creator_source",
-        "similarity": 0.875,
-        "shellOverlap": 0.8333,
-        "coreOverlap": 1.0,
-        "archetypeOverlap": 1.0,
-        "moveOverlap": 0.6667,
-        "referenceConfidence": 0.9602,
-        "finalContribution": 0.7642,
-        "topMatches": [
-          {
-            "sourceName": "curatedpikalyticsimport",
-            "matchedCreator": "Curated Pikalytics import",
-            "rawSourceName": "Curated Pikalytics import",
-            "originSourceType": "pikalytics",
-            "qualityClass": "original_creator_source",
-            "confidence": 0.9602,
-            "similarity": 0.875,
-            "shell_overlap": 0.8333,
-            "core_overlap": 1.0,
-            "archetype_overlap": 1.0,
-            "move_overlap": 0.6667,
-            "contribution": 0.8713
-          },
-          {
-            "sourceName": "moxieboosted",
-            "matchedCreator": "Moxie Boosted",
-            "rawSourceName": "r/stunfisk post",
-            "originSourceType": "reddit",
-            "qualityClass": "original_creator_source",
-            "confidence": 0.685,
-            "similarity": 0.8,
-            "shell_overlap": 1.0,
-            "core_overlap": 1.0,
-            "archetype_overlap": 0.0,
-            "move_overlap": 0.5,
-            "contribution": 0.7567
-          },
-          {
-            "sourceName": "pokeaimmd",
-            "matchedCreator": "PokeaimMD",
-            "rawSourceName": "Curated Reddit balance team",
-            "originSourceType": "reddit",
-            "qualityClass": "original_creator_source",
-            "confidence": 0.9438,
-            "similarity": 0.5125,
-            "shell_overlap": 0.5,
-            "core_overlap": 1.0,
-            "archetype_overlap": 0.0,
-            "move_overlap": 0.375,
-            "contribution": 0.6066
-          }
-        ]
-      },
-      "structureSignals": {
-        "mega_sun": false,
-        "rain_shell": true,
-        "hard_tr": false,
-        "speed_control": true,
-        "shell_integrity": 1.0,
-        "coherence_bonus": 0.11
-      }
-    },
-    {
       "label": "pikalyticsvariant30curatedpikalyticsimport",
       "sourceType": "pikalytics_variant",
       "confidence": 0.838,
-      "overall": 0.7468,
+      "overall": 0.7465,
       "team": [
         "Pelipper",
         "Basculegion",
@@ -759,16 +675,16 @@
       }
     },
     {
-      "label": "pikalyticsvariant325curatedpikalyticsimport",
+      "label": "pikalyticsvariant1621curatedpikalyticsimport",
       "sourceType": "pikalytics_variant",
       "confidence": 0.838,
-      "overall": 0.7467,
+      "overall": 0.7465,
       "team": [
         "Pelipper",
         "Basculegion",
         "Incineroar",
         "Whimsicott",
-        "Tyranitar",
+        "Charizard",
         "Archaludon"
       ],
       "highLevel": {
@@ -843,10 +759,10 @@
       }
     },
     {
-      "label": "pikalyticsvariant557curatedpikalyticsimport",
+      "label": "pikalyticsvariant761curatedpikalyticsimport",
       "sourceType": "pikalytics_variant",
       "confidence": 0.838,
-      "overall": 0.7466,
+      "overall": 0.7464,
       "team": [
         "Pelipper",
         "Basculegion",
@@ -927,10 +843,94 @@
       }
     },
     {
-      "label": "pikalyticsvariant611curatedpikalyticsimport",
+      "label": "pikalyticsvariant1068curatedpikalyticsimport",
       "sourceType": "pikalytics_variant",
       "confidence": 0.838,
-      "overall": 0.7465,
+      "overall": 0.7463,
+      "team": [
+        "Pelipper",
+        "Basculegion",
+        "Incineroar",
+        "Whimsicott",
+        "Tyranitar",
+        "Archaludon"
+      ],
+      "highLevel": {
+        "poolSize": 5,
+        "fallbackUsed": false,
+        "reason": "creator shell similarity",
+        "matched": true,
+        "matchedSource": "curatedpikalyticsimport",
+        "matchedCreator": "Curated Pikalytics import",
+        "rawSourceName": "Curated Pikalytics import",
+        "originSourceType": "pikalytics",
+        "qualityClass": "original_creator_source",
+        "similarity": 0.875,
+        "shellOverlap": 0.8333,
+        "coreOverlap": 1.0,
+        "archetypeOverlap": 1.0,
+        "moveOverlap": 0.6667,
+        "referenceConfidence": 0.9602,
+        "finalContribution": 0.7642,
+        "topMatches": [
+          {
+            "sourceName": "curatedpikalyticsimport",
+            "matchedCreator": "Curated Pikalytics import",
+            "rawSourceName": "Curated Pikalytics import",
+            "originSourceType": "pikalytics",
+            "qualityClass": "original_creator_source",
+            "confidence": 0.9602,
+            "similarity": 0.875,
+            "shell_overlap": 0.8333,
+            "core_overlap": 1.0,
+            "archetype_overlap": 1.0,
+            "move_overlap": 0.6667,
+            "contribution": 0.8713
+          },
+          {
+            "sourceName": "moxieboosted",
+            "matchedCreator": "Moxie Boosted",
+            "rawSourceName": "r/stunfisk post",
+            "originSourceType": "reddit",
+            "qualityClass": "original_creator_source",
+            "confidence": 0.685,
+            "similarity": 0.8,
+            "shell_overlap": 1.0,
+            "core_overlap": 1.0,
+            "archetype_overlap": 0.0,
+            "move_overlap": 0.5,
+            "contribution": 0.7567
+          },
+          {
+            "sourceName": "pokeaimmd",
+            "matchedCreator": "PokeaimMD",
+            "rawSourceName": "Curated Reddit balance team",
+            "originSourceType": "reddit",
+            "qualityClass": "original_creator_source",
+            "confidence": 0.9438,
+            "similarity": 0.5125,
+            "shell_overlap": 0.5,
+            "core_overlap": 1.0,
+            "archetype_overlap": 0.0,
+            "move_overlap": 0.375,
+            "contribution": 0.6066
+          }
+        ]
+      },
+      "structureSignals": {
+        "mega_sun": false,
+        "rain_shell": true,
+        "hard_tr": false,
+        "speed_control": true,
+        "shell_integrity": 1.0,
+        "coherence_bonus": 0.11
+      }
+    },
+    {
+      "label": "pikalyticsvariant103curatedpikalyticsimport",
+      "sourceType": "pikalytics_variant",
+      "confidence": 0.838,
+      "overall": 0.7462,
       "team": [
         "Pelipper",
         "Basculegion",
