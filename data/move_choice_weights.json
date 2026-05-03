@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-05-02T08:44:37+00:00",
+  "updatedAt": "2026-05-03T08:57:24+00:00",
   "weights": {
     "protect": 1.0,
     "fake out": 0.22,
@@ -15,7 +15,7 @@
     "aquajet": 0.08,
     "fakeout": 0.405,
     "partingshot": 0.405,
-    "flareblitz": 0.231,
+    "flareblitz": 0.232,
     "knockoff": 0.308,
     "encore": 0.364,
     "moonblast": 0.308,
@@ -33,7 +33,7 @@
     "kowtowcleave": 0.153,
     "lowkick": 0.153,
     "hydropump": 0.227,
-    "icebeam": 0.151,
+    "icebeam": 0.152,
     "thunderbolt": 0.15,
     "extremespeed": 0.075,
     "firepunch": 0.075,
