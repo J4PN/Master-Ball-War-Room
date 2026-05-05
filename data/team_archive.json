@@ -925,7 +925,7 @@
     },
     {
       "source_type": "pikalytics_variant",
-      "source_name": "pikalyticsvariant843curatedpikalyticsimport",
+      "source_name": "pikalyticsvariant138curatedpikalyticsimport",
       "source_url": "",
       "archetype": "unknown",
       "tags": [
@@ -1317,7 +1317,7 @@
     },
     {
       "source_type": "pikalytics_variant",
-      "source_name": "pikalyticsvariant31curatedpikalyticsimport",
+      "source_name": "pikalyticsvariant1613curatedpikalyticsimport",
       "source_url": "",
       "archetype": "unknown",
       "tags": [
@@ -1416,44 +1416,36 @@
           "identity_key": "whimsicott::whimsicott::focus sash::"
         },
         {
-          "base_species": "Gengar",
-          "display_species": "Gengar",
+          "base_species": "Charizard",
+          "display_species": "Charizard",
           "item": "",
           "mega_stone": "",
           "mega_identity": "",
-          "form_identity": "Gengar",
+          "form_identity": "Charizard",
           "role": "",
           "archetype": "",
           "moves": [],
           "key_moves": [],
-          "identity_key": "gengar::gengar::::"
+          "identity_key": "charizard::charizard::::"
         },
         {
-          "base_species": "Garchomp",
-          "display_species": "Garchomp",
-          "item": "Clear Amulet",
+          "base_species": "Archaludon",
+          "display_species": "Archaludon",
+          "item": "",
           "mega_stone": "",
           "mega_identity": "",
-          "form_identity": "Garchomp",
+          "form_identity": "Archaludon",
           "role": "",
           "archetype": "",
-          "moves": [
-            "Earthquake",
-            "Rock Slide",
-            "Protect",
-            "Dragon Claw"
-          ],
-          "key_moves": [
-            "Earthquake",
-            "Rock Slide"
-          ],
-          "identity_key": "garchomp::garchomp::clear amulet::"
+          "moves": [],
+          "key_moves": [],
+          "identity_key": "archaludon::archaludon::::"
         }
       ]
     },
     {
       "source_type": "pikalytics_variant",
-      "source_name": "pikalyticsvariant719pikalyticschampionssnapshot",
+      "source_name": "pikalyticsvariant723pikalyticschampionssnapshot",
       "source_url": "",
       "archetype": "unknown",
       "tags": [
@@ -1580,7 +1572,7 @@
     },
     {
       "source_type": "pikalytics_variant",
-      "source_name": "pikalyticsvariant679pikalyticschampionssnapshot",
+      "source_name": "pikalyticsvariant683pikalyticschampionssnapshot",
       "source_url": "",
       "archetype": "unknown",
       "tags": [
@@ -1715,7 +1707,7 @@
     },
     {
       "source_type": "pikalytics_variant",
-      "source_name": "pikalyticsvariant132pikalyticschampionssnapshot",
+      "source_name": "pikalyticsvariant1761pikalyticschampionssnapshot",
       "source_url": "",
       "archetype": "unknown",
       "tags": [
@@ -1842,7 +1834,7 @@
     },
     {
       "source_type": "pikalytics_variant",
-      "source_name": "pikalyticsvariant357pikalyticschampionssnapshot",
+      "source_name": "pikalyticsvariant360pikalyticschampionssnapshot",
       "source_url": "",
       "archetype": "unknown",
       "tags": [
@@ -1969,7 +1961,7 @@
     },
     {
       "source_type": "high_level_variant",
-      "source_name": "highlevelvariant53pokeaimmd",
+      "source_name": "highlevelvariant521pokeaimmd",
       "source_url": "",
       "archetype": "unknown",
       "tags": [
@@ -2353,7 +2345,7 @@
       "source_url": "",
       "archetype": "unknown",
       "tags": [],
-      "confidence": 0.492,
+      "confidence": 0.494,
       "quality_class": "archive",
       "team": [
         {
@@ -2442,7 +2434,7 @@
       "source_url": "",
       "archetype": "unknown",
       "tags": [],
-      "confidence": 0.492,
+      "confidence": 0.494,
       "quality_class": "archive",
       "team": [
         {
@@ -2531,7 +2523,7 @@
       "source_url": "",
       "archetype": "unknown",
       "tags": [],
-      "confidence": 0.49,
+      "confidence": 0.492,
       "quality_class": "archive",
       "team": [
         {
@@ -2620,7 +2612,7 @@
       "source_url": "",
       "archetype": "unknown",
       "tags": [],
-      "confidence": 0.487,
+      "confidence": 0.49,
       "quality_class": "archive",
       "team": [
         {
@@ -2709,7 +2701,7 @@
       "source_url": "",
       "archetype": "unknown",
       "tags": [],
-      "confidence": 0.487,
+      "confidence": 0.49,
       "quality_class": "archive",
       "team": [
         {
@@ -2798,7 +2790,7 @@
       "source_url": "",
       "archetype": "unknown",
       "tags": [],
-      "confidence": 0.483,
+      "confidence": 0.487,
       "quality_class": "archive",
       "team": [
         {
@@ -2887,7 +2879,7 @@
       "source_url": "",
       "archetype": "unknown",
       "tags": [],
-      "confidence": 0.483,
+      "confidence": 0.487,
       "quality_class": "archive",
       "team": [
         {
@@ -2976,7 +2968,7 @@
       "source_url": "",
       "archetype": "unknown",
       "tags": [],
-      "confidence": 0.458,
+      "confidence": 0.469,
       "quality_class": "archive",
       "team": [
         {
