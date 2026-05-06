@@ -282,6 +282,15 @@
         "bulky-offense": 1
       },
       "mega_team_count": 0
+    },
+    {
+      "run_index": 29,
+      "team_count": 127,
+      "archetype_counts": {
+        "unknown": 126,
+        "bulky-offense": 1
+      },
+      "mega_team_count": 0
     }
   ]
 }

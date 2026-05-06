@@ -1,57 +1,57 @@
 # Off-PC Training Summary
 
-- Timestamp: 2026-05-05T09:20:18+00:00
+- Timestamp: 2026-05-06T09:37:11+00:00
 - Candidate iterations: 3000
 - candidate_iterations: 3000
-- Evaluated candidates: 1248
-- evaluated_candidates: 1248
+- Evaluated candidates: 1251
+- evaluated_candidates: 1251
 - Retained learning candidates: 24
 - retained_candidates: 24
 - persistent_memory_updated: pending persistent_memory.py step
-- Battle log: `data/battle_logs/training-20260505T092018Z.jsonl`
+- Battle log: `data/battle_logs/training-20260506T093711Z.jsonl`
 - High-level debug: `reports/high_level_debug.json`
 
 ## Source Counts
 
 - `meta`: 0
 - `pikalytics`: 2
-- `pikalytics_variant`: 115
+- `pikalytics_variant`: 107
 - `high_level`: 4
-- `high_level_variant`: 145
+- `high_level_variant`: 143
 - `reddit`: 0
-- `reddit_variant`: 3
+- `reddit_variant`: 4
 - `youtube`: 0
-- `youtube_variant`: 65
-- `archive`: 31
-- `archive_variant`: 387
+- `youtube_variant`: 74
+- `archive`: 32
+- `archive_variant`: 391
 - `random`: 0
-- `selfplay`: 496
+- `selfplay`: 494
 
 ## Source Share
 
 - `meta`: 0.0%
 - `pikalytics`: 0.2%
-- `pikalytics_variant`: 9.2%
+- `pikalytics_variant`: 8.6%
 - `high_level`: 0.3%
-- `high_level_variant`: 11.6%
+- `high_level_variant`: 11.4%
 - `reddit`: 0.0%
-- `reddit_variant`: 0.2%
+- `reddit_variant`: 0.3%
 - `youtube`: 0.0%
-- `youtube_variant`: 5.2%
-- `archive`: 2.5%
-- `archive_variant`: 31.0%
+- `youtube_variant`: 5.9%
+- `archive`: 2.6%
+- `archive_variant`: 31.3%
 - `random`: 0.0%
-- `selfplay`: 39.7%
+- `selfplay`: 39.5%
 
-WARNING: evaluation pool below expected size (1248 < 1299)
+WARNING: evaluation pool below expected size (1251 < 1302)
 
 ## Retained Source Counts
 
 - `meta`: 0
 - `pikalytics`: 2
-- `pikalytics_variant`: 8
+- `pikalytics_variant`: 7
 - `high_level`: 4
-- `high_level_variant`: 1
+- `high_level_variant`: 2
 - `reddit`: 0
 - `reddit_variant`: 0
 - `youtube`: 0
@@ -65,9 +65,9 @@ WARNING: evaluation pool below expected size (1248 < 1299)
 
 - `meta`: 0.0%
 - `pikalytics`: 8.3%
-- `pikalytics_variant`: 33.3%
+- `pikalytics_variant`: 29.2%
 - `high_level`: 16.7%
-- `high_level_variant`: 4.2%
+- `high_level_variant`: 8.3%
 - `reddit`: 0.0%
 - `reddit_variant`: 0.0%
 - `youtube`: 0.0%
@@ -79,36 +79,36 @@ WARNING: evaluation pool below expected size (1248 < 1299)
 
 ## Top Teams
 
+- [archive] score `0.737` confidence `0.74`
+  `Incineroar, Whimsicott, Starmie, Garchomp, Kingambit, Pelipper`
+  meta `0.856` | pikalytics `0.986` | high_level `0.740` | reddit `0.693` | youtube `0.580` | archive `0.630` | random `0.277` | selfplay `0.298`
+  creator match `PokeaimMD` | shell `1.00` | core `1.00` | archetype `0.00` | final `0.740`
 - [archive] score `0.710` confidence `0.49`
   `Pelipper, Basculegion, Incineroar, Whimsicott, Starmie, Charizard`
-  meta `0.841` | pikalytics `0.964` | high_level `0.677` | reddit `0.667` | youtube `0.573` | archive `0.598` | random `0.270` | selfplay `0.293`
+  meta `0.842` | pikalytics `0.965` | high_level `0.677` | reddit `0.667` | youtube `0.574` | archive `0.598` | random `0.270` | selfplay `0.293`
   creator match `Moxie Boosted` | shell `1.00` | core `1.00` | archetype `0.00` | final `0.677`
-- [archive] score `0.700` confidence `0.49`
+- [archive] score `0.700` confidence `0.50`
   `Pelipper, Gengar, Incineroar, Whimsicott, Archaludon, Garchomp`
-  meta `0.817` | pikalytics `0.941` | high_level `0.668` | reddit `0.677` | youtube `0.573` | archive `0.601` | random `0.272` | selfplay `0.295`
+  meta `0.817` | pikalytics `0.941` | high_level `0.668` | reddit `0.677` | youtube `0.573` | archive `0.602` | random `0.272` | selfplay `0.295`
   creator match `Curated Pikalytics import` | shell `0.83` | core `1.00` | archetype `0.00` | final `0.668`
 - [archive] score `0.698` confidence `0.49`
   `Tyranitar, Garchomp, Farigiraf, Starmie, Dragonite, Kingambit`
-  meta `0.867` | pikalytics `0.985` | high_level `0.540` | reddit `0.702` | youtube `0.581` | archive `0.593` | random `0.269` | selfplay `0.293`
+  meta `0.868` | pikalytics `0.985` | high_level `0.540` | reddit `0.702` | youtube `0.581` | archive `0.593` | random `0.269` | selfplay `0.293`
   creator match `PokeaimMD` | shell `0.50` | core `1.00` | archetype `0.00` | final `0.540`
+- [archive] score `0.701` confidence `0.48`
+  `Rotom-Wash, Garchomp, Farigiraf, Starmie, Dragonite, Charizard`
+  meta `0.881` | pikalytics `0.997` | high_level `0.529` | reddit `0.709` | youtube `0.576` | archive `0.594` | random `0.269` | selfplay `0.293`
+  creator match `Curated YouTube showcase team` | shell `0.67` | core `1.00` | archetype `0.00` | final `0.529`
 - [archive] score `0.697` confidence `0.49`
   `Farigiraf, Garchomp, Tyranitar, Starmie, Charizard, Rotom-Wash`
   meta `0.880` | pikalytics `0.997` | high_level `0.502` | reddit `0.709` | youtube `0.581` | archive `0.595` | random `0.269` | selfplay `0.295`
   creator match `Curated YouTube showcase team` | shell `0.50` | core `1.00` | archetype `0.00` | final `0.502`
-- [archive] score `0.701` confidence `0.47`
-  `Rotom-Wash, Garchomp, Farigiraf, Starmie, Dragonite, Charizard`
-  meta `0.880` | pikalytics `0.997` | high_level `0.529` | reddit `0.709` | youtube `0.576` | archive `0.594` | random `0.269` | selfplay `0.293`
-  creator match `Curated YouTube showcase team` | shell `0.67` | core `1.00` | archetype `0.00` | final `0.529`
-- [archive] score `0.693` confidence `0.49`
-  `Incineroar, Farigiraf, Whimsicott, Charizard, Dragonite, Rotom-Wash`
-  meta `0.857` | pikalytics `0.979` | high_level `0.541` | reddit `0.689` | youtube `0.576` | archive `0.594` | random `0.267` | selfplay `0.291`
-  creator match `Curated YouTube showcase team` | shell `0.67` | core `1.00` | archetype `0.00` | final `0.541`
 
 ## Creator Matches
 
+- `archivepikalyticsvariant360pikalyticschampionssnapshot`: matched `PokeaimMD` from `reddit` with similarity `0.810` (shell `1.00`, core `1.00`, archetype `0.00`)
 - `archivepelipperbasculegion`: matched `Moxie Boosted` from `reddit` with similarity `0.750` (shell `1.00`, core `1.00`, archetype `0.00`)
 - `archivepelippergengar`: matched `Curated Pikalytics import` from `pikalytics` with similarity `0.658` (shell `0.83`, core `1.00`, archetype `0.00`)
 - `archivetyranitargarchomp`: matched `PokeaimMD` from `reddit` with similarity `0.475` (shell `0.50`, core `1.00`, archetype `0.00`)
-- `archivefarigirafgarchomp`: matched `Curated YouTube showcase team` from `youtube` with similarity `0.475` (shell `0.50`, core `1.00`, archetype `0.00`)
 - `archiverotomwashgarchomp`: matched `Curated YouTube showcase team` from `youtube` with similarity `0.567` (shell `0.67`, core `1.00`, archetype `0.00`)
-- `archiveincineroarfarigiraf`: matched `Curated YouTube showcase team` from `youtube` with similarity `0.567` (shell `0.67`, core `1.00`, archetype `0.00`)
+- `archivefarigirafgarchomp`: matched `Curated YouTube showcase team` from `youtube` with similarity `0.475` (shell `0.50`, core `1.00`, archetype `0.00`)
