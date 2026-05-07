@@ -1,8 +1,8 @@
 # Persistent Training Memory Report
 
 - persistent_memory_updated: true
-- Prior runs reused: 29
+- Prior runs reused: 30
 - Persistent shells retained: 220
 - Rain diversity penalty: 0.0
-- Sun support bonus: 0.1659
+- Sun support bonus: 0.1633
 - Weather example: Pelipper:rain vs Mega Charizard Y:sun => sun
