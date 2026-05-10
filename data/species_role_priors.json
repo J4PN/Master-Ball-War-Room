@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-05-09T08:51:47+00:00",
+  "updatedAt": "2026-05-10T09:02:26+00:00",
   "priors": {
     "incineroar": {
       "weight": 0.138,
@@ -16,14 +16,14 @@
       ]
     },
     "garchomp": {
-      "weight": 0.113,
+      "weight": 0.125,
       "roles": [
         "physical_pressure",
         "spread_damage"
       ]
     },
     "pelipper": {
-      "weight": 0.087,
+      "weight": 0.1,
       "roles": [
         "weather",
         "speed_control"
@@ -39,27 +39,27 @@
     },
     "sinistcha": {
       "roles": [],
-      "weight": 0.037
+      "weight": 0.025
     },
     "kingambit": {
       "roles": [],
-      "weight": 0.037
+      "weight": 0.05
     },
     "starmie": {
       "roles": [],
-      "weight": 0.1
+      "weight": 0.113
     },
     "dragonite": {
       "roles": [],
-      "weight": 0.075
+      "weight": 0.062
     },
     "rotomwash": {
       "roles": [],
-      "weight": 0.062
+      "weight": 0.05
     },
     "farigiraf": {
       "roles": [],
-      "weight": 0.062
+      "weight": 0.05
     },
     "gengar": {
       "roles": [],
