@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-05-10T09:01:03+00:00",
+  "updatedAt": "2026-05-11T10:44:18+00:00",
   "sources": [
     "archive",
     "high_level",
@@ -30,7 +30,7 @@
     {
       "name": "incineroar",
       "displayName": "incineroar",
-      "importance": 1.736,
+      "importance": 1.737,
       "sources": [
         "archive",
         "high_level",
@@ -46,7 +46,7 @@
     {
       "name": "garchomp",
       "displayName": "garchomp",
-      "importance": 1.492,
+      "importance": 1.525,
       "sources": [
         "archive",
         "high_level",
@@ -61,7 +61,7 @@
     {
       "name": "pelipper",
       "displayName": "pelipper",
-      "importance": 1.413,
+      "importance": 1.418,
       "sources": [
         "archive",
         "high_level",
@@ -76,7 +76,7 @@
     {
       "name": "starmie",
       "displayName": "starmie",
-      "importance": 1.376,
+      "importance": 1.354,
       "sources": [
         "archive",
         "high_level",
@@ -90,7 +90,7 @@
     {
       "name": "dragonite",
       "displayName": "dragonite",
-      "importance": 0.975,
+      "importance": 0.961,
       "sources": [
         "archive",
         "high_level",
@@ -103,7 +103,7 @@
     {
       "name": "basculegion",
       "displayName": "basculegion",
-      "importance": 0.93,
+      "importance": 0.945,
       "sources": [
         "archive",
         "high_level",
@@ -117,7 +117,7 @@
     {
       "name": "kingambit",
       "displayName": "kingambit",
-      "importance": 0.885,
+      "importance": 0.898,
       "sources": [
         "archive",
         "high_level",
@@ -132,7 +132,7 @@
     {
       "name": "rotomwash",
       "displayName": "rotomwash",
-      "importance": 0.843,
+      "importance": 0.831,
       "sources": [
         "archive",
         "high_level",
@@ -145,7 +145,7 @@
     {
       "name": "archaludon",
       "displayName": "archaludon",
-      "importance": 0.836,
+      "importance": 0.795,
       "sources": [
         "archive",
         "high_level",
@@ -157,7 +157,7 @@
     {
       "name": "farigiraf",
       "displayName": "farigiraf",
-      "importance": 0.794,
+      "importance": 0.782,
       "sources": [
         "archive",
         "random",
@@ -168,7 +168,7 @@
     {
       "name": "sinistcha",
       "displayName": "sinistcha",
-      "importance": 0.769,
+      "importance": 0.758,
       "sources": [
         "archive",
         "meta",
@@ -181,7 +181,7 @@
     {
       "name": "charizard",
       "displayName": "charizard",
-      "importance": 0.736,
+      "importance": 0.697,
       "sources": [
         "archive",
         "random"
@@ -191,7 +191,7 @@
     {
       "name": "tyranitar",
       "displayName": "tyranitar",
-      "importance": 0.611,
+      "importance": 0.602,
       "sources": [
         "archive",
         "random"
@@ -210,32 +210,32 @@
     }
   ],
   "cleanThreatImportance": {
-    "incineroar": 1.9547,
+    "pelipper": 1.7861,
+    "basculegion": 1.5401,
+    "incineroar": 1.9539,
     "whimsicott": 2.0,
-    "starmie": 1.8418,
-    "garchomp": 1.8393,
-    "kingambit": 1.5321,
-    "pelipper": 1.7902,
-    "basculegion": 1.5506,
-    "charizard": 1.4789,
-    "gengar": 1.2644,
-    "archaludon": 1.4729,
-    "rotomwash": 1.5352,
-    "farigiraf": 1.535,
-    "dragonite": 1.6263,
-    "tyranitar": 1.411,
-    "sinistcha": 1.471
+    "starmie": 1.8594,
+    "charizard": 1.5087,
+    "gengar": 1.2484,
+    "archaludon": 1.5025,
+    "garchomp": 1.8153,
+    "rotomwash": 1.5453,
+    "farigiraf": 1.5451,
+    "dragonite": 1.6381,
+    "tyranitar": 1.4186,
+    "kingambit": 1.5233,
+    "sinistcha": 1.4798
   },
   "persistent_archetype_counts": {
-    "unknown": 126,
+    "unknown": 125,
     "bulky-offense": 1
   },
   "archetype_diversity_pressure": {
     "rain_penalty": 0.0,
-    "sun_support": 0.1565,
+    "sun_support": 0.1544,
     "weather_diversity_target": 0.26,
-    "rain_share": 0.068,
-    "sun_share": 0.0496,
+    "rain_share": 0.0697,
+    "sun_share": 0.0513,
     "rain_shell_share": 0.0045,
     "sun_shell_share": 0.0,
     "applied": false
@@ -248,10 +248,6 @@
     [
       "archive",
       32
-    ],
-    [
-      "archivepikalyticsvariant637pikalyticschampionssnapshot",
-      1
     ],
     [
       "highlevelpokeaimmdincineroarstarmiegarchompwhimsicottkingambitpelipper",
@@ -278,15 +274,19 @@
       1
     ],
     [
-      "pikalyticsvariant161curatedpikalyticsimport",
+      "generated494",
       1
     ],
     [
-      "highlevelvariant53pokeaimmd",
+      "pikalyticsvariant1176curatedpikalyticsimport",
       1
     ],
     [
-      "pikalyticsvariant481pikalyticschampionssnapshot",
+      "highlevelvariant160pokeaimmd",
+      1
+    ],
+    [
+      "pikalyticsvariant798pikalyticschampionssnapshot",
       1
     ]
   ]
