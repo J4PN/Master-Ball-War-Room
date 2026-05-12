@@ -1,10 +1,10 @@
 {
-  "updatedAt": "2026-05-11T10:45:39+00:00",
+  "updatedAt": "2026-05-12T09:49:51+00:00",
   "iterations": 3000,
   "candidate_iterations": 3000,
-  "evaluationTarget": 1318,
-  "evaluatedCandidates": 1267,
-  "evaluated_candidates": 1267,
+  "evaluationTarget": 1312,
+  "evaluatedCandidates": 1261,
+  "evaluated_candidates": 1261,
   "retainedCandidates": 24,
   "retained_candidates": 24,
   "persistent_memory_updated": false,
@@ -12,36 +12,36 @@
     "pikalytics": 2,
     "high_level": 4,
     "pikalytics_variant": 109,
-    "high_level_variant": 142,
-    "archive": 82,
-    "selfplay": 500,
-    "youtube_variant": 72,
-    "archive_variant": 401,
-    "reddit_variant": 6
+    "archive": 83,
+    "high_level_variant": 144,
+    "selfplay": 496,
+    "youtube_variant": 77,
+    "archive_variant": 394,
+    "reddit_variant": 3
   },
   "postBalanceSourceCounts": {
-    "archive": 31,
-    "archive_variant": 401,
+    "archive": 32,
+    "archive_variant": 394,
     "high_level": 4,
     "pikalytics": 2,
     "pikalytics_variant": 109,
-    "high_level_variant": 142,
-    "reddit_variant": 6,
-    "youtube_variant": 72,
-    "selfplay": 500
+    "high_level_variant": 144,
+    "reddit_variant": 3,
+    "youtube_variant": 77,
+    "selfplay": 496
   },
-  "evaluationSelfplayShare": 0.3946,
+  "evaluationSelfplayShare": 0.3933,
   "retainedSelfplayShare": 0.0,
   "variantCountsByOrigin": {
     "archive": 488,
-    "high_level": 478,
-    "pikalytics": 439,
-    "youtube": 511,
-    "reddit": 484
+    "high_level": 476,
+    "pikalytics": 429,
+    "youtube": 500,
+    "reddit": 507
   },
   "droppedCandidatesByReason": {
-    "variant_generation_failed": 428,
-    "duplicate_team_species": 1826
+    "variant_generation_failed": 465,
+    "duplicate_team_species": 1831
   },
   "validationStatus": {
     "ok": true,
