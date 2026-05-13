@@ -2,7 +2,7 @@
   "teams": [
     {
       "source_type": "archive",
-      "source_name": "archivepikalyticsvariant637pikalyticschampionssnapshot",
+      "source_name": "archivepikalyticsvariant482pikalyticschampionssnapshot",
       "source_url": "",
       "quality_class": "",
       "archetype": "unknown",
@@ -49,6 +49,39 @@
           "identity_key": "whimsicott::whimsicott::focus sash::"
         },
         {
+          "name": "Garchomp",
+          "species": "Garchomp",
+          "base_species": "Garchomp",
+          "display_species": "Garchomp",
+          "item": "Choice Scarf",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Garchomp",
+          "role": "",
+          "archetype": "",
+          "moves": [
+            "Earthquake",
+            "Rock Slide",
+            "Dragon Claw",
+            "Protect"
+          ],
+          "identity_key": "garchomp::garchomp::choice scarf::"
+        },
+        {
+          "name": "Kingambit",
+          "species": "Kingambit",
+          "base_species": "Kingambit",
+          "display_species": "Kingambit",
+          "item": "",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Kingambit",
+          "role": "",
+          "archetype": "",
+          "moves": [],
+          "identity_key": "kingambit::kingambit::::"
+        },
+        {
           "name": "Starmie",
           "species": "Starmie",
           "base_species": "Starmie",
@@ -61,39 +94,6 @@
           "archetype": "",
           "moves": [],
           "identity_key": "starmie::starmie::::"
-        },
-        {
-          "name": "Garchomp",
-          "species": "Garchomp",
-          "base_species": "Garchomp",
-          "display_species": "Garchomp",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Garchomp",
-          "role": "",
-          "archetype": "",
-          "moves": [],
-          "identity_key": "garchomp::garchomp::::"
-        },
-        {
-          "name": "Kingambit",
-          "species": "Kingambit",
-          "base_species": "Kingambit",
-          "display_species": "Kingambit",
-          "item": "Black Glasses",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Kingambit",
-          "role": "",
-          "archetype": "",
-          "moves": [
-            "Sucker Punch",
-            "Kowtow Cleave",
-            "Low Kick",
-            "Protect"
-          ],
-          "identity_key": "kingambit::kingambit::black glasses::"
         },
         {
           "name": "Pelipper",
@@ -116,12 +116,12 @@
         }
       ],
       "confidence": 0.744,
-      "score": 0.7369,
+      "score": 0.7401,
       "sourceType": "archive",
-      "sourceName": "archivepikalyticsvariant637pikalyticschampionssnapshot",
+      "sourceName": "archivepikalyticsvariant482pikalyticschampionssnapshot",
       "sourceUrl": "",
       "originSourceType": "",
-      "parentSourceName": "archivepikalyticsvariant637pikalyticschampionssnapshot",
+      "parentSourceName": "archivepikalyticsvariant482pikalyticschampionssnapshot",
       "generated": false,
       "variantReason": ""
     },
@@ -424,7 +424,7 @@
           "identity_key": "charizard::charizard::::"
         }
       ],
-      "confidence": 0.495,
+      "confidence": 0.496,
       "score": 0.701,
       "sourceType": "archive",
       "sourceName": "archive",
@@ -770,7 +770,7 @@
         }
       ],
       "confidence": 0.944,
-      "score": 0.746,
+      "score": 0.7465,
       "sourceType": "high_level",
       "sourceName": "highlevelpokeaimmdincineroarstarmiegarchompwhimsicottkingambitpelipper",
       "sourceUrl": "",
@@ -865,7 +865,7 @@
         }
       ],
       "confidence": 0.685,
-      "score": 0.7549,
+      "score": 0.7556,
       "sourceType": "high_level",
       "sourceName": "highlevelmoxieboostedpelipperbasculegionincineroarwhimsicott",
       "sourceUrl": "",
@@ -1094,7 +1094,7 @@
         }
       ],
       "confidence": 0.924,
-      "score": 0.7502,
+      "score": 0.7498,
       "sourceType": "high_level",
       "sourceName": "highlevelcuratedyoutubeshowcaseteamincineroargarchompwhimsicottstarmiedragoniterotomwash",
       "sourceUrl": "",
@@ -1231,7 +1231,7 @@
         }
       ],
       "confidence": 0.992,
-      "score": 0.7429,
+      "score": 0.743,
       "sourceType": "pikalytics",
       "sourceName": "pikalyticscuratedpikalyticsimportpelipperbasculegionincineroarwhimsicottarchaludongarchomp",
       "sourceUrl": "",
@@ -1367,7 +1367,7 @@
         }
       ],
       "confidence": 0.97,
-      "score": 0.7265,
+      "score": 0.7269,
       "sourceType": "pikalytics",
       "sourceName": "pikalyticschampionssnapshotincineroarwhimsicottgarchompsinistchakingambitpelipper",
       "sourceUrl": "",
@@ -1470,7 +1470,7 @@
         }
       ],
       "confidence": 0.498,
-      "score": 0.693,
+      "score": 0.692,
       "sourceType": "archive",
       "sourceName": "archive",
       "sourceUrl": "",
@@ -1687,7 +1687,7 @@
     },
     {
       "source_type": "pikalytics_variant",
-      "source_name": "pikalyticsvariant162curatedpikalyticsimport",
+      "source_name": "pikalyticsvariant284curatedpikalyticsimport",
       "source_url": "",
       "quality_class": "",
       "archetype": "unknown",
@@ -1806,9 +1806,9 @@
         }
       ],
       "confidence": 0.838,
-      "score": 0.7465,
+      "score": 0.7471,
       "sourceType": "pikalytics_variant",
-      "sourceName": "pikalyticsvariant162curatedpikalyticsimport",
+      "sourceName": "pikalyticsvariant284curatedpikalyticsimport",
       "sourceUrl": "",
       "originSourceType": "pikalytics",
       "parentSourceName": "curatedpikalyticsimport",
@@ -1820,7 +1820,7 @@
     },
     {
       "source_type": "high_level_variant",
-      "source_name": "highlevelvariant53pokeaimmd",
+      "source_name": "highlevelvariant243pokeaimmd",
       "source_url": "",
       "quality_class": "",
       "archetype": "unknown",
@@ -1946,9 +1946,9 @@
         }
       ],
       "confidence": 0.809,
-      "score": 0.7498,
+      "score": 0.75,
       "sourceType": "high_level_variant",
-      "sourceName": "highlevelvariant53pokeaimmd",
+      "sourceName": "highlevelvariant243pokeaimmd",
       "sourceUrl": "",
       "originSourceType": "high_level",
       "parentSourceName": "pokeaimmd",
@@ -1960,7 +1960,7 @@
     },
     {
       "source_type": "pikalytics_variant",
-      "source_name": "pikalyticsvariant482pikalyticschampionssnapshot",
+      "source_name": "pikalyticsvariant1092pikalyticschampionssnapshot",
       "source_url": "",
       "quality_class": "",
       "archetype": "unknown",
@@ -2030,20 +2030,6 @@
           "identity_key": "garchomp::garchomp::choice scarf::"
         },
         {
-          "name": "Kingambit",
-          "species": "Kingambit",
-          "base_species": "Kingambit",
-          "display_species": "Kingambit",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Kingambit",
-          "role": "",
-          "archetype": "",
-          "moves": [],
-          "identity_key": "kingambit::kingambit::::"
-        },
-        {
           "name": "Starmie",
           "species": "Starmie",
           "base_species": "Starmie",
@@ -2056,6 +2042,25 @@
           "archetype": "",
           "moves": [],
           "identity_key": "starmie::starmie::::"
+        },
+        {
+          "name": "Kingambit",
+          "species": "Kingambit",
+          "base_species": "Kingambit",
+          "display_species": "Kingambit",
+          "item": "Black Glasses",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Kingambit",
+          "role": "",
+          "archetype": "",
+          "moves": [
+            "Sucker Punch",
+            "Kowtow Cleave",
+            "Low Kick",
+            "Protect"
+          ],
+          "identity_key": "kingambit::kingambit::black glasses::"
         },
         {
           "name": "Pelipper",
@@ -2078,9 +2083,9 @@
         }
       ],
       "confidence": 0.825,
-      "score": 0.7395,
+      "score": 0.7394,
       "sourceType": "pikalytics_variant",
-      "sourceName": "pikalyticsvariant482pikalyticschampionssnapshot",
+      "sourceName": "pikalyticsvariant1092pikalyticschampionssnapshot",
       "sourceUrl": "",
       "originSourceType": "pikalytics",
       "parentSourceName": "pikalyticschampionssnapshot",
@@ -2216,7 +2221,7 @@
         }
       ],
       "confidence": 0.838,
-      "score": 0.7462,
+      "score": 0.7466,
       "sourceType": "pikalytics_variant",
       "sourceName": "pikalyticsvariant3curatedpikalyticsimport",
       "sourceUrl": "",
@@ -2230,7 +2235,7 @@
     },
     {
       "source_type": "pikalytics_variant",
-      "source_name": "pikalyticsvariant339pikalyticschampionssnapshot",
+      "source_name": "pikalyticsvariant487pikalyticschampionssnapshot",
       "source_url": "",
       "quality_class": "",
       "archetype": "unknown",
@@ -2300,37 +2305,32 @@
           "identity_key": "garchomp::garchomp::choice scarf::"
         },
         {
-          "name": "Starmie",
-          "species": "Starmie",
-          "base_species": "Starmie",
-          "display_species": "Starmie",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Starmie",
-          "role": "",
-          "archetype": "",
-          "moves": [],
-          "identity_key": "starmie::starmie::::"
-        },
-        {
           "name": "Kingambit",
           "species": "Kingambit",
           "base_species": "Kingambit",
           "display_species": "Kingambit",
-          "item": "Black Glasses",
+          "item": "",
           "mega_stone": "",
           "mega_identity": "",
           "form_identity": "Kingambit",
           "role": "",
           "archetype": "",
-          "moves": [
-            "Sucker Punch",
-            "Kowtow Cleave",
-            "Low Kick",
-            "Protect"
-          ],
-          "identity_key": "kingambit::kingambit::black glasses::"
+          "moves": [],
+          "identity_key": "kingambit::kingambit::::"
+        },
+        {
+          "name": "Basculegion",
+          "species": "Basculegion",
+          "base_species": "Basculegion",
+          "display_species": "Basculegion",
+          "item": "",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Basculegion",
+          "role": "",
+          "archetype": "",
+          "moves": [],
+          "identity_key": "basculegion::basculegion::::"
         },
         {
           "name": "Pelipper",
@@ -2353,9 +2353,9 @@
         }
       ],
       "confidence": 0.825,
-      "score": 0.7386,
+      "score": 0.7385,
       "sourceType": "pikalytics_variant",
-      "sourceName": "pikalyticsvariant339pikalyticschampionssnapshot",
+      "sourceName": "pikalyticsvariant487pikalyticschampionssnapshot",
       "sourceUrl": "",
       "originSourceType": "pikalytics",
       "parentSourceName": "pikalyticschampionssnapshot",
@@ -2486,7 +2486,7 @@
         }
       ],
       "confidence": 0.838,
-      "score": 0.7458,
+      "score": 0.7463,
       "sourceType": "pikalytics_variant",
       "sourceName": "pikalyticsvariant21curatedpikalyticsimport",
       "sourceUrl": "",
@@ -2500,7 +2500,7 @@
     },
     {
       "source_type": "pikalytics_variant",
-      "source_name": "pikalyticsvariant1749pikalyticschampionssnapshot",
+      "source_name": "pikalyticsvariant1637pikalyticschampionssnapshot",
       "source_url": "",
       "quality_class": "",
       "archetype": "unknown",
@@ -2551,51 +2551,51 @@
           "identity_key": "whimsicott::whimsicott::focus sash::"
         },
         {
+          "name": "Starmie",
+          "species": "Starmie",
+          "base_species": "Starmie",
+          "display_species": "Starmie",
+          "item": "",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Starmie",
+          "role": "",
+          "archetype": "",
+          "moves": [],
+          "identity_key": "starmie::starmie::::"
+        },
+        {
           "name": "Garchomp",
           "species": "Garchomp",
           "base_species": "Garchomp",
           "display_species": "Garchomp",
-          "item": "Choice Scarf",
+          "item": "",
           "mega_stone": "",
           "mega_identity": "",
           "form_identity": "Garchomp",
           "role": "",
           "archetype": "",
-          "moves": [
-            "Earthquake",
-            "Rock Slide",
-            "Dragon Claw",
-            "Protect"
-          ],
-          "identity_key": "garchomp::garchomp::choice scarf::"
+          "moves": [],
+          "identity_key": "garchomp::garchomp::::"
         },
         {
           "name": "Kingambit",
           "species": "Kingambit",
           "base_species": "Kingambit",
           "display_species": "Kingambit",
-          "item": "",
+          "item": "Black Glasses",
           "mega_stone": "",
           "mega_identity": "",
           "form_identity": "Kingambit",
           "role": "",
           "archetype": "",
-          "moves": [],
-          "identity_key": "kingambit::kingambit::::"
-        },
-        {
-          "name": "Basculegion",
-          "species": "Basculegion",
-          "base_species": "Basculegion",
-          "display_species": "Basculegion",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Basculegion",
-          "role": "",
-          "archetype": "",
-          "moves": [],
-          "identity_key": "basculegion::basculegion::::"
+          "moves": [
+            "Sucker Punch",
+            "Kowtow Cleave",
+            "Low Kick",
+            "Protect"
+          ],
+          "identity_key": "kingambit::kingambit::black glasses::"
         },
         {
           "name": "Pelipper",
@@ -2618,9 +2618,9 @@
         }
       ],
       "confidence": 0.825,
-      "score": 0.738,
+      "score": 0.7381,
       "sourceType": "pikalytics_variant",
-      "sourceName": "pikalyticsvariant1749pikalyticschampionssnapshot",
+      "sourceName": "pikalyticsvariant1637pikalyticschampionssnapshot",
       "sourceUrl": "",
       "originSourceType": "pikalytics",
       "parentSourceName": "pikalyticschampionssnapshot",
@@ -2632,7 +2632,7 @@
     },
     {
       "source_type": "pikalytics_variant",
-      "source_name": "pikalyticsvariant31curatedpikalyticsimport",
+      "source_name": "pikalyticsvariant378curatedpikalyticsimport",
       "source_url": "",
       "quality_class": "",
       "archetype": "unknown",
@@ -2722,43 +2722,38 @@
           "identity_key": "whimsicott::whimsicott::focus sash::"
         },
         {
-          "name": "Gengar",
-          "species": "Gengar",
-          "base_species": "Gengar",
-          "display_species": "Gengar",
+          "name": "Charizard",
+          "species": "Charizard",
+          "base_species": "Charizard",
+          "display_species": "Charizard",
           "item": "",
           "mega_stone": "",
           "mega_identity": "",
-          "form_identity": "Gengar",
+          "form_identity": "Charizard",
           "role": "",
           "archetype": "",
           "moves": [],
-          "identity_key": "gengar::gengar::::"
+          "identity_key": "charizard::charizard::::"
         },
         {
-          "name": "Garchomp",
-          "species": "Garchomp",
-          "base_species": "Garchomp",
-          "display_species": "Garchomp",
-          "item": "Clear Amulet",
+          "name": "Archaludon",
+          "species": "Archaludon",
+          "base_species": "Archaludon",
+          "display_species": "Archaludon",
+          "item": "",
           "mega_stone": "",
           "mega_identity": "",
-          "form_identity": "Garchomp",
+          "form_identity": "Archaludon",
           "role": "",
           "archetype": "",
-          "moves": [
-            "Earthquake",
-            "Rock Slide",
-            "Protect",
-            "Dragon Claw"
-          ],
-          "identity_key": "garchomp::garchomp::clear amulet::"
+          "moves": [],
+          "identity_key": "archaludon::archaludon::::"
         }
       ],
       "confidence": 0.838,
-      "score": 0.7454,
+      "score": 0.7462,
       "sourceType": "pikalytics_variant",
-      "sourceName": "pikalyticsvariant31curatedpikalyticsimport",
+      "sourceName": "pikalyticsvariant378curatedpikalyticsimport",
       "sourceUrl": "",
       "originSourceType": "pikalytics",
       "parentSourceName": "curatedpikalyticsimport",
@@ -2893,7 +2888,7 @@
         }
       ],
       "confidence": 0.825,
-      "score": 0.7368,
+      "score": 0.7375,
       "sourceType": "pikalytics_variant",
       "sourceName": "pikalyticsvariant45pikalyticschampionssnapshot",
       "sourceUrl": "",
@@ -12980,7 +12975,7 @@
         }
       ],
       "confidence": 0.944,
-      "score": 0.746,
+      "score": 0.747,
       "sourceType": "archive",
       "sourceName": "archive",
       "sourceUrl": "",
@@ -13055,7 +13050,7 @@
         }
       ],
       "confidence": 0.685,
-      "score": 0.755,
+      "score": 0.756,
       "sourceType": "archive",
       "sourceName": "archive",
       "sourceUrl": "",
@@ -13364,7 +13359,7 @@
         }
       ],
       "confidence": 0.97,
-      "score": 0.726,
+      "score": 0.727,
       "sourceType": "archive",
       "sourceName": "archive",
       "sourceUrl": "",
@@ -13376,10 +13371,10 @@
   ],
   "diversity_pressure": {
     "rain_penalty": 0.0,
-    "sun_support": 0.1526,
+    "sun_support": 0.1508,
     "weather_diversity_target": 0.26,
-    "rain_share": 0.0714,
-    "sun_share": 0.0528,
+    "rain_share": 0.073,
+    "sun_share": 0.0543,
     "rain_shell_share": 0.0045,
     "sun_shell_share": 0.0,
     "applied": false
