@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-05-13T09:51:53+00:00",
+  "updatedAt": "2026-05-14T09:41:27+00:00",
   "byThreat": {
     "incineroar": {
       "multiplier": 1.611,
@@ -10,7 +10,7 @@
       "notes": "Fast disruption remains a top pressure source."
     },
     "garchomp": {
-      "multiplier": 1.404,
+      "multiplier": 1.429,
       "notes": "Observed in archive, high_level, meta, pikalytics, reddit, selfplay, youtube source pools."
     },
     "whimsicott": {
@@ -38,7 +38,7 @@
       "notes": "Observed in archive, high_level, random, reddit, selfplay, youtube source pools."
     },
     "archaludon": {
-      "multiplier": 1.207,
+      "multiplier": 1.182,
       "notes": "Observed in archive, high_level, meta, pikalytics source pools."
     },
     "dragonite": {
@@ -54,7 +54,7 @@
       "notes": "Observed in archive, random, selfplay source pools."
     },
     "gengar": {
-      "multiplier": 1.148,
+      "multiplier": 1.177,
       "notes": "Observed in archive, random source pools."
     },
     "tyranitar": {
@@ -62,7 +62,7 @@
       "notes": "Observed in archive, random source pools."
     },
     "charizard": {
-      "multiplier": 1.163,
+      "multiplier": 1.138,
       "notes": "Observed in archive, random source pools."
     },
     "basespecieswhimsicottdisplayspecieswhimsicottitemmegastonemegaidentityformidentitywhimsicottrolearchetypemoveskeymovesidentitykeywhimsicottwhimsicott": {
