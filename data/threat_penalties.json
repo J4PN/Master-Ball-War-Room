@@ -1,8 +1,8 @@
 {
-  "updatedAt": "2026-05-14T09:41:27+00:00",
+  "updatedAt": "2026-05-15T09:53:10+00:00",
   "byThreat": {
     "incineroar": {
-      "multiplier": 1.611,
+      "multiplier": 1.581,
       "notes": "Observed in archive, high_level, meta, pikalytics, random, reddit, selfplay, youtube source pools."
     },
     "sneasler": {
@@ -10,11 +10,11 @@
       "notes": "Fast disruption remains a top pressure source."
     },
     "garchomp": {
-      "multiplier": 1.429,
+      "multiplier": 1.433,
       "notes": "Observed in archive, high_level, meta, pikalytics, reddit, selfplay, youtube source pools."
     },
     "whimsicott": {
-      "multiplier": 1.591,
+      "multiplier": 1.562,
       "notes": "Observed in archive, high_level, meta, pikalytics, random, reddit, selfplay, youtube source pools."
     },
     "pelipper": {
@@ -34,15 +34,15 @@
       "notes": "Observed in archive, meta, pikalytics, random, selfplay source pools."
     },
     "starmie": {
-      "multiplier": 1.378,
+      "multiplier": 1.436,
       "notes": "Observed in archive, high_level, random, reddit, selfplay, youtube source pools."
     },
     "archaludon": {
-      "multiplier": 1.182,
+      "multiplier": 1.178,
       "notes": "Observed in archive, high_level, meta, pikalytics source pools."
     },
     "dragonite": {
-      "multiplier": 1.232,
+      "multiplier": 1.203,
       "notes": "Observed in archive, high_level, random, selfplay, youtube source pools."
     },
     "rotomwash": {
@@ -58,11 +58,11 @@
       "notes": "Observed in archive, random source pools."
     },
     "tyranitar": {
-      "multiplier": 1.09,
+      "multiplier": 1.12,
       "notes": "Observed in archive, random source pools."
     },
     "charizard": {
-      "multiplier": 1.138,
+      "multiplier": 1.134,
       "notes": "Observed in archive, random source pools."
     },
     "basespecieswhimsicottdisplayspecieswhimsicottitemmegastonemegaidentityformidentitywhimsicottrolearchetypemoveskeymovesidentitykeywhimsicottwhimsicott": {

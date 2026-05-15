@@ -3,8 +3,8 @@
     {
       "shell_signature": "archaludon::archaludon::::|basculegion::basculegion::::|garchomp::garchomp::::|incineroar::incineroar::::|pelipper::pelipper::::|whimsicott::whimsicott::::",
       "archetype": "unknown",
-      "sample_count": 37,
-      "quality_score": 6.9772,
+      "sample_count": 38,
+      "quality_score": 6.9793,
       "last_sources": [
         "archive"
       ],
@@ -94,8 +94,8 @@
     {
       "shell_signature": "garchomp::garchomp::::|incineroar::incineroar::::|kingambit::kingambit::::|pelipper::pelipper::::|sinistcha::sinistcha::::|whimsicott::whimsicott::::",
       "archetype": "unknown",
-      "sample_count": 37,
-      "quality_score": 6.8235,
+      "sample_count": 38,
+      "quality_score": 6.8254,
       "last_sources": [
         "archive"
       ],
@@ -185,8 +185,8 @@
     {
       "shell_signature": "garchomp::garchomp::::|incineroar::incineroar::::|kingambit::kingambit::::|pelipper::pelipper::::|starmie::starmie::::|whimsicott::whimsicott::::",
       "archetype": "unknown",
-      "sample_count": 36,
-      "quality_score": 6.631,
+      "sample_count": 37,
+      "quality_score": 6.6348,
       "last_sources": [
         "archive"
       ],
@@ -276,8 +276,8 @@
     {
       "shell_signature": "dragonite::dragonite::::|garchomp::garchomp::::|incineroar::incineroar::::|rotom-wash::rotom-wash::::|starmie::starmie::::|whimsicott::whimsicott::::",
       "archetype": "unknown",
-      "sample_count": 34,
-      "quality_score": 6.4873,
+      "sample_count": 35,
+      "quality_score": 6.4917,
       "last_sources": [
         "archive"
       ],
@@ -367,8 +367,8 @@
     {
       "shell_signature": "archaludon::archaludon::assault vest::|basculegion::basculegion::choice scarf::|garchomp::garchomp::clear amulet::|incineroar::incineroar::sitrus berry::|pelipper::pelipper::choice scarf::|whimsicott::whimsicott::focus sash::",
       "archetype": "unknown",
-      "sample_count": 35,
-      "quality_score": 6.2215,
+      "sample_count": 36,
+      "quality_score": 6.2255,
       "last_sources": [
         "pikalyticscuratedpikalyticsimportpelipperbasculegionincineroarwhimsicottarchaludongarchomp",
         "curated pikalytics import",
@@ -509,8 +509,8 @@
     {
       "shell_signature": "garchomp::garchomp::choice scarf::|incineroar::incineroar::sitrus berry::|kingambit::kingambit::black glasses::|pelipper::pelipper::choice scarf::|sinistcha::sinistcha::leftovers::|whimsicott::whimsicott::focus sash::",
       "archetype": "unknown",
-      "sample_count": 36,
-      "quality_score": 6.0787,
+      "sample_count": 37,
+      "quality_score": 6.0834,
       "last_sources": [
         "pikalyticschampionssnapshotincineroarwhimsicottgarchompsinistchakingambitpelipper",
         "pikalyticspikalyticschampionssnapshotincineroarwhimsicottgarchompsinistchakingambitpelipper",
@@ -651,8 +651,8 @@
     {
       "shell_signature": "garchomp::garchomp::clear amulet::|incineroar::incineroar::safety goggles::|kingambit::kingambit::black glasses::|pelipper::pelipper::covert cloak::|starmie::starmie::life orb::|whimsicott::whimsicott::focus sash::",
       "archetype": "unknown",
-      "sample_count": 35,
-      "quality_score": 5.9162,
+      "sample_count": 36,
+      "quality_score": 5.9211,
       "last_sources": [
         "highlevelpokeaimmdincineroarstarmiegarchompwhimsicottkingambitpelipper",
         "pokeaimmd",
@@ -794,8 +794,8 @@
     {
       "shell_signature": "dragonite::dragonite::dragoninite::|garchomp::garchomp::choice scarf::|incineroar::incineroar::sitrus berry::|rotom-wash::rotom-wash::sitrus berry::|starmie::starmie::life orb::|whimsicott::whimsicott::focus sash::",
       "archetype": "unknown",
-      "sample_count": 36,
-      "quality_score": 5.7928,
+      "sample_count": 37,
+      "quality_score": 5.7975,
       "last_sources": [
         "highlevelcuratedyoutubeshowcaseteamincineroargarchompwhimsicottstarmiedragoniterotomwash",
         "curated youtube showcase team",
@@ -937,8 +937,8 @@
     {
       "shell_signature": "basculegion::basculegion::choice scarf::|garchomp::garchomp::clear amulet::|incineroar::incineroar::sitrus berry::|pelipper::pelipper::choice scarf::|starmie::starmie::::|whimsicott::whimsicott::focus sash::",
       "archetype": "unknown",
-      "sample_count": 24,
-      "quality_score": 5.1957,
+      "sample_count": 25,
+      "quality_score": 5.2099,
       "last_sources": [
         "pikalyticsvariant3curatedpikalyticsimport",
         "pikalyticsvariant166curatedpikalyticsimport",
@@ -1070,8 +1070,8 @@
     {
       "shell_signature": "archaludon::archaludon::::|basculegion::basculegion::choice scarf::|gengar::gengar::::|incineroar::incineroar::sitrus berry::|pelipper::pelipper::choice scarf::|whimsicott::whimsicott::focus sash::",
       "archetype": "unknown",
-      "sample_count": 23,
-      "quality_score": 5.1799,
+      "sample_count": 24,
+      "quality_score": 5.1966,
       "last_sources": [
         "pikalyticsvariant21curatedpikalyticsimport",
         "pikalyticsvariant19curatedpikalyticsimport",
@@ -1195,15 +1195,15 @@
     {
       "shell_signature": "archaludon::archaludon::::|basculegion::basculegion::choice scarf::|incineroar::incineroar::sitrus berry::|pelipper::pelipper::choice scarf::|starmie::starmie::::|whimsicott::whimsicott::focus sash::",
       "archetype": "unknown",
-      "sample_count": 23,
-      "quality_score": 5.1712,
+      "sample_count": 24,
+      "quality_score": 5.1893,
       "last_sources": [
+        "pikalyticsvariant761curatedpikalyticsimport",
         "pikalyticsvariant414curatedpikalyticsimport",
         "pikalyticsvariant284curatedpikalyticsimport",
         "pikalyticsvariant162curatedpikalyticsimport",
         "pikalyticsvariant1176curatedpikalyticsimport",
-        "pikalyticsvariant161curatedpikalyticsimport",
-        "pikalyticsvariant1174curatedpikalyticsimport"
+        "pikalyticsvariant161curatedpikalyticsimport"
       ],
       "team": [
         {
@@ -1323,15 +1323,15 @@
     {
       "shell_signature": "basculegion::basculegion::::|garchomp::garchomp::choice scarf::|incineroar::incineroar::sitrus berry::|kingambit::kingambit::::|pelipper::pelipper::choice scarf::|whimsicott::whimsicott::focus sash::",
       "archetype": "unknown",
-      "sample_count": 22,
-      "quality_score": 5.0681,
+      "sample_count": 23,
+      "quality_score": 5.0896,
       "last_sources": [
+        "pikalyticsvariant231pikalyticschampionssnapshot",
         "pikalyticsvariant229pikalyticschampionssnapshot",
         "pikalyticsvariant487pikalyticschampionssnapshot",
         "pikalyticsvariant1749pikalyticschampionssnapshot",
         "pikalyticsvariant233pikalyticschampionssnapshot",
-        "pikalyticsvariant232pikalyticschampionssnapshot",
-        "pikalyticsvariant1322pikalyticschampionssnapshot"
+        "pikalyticsvariant232pikalyticschampionssnapshot"
       ],
       "team": [
         {
@@ -1451,15 +1451,15 @@
     {
       "shell_signature": "garchomp::garchomp::choice scarf::|incineroar::incineroar::sitrus berry::|kingambit::kingambit::black glasses::|pelipper::pelipper::choice scarf::|starmie::starmie::::|whimsicott::whimsicott::focus sash::",
       "archetype": "unknown",
-      "sample_count": 22,
-      "quality_score": 5.0589,
+      "sample_count": 23,
+      "quality_score": 5.0819,
       "last_sources": [
+        "pikalyticsvariant381pikalyticschampionssnapshot",
         "pikalyticsvariant1102pikalyticschampionssnapshot",
         "pikalyticsvariant1092pikalyticschampionssnapshot",
         "pikalyticsvariant339pikalyticschampionssnapshot",
         "pikalyticsvariant384pikalyticschampionssnapshot",
-        "pikalyticsvariant338pikalyticschampionssnapshot",
-        "pikalyticsvariant383pikalyticschampionssnapshot"
+        "pikalyticsvariant338pikalyticschampionssnapshot"
       ],
       "team": [
         {
@@ -1587,15 +1587,15 @@
     {
       "shell_signature": "garchomp::garchomp::choice scarf::|incineroar::incineroar::sitrus berry::|kingambit::kingambit::::|pelipper::pelipper::choice scarf::|starmie::starmie::::|whimsicott::whimsicott::focus sash::",
       "archetype": "unknown",
-      "sample_count": 24,
-      "quality_score": 4.8792,
+      "sample_count": 25,
+      "quality_score": 4.9309,
       "last_sources": [
+        "pikalyticsvariant1716pikalyticschampionssnapshot",
         "archivepikalyticsvariant482pikalyticschampionssnapshot",
         "pikalyticsvariant482pikalyticschampionssnapshot",
         "pikalyticsvariant798pikalyticschampionssnapshot",
         "pikalyticsvariant481pikalyticschampionssnapshot",
-        "pikalyticsvariant797pikalyticschampionssnapshot",
-        "pikalyticsvariant483pikalyticschampionssnapshot"
+        "pikalyticsvariant797pikalyticschampionssnapshot"
       ],
       "team": [
         {
@@ -1715,15 +1715,15 @@
     {
       "shell_signature": "garchomp::garchomp::clear amulet::|incineroar::incineroar::safety goggles::|pelipper::pelipper::covert cloak::|rotom-wash::rotom-wash::::|starmie::starmie::life orb::|whimsicott::whimsicott::focus sash::",
       "archetype": "unknown",
-      "sample_count": 18,
-      "quality_score": 4.8692,
+      "sample_count": 19,
+      "quality_score": 4.9066,
       "last_sources": [
+        "highlevelvariant158pokeaimmd",
         "highlevelvariant52pokeaimmd",
         "highlevelvariant243pokeaimmd",
         "highlevelvariant53pokeaimmd",
         "highlevelvariant160pokeaimmd",
-        "highlevelvariant521pokeaimmd",
-        "highlevelvariant157pokeaimmd"
+        "highlevelvariant521pokeaimmd"
       ],
       "team": [
         {
@@ -1849,171 +1849,13 @@
       "mega_count": 0
     },
     {
-      "shell_signature": "basculegion::basculegion::::|incineroar::incineroar::::|pelipper::pelipper::::|whimsicott::whimsicott::::",
-      "archetype": "unknown",
-      "sample_count": 35,
-      "quality_score": 4.831,
-      "last_sources": [
-        "archive"
-      ],
-      "team": [
-        {
-          "base_species": "Pelipper",
-          "display_species": "Pelipper",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Pelipper",
-          "role": "",
-          "archetype": "",
-          "moves": [],
-          "key_moves": [],
-          "identity_key": "pelipper::pelipper::::"
-        },
-        {
-          "base_species": "Basculegion",
-          "display_species": "Basculegion",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Basculegion",
-          "role": "",
-          "archetype": "",
-          "moves": [],
-          "key_moves": [],
-          "identity_key": "basculegion::basculegion::::"
-        },
-        {
-          "base_species": "Incineroar",
-          "display_species": "Incineroar",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Incineroar",
-          "role": "",
-          "archetype": "",
-          "moves": [],
-          "key_moves": [],
-          "identity_key": "incineroar::incineroar::::"
-        },
-        {
-          "base_species": "Whimsicott",
-          "display_species": "Whimsicott",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Whimsicott",
-          "role": "",
-          "archetype": "",
-          "moves": [],
-          "key_moves": [],
-          "identity_key": "whimsicott::whimsicott::::"
-        }
-      ],
-      "rain_bias_count": 0,
-      "mega_count": 0
-    },
-    {
-      "shell_signature": "basculegion::basculegion::choice scarf::|incineroar::incineroar::safety goggles::|pelipper::pelipper::focus sash::|whimsicott::whimsicott::::",
-      "archetype": "unknown",
-      "sample_count": 36,
-      "quality_score": 4.8053,
-      "last_sources": [
-        "highlevelmoxieboostedpelipperbasculegionincineroarwhimsicott",
-        "moxie boosted",
-        "Moxie Boosted",
-        "redditrstunfiskpostpelipperbasculegionincineroarwhimsicott",
-        "r/stunfisk post"
-      ],
-      "team": [
-        {
-          "base_species": "Pelipper",
-          "display_species": "Pelipper",
-          "item": "Focus Sash",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Pelipper",
-          "role": "",
-          "archetype": "",
-          "moves": [
-            "Tailwind",
-            "Hurricane"
-          ],
-          "key_moves": [
-            "Tailwind",
-            "Hurricane"
-          ],
-          "identity_key": "pelipper::pelipper::focus sash::"
-        },
-        {
-          "base_species": "Basculegion",
-          "display_species": "Basculegion",
-          "item": "Choice Scarf",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Basculegion",
-          "role": "",
-          "archetype": "",
-          "moves": [
-            "Last Respects",
-            "Wave Crash"
-          ],
-          "key_moves": [
-            "Last Respects",
-            "Wave Crash"
-          ],
-          "identity_key": "basculegion::basculegion::choice scarf::"
-        },
-        {
-          "base_species": "Incineroar",
-          "display_species": "Incineroar",
-          "item": "Safety Goggles",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Incineroar",
-          "role": "",
-          "archetype": "",
-          "moves": [
-            "Fake Out",
-            "Parting Shot"
-          ],
-          "key_moves": [
-            "Fake Out",
-            "Parting Shot"
-          ],
-          "identity_key": "incineroar::incineroar::safety goggles::"
-        },
-        {
-          "base_species": "Whimsicott",
-          "display_species": "Whimsicott",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Whimsicott",
-          "role": "",
-          "archetype": "",
-          "moves": [
-            "Tailwind",
-            "Encore"
-          ],
-          "key_moves": [
-            "Tailwind",
-            "Encore"
-          ],
-          "identity_key": "whimsicott::whimsicott::::"
-        }
-      ],
-      "rain_bias_count": 13,
-      "mega_count": 0
-    },
-    {
       "shell_signature": "basculegion::basculegion::choice scarf::|garchomp::garchomp::clear amulet::|gengar::gengar::::|incineroar::incineroar::sitrus berry::|pelipper::pelipper::choice scarf::|whimsicott::whimsicott::focus sash::",
       "archetype": "unknown",
-      "sample_count": 14,
-      "quality_score": 4.7862,
+      "sample_count": 15,
+      "quality_score": 4.8659,
       "last_sources": [
-        "pikalyticsvariant30curatedpikalyticsimport",
         "pikalyticsvariant31curatedpikalyticsimport",
+        "pikalyticsvariant30curatedpikalyticsimport",
         "highlevelvariant2curatedpikalyticsimport",
         "pikalyticsvariant327curatedpikalyticsimport",
         "pikalyticsvariant93curatedpikalyticsimport"
@@ -2142,17 +1984,175 @@
       "mega_count": 0
     },
     {
+      "shell_signature": "basculegion::basculegion::::|incineroar::incineroar::::|pelipper::pelipper::::|whimsicott::whimsicott::::",
+      "archetype": "unknown",
+      "sample_count": 36,
+      "quality_score": 4.8328,
+      "last_sources": [
+        "archive"
+      ],
+      "team": [
+        {
+          "base_species": "Pelipper",
+          "display_species": "Pelipper",
+          "item": "",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Pelipper",
+          "role": "",
+          "archetype": "",
+          "moves": [],
+          "key_moves": [],
+          "identity_key": "pelipper::pelipper::::"
+        },
+        {
+          "base_species": "Basculegion",
+          "display_species": "Basculegion",
+          "item": "",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Basculegion",
+          "role": "",
+          "archetype": "",
+          "moves": [],
+          "key_moves": [],
+          "identity_key": "basculegion::basculegion::::"
+        },
+        {
+          "base_species": "Incineroar",
+          "display_species": "Incineroar",
+          "item": "",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Incineroar",
+          "role": "",
+          "archetype": "",
+          "moves": [],
+          "key_moves": [],
+          "identity_key": "incineroar::incineroar::::"
+        },
+        {
+          "base_species": "Whimsicott",
+          "display_species": "Whimsicott",
+          "item": "",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Whimsicott",
+          "role": "",
+          "archetype": "",
+          "moves": [],
+          "key_moves": [],
+          "identity_key": "whimsicott::whimsicott::::"
+        }
+      ],
+      "rain_bias_count": 0,
+      "mega_count": 0
+    },
+    {
+      "shell_signature": "basculegion::basculegion::choice scarf::|incineroar::incineroar::safety goggles::|pelipper::pelipper::focus sash::|whimsicott::whimsicott::::",
+      "archetype": "unknown",
+      "sample_count": 37,
+      "quality_score": 4.809,
+      "last_sources": [
+        "highlevelmoxieboostedpelipperbasculegionincineroarwhimsicott",
+        "moxie boosted",
+        "Moxie Boosted",
+        "redditrstunfiskpostpelipperbasculegionincineroarwhimsicott",
+        "r/stunfisk post"
+      ],
+      "team": [
+        {
+          "base_species": "Pelipper",
+          "display_species": "Pelipper",
+          "item": "Focus Sash",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Pelipper",
+          "role": "",
+          "archetype": "",
+          "moves": [
+            "Tailwind",
+            "Hurricane"
+          ],
+          "key_moves": [
+            "Tailwind",
+            "Hurricane"
+          ],
+          "identity_key": "pelipper::pelipper::focus sash::"
+        },
+        {
+          "base_species": "Basculegion",
+          "display_species": "Basculegion",
+          "item": "Choice Scarf",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Basculegion",
+          "role": "",
+          "archetype": "",
+          "moves": [
+            "Last Respects",
+            "Wave Crash"
+          ],
+          "key_moves": [
+            "Last Respects",
+            "Wave Crash"
+          ],
+          "identity_key": "basculegion::basculegion::choice scarf::"
+        },
+        {
+          "base_species": "Incineroar",
+          "display_species": "Incineroar",
+          "item": "Safety Goggles",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Incineroar",
+          "role": "",
+          "archetype": "",
+          "moves": [
+            "Fake Out",
+            "Parting Shot"
+          ],
+          "key_moves": [
+            "Fake Out",
+            "Parting Shot"
+          ],
+          "identity_key": "incineroar::incineroar::safety goggles::"
+        },
+        {
+          "base_species": "Whimsicott",
+          "display_species": "Whimsicott",
+          "item": "",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Whimsicott",
+          "role": "",
+          "archetype": "",
+          "moves": [
+            "Tailwind",
+            "Encore"
+          ],
+          "key_moves": [
+            "Tailwind",
+            "Encore"
+          ],
+          "identity_key": "whimsicott::whimsicott::::"
+        }
+      ],
+      "rain_bias_count": 13,
+      "mega_count": 0
+    },
+    {
       "shell_signature": "garchomp::garchomp::::|incineroar::incineroar::sitrus berry::|kingambit::kingambit::black glasses::|pelipper::pelipper::choice scarf::|starmie::starmie::::|whimsicott::whimsicott::focus sash::",
       "archetype": "unknown",
-      "sample_count": 14,
-      "quality_score": 4.6033,
+      "sample_count": 15,
+      "quality_score": 4.6991,
       "last_sources": [
+        "pikalyticsvariant677pikalyticschampionssnapshot",
         "pikalyticsvariant623pikalyticschampionssnapshot",
         "pikalyticsvariant1637pikalyticschampionssnapshot",
         "archivepikalyticsvariant637pikalyticschampionssnapshot",
         "pikalyticsvariant637pikalyticschampionssnapshot",
-        "archivepikalyticsvariant636pikalyticschampionssnapshot",
-        "pikalyticsvariant636pikalyticschampionssnapshot"
+        "archivepikalyticsvariant636pikalyticschampionssnapshot"
       ],
       "team": [
         {
@@ -2291,7 +2291,7 @@
           "mega_identity": "",
           "form_identity": "Incineroar",
           "role": "",
-          "archetype": "",
+          "archetype": "unknown",
           "moves": [
             "Fake Out",
             "Flare Blitz",
@@ -2312,7 +2312,7 @@
           "mega_identity": "",
           "form_identity": "Whimsicott",
           "role": "",
-          "archetype": "",
+          "archetype": "unknown",
           "moves": [
             "Tailwind",
             "Moonblast",
@@ -2333,7 +2333,7 @@
           "mega_identity": "",
           "form_identity": "Garchomp",
           "role": "",
-          "archetype": "",
+          "archetype": "unknown",
           "moves": [
             "Earthquake",
             "Rock Slide",
@@ -2354,7 +2354,7 @@
           "mega_identity": "",
           "form_identity": "Basculegion",
           "role": "",
-          "archetype": "",
+          "archetype": "unknown",
           "moves": [],
           "key_moves": [],
           "identity_key": "basculegion::basculegion::::"
@@ -2367,7 +2367,7 @@
           "mega_identity": "",
           "form_identity": "Kingambit",
           "role": "",
-          "archetype": "",
+          "archetype": "unknown",
           "moves": [
             "Sucker Punch",
             "Kowtow Cleave",
@@ -2388,7 +2388,7 @@
           "mega_identity": "",
           "form_identity": "Pelipper",
           "role": "",
-          "archetype": "",
+          "archetype": "unknown",
           "moves": [
             "Hurricane",
             "Muddy Water",
@@ -2536,8 +2536,8 @@
     {
       "shell_signature": "garchomp::garchomp::::|incineroar::incineroar::::|starmie::starmie::::|whimsicott::whimsicott::::",
       "archetype": "bulky-offense",
-      "sample_count": 36,
-      "quality_score": 4.0552,
+      "sample_count": 37,
+      "quality_score": 4.0564,
       "last_sources": [
         "pokeaimmd",
         "PokeaimMD",
@@ -2616,8 +2616,8 @@
     {
       "shell_signature": "charizard::charizard::::|dragonite::dragonite::::|farigiraf::farigiraf::::|incineroar::incineroar::::|rotom-wash::rotom-wash::::|whimsicott::whimsicott::::",
       "archetype": "unknown",
-      "sample_count": 21,
-      "quality_score": 3.4161,
+      "sample_count": 22,
+      "quality_score": 3.4342,
       "last_sources": [
         "archive"
       ],
@@ -2707,8 +2707,8 @@
     {
       "shell_signature": "archaludon::::::|dragonite::::::|farigiraf::::::|gengar::::::|kingambit::::::|rotom-wash::::::",
       "archetype": "unknown",
-      "sample_count": 36,
-      "quality_score": 3.207,
+      "sample_count": 37,
+      "quality_score": 3.208,
       "last_sources": [
         "archive"
       ],
@@ -2798,8 +2798,8 @@
     {
       "shell_signature": "charizard::::::|dragonite::::::|farigiraf::::::|incineroar::::::|rotom-wash::::::|whimsicott::::::",
       "archetype": "unknown",
-      "sample_count": 36,
-      "quality_score": 3.1092,
+      "sample_count": 37,
+      "quality_score": 3.1101,
       "last_sources": [
         "archive"
       ],
@@ -5776,8 +5776,8 @@
     {
       "shell_signature": "dragonite::dragonite::::|farigiraf::farigiraf::::|gengar::gengar::::|kingambit::kingambit::::|pelipper::pelipper::::|rotom-wash::rotom-wash::::",
       "archetype": "unknown",
-      "sample_count": 36,
-      "quality_score": 2.1792,
+      "sample_count": 37,
+      "quality_score": 2.18,
       "last_sources": [
         "archive",
         "random-a"
@@ -5868,8 +5868,8 @@
     {
       "shell_signature": "charizard::charizard::::|incineroar::incineroar::::|sinistcha::sinistcha::::|starmie::starmie::::|tyranitar::tyranitar::::|whimsicott::whimsicott::::",
       "archetype": "unknown",
-      "sample_count": 35,
-      "quality_score": 2.1777,
+      "sample_count": 36,
+      "quality_score": 2.1787,
       "last_sources": [
         "randomrandombwhimsicottcharizardstarmietyranitarincineroarsinistcha",
         "random-b"
