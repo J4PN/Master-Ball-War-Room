@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-05-15T09:53:10+00:00",
+  "updatedAt": "2026-05-16T09:01:15+00:00",
   "weights": {
     "protect": 1.0,
     "fake out": 0.22,
@@ -33,7 +33,7 @@
     "kowtowcleave": 0.153,
     "lowkick": 0.153,
     "hydropump": 0.227,
-    "icebeam": 0.151,
+    "icebeam": 0.152,
     "thunderbolt": 0.15,
     "extremespeed": 0.075,
     "firepunch": 0.075,

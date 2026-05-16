@@ -1,10 +1,10 @@
 {
-  "version": 41,
-  "updatedAt": "2026-05-15T09:53:10+00:00",
+  "version": 42,
+  "updatedAt": "2026-05-16T09:01:15+00:00",
   "candidateScoreWeights": {
-    "rolePrior": 7.389,
-    "moveWeight": 6.028,
-    "threatPenalty": 11.444,
+    "rolePrior": 7.388,
+    "moveWeight": 6.027,
+    "threatPenalty": 11.446,
     "archiveBias": 4.16
   },
   "leadPairBias": {
@@ -14,19 +14,19 @@
   "threatSeverityWeights": {
     "default": 1,
     "byThreat": {
-      "archaludon": 1.4815,
-      "basculegion": 1.5401,
-      "charizard": 1.4879,
-      "dragonite": 1.6382,
-      "farigiraf": 1.5452,
-      "garchomp": 1.8363,
-      "gengar": 1.2693,
+      "archaludon": 1.5025,
+      "basculegion": 1.5606,
+      "charizard": 1.5293,
+      "dragonite": 1.6383,
+      "farigiraf": 1.5453,
+      "garchomp": 1.8154,
+      "gengar": 1.2484,
       "incineroar": 1.9539,
-      "kingambit": 1.5233,
-      "pelipper": 1.7861,
-      "rotomwash": 1.5454,
-      "sinistcha": 1.4798,
-      "starmie": 1.8595,
+      "kingambit": 1.5028,
+      "pelipper": 1.786,
+      "rotomwash": 1.5455,
+      "sinistcha": 1.4799,
+      "starmie": 1.839,
       "tyranitar": 1.4186,
       "whimsicott": 2.0
     }
@@ -63,15 +63,15 @@
   },
   "archetype_diversity_pressure": {
     "rain_penalty": 0.0,
-    "sun_support": 0.1477,
+    "sun_support": 0.1461,
     "weather_diversity_target": 0.26,
-    "rain_share": 0.0759,
-    "sun_share": 0.0569,
+    "rain_share": 0.0772,
+    "sun_share": 0.0583,
     "rain_shell_share": 0.0045,
     "sun_shell_share": 0.0,
     "applied": false
   },
   "persistent_shell_count": 220,
   "rain_shell_pressure": 0.0,
-  "sun_shell_support": 0.1477
+  "sun_shell_support": 0.1461
 }
