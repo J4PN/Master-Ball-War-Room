@@ -10,7 +10,7 @@
       "best_support_shells": [
         {
           "key": "Incineroar",
-          "score": 4.5883,
+          "score": 4.6447,
           "samples": [
             "selfgenerated"
           ]
@@ -51,8 +51,8 @@
       "bad_patterns_to_avoid": []
     },
     "rain": {
-      "count": 1153,
-      "quality_score": 6.6459,
+      "count": 1203,
+      "quality_score": 6.646,
       "mega_count": 0,
       "anti_rain_count": 0,
       "weather_count": 16,
@@ -60,7 +60,7 @@
       "best_support_shells": [
         {
           "key": "Incineroar + Whimsicott + Sinistcha",
-          "score": 7.8126,
+          "score": 7.8129,
           "samples": [
             "archive",
             "selfgenerated",
@@ -71,29 +71,29 @@
         },
         {
           "key": "Incineroar + Whimsicott + Pelipper",
-          "score": 7.4912,
+          "score": 7.5113,
           "samples": [
             "archive",
             "selfgenerated",
-            "pikalyticsvariant235pikalyticschampionssnapshot",
-            "pikalyticsvariant381pikalyticschampionssnapshot",
-            "pikalyticsvariant486pikalyticschampionssnapshot"
+            "pikalyticsvariant600pikalyticschampionssnapshot",
+            "pikalyticsvariant1017pikalyticschampionssnapshot",
+            "pikalyticsvariant380pikalyticschampionssnapshot"
           ]
         },
         {
           "key": "Incineroar + Whimsicott + Rotom-Wash",
-          "score": 7.3235,
+          "score": 7.4076,
           "samples": [
+            "highlevelvariant52pokeaimmd",
             "highlevelvariant2152pokeaimmd",
             "highlevelvariant158pokeaimmd",
-            "highlevelvariant52pokeaimmd",
             "highlevelvariant243pokeaimmd",
             "highlevelvariant53pokeaimmd"
           ]
         },
         {
           "key": "Pelipper + Incineroar + Whimsicott",
-          "score": 6.5329,
+          "score": 6.5079,
           "samples": [
             "archive",
             "generated152",
@@ -104,14 +104,14 @@
         },
         {
           "key": "Whimsicott + Sinistcha + Pelipper",
-          "score": 5.0903,
+          "score": 5.1021,
           "samples": [
             "selfgenerated"
           ]
         },
         {
           "key": "Incineroar + Pelipper + Sinistcha",
-          "score": 4.9847,
+          "score": 5.0509,
           "samples": [
             "archive",
             "selfgenerated"
@@ -119,15 +119,43 @@
         },
         {
           "key": "Sinistcha + Pelipper",
-          "score": 4.7027,
+          "score": 4.7476,
           "samples": [
             "selfgenerated",
             "archive"
           ]
         },
         {
+          "key": "Incineroar + Farigiraf + Sinistcha",
+          "score": 4.6954,
+          "samples": [
+            "selfgenerated"
+          ]
+        },
+        {
+          "key": "Rotom-Wash + Whimsicott + Pelipper",
+          "score": 4.6954,
+          "samples": [
+            "selfgenerated"
+          ]
+        },
+        {
+          "key": "Pelipper + Sinistcha",
+          "score": 4.6954,
+          "samples": [
+            "selfgenerated"
+          ]
+        },
+        {
+          "key": "Pelipper + Whimsicott",
+          "score": 4.6954,
+          "samples": [
+            "selfgenerated"
+          ]
+        },
+        {
           "key": "Pelipper + Incineroar",
-          "score": 4.6765,
+          "score": 4.6777,
           "samples": [
             "generated7",
             "archive",
@@ -135,64 +163,36 @@
           ]
         },
         {
-          "key": "Incineroar + Farigiraf + Sinistcha",
-          "score": 4.6447,
-          "samples": [
-            "selfgenerated"
-          ]
-        },
-        {
-          "key": "Rotom-Wash + Whimsicott + Pelipper",
-          "score": 4.6447,
-          "samples": [
-            "selfgenerated"
-          ]
-        },
-        {
-          "key": "Pelipper + Sinistcha",
-          "score": 4.6447,
-          "samples": [
-            "selfgenerated"
-          ]
-        },
-        {
-          "key": "Pelipper + Whimsicott",
-          "score": 4.6447,
-          "samples": [
-            "selfgenerated"
-          ]
-        },
-        {
           "key": "Rotom-Wash + Sinistcha + Pelipper",
-          "score": 4.5883,
+          "score": 4.6447,
           "samples": [
             "selfgenerated"
           ]
         },
         {
           "key": "Incineroar + Sinistcha + Whimsicott",
-          "score": 4.5883,
+          "score": 4.6447,
           "samples": [
             "selfgenerated"
           ]
         },
         {
           "key": "Incineroar + Rotom-Wash + Pelipper",
-          "score": 4.5883,
+          "score": 4.6447,
           "samples": [
             "selfgenerated"
           ]
         },
         {
           "key": "Incineroar + Sinistcha + Pelipper",
-          "score": 4.5883,
+          "score": 4.6447,
           "samples": [
             "selfgenerated"
           ]
         },
         {
           "key": "Whimsicott + Pelipper",
-          "score": 4.0503,
+          "score": 4.0933,
           "samples": [
             "selfgenerated",
             "archive"
@@ -211,13 +211,13 @@
       "best_speed_control": [
         {
           "key": "Whimsicott: Tailwind",
-          "score": 5.9796,
+          "score": 5.9794,
           "samples": [
             "generated152",
             "generated540",
             "generated14",
             "selfgenerated",
-            "pikalyticsvariant731curatedpikalyticsimport"
+            "pikalyticsvariant600pikalyticschampionssnapshot"
           ]
         },
         {
@@ -236,18 +236,18 @@
       "best_breakers": [
         {
           "key": "Starmie",
-          "score": 7.2048,
+          "score": 7.2058,
           "samples": [
             "selfgenerated",
-            "highlevelvariant2152pokeaimmd",
+            "highlevelvariant52pokeaimmd",
             "highlevelpokeaimmdincineroarstarmiegarchompwhimsicottkingambitpelipper",
-            "highlevelvariant158pokeaimmd",
-            "highlevelvariant52pokeaimmd"
+            "highlevelvariant2152pokeaimmd",
+            "highlevelvariant158pokeaimmd"
           ]
         },
         {
           "key": "Archaludon",
-          "score": 7.0489,
+          "score": 7.0571,
           "samples": [
             "generated14",
             "pikalyticscuratedpikalyticsimportpelipperbasculegionincineroarwhimsicottarchaludongarchomp",
@@ -258,35 +258,35 @@
         },
         {
           "key": "Basculegion",
-          "score": 6.3251,
+          "score": 6.286,
           "samples": [
             "generated152",
             "generated540",
             "generated7",
             "selfgenerated",
-            "pikalyticsvariant731curatedpikalyticsimport"
+            "pikalyticsvariant30curatedpikalyticsimport"
           ]
         },
         {
           "key": "Kingambit",
-          "score": 6.0441,
+          "score": 6.0841,
           "samples": [
             "selfgenerated",
-            "pikalyticsvariant381pikalyticschampionssnapshot",
+            "pikalyticsvariant600pikalyticschampionssnapshot",
+            "pikalyticsvariant380pikalyticschampionssnapshot",
             "pikalyticschampionssnapshotincineroarwhimsicottgarchompsinistchakingambitpelipper",
-            "highlevelpokeaimmdincineroarstarmiegarchompwhimsicottkingambitpelipper",
-            "pikalyticsvariant677pikalyticschampionssnapshot"
+            "highlevelpokeaimmdincineroarstarmiegarchompwhimsicottkingambitpelipper"
           ]
         },
         {
           "key": "Garchomp",
-          "score": 6.0257,
+          "score": 6.0534,
           "samples": [
             "generated14",
             "selfgenerated",
-            "pikalyticsvariant235pikalyticschampionssnapshot",
-            "pikalyticsvariant381pikalyticschampionssnapshot",
-            "pikalyticsvariant3curatedpikalyticsimport"
+            "pikalyticsvariant30curatedpikalyticsimport",
+            "pikalyticsvariant1017pikalyticschampionssnapshot",
+            "pikalyticsvariant380pikalyticschampionssnapshot"
           ]
         }
       ],
@@ -337,12 +337,12 @@
     },
     "hard_tr": {
       "label": "Hard TR",
-      "count": 169,
+      "count": 177,
       "quality_score": 5.0186,
       "best_support_shells": [
         {
           "key": "Pelipper + Incineroar + Whimsicott",
-          "score": 6.9492,
+          "score": 7.0268,
           "samples": [
             "highlevelmoxieboostedpelipperbasculegionincineroarwhimsicott",
             "highlevelvariant15moxieboosted"
@@ -350,7 +350,7 @@
         },
         {
           "key": "Farigiraf",
-          "score": 4.7919,
+          "score": 4.7924,
           "samples": [
             "generated195",
             "generated708",
@@ -359,14 +359,14 @@
         },
         {
           "key": "Sinistcha + Whimsicott + Farigiraf",
-          "score": 4.5883,
+          "score": 4.6447,
           "samples": [
             "selfgenerated"
           ]
         },
         {
           "key": "Incineroar + Whimsicott + Sinistcha",
-          "score": 4.5575,
+          "score": 4.5679,
           "samples": [
             "selfgenerated",
             "archive"
@@ -376,7 +376,7 @@
       "best_speed_control": [
         {
           "key": "Pelipper: Tailwind",
-          "score": 6.9492,
+          "score": 7.0268,
           "samples": [
             "highlevelmoxieboostedpelipperbasculegionincineroarwhimsicott",
             "highlevelvariant15moxieboosted"
@@ -384,7 +384,7 @@
         },
         {
           "key": "Whimsicott: Tailwind",
-          "score": 5.9535,
+          "score": 5.9656,
           "samples": [
             "selfgenerated",
             "highlevelmoxieboostedpelipperbasculegionincineroarwhimsicott",
@@ -396,7 +396,7 @@
       "best_breakers": [
         {
           "key": "Basculegion",
-          "score": 6.9492,
+          "score": 7.0268,
           "samples": [
             "highlevelmoxieboostedpelipperbasculegionincineroarwhimsicott",
             "highlevelvariant15moxieboosted"
@@ -404,7 +404,7 @@
         },
         {
           "key": "Starmie",
-          "score": 4.4264,
+          "score": 4.4366,
           "samples": [
             "generated195",
             "generated708"
@@ -412,7 +412,7 @@
         },
         {
           "key": "Dragonite",
-          "score": 4.4264,
+          "score": 4.4366,
           "samples": [
             "generated195",
             "generated708"
@@ -420,7 +420,7 @@
         },
         {
           "key": "Garchomp",
-          "score": 4.4264,
+          "score": 4.4366,
           "samples": [
             "selfgenerated",
             "generated708"
@@ -428,7 +428,7 @@
         },
         {
           "key": "Kingambit",
-          "score": 3.9898,
+          "score": 4.0388,
           "samples": [
             "selfgenerated"
           ]
@@ -438,7 +438,7 @@
       "bad_patterns_to_avoid": [
         {
           "key": "mixing Tailwind into Hard TR without hybrid intent",
-          "score": 5.9535,
+          "score": 5.9656,
           "samples": [
             "selfgenerated",
             "highlevelmoxieboostedpelipperbasculegionincineroarwhimsicott",
@@ -449,7 +449,7 @@
     },
     "tr_hybrid": {
       "label": "TR Hybrid",
-      "count": 1516,
+      "count": 1588,
       "quality_score": 4.9876,
       "best_support_shells": [
         {
@@ -465,7 +465,7 @@
         },
         {
           "key": "Pelipper + Incineroar + Whimsicott",
-          "score": 5.1039,
+          "score": 5.113,
           "samples": [
             "selfgenerated",
             "archive",
@@ -474,14 +474,14 @@
         },
         {
           "key": "Whimsicott + Sinistcha + Pelipper",
-          "score": 5.0903,
+          "score": 5.1021,
           "samples": [
             "selfgenerated"
           ]
         },
         {
           "key": "Incineroar + Pelipper + Sinistcha",
-          "score": 4.9847,
+          "score": 5.0509,
           "samples": [
             "archive",
             "selfgenerated"
@@ -489,7 +489,7 @@
         },
         {
           "key": "Farigiraf + Sinistcha + Whimsicott",
-          "score": 4.9208,
+          "score": 4.9934,
           "samples": [
             "archive",
             "selfgenerated"
@@ -497,7 +497,7 @@
         },
         {
           "key": "Sinistcha",
-          "score": 4.8977,
+          "score": 4.8994,
           "samples": [
             "generated35",
             "selfgenerated"
@@ -505,7 +505,7 @@
         },
         {
           "key": "Sinistcha + Rotom-Wash",
-          "score": 4.7676,
+          "score": 4.7693,
           "samples": [
             "generated346",
             "archive",
@@ -514,7 +514,7 @@
         },
         {
           "key": "Farigiraf + Whimsicott + Rotom-Wash",
-          "score": 4.7676,
+          "score": 4.7693,
           "samples": [
             "generated223",
             "archive",
@@ -523,7 +523,7 @@
         },
         {
           "key": "Sinistcha + Pelipper",
-          "score": 4.6486,
+          "score": 4.6989,
           "samples": [
             "selfgenerated",
             "archive"
@@ -531,56 +531,56 @@
         },
         {
           "key": "Incineroar + Whimsicott + Farigiraf",
-          "score": 4.5883,
+          "score": 4.6447,
           "samples": [
             "selfgenerated"
           ]
         },
         {
           "key": "Farigiraf + Whimsicott + Sinistcha",
-          "score": 4.5883,
+          "score": 4.6447,
           "samples": [
             "selfgenerated"
           ]
         },
         {
           "key": "Sinistcha + Incineroar + Rotom-Wash",
-          "score": 4.5883,
+          "score": 4.6447,
           "samples": [
             "selfgenerated"
           ]
         },
         {
           "key": "Incineroar + Farigiraf + Sinistcha",
-          "score": 4.5883,
+          "score": 4.6447,
           "samples": [
             "selfgenerated"
           ]
         },
         {
           "key": "Incineroar + Sinistcha",
-          "score": 4.5883,
+          "score": 4.6447,
           "samples": [
             "selfgenerated"
           ]
         },
         {
           "key": "Sinistcha + Whimsicott",
-          "score": 4.5883,
+          "score": 4.6447,
           "samples": [
             "selfgenerated"
           ]
         },
         {
           "key": "Rotom-Wash + Sinistcha + Pelipper",
-          "score": 4.5883,
+          "score": 4.6447,
           "samples": [
             "selfgenerated"
           ]
         },
         {
           "key": "Whimsicott + Farigiraf + Sinistcha",
-          "score": 4.5883,
+          "score": 4.6447,
           "samples": [
             "selfgenerated"
           ]
@@ -640,7 +640,7 @@
         },
         {
           "key": "Basculegion",
-          "score": 4.6488,
+          "score": 4.6991,
           "samples": [
             "selfgenerated",
             "archivehighlevelvariant14moxieboosted"
@@ -674,8 +674,8 @@
     },
     "tailwind": {
       "label": "Tailwind",
-      "count": 2296,
-      "quality_score": 6.7584,
+      "count": 2401,
+      "quality_score": 6.7585,
       "best_support_shells": [
         {
           "key": "Incineroar + Whimsicott + Rotom-Wash",
@@ -683,20 +683,20 @@
           "samples": [
             "archive",
             "selfgenerated",
-            "highlevelvariant2152pokeaimmd",
+            "highlevelvariant52pokeaimmd",
             "highlevelcuratedyoutubeshowcaseteamincineroargarchompwhimsicottstarmiedragoniterotomwash",
-            "highlevelvariant158pokeaimmd"
+            "highlevelvariant2152pokeaimmd"
           ]
         },
         {
           "key": "Incineroar + Whimsicott + Pelipper",
-          "score": 7.4912,
+          "score": 7.5113,
           "samples": [
             "archive",
             "selfgenerated",
-            "pikalyticsvariant235pikalyticschampionssnapshot",
-            "pikalyticsvariant381pikalyticschampionssnapshot",
-            "pikalyticsvariant486pikalyticschampionssnapshot"
+            "pikalyticsvariant600pikalyticschampionssnapshot",
+            "pikalyticsvariant1017pikalyticschampionssnapshot",
+            "pikalyticsvariant380pikalyticschampionssnapshot"
           ]
         },
         {
@@ -712,7 +712,7 @@
         },
         {
           "key": "Pelipper + Incineroar + Whimsicott",
-          "score": 6.5329,
+          "score": 6.5079,
           "samples": [
             "archive",
             "generated152",
@@ -723,7 +723,7 @@
         },
         {
           "key": "Incineroar + Whimsicott",
-          "score": 5.4371,
+          "score": 5.4374,
           "samples": [
             "selfgenerated",
             "pokeaimmd"
@@ -731,14 +731,14 @@
         },
         {
           "key": "Whimsicott + Sinistcha + Pelipper",
-          "score": 5.0965,
+          "score": 5.1071,
           "samples": [
             "selfgenerated"
           ]
         },
         {
           "key": "Incineroar + Pelipper + Sinistcha",
-          "score": 4.9847,
+          "score": 5.0509,
           "samples": [
             "archive",
             "selfgenerated"
@@ -746,7 +746,7 @@
         },
         {
           "key": "Farigiraf + Whimsicott + Rotom-Wash",
-          "score": 4.7681,
+          "score": 4.7696,
           "samples": [
             "generated223",
             "archive",
@@ -755,7 +755,7 @@
         },
         {
           "key": "Sinistcha",
-          "score": 4.7409,
+          "score": 4.7518,
           "samples": [
             "generated35",
             "selfgenerated"
@@ -763,7 +763,7 @@
         },
         {
           "key": "Sinistcha + Pelipper",
-          "score": 4.6995,
+          "score": 4.7447,
           "samples": [
             "selfgenerated",
             "archive"
@@ -771,49 +771,49 @@
         },
         {
           "key": "Incineroar + Whimsicott + Farigiraf",
-          "score": 4.6447,
+          "score": 4.6954,
           "samples": [
             "selfgenerated"
           ]
         },
         {
           "key": "Incineroar + Farigiraf + Sinistcha",
-          "score": 4.6447,
+          "score": 4.6954,
           "samples": [
             "selfgenerated"
           ]
         },
         {
           "key": "Rotom-Wash + Sinistcha + Pelipper",
-          "score": 4.6447,
+          "score": 4.6954,
           "samples": [
             "selfgenerated"
           ]
         },
         {
           "key": "Incineroar + Sinistcha + Whimsicott",
-          "score": 4.6447,
+          "score": 4.6954,
           "samples": [
             "selfgenerated"
           ]
         },
         {
           "key": "Incineroar + Rotom-Wash + Pelipper",
-          "score": 4.6447,
+          "score": 4.6954,
           "samples": [
             "selfgenerated"
           ]
         },
         {
           "key": "Incineroar + Sinistcha + Pelipper",
-          "score": 4.6447,
+          "score": 4.6954,
           "samples": [
             "selfgenerated"
           ]
         },
         {
           "key": "Whimsicott + Pelipper",
-          "score": 4.0944,
+          "score": 4.133,
           "samples": [
             "selfgenerated",
             "archive"
@@ -843,7 +843,7 @@
         },
         {
           "key": "Whimsicott: Tailwind",
-          "score": 5.353,
+          "score": 5.3529,
           "samples": [
             "generated152",
             "generated540",
@@ -857,7 +857,7 @@
       "best_breakers": [
         {
           "key": "Archaludon",
-          "score": 7.0516,
+          "score": 7.0593,
           "samples": [
             "generated14",
             "pikalyticscuratedpikalyticsimportpelipperbasculegionincineroarwhimsicottarchaludongarchomp",
@@ -868,29 +868,29 @@
         },
         {
           "key": "Basculegion",
-          "score": 6.3251,
+          "score": 6.286,
           "samples": [
             "generated152",
             "generated540",
             "generated7",
             "selfgenerated",
-            "pikalyticsvariant731curatedpikalyticsimport"
+            "pikalyticsvariant30curatedpikalyticsimport"
           ]
         },
         {
           "key": "Kingambit",
-          "score": 5.8037,
+          "score": 5.8483,
           "samples": [
             "selfgenerated",
-            "pikalyticsvariant381pikalyticschampionssnapshot",
+            "pikalyticsvariant600pikalyticschampionssnapshot",
+            "pikalyticsvariant380pikalyticschampionssnapshot",
             "pikalyticschampionssnapshotincineroarwhimsicottgarchompsinistchakingambitpelipper",
-            "highlevelpokeaimmdincineroarstarmiegarchompwhimsicottkingambitpelipper",
-            "pikalyticsvariant677pikalyticschampionssnapshot"
+            "highlevelpokeaimmdincineroarstarmiegarchompwhimsicottkingambitpelipper"
           ]
         },
         {
           "key": "Garchomp",
-          "score": 5.2603,
+          "score": 5.2757,
           "samples": [
             "generated14",
             "generated154",
@@ -927,12 +927,12 @@
     },
     "hyper_offense": {
       "label": "Hyper Offense",
-      "count": 126,
+      "count": 132,
       "quality_score": 4.7648,
       "best_support_shells": [
         {
           "key": "Farigiraf",
-          "score": 4.7919,
+          "score": 4.7924,
           "samples": [
             "generated195",
             "generated708",
@@ -941,7 +941,7 @@
         },
         {
           "key": "Sinistcha",
-          "score": 4.7409,
+          "score": 4.7518,
           "samples": [
             "generated35",
             "selfgenerated"
@@ -953,7 +953,7 @@
       "best_breakers": [
         {
           "key": "Starmie",
-          "score": 4.4742,
+          "score": 4.4758,
           "samples": [
             "generated35",
             "generated195",
@@ -962,7 +962,7 @@
         },
         {
           "key": "Dragonite",
-          "score": 4.4742,
+          "score": 4.4758,
           "samples": [
             "generated35",
             "generated195",
@@ -971,7 +971,7 @@
         },
         {
           "key": "Garchomp",
-          "score": 3.9898,
+          "score": 4.0388,
           "samples": [
             "generated708"
           ]
@@ -982,30 +982,30 @@
     },
     "sun": {
       "label": "Sun",
-      "count": 870,
-      "quality_score": 4.4644,
+      "count": 911,
+      "quality_score": 4.4496,
       "best_support_shells": [
         {
           "key": "Pelipper + Incineroar + Whimsicott",
-          "score": 5.7105,
+          "score": 5.5322,
           "samples": [
             "generated540",
             "selfgenerated",
+            "archive",
             "pikalyticsvariant731curatedpikalyticsimport",
-            "highlevelvariant1227curatedpikalyticsimport",
-            "archive"
+            "highlevelvariant1227curatedpikalyticsimport"
           ]
         },
         {
           "key": "Incineroar + Farigiraf + Whimsicott",
-          "score": 5.2017,
+          "score": 5.22,
           "samples": [
             "archive"
           ]
         },
         {
           "key": "Farigiraf + Whimsicott + Rotom-Wash",
-          "score": 4.7676,
+          "score": 4.7693,
           "samples": [
             "generated223",
             "archive",
@@ -1014,7 +1014,7 @@
         },
         {
           "key": "Farigiraf + Whimsicott",
-          "score": 4.7676,
+          "score": 4.7693,
           "samples": [
             "generated672",
             "archive",
@@ -1023,7 +1023,7 @@
         },
         {
           "key": "Sinistcha",
-          "score": 4.7409,
+          "score": 4.7518,
           "samples": [
             "generated35",
             "selfgenerated"
@@ -1031,7 +1031,7 @@
         },
         {
           "key": "Farigiraf + Rotom-Wash",
-          "score": 4.7163,
+          "score": 4.7166,
           "samples": [
             "generated907",
             "generated524",
@@ -1041,63 +1041,63 @@
         },
         {
           "key": "Farigiraf + Whimsicott + Sinistcha",
-          "score": 4.5883,
+          "score": 4.6447,
           "samples": [
             "selfgenerated"
           ]
         },
         {
           "key": "Incineroar + Sinistcha",
-          "score": 4.5883,
+          "score": 4.6447,
           "samples": [
             "selfgenerated"
           ]
         },
         {
           "key": "Incineroar + Rotom-Wash",
-          "score": 4.5883,
+          "score": 4.6447,
           "samples": [
             "selfgenerated"
           ]
         },
         {
           "key": "Incineroar + Rotom-Wash + Pelipper",
-          "score": 4.5883,
+          "score": 4.6447,
           "samples": [
             "selfgenerated"
           ]
         },
         {
           "key": "Incineroar + Sinistcha + Pelipper",
-          "score": 4.5883,
+          "score": 4.6447,
           "samples": [
             "selfgenerated"
           ]
         },
         {
           "key": "Incineroar + Whimsicott",
-          "score": 4.5883,
+          "score": 4.6447,
           "samples": [
             "selfgenerated"
           ]
         },
         {
           "key": "Incineroar + Whimsicott + Pelipper",
-          "score": 4.5883,
+          "score": 4.6447,
           "samples": [
             "selfgenerated"
           ]
         },
         {
           "key": "Incineroar + Whimsicott + Rotom-Wash",
-          "score": 4.5883,
+          "score": 4.6447,
           "samples": [
             "selfgenerated"
           ]
         },
         {
           "key": "Sinistcha + Rotom-Wash",
-          "score": 4.5575,
+          "score": 4.5679,
           "samples": [
             "generated346",
             "archive"
@@ -1105,7 +1105,7 @@
         },
         {
           "key": "Farigiraf",
-          "score": 4.5575,
+          "score": 4.5679,
           "samples": [
             "generated195",
             "archive"
@@ -1113,7 +1113,7 @@
         },
         {
           "key": "Pelipper + Incineroar",
-          "score": 4.4264,
+          "score": 4.4366,
           "samples": [
             "generated7",
             "archive"
@@ -1121,7 +1121,7 @@
         },
         {
           "key": "Whimsicott + Pelipper",
-          "score": 4.0503,
+          "score": 4.0933,
           "samples": [
             "selfgenerated",
             "archive"
@@ -1131,7 +1131,7 @@
       "best_speed_control": [
         {
           "key": "Pelipper: Tailwind",
-          "score": 5.1591,
+          "score": 4.9737,
           "samples": [
             "generated540",
             "generated7",
@@ -1142,7 +1142,7 @@
         },
         {
           "key": "Whimsicott: Tailwind",
-          "score": 5.0658,
+          "score": 4.8751,
           "samples": [
             "generated540",
             "selfgenerated",
@@ -1156,7 +1156,7 @@
       "best_breakers": [
         {
           "key": "Basculegion",
-          "score": 5.387,
+          "score": 5.2147,
           "samples": [
             "generated540",
             "generated7",
@@ -1167,14 +1167,14 @@
         },
         {
           "key": "Kingambit",
-          "score": 4.8977,
+          "score": 4.8994,
           "samples": [
             "selfgenerated"
           ]
         },
         {
           "key": "Garchomp",
-          "score": 4.8402,
+          "score": 4.8403,
           "samples": [
             "generated154",
             "generated524",
@@ -1183,7 +1183,7 @@
         },
         {
           "key": "Starmie",
-          "score": 4.5239,
+          "score": 4.5242,
           "samples": [
             "generated571",
             "generated35",
@@ -1209,12 +1209,12 @@
     },
     "stall_fat_balance": {
       "label": "Stall / Fat Balance",
-      "count": 6373,
-      "quality_score": 6.45,
+      "count": 6383,
+      "quality_score": 6.455,
       "best_support_shells": [
         {
           "key": "Incineroar + Whimsicott",
-          "score": 5.9536,
+          "score": 6.0082,
           "samples": [
             "pokeaimmd",
             "selfgenerated"
@@ -1351,7 +1351,7 @@
       "best_breakers": [
         {
           "key": "Garchomp",
-          "score": 6.0916,
+          "score": 6.1324,
           "samples": [
             "pokeaimmd",
             "generated154",
@@ -1388,7 +1388,7 @@
     },
     "anti_meta": {
       "label": "Anti-meta",
-      "count": 2383,
+      "count": 2494,
       "quality_score": 6.7542,
       "best_support_shells": [
         {
@@ -1397,20 +1397,20 @@
           "samples": [
             "archive",
             "selfgenerated",
-            "highlevelvariant2152pokeaimmd",
+            "highlevelvariant52pokeaimmd",
             "highlevelcuratedyoutubeshowcaseteamincineroargarchompwhimsicottstarmiedragoniterotomwash",
-            "highlevelvariant158pokeaimmd"
+            "highlevelvariant2152pokeaimmd"
           ]
         },
         {
           "key": "Incineroar + Whimsicott + Pelipper",
-          "score": 7.4912,
+          "score": 7.5113,
           "samples": [
             "archive",
             "selfgenerated",
-            "pikalyticsvariant235pikalyticschampionssnapshot",
-            "pikalyticsvariant381pikalyticschampionssnapshot",
-            "pikalyticsvariant486pikalyticschampionssnapshot"
+            "pikalyticsvariant600pikalyticschampionssnapshot",
+            "pikalyticsvariant1017pikalyticschampionssnapshot",
+            "pikalyticsvariant380pikalyticschampionssnapshot"
           ]
         },
         {
@@ -1426,7 +1426,7 @@
         },
         {
           "key": "Pelipper + Incineroar + Whimsicott",
-          "score": 6.5329,
+          "score": 6.5079,
           "samples": [
             "archive",
             "generated152",
@@ -1437,7 +1437,7 @@
         },
         {
           "key": "Incineroar + Whimsicott",
-          "score": 5.437,
+          "score": 5.4373,
           "samples": [
             "selfgenerated",
             "pokeaimmd"
@@ -1445,14 +1445,14 @@
         },
         {
           "key": "Whimsicott + Sinistcha + Pelipper",
-          "score": 5.0903,
+          "score": 5.1021,
           "samples": [
             "selfgenerated"
           ]
         },
         {
           "key": "Incineroar + Pelipper + Sinistcha",
-          "score": 4.9847,
+          "score": 5.0509,
           "samples": [
             "archive",
             "selfgenerated"
@@ -1460,7 +1460,7 @@
         },
         {
           "key": "Farigiraf + Sinistcha + Whimsicott",
-          "score": 4.9208,
+          "score": 4.9934,
           "samples": [
             "archive",
             "selfgenerated"
@@ -1468,7 +1468,7 @@
         },
         {
           "key": "Sinistcha + Rotom-Wash",
-          "score": 4.7676,
+          "score": 4.7693,
           "samples": [
             "generated346",
             "archive",
@@ -1477,7 +1477,7 @@
         },
         {
           "key": "Farigiraf + Whimsicott + Rotom-Wash",
-          "score": 4.7676,
+          "score": 4.7693,
           "samples": [
             "generated223",
             "archive",
@@ -1486,7 +1486,7 @@
         },
         {
           "key": "Sinistcha",
-          "score": 4.7409,
+          "score": 4.7518,
           "samples": [
             "generated35",
             "selfgenerated"
@@ -1494,7 +1494,7 @@
         },
         {
           "key": "Sinistcha + Pelipper",
-          "score": 4.6486,
+          "score": 4.6989,
           "samples": [
             "selfgenerated",
             "archive"
@@ -1502,28 +1502,28 @@
         },
         {
           "key": "Incineroar + Whimsicott + Farigiraf",
-          "score": 4.5883,
+          "score": 4.6447,
           "samples": [
             "selfgenerated"
           ]
         },
         {
           "key": "Farigiraf + Whimsicott + Sinistcha",
-          "score": 4.5883,
+          "score": 4.6447,
           "samples": [
             "selfgenerated"
           ]
         },
         {
           "key": "Sinistcha + Incineroar + Rotom-Wash",
-          "score": 4.5883,
+          "score": 4.6447,
           "samples": [
             "selfgenerated"
           ]
         },
         {
           "key": "Whimsicott + Pelipper",
-          "score": 4.0503,
+          "score": 4.0933,
           "samples": [
             "selfgenerated",
             "archive"
@@ -1560,7 +1560,7 @@
         },
         {
           "key": "Whimsicott: Tailwind",
-          "score": 5.353,
+          "score": 5.3529,
           "samples": [
             "generated152",
             "generated540",
@@ -1574,7 +1574,7 @@
       "best_breakers": [
         {
           "key": "Archaludon",
-          "score": 7.041,
+          "score": 7.0507,
           "samples": [
             "generated14",
             "pikalyticscuratedpikalyticsimportpelipperbasculegionincineroarwhimsicottarchaludongarchomp",
@@ -1585,29 +1585,29 @@
         },
         {
           "key": "Basculegion",
-          "score": 6.3251,
+          "score": 6.286,
           "samples": [
             "generated152",
             "generated540",
             "generated7",
             "selfgenerated",
-            "pikalyticsvariant731curatedpikalyticsimport"
+            "pikalyticsvariant30curatedpikalyticsimport"
           ]
         },
         {
           "key": "Kingambit",
-          "score": 5.8037,
+          "score": 5.8483,
           "samples": [
             "selfgenerated",
-            "pikalyticsvariant381pikalyticschampionssnapshot",
+            "pikalyticsvariant600pikalyticschampionssnapshot",
+            "pikalyticsvariant380pikalyticschampionssnapshot",
             "pikalyticschampionssnapshotincineroarwhimsicottgarchompsinistchakingambitpelipper",
-            "highlevelpokeaimmdincineroarstarmiegarchompwhimsicottkingambitpelipper",
-            "pikalyticsvariant677pikalyticschampionssnapshot"
+            "highlevelpokeaimmdincineroarstarmiegarchompwhimsicottkingambitpelipper"
           ]
         },
         {
           "key": "Garchomp",
-          "score": 5.1779,
+          "score": 5.1923,
           "samples": [
             "generated14",
             "generated154",
@@ -1618,7 +1618,7 @@
         },
         {
           "key": "Starmie",
-          "score": 4.7333,
+          "score": 4.7335,
           "samples": [
             "generated571",
             "generated35",
