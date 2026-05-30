@@ -748,7 +748,7 @@
         }
       ],
       "confidence": 0.944,
-      "score": 0.7459,
+      "score": 0.7461,
       "sourceType": "high_level",
       "sourceName": "highlevelpokeaimmdincineroarstarmiegarchompwhimsicottkingambitpelipper",
       "sourceUrl": "",
@@ -843,7 +843,7 @@
         }
       ],
       "confidence": 0.685,
-      "score": 0.7548,
+      "score": 0.7549,
       "sourceType": "high_level",
       "sourceName": "highlevelmoxieboostedpelipperbasculegionincineroarwhimsicott",
       "sourceUrl": "",
@@ -1072,7 +1072,7 @@
         }
       ],
       "confidence": 0.924,
-      "score": 0.7501,
+      "score": 0.7503,
       "sourceType": "high_level",
       "sourceName": "highlevelcuratedyoutubeshowcaseteamincineroargarchompwhimsicottstarmiedragoniterotomwash",
       "sourceUrl": "",
@@ -1209,7 +1209,7 @@
         }
       ],
       "confidence": 0.992,
-      "score": 0.7428,
+      "score": 0.7429,
       "sourceType": "pikalytics",
       "sourceName": "pikalyticscuratedpikalyticsimportpelipperbasculegionincineroarwhimsicottarchaludongarchomp",
       "sourceUrl": "",
@@ -1345,7 +1345,7 @@
         }
       ],
       "confidence": 0.97,
-      "score": 0.7264,
+      "score": 0.7265,
       "sourceType": "pikalytics",
       "sourceName": "pikalyticschampionssnapshotincineroarwhimsicottgarchompsinistchakingambitpelipper",
       "sourceUrl": "",
@@ -1674,7 +1674,7 @@
     },
     {
       "source_type": "pikalytics_variant",
-      "source_name": "pikalyticsvariant603curatedpikalyticsimport",
+      "source_name": "pikalyticsvariant3curatedpikalyticsimport",
       "source_url": "",
       "quality_class": "",
       "archetype": "unknown",
@@ -1778,24 +1778,29 @@
           "identity_key": "starmie::starmie::::"
         },
         {
-          "name": "Archaludon",
-          "species": "Archaludon",
-          "base_species": "Archaludon",
-          "display_species": "Archaludon",
-          "item": "",
+          "name": "Garchomp",
+          "species": "Garchomp",
+          "base_species": "Garchomp",
+          "display_species": "Garchomp",
+          "item": "Clear Amulet",
           "mega_stone": "",
           "mega_identity": "",
-          "form_identity": "Archaludon",
+          "form_identity": "Garchomp",
           "role": "",
           "archetype": "",
-          "moves": [],
-          "identity_key": "archaludon::archaludon::::"
+          "moves": [
+            "Earthquake",
+            "Rock Slide",
+            "Protect",
+            "Dragon Claw"
+          ],
+          "identity_key": "garchomp::garchomp::clear amulet::"
         }
       ],
       "confidence": 0.838,
-      "score": 0.7465,
+      "score": 0.7462,
       "sourceType": "pikalytics_variant",
-      "sourceName": "pikalyticsvariant603curatedpikalyticsimport",
+      "sourceName": "pikalyticsvariant3curatedpikalyticsimport",
       "sourceUrl": "",
       "originSourceType": "pikalytics",
       "parentSourceName": "curatedpikalyticsimport",
@@ -1807,7 +1812,7 @@
     },
     {
       "source_type": "high_level_variant",
-      "source_name": "highlevelvariant2152pokeaimmd",
+      "source_name": "highlevelvariant52pokeaimmd",
       "source_url": "",
       "quality_class": "",
       "archetype": "unknown",
@@ -1933,9 +1938,9 @@
         }
       ],
       "confidence": 0.809,
-      "score": 0.7497,
+      "score": 0.7499,
       "sourceType": "high_level_variant",
-      "sourceName": "highlevelvariant2152pokeaimmd",
+      "sourceName": "highlevelvariant52pokeaimmd",
       "sourceUrl": "",
       "originSourceType": "high_level",
       "parentSourceName": "pokeaimmd",
@@ -1946,141 +1951,8 @@
       "variant_reason": "controlled-source-variant"
     },
     {
-      "source_type": "high_level_variant",
-      "source_name": "highlevelvariant1227curatedpikalyticsimport",
-      "source_url": "",
-      "quality_class": "",
-      "archetype": "unknown",
-      "tags": [
-        "high_level_variant",
-        "high_level",
-        "curated_pikalytics",
-        "expanded",
-        "generated",
-        "controlled-source-variant"
-      ],
-      "team": [
-        {
-          "name": "Pelipper",
-          "species": "Pelipper",
-          "base_species": "Pelipper",
-          "display_species": "Pelipper",
-          "item": "Choice Scarf",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Pelipper",
-          "role": "",
-          "archetype": "",
-          "moves": [
-            "Hurricane",
-            "Tailwind",
-            "Protect",
-            "Muddy Water"
-          ],
-          "identity_key": "pelipper::pelipper::choice scarf::"
-        },
-        {
-          "name": "Basculegion",
-          "species": "Basculegion",
-          "base_species": "Basculegion",
-          "display_species": "Basculegion",
-          "item": "Choice Scarf",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Basculegion",
-          "role": "",
-          "archetype": "",
-          "moves": [
-            "Last Respects",
-            "Wave Crash",
-            "Flip Turn",
-            "Aqua Jet"
-          ],
-          "identity_key": "basculegion::basculegion::choice scarf::"
-        },
-        {
-          "name": "Incineroar",
-          "species": "Incineroar",
-          "base_species": "Incineroar",
-          "display_species": "Incineroar",
-          "item": "Sitrus Berry",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Incineroar",
-          "role": "",
-          "archetype": "",
-          "moves": [
-            "Fake Out",
-            "Parting Shot",
-            "Flare Blitz",
-            "Knock Off"
-          ],
-          "identity_key": "incineroar::incineroar::sitrus berry::"
-        },
-        {
-          "name": "Whimsicott",
-          "species": "Whimsicott",
-          "base_species": "Whimsicott",
-          "display_species": "Whimsicott",
-          "item": "Focus Sash",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Whimsicott",
-          "role": "",
-          "archetype": "",
-          "moves": [
-            "Tailwind",
-            "Encore",
-            "Moonblast",
-            "Protect"
-          ],
-          "identity_key": "whimsicott::whimsicott::focus sash::"
-        },
-        {
-          "name": "Garchomp",
-          "species": "Garchomp",
-          "base_species": "Garchomp",
-          "display_species": "Garchomp",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Garchomp",
-          "role": "",
-          "archetype": "",
-          "moves": [],
-          "identity_key": "garchomp::garchomp::::"
-        },
-        {
-          "name": "Charizard",
-          "species": "Charizard",
-          "base_species": "Charizard",
-          "display_species": "Charizard",
-          "item": "",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Charizard",
-          "role": "",
-          "archetype": "",
-          "moves": [],
-          "identity_key": "charizard::charizard::::"
-        }
-      ],
-      "confidence": 0.819,
-      "score": 0.7435,
-      "sourceType": "high_level_variant",
-      "sourceName": "highlevelvariant1227curatedpikalyticsimport",
-      "sourceUrl": "",
-      "originSourceType": "high_level",
-      "parentSourceName": "curatedpikalyticsimport",
-      "generated": true,
-      "variantReason": "controlled-source-variant",
-      "origin_source_type": "high_level",
-      "parent_source_name": "curatedpikalyticsimport",
-      "variant_reason": "controlled-source-variant"
-    },
-    {
       "source_type": "pikalytics_variant",
-      "source_name": "pikalyticsvariant486pikalyticschampionssnapshot",
+      "source_name": "pikalyticsvariant483pikalyticschampionssnapshot",
       "source_url": "",
       "quality_class": "",
       "archetype": "unknown",
@@ -2198,9 +2070,9 @@
         }
       ],
       "confidence": 0.825,
-      "score": 0.7394,
+      "score": 0.7396,
       "sourceType": "pikalytics_variant",
-      "sourceName": "pikalyticsvariant486pikalyticschampionssnapshot",
+      "sourceName": "pikalyticsvariant483pikalyticschampionssnapshot",
       "sourceUrl": "",
       "originSourceType": "pikalytics",
       "parentSourceName": "pikalyticschampionssnapshot",
@@ -2212,7 +2084,7 @@
     },
     {
       "source_type": "pikalytics_variant",
-      "source_name": "pikalyticsvariant3curatedpikalyticsimport",
+      "source_name": "pikalyticsvariant158curatedpikalyticsimport",
       "source_url": "",
       "quality_class": "",
       "archetype": "unknown",
@@ -2316,29 +2188,24 @@
           "identity_key": "starmie::starmie::::"
         },
         {
-          "name": "Garchomp",
-          "species": "Garchomp",
-          "base_species": "Garchomp",
-          "display_species": "Garchomp",
-          "item": "Clear Amulet",
+          "name": "Archaludon",
+          "species": "Archaludon",
+          "base_species": "Archaludon",
+          "display_species": "Archaludon",
+          "item": "",
           "mega_stone": "",
           "mega_identity": "",
-          "form_identity": "Garchomp",
+          "form_identity": "Archaludon",
           "role": "",
           "archetype": "",
-          "moves": [
-            "Earthquake",
-            "Rock Slide",
-            "Protect",
-            "Dragon Claw"
-          ],
-          "identity_key": "garchomp::garchomp::clear amulet::"
+          "moves": [],
+          "identity_key": "archaludon::archaludon::::"
         }
       ],
       "confidence": 0.838,
-      "score": 0.7461,
+      "score": 0.7465,
       "sourceType": "pikalytics_variant",
-      "sourceName": "pikalyticsvariant3curatedpikalyticsimport",
+      "sourceName": "pikalyticsvariant158curatedpikalyticsimport",
       "sourceUrl": "",
       "originSourceType": "pikalytics",
       "parentSourceName": "curatedpikalyticsimport",
@@ -2350,7 +2217,7 @@
     },
     {
       "source_type": "pikalytics_variant",
-      "source_name": "pikalyticsvariant381pikalyticschampionssnapshot",
+      "source_name": "pikalyticsvariant380pikalyticschampionssnapshot",
       "source_url": "",
       "quality_class": "",
       "archetype": "unknown",
@@ -2473,9 +2340,9 @@
         }
       ],
       "confidence": 0.825,
-      "score": 0.7385,
+      "score": 0.7387,
       "sourceType": "pikalytics_variant",
-      "sourceName": "pikalyticsvariant381pikalyticschampionssnapshot",
+      "sourceName": "pikalyticsvariant380pikalyticschampionssnapshot",
       "sourceUrl": "",
       "originSourceType": "pikalytics",
       "parentSourceName": "pikalyticschampionssnapshot",
@@ -2606,7 +2473,7 @@
         }
       ],
       "confidence": 0.838,
-      "score": 0.7457,
+      "score": 0.7458,
       "sourceType": "pikalytics_variant",
       "sourceName": "pikalyticsvariant21curatedpikalyticsimport",
       "sourceUrl": "",
@@ -2620,7 +2487,7 @@
     },
     {
       "source_type": "pikalytics_variant",
-      "source_name": "pikalyticsvariant235pikalyticschampionssnapshot",
+      "source_name": "pikalyticsvariant1017pikalyticschampionssnapshot",
       "source_url": "",
       "quality_class": "",
       "archetype": "unknown",
@@ -2738,9 +2605,9 @@
         }
       ],
       "confidence": 0.825,
-      "score": 0.7379,
+      "score": 0.738,
       "sourceType": "pikalytics_variant",
-      "sourceName": "pikalyticsvariant235pikalyticschampionssnapshot",
+      "sourceName": "pikalyticsvariant1017pikalyticschampionssnapshot",
       "sourceUrl": "",
       "originSourceType": "pikalytics",
       "parentSourceName": "pikalyticschampionssnapshot",
@@ -2752,7 +2619,7 @@
     },
     {
       "source_type": "pikalytics_variant",
-      "source_name": "pikalyticsvariant731curatedpikalyticsimport",
+      "source_name": "pikalyticsvariant30curatedpikalyticsimport",
       "source_url": "",
       "quality_class": "",
       "archetype": "unknown",
@@ -2842,38 +2709,43 @@
           "identity_key": "whimsicott::whimsicott::focus sash::"
         },
         {
-          "name": "Charizard",
-          "species": "Charizard",
-          "base_species": "Charizard",
-          "display_species": "Charizard",
+          "name": "Gengar",
+          "species": "Gengar",
+          "base_species": "Gengar",
+          "display_species": "Gengar",
           "item": "",
           "mega_stone": "",
           "mega_identity": "",
-          "form_identity": "Charizard",
+          "form_identity": "Gengar",
           "role": "",
           "archetype": "",
           "moves": [],
-          "identity_key": "charizard::charizard::::"
+          "identity_key": "gengar::gengar::::"
         },
         {
-          "name": "Archaludon",
-          "species": "Archaludon",
-          "base_species": "Archaludon",
-          "display_species": "Archaludon",
-          "item": "",
+          "name": "Garchomp",
+          "species": "Garchomp",
+          "base_species": "Garchomp",
+          "display_species": "Garchomp",
+          "item": "Clear Amulet",
           "mega_stone": "",
           "mega_identity": "",
-          "form_identity": "Archaludon",
+          "form_identity": "Garchomp",
           "role": "",
           "archetype": "",
-          "moves": [],
-          "identity_key": "archaludon::archaludon::::"
+          "moves": [
+            "Earthquake",
+            "Rock Slide",
+            "Protect",
+            "Dragon Claw"
+          ],
+          "identity_key": "garchomp::garchomp::clear amulet::"
         }
       ],
       "confidence": 0.838,
-      "score": 0.7456,
+      "score": 0.7454,
       "sourceType": "pikalytics_variant",
-      "sourceName": "pikalyticsvariant731curatedpikalyticsimport",
+      "sourceName": "pikalyticsvariant30curatedpikalyticsimport",
       "sourceUrl": "",
       "originSourceType": "pikalytics",
       "parentSourceName": "curatedpikalyticsimport",
@@ -2881,6 +2753,138 @@
       "variantReason": "controlled-source-variant",
       "origin_source_type": "pikalytics",
       "parent_source_name": "curatedpikalyticsimport",
+      "variant_reason": "controlled-source-variant"
+    },
+    {
+      "source_type": "pikalytics_variant",
+      "source_name": "pikalyticsvariant600pikalyticschampionssnapshot",
+      "source_url": "",
+      "quality_class": "",
+      "archetype": "unknown",
+      "tags": [
+        "pikalytics_variant",
+        "pikalytics",
+        "meta",
+        "generated",
+        "controlled-source-variant"
+      ],
+      "team": [
+        {
+          "name": "Incineroar",
+          "species": "Incineroar",
+          "base_species": "Incineroar",
+          "display_species": "Incineroar",
+          "item": "Sitrus Berry",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Incineroar",
+          "role": "",
+          "archetype": "",
+          "moves": [
+            "Fake Out",
+            "Flare Blitz",
+            "Parting Shot",
+            "Knock Off"
+          ],
+          "identity_key": "incineroar::incineroar::sitrus berry::"
+        },
+        {
+          "name": "Whimsicott",
+          "species": "Whimsicott",
+          "base_species": "Whimsicott",
+          "display_species": "Whimsicott",
+          "item": "Focus Sash",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Whimsicott",
+          "role": "",
+          "archetype": "",
+          "moves": [
+            "Tailwind",
+            "Moonblast",
+            "Encore",
+            "Protect"
+          ],
+          "identity_key": "whimsicott::whimsicott::focus sash::"
+        },
+        {
+          "name": "Starmie",
+          "species": "Starmie",
+          "base_species": "Starmie",
+          "display_species": "Starmie",
+          "item": "",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Starmie",
+          "role": "",
+          "archetype": "",
+          "moves": [],
+          "identity_key": "starmie::starmie::::"
+        },
+        {
+          "name": "Garchomp",
+          "species": "Garchomp",
+          "base_species": "Garchomp",
+          "display_species": "Garchomp",
+          "item": "",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Garchomp",
+          "role": "",
+          "archetype": "",
+          "moves": [],
+          "identity_key": "garchomp::garchomp::::"
+        },
+        {
+          "name": "Kingambit",
+          "species": "Kingambit",
+          "base_species": "Kingambit",
+          "display_species": "Kingambit",
+          "item": "Black Glasses",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Kingambit",
+          "role": "",
+          "archetype": "",
+          "moves": [
+            "Sucker Punch",
+            "Kowtow Cleave",
+            "Low Kick",
+            "Protect"
+          ],
+          "identity_key": "kingambit::kingambit::black glasses::"
+        },
+        {
+          "name": "Pelipper",
+          "species": "Pelipper",
+          "base_species": "Pelipper",
+          "display_species": "Pelipper",
+          "item": "Choice Scarf",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Pelipper",
+          "role": "",
+          "archetype": "",
+          "moves": [
+            "Hurricane",
+            "Muddy Water",
+            "Tailwind",
+            "Protect"
+          ],
+          "identity_key": "pelipper::pelipper::choice scarf::"
+        }
+      ],
+      "confidence": 0.825,
+      "score": 0.737,
+      "sourceType": "pikalytics_variant",
+      "sourceName": "pikalyticsvariant600pikalyticschampionssnapshot",
+      "sourceUrl": "",
+      "originSourceType": "pikalytics",
+      "parentSourceName": "pikalyticschampionssnapshot",
+      "generated": true,
+      "variantReason": "controlled-source-variant",
+      "origin_source_type": "pikalytics",
+      "parent_source_name": "pikalyticschampionssnapshot",
       "variant_reason": "controlled-source-variant"
     },
     {
@@ -13230,7 +13234,7 @@
         }
       ],
       "confidence": 0.97,
-      "score": 0.726,
+      "score": 0.727,
       "sourceType": "archive",
       "sourceName": "archive",
       "sourceUrl": "",
@@ -13242,10 +13246,10 @@
   ],
   "diversity_pressure": {
     "rain_penalty": 0.0,
-    "sun_support": 0.1326,
+    "sun_support": 0.1319,
     "weather_diversity_target": 0.26,
-    "rain_share": 0.0886,
-    "sun_share": 0.0695,
+    "rain_share": 0.0893,
+    "sun_share": 0.0701,
     "rain_shell_share": 0.0045,
     "sun_shell_share": 0.0,
     "applied": false
