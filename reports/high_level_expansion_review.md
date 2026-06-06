@@ -1,6 +1,6 @@
 # High-Level Expansion Review
 
-- Updated: 2026-06-05T10:54:05+00:00
+- Updated: 2026-06-06T09:30:07+00:00
 - Sources scanned: 5
 - Accepted teams: 4
 - Rejected teams: 1
