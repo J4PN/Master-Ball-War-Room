@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-06-09T10:40:17+00:00",
+  "updatedAt": "2026-06-10T11:02:14+00:00",
   "sources": [
     "archive",
     "high_level",
@@ -46,7 +46,7 @@
     {
       "name": "garchomp",
       "displayName": "garchomp",
-      "importance": 1.493,
+      "importance": 1.522,
       "sources": [
         "archive",
         "high_level",
@@ -76,7 +76,7 @@
     {
       "name": "starmie",
       "displayName": "starmie",
-      "importance": 1.348,
+      "importance": 1.376,
       "sources": [
         "archive",
         "high_level",
@@ -103,7 +103,7 @@
     {
       "name": "basculegion",
       "displayName": "basculegion",
-      "importance": 0.959,
+      "importance": 0.93,
       "sources": [
         "archive",
         "high_level",
@@ -117,7 +117,7 @@
     {
       "name": "kingambit",
       "displayName": "kingambit",
-      "importance": 0.856,
+      "importance": 0.885,
       "sources": [
         "archive",
         "high_level",
@@ -145,7 +145,7 @@
     {
       "name": "archaludon",
       "displayName": "archaludon",
-      "importance": 0.836,
+      "importance": 0.807,
       "sources": [
         "archive",
         "high_level",
@@ -181,7 +181,7 @@
     {
       "name": "charizard",
       "displayName": "charizard",
-      "importance": 0.765,
+      "importance": 0.707,
       "sources": [
         "archive",
         "random"
@@ -211,20 +211,20 @@
   ],
   "cleanThreatImportance": {
     "pelipper": 1.786,
-    "basculegion": 1.5401,
+    "basculegion": 1.5606,
     "incineroar": 1.9539,
     "whimsicott": 2.0,
-    "starmie": 1.8595,
-    "charizard": 1.4879,
-    "gengar": 1.2693,
-    "archaludon": 1.4815,
-    "garchomp": 1.8363,
+    "starmie": 1.839,
+    "charizard": 1.5293,
+    "gengar": 1.2484,
+    "archaludon": 1.5025,
+    "garchomp": 1.8153,
     "rotomwash": 1.5455,
     "farigiraf": 1.5453,
-    "dragonite": 1.6382,
-    "tyranitar": 1.4185,
-    "kingambit": 1.5233,
-    "sinistcha": 1.4798
+    "dragonite": 1.6383,
+    "tyranitar": 1.4186,
+    "kingambit": 1.5028,
+    "sinistcha": 1.4799
   },
   "persistent_archetype_counts": {
     "unknown": 125,
@@ -232,10 +232,10 @@
   },
   "archetype_diversity_pressure": {
     "rain_penalty": 0.0,
-    "sun_support": 0.1251,
+    "sun_support": 0.1245,
     "weather_diversity_target": 0.26,
-    "rain_share": 0.0951,
-    "sun_share": 0.0758,
+    "rain_share": 0.0955,
+    "sun_share": 0.0763,
     "rain_shell_share": 0.0045,
     "sun_shell_share": 0.0,
     "applied": false
@@ -278,15 +278,15 @@
       1
     ],
     [
-      "pikalyticsvariant3curatedpikalyticsimport",
+      "pikalyticsvariant603curatedpikalyticsimport",
       1
     ],
     [
-      "highlevelvariant52pokeaimmd",
+      "highlevelvariant2152pokeaimmd",
       1
     ],
     [
-      "pikalyticsvariant483pikalyticschampionssnapshot",
+      "highlevelvariant1227curatedpikalyticsimport",
       1
     ]
   ]
