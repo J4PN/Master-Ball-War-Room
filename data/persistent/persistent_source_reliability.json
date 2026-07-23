@@ -2,7 +2,7 @@
   "sources": {
     "archive": {
       "quality_class": "archive",
-      "sample_count": 3198,
+      "sample_count": 3230,
       "reliability_score": 5.7489,
       "tags": []
     },
@@ -127,7 +127,7 @@
     },
     "pikalyticscuratedpikalyticsimportpelipperbasculegionincineroarwhimsicottarchaludongarchomp": {
       "quality_class": "unknown",
-      "sample_count": 96,
+      "sample_count": 97,
       "reliability_score": 7.6876,
       "tags": [
         "pikalytics",
@@ -166,7 +166,7 @@
     },
     "generated154": {
       "quality_class": "archive",
-      "sample_count": 98,
+      "sample_count": 99,
       "reliability_score": 3.4458,
       "tags": [
         "selfplay",
@@ -176,7 +176,7 @@
     },
     "generated664": {
       "quality_class": "archive",
-      "sample_count": 98,
+      "sample_count": 99,
       "reliability_score": 3.4458,
       "tags": [
         "selfplay",
@@ -186,7 +186,7 @@
     },
     "generated346": {
       "quality_class": "archive",
-      "sample_count": 98,
+      "sample_count": 99,
       "reliability_score": 3.4458,
       "tags": [
         "selfplay",
@@ -216,7 +216,7 @@
     },
     "generated223": {
       "quality_class": "archive",
-      "sample_count": 98,
+      "sample_count": 99,
       "reliability_score": 3.4458,
       "tags": [
         "selfplay",
@@ -226,7 +226,7 @@
     },
     "generated865": {
       "quality_class": "archive",
-      "sample_count": 98,
+      "sample_count": 99,
       "reliability_score": 3.4458,
       "tags": [
         "selfplay",
@@ -236,7 +236,7 @@
     },
     "generated898": {
       "quality_class": "archive",
-      "sample_count": 98,
+      "sample_count": 99,
       "reliability_score": 3.4458,
       "tags": [
         "selfplay",
@@ -246,7 +246,7 @@
     },
     "generated263": {
       "quality_class": "archive",
-      "sample_count": 98,
+      "sample_count": 99,
       "reliability_score": 3.4458,
       "tags": [
         "selfplay",
@@ -256,7 +256,7 @@
     },
     "generated501": {
       "quality_class": "archive",
-      "sample_count": 98,
+      "sample_count": 99,
       "reliability_score": 3.4458,
       "tags": [
         "selfplay",
@@ -266,7 +266,7 @@
     },
     "generated708": {
       "quality_class": "archive",
-      "sample_count": 98,
+      "sample_count": 99,
       "reliability_score": 3.4458,
       "tags": [
         "selfplay",
@@ -286,7 +286,7 @@
     },
     "generated302": {
       "quality_class": "archive",
-      "sample_count": 97,
+      "sample_count": 98,
       "reliability_score": 3.4458,
       "tags": [
         "selfplay",
@@ -296,7 +296,7 @@
     },
     "generated195": {
       "quality_class": "archive",
-      "sample_count": 97,
+      "sample_count": 98,
       "reliability_score": 3.4458,
       "tags": [
         "selfplay",
@@ -306,7 +306,7 @@
     },
     "generated630": {
       "quality_class": "archive",
-      "sample_count": 97,
+      "sample_count": 98,
       "reliability_score": 3.4458,
       "tags": [
         "selfplay",
@@ -316,7 +316,7 @@
     },
     "generated616": {
       "quality_class": "archive",
-      "sample_count": 97,
+      "sample_count": 98,
       "reliability_score": 3.4458,
       "tags": [
         "selfplay",
@@ -326,7 +326,7 @@
     },
     "generated672": {
       "quality_class": "archive",
-      "sample_count": 97,
+      "sample_count": 98,
       "reliability_score": 3.4458,
       "tags": [
         "selfplay",
@@ -336,7 +336,7 @@
     },
     "generated506": {
       "quality_class": "archive",
-      "sample_count": 97,
+      "sample_count": 98,
       "reliability_score": 3.4458,
       "tags": [
         "selfplay",
@@ -346,7 +346,7 @@
     },
     "generated524": {
       "quality_class": "archive",
-      "sample_count": 97,
+      "sample_count": 98,
       "reliability_score": 3.4458,
       "tags": [
         "selfplay",
@@ -356,7 +356,7 @@
     },
     "randomrandombwhimsicottcharizardstarmietyranitarincineroarsinistcha": {
       "quality_class": "archive",
-      "sample_count": 97,
+      "sample_count": 98,
       "reliability_score": 2.6877,
       "tags": [
         "random"
@@ -372,7 +372,7 @@
     },
     "generated907": {
       "quality_class": "archive",
-      "sample_count": 96,
+      "sample_count": 97,
       "reliability_score": 3.4458,
       "tags": [
         "selfplay",
@@ -382,7 +382,7 @@
     },
     "generated55": {
       "quality_class": "archive",
-      "sample_count": 96,
+      "sample_count": 97,
       "reliability_score": 3.4458,
       "tags": [
         "selfplay",
@@ -392,7 +392,7 @@
     },
     "generated594": {
       "quality_class": "archive",
-      "sample_count": 96,
+      "sample_count": 97,
       "reliability_score": 3.4458,
       "tags": [
         "selfplay",
@@ -402,7 +402,7 @@
     },
     "generated494": {
       "quality_class": "archive",
-      "sample_count": 96,
+      "sample_count": 97,
       "reliability_score": 3.4458,
       "tags": [
         "selfplay",
@@ -412,7 +412,7 @@
     },
     "generated218": {
       "quality_class": "archive",
-      "sample_count": 96,
+      "sample_count": 97,
       "reliability_score": 3.4458,
       "tags": [
         "selfplay",
@@ -422,7 +422,7 @@
     },
     "generated35": {
       "quality_class": "archive",
-      "sample_count": 96,
+      "sample_count": 97,
       "reliability_score": 3.4458,
       "tags": [
         "selfplay",
@@ -432,7 +432,7 @@
     },
     "generated571": {
       "quality_class": "archive",
-      "sample_count": 96,
+      "sample_count": 97,
       "reliability_score": 3.4458,
       "tags": [
         "selfplay",
@@ -471,7 +471,7 @@
     },
     "generated14": {
       "quality_class": "archive",
-      "sample_count": 95,
+      "sample_count": 96,
       "reliability_score": 3.4458,
       "tags": [
         "selfplay",
@@ -481,7 +481,7 @@
     },
     "generated7": {
       "quality_class": "archive",
-      "sample_count": 95,
+      "sample_count": 96,
       "reliability_score": 3.4458,
       "tags": [
         "selfplay",
@@ -499,7 +499,7 @@
     },
     "generated540": {
       "quality_class": "archive",
-      "sample_count": 94,
+      "sample_count": 95,
       "reliability_score": 3.4458,
       "tags": [
         "selfplay",
@@ -509,7 +509,7 @@
     },
     "generated152": {
       "quality_class": "archive",
-      "sample_count": 94,
+      "sample_count": 95,
       "reliability_score": 3.4458,
       "tags": [
         "selfplay",
@@ -519,7 +519,7 @@
     },
     "selfgenerated": {
       "quality_class": "archive",
-      "sample_count": 4764,
+      "sample_count": 4815,
       "reliability_score": 3.8371,
       "tags": [
         "selfplay",
@@ -543,7 +543,7 @@
     },
     "pokeaimmd": {
       "quality_class": "original_creator_source",
-      "sample_count": 95,
+      "sample_count": 96,
       "reliability_score": 4.9997,
       "tags": [
         "high_level",
@@ -562,7 +562,7 @@
     },
     "pikalyticschampionssnapshotincineroarwhimsicottgarchompsinistchakingambitpelipper": {
       "quality_class": "unknown",
-      "sample_count": 93,
+      "sample_count": 94,
       "reliability_score": 7.5171,
       "tags": [
         "pikalytics",
@@ -903,7 +903,7 @@
     },
     "pikalyticsvariant3curatedpikalyticsimport": {
       "quality_class": "unknown",
-      "sample_count": 90,
+      "sample_count": 91,
       "reliability_score": 6.5032,
       "tags": [
         "pikalytics_variant",
@@ -956,7 +956,7 @@
     },
     "pikalyticsvariant21curatedpikalyticsimport": {
       "quality_class": "unknown",
-      "sample_count": 89,
+      "sample_count": 90,
       "reliability_score": 6.5032,
       "tags": [
         "pikalytics_variant",
@@ -1180,7 +1180,7 @@
     },
     "highlevelpokeaimmdincineroarstarmiegarchompwhimsicottkingambitpelipper": {
       "quality_class": "unknown",
-      "sample_count": 89,
+      "sample_count": 90,
       "reliability_score": 7.3186,
       "tags": [
         "high_level",
@@ -1192,7 +1192,7 @@
     },
     "highlevelmoxieboostedpelipperbasculegionincineroarwhimsicott": {
       "quality_class": "unknown",
-      "sample_count": 89,
+      "sample_count": 90,
       "reliability_score": 5.9424,
       "tags": [
         "high_level",
@@ -1206,7 +1206,7 @@
     },
     "highlevelcuratedyoutubeshowcaseteamincineroargarchompwhimsicottstarmiedragoniterotomwash": {
       "quality_class": "unknown",
-      "sample_count": 89,
+      "sample_count": 90,
       "reliability_score": 7.1651,
       "tags": [
         "high_level",
@@ -1800,8 +1800,8 @@
     },
     "pikalyticsvariant30curatedpikalyticsimport": {
       "quality_class": "unknown",
-      "sample_count": 37,
-      "reliability_score": 6.4659,
+      "sample_count": 38,
+      "reliability_score": 6.4708,
       "tags": [
         "pikalytics_variant",
         "pikalytics",
@@ -2192,8 +2192,8 @@
     },
     "pikalyticsvariant483pikalyticschampionssnapshot": {
       "quality_class": "unknown",
-      "sample_count": 34,
-      "reliability_score": 6.3469,
+      "sample_count": 35,
+      "reliability_score": 6.3542,
       "tags": [
         "pikalytics_variant",
         "pikalytics",
@@ -2578,8 +2578,8 @@
     },
     "highlevelvariant52pokeaimmd": {
       "quality_class": "unknown",
-      "sample_count": 34,
-      "reliability_score": 6.2256,
+      "sample_count": 35,
+      "reliability_score": 6.2328,
       "tags": [
         "high_level_variant",
         "high_level",
@@ -2796,8 +2796,8 @@
     },
     "pikalyticsvariant158curatedpikalyticsimport": {
       "quality_class": "unknown",
-      "sample_count": 33,
-      "reliability_score": 6.438,
+      "sample_count": 34,
+      "reliability_score": 6.4465,
       "tags": [
         "pikalytics_variant",
         "pikalytics",
@@ -2809,8 +2809,8 @@
     },
     "pikalyticsvariant380pikalyticschampionssnapshot": {
       "quality_class": "unknown",
-      "sample_count": 33,
-      "reliability_score": 6.3384,
+      "sample_count": 34,
+      "reliability_score": 6.3468,
       "tags": [
         "pikalytics_variant",
         "pikalytics",
@@ -2821,8 +2821,8 @@
     },
     "pikalyticsvariant1017pikalyticschampionssnapshot": {
       "quality_class": "unknown",
-      "sample_count": 33,
-      "reliability_score": 6.3383,
+      "sample_count": 34,
+      "reliability_score": 6.3467,
       "tags": [
         "pikalytics_variant",
         "pikalytics",
@@ -2833,8 +2833,8 @@
     },
     "pikalyticsvariant600pikalyticschampionssnapshot": {
       "quality_class": "unknown",
-      "sample_count": 33,
-      "reliability_score": 6.3383,
+      "sample_count": 34,
+      "reliability_score": 6.3467,
       "tags": [
         "pikalytics_variant",
         "pikalytics",
