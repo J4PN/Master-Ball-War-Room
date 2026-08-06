@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-05T09:48:22+00:00",
+  "updatedAt": "2026-08-06T09:50:33+00:00",
   "byThreat": {
     "incineroar": {
       "multiplier": 1.581,
@@ -10,7 +10,7 @@
       "notes": "Fast disruption remains a top pressure source."
     },
     "garchomp": {
-      "multiplier": 1.403,
+      "multiplier": 1.428,
       "notes": "Observed in archive, high_level, meta, pikalytics, reddit, selfplay, youtube source pools."
     },
     "whimsicott": {
@@ -22,11 +22,11 @@
       "notes": "Observed in archive, high_level, meta, pikalytics, random, reddit, selfplay source pools."
     },
     "kingambit": {
-      "multiplier": 1.22,
+      "multiplier": 1.245,
       "notes": "Observed in archive, high_level, meta, pikalytics, random, reddit, selfplay source pools."
     },
     "basculegion": {
-      "multiplier": 1.344,
+      "multiplier": 1.319,
       "notes": "Observed in archive, high_level, meta, pikalytics, reddit, selfplay source pools."
     },
     "sinistcha": {
@@ -34,11 +34,11 @@
       "notes": "Observed in archive, meta, pikalytics, random, selfplay source pools."
     },
     "starmie": {
-      "multiplier": 1.411,
+      "multiplier": 1.436,
       "notes": "Observed in archive, high_level, random, reddit, selfplay, youtube source pools."
     },
     "archaludon": {
-      "multiplier": 1.209,
+      "multiplier": 1.184,
       "notes": "Observed in archive, high_level, meta, pikalytics source pools."
     },
     "dragonite": {
@@ -54,7 +54,7 @@
       "notes": "Observed in archive, random, selfplay source pools."
     },
     "gengar": {
-      "multiplier": 1.148,
+      "multiplier": 1.177,
       "notes": "Observed in archive, random source pools."
     },
     "tyranitar": {
@@ -62,7 +62,7 @@
       "notes": "Observed in archive, random source pools."
     },
     "charizard": {
-      "multiplier": 1.194,
+      "multiplier": 1.144,
       "notes": "Observed in archive, random source pools."
     },
     "basespecieswhimsicottdisplayspecieswhimsicottitemmegastonemegaidentityformidentitywhimsicottrolearchetypemoveskeymovesidentitykeywhimsicottwhimsicott": {
