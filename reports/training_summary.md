@@ -1,57 +1,57 @@
 # Off-PC Training Summary
 
-- Timestamp: 2026-08-09T08:00:33+00:00
+- Timestamp: 2026-08-10T08:50:24+00:00
 - Candidate iterations: 3000
 - candidate_iterations: 3000
-- Evaluated candidates: 1260
-- evaluated_candidates: 1260
+- Evaluated candidates: 1261
+- evaluated_candidates: 1261
 - Retained learning candidates: 24
 - retained_candidates: 24
 - persistent_memory_updated: pending persistent_memory.py step
-- Battle log: `data/battle_logs/training-20260809T080032Z.jsonl`
+- Battle log: `data/battle_logs/training-20260810T085024Z.jsonl`
 - High-level debug: `reports/high_level_debug.json`
 
 ## Source Counts
 
 - `meta`: 0
 - `pikalytics`: 2
-- `pikalytics_variant`: 110
+- `pikalytics_variant`: 109
 - `high_level`: 4
-- `high_level_variant`: 138
+- `high_level_variant`: 139
 - `reddit`: 0
 - `reddit_variant`: 3
 - `youtube`: 0
-- `youtube_variant`: 80
+- `youtube_variant`: 76
 - `archive`: 31
-- `archive_variant`: 394
+- `archive_variant`: 395
 - `random`: 0
-- `selfplay`: 498
+- `selfplay`: 502
 
 ## Source Share
 
 - `meta`: 0.0%
 - `pikalytics`: 0.2%
-- `pikalytics_variant`: 8.7%
+- `pikalytics_variant`: 8.6%
 - `high_level`: 0.3%
 - `high_level_variant`: 11.0%
 - `reddit`: 0.0%
 - `reddit_variant`: 0.2%
 - `youtube`: 0.0%
-- `youtube_variant`: 6.3%
+- `youtube_variant`: 6.0%
 - `archive`: 2.5%
 - `archive_variant`: 31.3%
 - `random`: 0.0%
-- `selfplay`: 39.5%
+- `selfplay`: 39.8%
 
-WARNING: evaluation pool below expected size (1260 < 1311)
+WARNING: evaluation pool below expected size (1261 < 1312)
 
 ## Retained Source Counts
 
 - `meta`: 0
 - `pikalytics`: 2
-- `pikalytics_variant`: 7
+- `pikalytics_variant`: 8
 - `high_level`: 4
-- `high_level_variant`: 2
+- `high_level_variant`: 1
 - `reddit`: 0
 - `reddit_variant`: 0
 - `youtube`: 0
@@ -65,9 +65,9 @@ WARNING: evaluation pool below expected size (1260 < 1311)
 
 - `meta`: 0.0%
 - `pikalytics`: 8.3%
-- `pikalytics_variant`: 29.2%
+- `pikalytics_variant`: 33.3%
 - `high_level`: 16.7%
-- `high_level_variant`: 8.3%
+- `high_level_variant`: 4.2%
 - `reddit`: 0.0%
 - `reddit_variant`: 0.0%
 - `youtube`: 0.0%
@@ -81,19 +81,19 @@ WARNING: evaluation pool below expected size (1260 < 1311)
 
 - [archive] score `0.710` confidence `0.50`
   `Pelipper, Basculegion, Incineroar, Whimsicott, Starmie, Charizard`
-  meta `0.841` | pikalytics `0.964` | high_level `0.677` | reddit `0.667` | youtube `0.573` | archive `0.598` | random `0.270` | selfplay `0.293`
+  meta `0.842` | pikalytics `0.965` | high_level `0.677` | reddit `0.668` | youtube `0.574` | archive `0.598` | random `0.270` | selfplay `0.293`
   creator match `Moxie Boosted` | shell `1.00` | core `1.00` | archetype `0.00` | final `0.677`
 - [archive] score `0.700` confidence `0.50`
   `Pelipper, Gengar, Incineroar, Whimsicott, Archaludon, Garchomp`
-  meta `0.817` | pikalytics `0.941` | high_level `0.668` | reddit `0.677` | youtube `0.573` | archive `0.602` | random `0.272` | selfplay `0.295`
+  meta `0.817` | pikalytics `0.941` | high_level `0.668` | reddit `0.677` | youtube `0.574` | archive `0.602` | random `0.272` | selfplay `0.295`
   creator match `Curated Pikalytics import` | shell `0.83` | core `1.00` | archetype `0.00` | final `0.668`
 - [archive] score `0.701` confidence `0.50`
   `Rotom-Wash, Garchomp, Farigiraf, Starmie, Dragonite, Charizard`
-  meta `0.880` | pikalytics `0.997` | high_level `0.529` | reddit `0.709` | youtube `0.576` | archive `0.595` | random `0.269` | selfplay `0.293`
+  meta `0.881` | pikalytics `0.998` | high_level `0.529` | reddit `0.709` | youtube `0.576` | archive `0.595` | random `0.269` | selfplay `0.293`
   creator match `Curated YouTube showcase team` | shell `0.67` | core `1.00` | archetype `0.00` | final `0.529`
 - [archive] score `0.698` confidence `0.50`
   `Tyranitar, Garchomp, Farigiraf, Starmie, Dragonite, Kingambit`
-  meta `0.867` | pikalytics `0.985` | high_level `0.540` | reddit `0.702` | youtube `0.581` | archive `0.593` | random `0.269` | selfplay `0.293`
+  meta `0.868` | pikalytics `0.986` | high_level `0.540` | reddit `0.702` | youtube `0.581` | archive `0.594` | random `0.269` | selfplay `0.293`
   creator match `PokeaimMD` | shell `0.50` | core `1.00` | archetype `0.00` | final `0.540`
 - [archive] score `0.697` confidence `0.50`
   `Farigiraf, Garchomp, Tyranitar, Starmie, Charizard, Rotom-Wash`
