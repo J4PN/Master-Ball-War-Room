@@ -1,19 +1,6 @@
 {
   "runs": [
     {
-      "run_index": 15,
-      "team_count": 141,
-      "archetype_counts": {
-        "unknown": 136,
-        "balance": 1,
-        "rain": 1,
-        "bulky-offense": 1,
-        "fast-offense": 1,
-        "rain-balance": 1
-      },
-      "mega_team_count": 0
-    },
-    {
       "run_index": 16,
       "team_count": 142,
       "archetype_counts": {
@@ -955,6 +942,15 @@
     },
     {
       "run_index": 120,
+      "team_count": 126,
+      "archetype_counts": {
+        "unknown": 125,
+        "bulky-offense": 1
+      },
+      "mega_team_count": 0
+    },
+    {
+      "run_index": 121,
       "team_count": 126,
       "archetype_counts": {
         "unknown": 125,
