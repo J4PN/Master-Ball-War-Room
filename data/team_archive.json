@@ -925,7 +925,7 @@
     },
     {
       "source_type": "pikalytics_variant",
-      "source_name": "pikalyticsvariant603curatedpikalyticsimport",
+      "source_name": "pikalyticsvariant158curatedpikalyticsimport",
       "source_url": "",
       "archetype": "unknown",
       "tags": [
@@ -1317,7 +1317,7 @@
     },
     {
       "source_type": "pikalytics_variant",
-      "source_name": "pikalyticsvariant731curatedpikalyticsimport",
+      "source_name": "pikalyticsvariant30curatedpikalyticsimport",
       "source_url": "",
       "archetype": "unknown",
       "tags": [
@@ -1416,36 +1416,44 @@
           "identity_key": "whimsicott::whimsicott::focus sash::"
         },
         {
-          "base_species": "Charizard",
-          "display_species": "Charizard",
+          "base_species": "Gengar",
+          "display_species": "Gengar",
           "item": "",
           "mega_stone": "",
           "mega_identity": "",
-          "form_identity": "Charizard",
+          "form_identity": "Gengar",
           "role": "",
           "archetype": "",
           "moves": [],
           "key_moves": [],
-          "identity_key": "charizard::charizard::::"
+          "identity_key": "gengar::gengar::::"
         },
         {
-          "base_species": "Archaludon",
-          "display_species": "Archaludon",
-          "item": "",
+          "base_species": "Garchomp",
+          "display_species": "Garchomp",
+          "item": "Clear Amulet",
           "mega_stone": "",
           "mega_identity": "",
-          "form_identity": "Archaludon",
+          "form_identity": "Garchomp",
           "role": "",
           "archetype": "",
-          "moves": [],
-          "key_moves": [],
-          "identity_key": "archaludon::archaludon::::"
+          "moves": [
+            "Earthquake",
+            "Rock Slide",
+            "Protect",
+            "Dragon Claw"
+          ],
+          "key_moves": [
+            "Earthquake",
+            "Rock Slide"
+          ],
+          "identity_key": "garchomp::garchomp::clear amulet::"
         }
       ]
     },
     {
       "source_type": "pikalytics_variant",
-      "source_name": "pikalyticsvariant486pikalyticschampionssnapshot",
+      "source_name": "pikalyticsvariant483pikalyticschampionssnapshot",
       "source_url": "",
       "archetype": "unknown",
       "tags": [
@@ -1572,7 +1580,7 @@
     },
     {
       "source_type": "pikalytics_variant",
-      "source_name": "pikalyticsvariant381pikalyticschampionssnapshot",
+      "source_name": "pikalyticsvariant380pikalyticschampionssnapshot",
       "source_url": "",
       "archetype": "unknown",
       "tags": [
@@ -1707,7 +1715,7 @@
     },
     {
       "source_type": "pikalytics_variant",
-      "source_name": "pikalyticsvariant235pikalyticschampionssnapshot",
+      "source_name": "pikalyticsvariant1017pikalyticschampionssnapshot",
       "source_url": "",
       "archetype": "unknown",
       "tags": [
@@ -1833,63 +1841,20 @@
       ]
     },
     {
-      "source_type": "high_level_variant",
-      "source_name": "highlevelvariant1227curatedpikalyticsimport",
+      "source_type": "pikalytics_variant",
+      "source_name": "pikalyticsvariant600pikalyticschampionssnapshot",
       "source_url": "",
       "archetype": "unknown",
       "tags": [
-        "high_level_variant",
-        "high_level",
-        "curated_pikalytics",
-        "expanded",
+        "pikalytics_variant",
+        "pikalytics",
+        "meta",
         "generated",
         "controlled-source-variant"
       ],
-      "confidence": 0.819,
+      "confidence": 0.825,
       "quality_class": "",
       "team": [
-        {
-          "base_species": "Pelipper",
-          "display_species": "Pelipper",
-          "item": "Choice Scarf",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Pelipper",
-          "role": "",
-          "archetype": "",
-          "moves": [
-            "Hurricane",
-            "Tailwind",
-            "Protect",
-            "Muddy Water"
-          ],
-          "key_moves": [
-            "Hurricane",
-            "Tailwind"
-          ],
-          "identity_key": "pelipper::pelipper::choice scarf::"
-        },
-        {
-          "base_species": "Basculegion",
-          "display_species": "Basculegion",
-          "item": "Choice Scarf",
-          "mega_stone": "",
-          "mega_identity": "",
-          "form_identity": "Basculegion",
-          "role": "",
-          "archetype": "",
-          "moves": [
-            "Last Respects",
-            "Wave Crash",
-            "Flip Turn",
-            "Aqua Jet"
-          ],
-          "key_moves": [
-            "Last Respects",
-            "Wave Crash"
-          ],
-          "identity_key": "basculegion::basculegion::choice scarf::"
-        },
         {
           "base_species": "Incineroar",
           "display_species": "Incineroar",
@@ -1901,13 +1866,13 @@
           "archetype": "",
           "moves": [
             "Fake Out",
-            "Parting Shot",
             "Flare Blitz",
+            "Parting Shot",
             "Knock Off"
           ],
           "key_moves": [
             "Fake Out",
-            "Parting Shot"
+            "Flare Blitz"
           ],
           "identity_key": "incineroar::incineroar::sitrus berry::"
         },
@@ -1922,15 +1887,28 @@
           "archetype": "",
           "moves": [
             "Tailwind",
-            "Encore",
             "Moonblast",
+            "Encore",
             "Protect"
           ],
           "key_moves": [
             "Tailwind",
-            "Encore"
+            "Moonblast"
           ],
           "identity_key": "whimsicott::whimsicott::focus sash::"
+        },
+        {
+          "base_species": "Starmie",
+          "display_species": "Starmie",
+          "item": "",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Starmie",
+          "role": "",
+          "archetype": "",
+          "moves": [],
+          "key_moves": [],
+          "identity_key": "starmie::starmie::::"
         },
         {
           "base_species": "Garchomp",
@@ -1946,23 +1924,52 @@
           "identity_key": "garchomp::garchomp::::"
         },
         {
-          "base_species": "Charizard",
-          "display_species": "Charizard",
-          "item": "",
+          "base_species": "Kingambit",
+          "display_species": "Kingambit",
+          "item": "Black Glasses",
           "mega_stone": "",
           "mega_identity": "",
-          "form_identity": "Charizard",
+          "form_identity": "Kingambit",
           "role": "",
           "archetype": "",
-          "moves": [],
-          "key_moves": [],
-          "identity_key": "charizard::charizard::::"
+          "moves": [
+            "Sucker Punch",
+            "Kowtow Cleave",
+            "Low Kick",
+            "Protect"
+          ],
+          "key_moves": [
+            "Sucker Punch",
+            "Kowtow Cleave"
+          ],
+          "identity_key": "kingambit::kingambit::black glasses::"
+        },
+        {
+          "base_species": "Pelipper",
+          "display_species": "Pelipper",
+          "item": "Choice Scarf",
+          "mega_stone": "",
+          "mega_identity": "",
+          "form_identity": "Pelipper",
+          "role": "",
+          "archetype": "",
+          "moves": [
+            "Hurricane",
+            "Muddy Water",
+            "Tailwind",
+            "Protect"
+          ],
+          "key_moves": [
+            "Hurricane",
+            "Muddy Water"
+          ],
+          "identity_key": "pelipper::pelipper::choice scarf::"
         }
       ]
     },
     {
       "source_type": "high_level_variant",
-      "source_name": "highlevelvariant2152pokeaimmd",
+      "source_name": "highlevelvariant52pokeaimmd",
       "source_url": "",
       "archetype": "unknown",
       "tags": [
